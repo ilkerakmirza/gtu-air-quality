@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+
+# Veritabanı (Railway PostgreSQL kullanacak, SQLite upload etme)
+*.db
+*.sqlite3
+
+# Büyük dosyalar
+atmotube_deneme_harita/
+*.xlsx
+
+# Geçici
+*.csv
+*.log
+.DS_Store
+Thumbs.db

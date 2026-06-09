@@ -1,0 +1,1420 @@
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+ 
+1. GENEL BİLGİLER 
+ 
+ 
+Aynı veya benzer başlık ve içerikte , GTÜ’den veya  başka bir kurumdan (TÜBİTAK, TÜSEB vb. kamu 
+veya özel fon sağlayıcı kuruluşlardan) destek almadığımı beyan ederim.  
+ 
+1.1. PROJE BAŞLIĞI 
+ 
+(Projenin Başlığı Türkçe olarak yazılmalıdır.) 
+Kampüs Mikro-Ortamlarında Taşınabilir Düşük Maliyetli Hava Kalite Sensörleri Vasıtası ile  
+Dinamik Kaynak Karakterizasyonu ve Makine Öğrenmesi ile Kişisel Maruziyetin En Aza 
+İndirilmesine Yönelik Karar Destek Modelinin Kurgulanması 
+ 
+1.2. PROJECT NAME  
+(Projenin Başlığı İngilizce olarak yazılmalıdır.) 
+Dynamic Source Characterization and Machine Learning in Campus Micro -Environments: 
+Development of a Decision Support Model to Minimize Personal Exposure via Portable Low 
+Cost Air Quality Sensors 
+ 
+1.3. PROJE TÜRÜ 
+(Proje türünün doğru işaretlendiğine dikkat edilmelidir.) 
+*Yüksek lisans ve doktora  tezi olarak önerilen projeler için, tez konusunun kabul edildiğini göste ren resmi belge  
+sunulmalıdır. 
+ 
+1.4. PROJE SÜRESİ 
+ 
+Önerilen Proje Süresi (Ay olarak belirtilmelidir.) Önerilen Başlama Tarihi 
+12 Ay 01.09.2026 
+ 
+1.5. PROJE YÜRÜTÜCÜSÜ 
+ 
+Ünvanı, Adı ve Soyadı Dr. Öğretim Üyesi İlker AKMIRZA 
+Bölümü Çevre Mühendisliği 
+Fakülte, Enstitü Mühendislik Fakültesi 
+Elektronik Posta Adresi akmirza@gtu.edu.tr 
+İş Tel No. 02626053157 
+Cep Tel No. (İsteğe bağlı) 05554942112 
+1.6. PROJE EKİBİ: 
+ 
+Ünvanı, Adı ve Soyadı Fakülte / Enstitü / Y.O. Bölüm Projedeki Görevi 
+Prof.Dr. Pınar Ergenekon Mühendislik Fakültesi Çevre 
+Mühendisliği Araştırmacı 
+    GTÜ 101*      GTÜ 102*   GTÜ 105 
+                  GTÜ 106                  GTÜ 107                  GTÜ 108 
+                  GTÜ 110                  GTÜ 112  
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+Doç.Dr Özgün Yücel Mühendislik Fakültesi Kimya 
+Mühendisliği Araştırmacı 
+Araş.Gör Serra Saraçoğlu Mühendislik Fakültesi Çevre 
+Mühendisliği Araştırmacı 
+    
+ 
+1.7. ÖNERİLEN PROJE BÜTÇESİ 
+ 
+BAPK Destek Miktarı: 125000 TL 
+Diğer Kuruluş(lar) Destek Miktarı: 
+(Bu proje kapsamında bütçeye 
+destek veren kuruluştan ıslak imzalı 
+destek mektubunun proje ekinde 
+sunulması gerekmektedir) 
+ 
+TOPLAM (TL. olarak belirtilmelidir.) : 125000 
+ 
+1.8 PROJEYE İLİŞKİN İMZALAR 
+ 
+Görevi  Ünvanı, Adı ve Soyadı Tarih İmza 
+Proje Yürütücüsü Dr.Öğr.Üyesi İlker AKMIRZA 05.04.2026  
+Bölüm Başkanı Prof.Dr. Nihal Bektaş 05.04.2026  
+Fakülte Dekanı / Ens. 
+Md. / Y.O. Md. / 
+Merkez Md. 
+Prof.Dr. Yusuf Sinan AKGÜL 05.04.2026  
+Diğer Kuruluş(lar) Adı 
+ve Onayı (varsa)  
+2. PROJE HAKKINDA BİLGİLER 
+ 
+2.1. ÖZET ve ANAHTAR KELİMELER : Projenin kapsamı, yöntemi, konunun özgün değeri ve 
+beklenen sonuçlar kısaca belirtilmelidir. Proje özetinin 300 kelimeyi aşmaması beklenir. 
+Gebze Teknik Üniversitesi (GTÜ) kampüsünde yer alan ve farklı amaçlar çer çevesinde ortak 
+kullanıma sahip olan mikro -ortamlarda hava kalitesinin belirlenmesi, kampüs paydaşlarının sağlığı 
+ve konfor u açısından kritik öneme sahiptir. Mevcut kirlilik izleme çalışmaları  bireylerin hava 
+kirleticilere olan aktüel maruziyetini temsil etme açısından  ölçüm istasyonların konumları gereği  
+sınırlı kalmakta ve kişisel maruziyetin dinamik yapısını tam olarak yansıtamamaktadır . Bu problemli 
+durumun ortadan kaldırılması ve kişisel maruziyetin anlık olarak takibi ve  de bireylerin hava 
+kalitesine etki eden emisyonların kaynaklarının belirlenmesi büyük önem kazanmaktadır. 
+Bu hedef doğrultusunda, kampüs genelinde ortak kullanıma sahip olan alanlarda düşük maliyetli 
+taşınabilir hava kalite sensörleri ile arka plan emisyonlarını izleyen sabit sensör ağları kişiye özgü  
+aktüel maruziyetin belirlenmesi ne yönelik entegre edile rek çalışmalar gerçekletirilecektir . 
+Sensörlerden CO2, Uçucu Organik Bileşikler (UOB) ve Partikül Madde (PM) konsantrasyonları anlık 
+olarak dinamik olarak izlenecektir. Alanların kullanım amacı, faaliyet türü ve anlık kullanıcı 
+yoğunluğu gibi değişkenler dikkate alınarak, kirliliğe sebep olan kaynakların dinamik 
+karakterizasyonu gerçekleştirilecektir. 
+Projede kaynak tanımlaması ve k irletici pro fili belirlenen alanlarda veriler  makine öğrenmesi 
+algoritmaları ile entegre edil erek kişisel maruziyetin en aza indirilmesi için gelecek tahmin 
+mekanizması oluşturulacak ve ayrıca hava kalite iyileştirme çalışmalarının hem kaynak bazlı hem de 
+bölgenin lokal ko şulları çerçevesinde ele alınarak etkisinin hangi ölçüde olacağı belirlenecektir.   Bu 
+modelleme sayesinde, kişisel maruziyet risklerini yüksek doğrulukla öngörebilen dinamik bir karar 
+destek mekanizması kurgulanacaktır. Kurulacak sistem, hava kalitesini iyileştirme uygulamalarının 
+sürdürülebilir, en yüksek  verim ve en az  maliyetle devreye alınmasına stratejik bir temel 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+oluşturacaktır. Nihai olarak geliştirilecek tahmin modeli; başta dezavantajlı gruplar olmak üzere tüm 
+kampüs bileşenlerinin günlük aktivitelerini minimum maruziyetle planlamasına olanak tanıyarak 
+yenilikçi bir çevresel yönetim stratejisi sunacaktır. 
+ 
+Anahtar Kelimeler: Taşınabilir Düşük Maliyetli Sensör, Hava Kalite, Kaynak Tanımlaması 
+,Tahmin Mekanizması 
+ 
+2.2. ABSTRACT: Projenin kapsamı, yöntemi, konunun özgün değeri ve beklenen sonuçlar kısaca 
+İngilizce olarak belirtilmelidir. Proje özetinin 300 kelimeyi aşmaması beklenir.  
+Determining the air quality in shared micro -environments serving various purposes on the Gebze 
+Technical University (GTU) campus is of critical importance for the health and comfort of campus 
+stakeholders. Current pollution monitoring efforts remain limited in representing individuals' actual 
+exposure to air pollutants due to the fixed locations of measurement stations, failing to fully capture 
+the dynamic nature of personal exposure. Overcoming this limitation, monitoring personal exposure 
+in real-time, and identifying the emission sources affecting air quality have become highly significant.  
+In line with this objective, portable low cost air quality sensors and fixed sensor networks monitoring 
+background emissions will be integrated across micro -environments within the campus. Based on 
+the acquired data, concentrations of CO2, Volatile Organic Compounds (VOCs), and Particulate 
+Matter (PM) will be monitored. By considering variables such as the intended use of the areas, 
+activity types, and instantaneous user density, dynamic characterization of the pollution sources will 
+be conducted. 
+In the areas where source identification and pollutant profiling are completed, the data will be 
+integrated with machine learning algorithms to establish a future prediction mechanism aimed at 
+minimizing personal exposure. Furthermore, the extent of the impact of air quality improvement 
+initiatives will be determined by evaluating them based on both source -specific factors and local 
+conditions. Through this modeling, a dynamic decision support mechanism capable of predicting 
+personal exposure risks with hig h accuracy will be developed. The established system will provide a 
+strategic foundation for implementing air quality improvement practices sustainably, with maximum 
+efficiency and minimum cost. Ultimately, the predictive model to be developed will introduce an 
+innovative environmental management strategy by enabling all campus stakeholders, particularly 
+disadvantaged groups, to plan their daily activities with minimal exposure. 
+ 
+ 
+ 
+ 
+ 
+Keywords: Portable Low-Cost Sensors, Air Quality, Source Characterization, Prediction 
+Mechanism. 
+ 
+2.3. AMAÇ / GEREKÇE: Önerilen projenin amacı ve erişilmek istenen sonuçlar açıkça yazılmalıdır. 
+Projenin amacı,  Gebze Teknik Üniversitesi (GTÜ) kampüsünde farklı amaçlar çerçevesinde ortak kullanıma 
+sahip olan mikro -ortamlarda, bireylerin hava kirliliğine kirletici bazlı zam ansal ve mekânsal olarak 
+maruziyetlerinin ve ortamdaki kirletici kaynaklarının belirlenmesidir. Bu doğrultuda, iç ortamlardaki taşınabilir 
+hava kalite sensörleri ile arka plan (çevre havası) emisyonlarını izleyen (kampüse entegre edilmiş) sabit 
+sensörler b irlikte kullanılacaktır. İncelemeye konu olan alanlardaki hava kalitesi; kullanım amacı, kullanıcı 
+yoğunluğu ve gerçekleştirilen faaliyet türüne bağlı olarak dinamik bir değişkenlik gösterdiğinden, kirliliğe sebep 
+olan kaynakların ve bu kaynakların karakteristik özelliklerinin tanımlanması ve alana özgü hava kalite yönetim 
+stratejilerinin belirlenmesi hedeflenmektedir. Bu hedef doğrultusunda hem uygun hava kalite iyileştirme 
+çalışmaları hem de bireylerin aktüel maruziyetin gelecek senaryo durumlarında en az a indirilmesi için makine 
+öğrenmesi algoritmalarıyla idealize edilmesi ve bu sayede kişiye özgü maruziyetin en aza indirilmesi ve hava 
+kalite iyileştirilme çalışmalarının sürdürülebilir, en yüksek verimle ve en az maliyet ile devreye alınması için 
+planlamalara katkı sunulması amaçlanmaktadır. 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+Bu kapsamda projede,  
+✓ Hali hazırda kampüste tespit edilen problemli ortak kullanım alanları merkeze alınarak PM, CO2 ve toplam 
+UOB parametrelerinin  taşınabilir düşük maliyetli sensörler aracılığıyla izlenmesi ve bu ki rleticilerin 
+mekansal ve zamansal trendlerinin ortaya konulması ve de mekânsal kirlilik kaynaklarının mevcut durumlar 
+çerçevesinde tespit edilmesi 
+✓ Dış ortam çalışmaları ile iç ortam analizleri entegre edilerek kirlilik kaynağı (iç ortam kaynaklı mı dış ortam 
+kaynaklı mı) ve miktarının bölgenin lokal koşulları çerçevesinde belirlenmesi 
+✓ Ayrıca kirletici düzeylerinin kullanım alanı, kullanıcı yoğunluğu ve faaliyet türüne bağlı değişkenliğinin 
+değerlendirilmesi 
+✓ Farklı mikro-ortamlarda çok noktalı ve karşılaştırmalı ölçümlerin uygulanabilir biçimde gerçekleştirilmesi 
+✓ Elde edilen veriler doğrultusunda ise olası kirletici kaynaklarının yorumlanması 
+✓ Kişisel aktüel maruziyetin en aza indirilmesi ve ortam hava kalitesinin iyileştirilmesi için tanımlanan kaynak 
+karakteristiği çerçevesinde yönetim stratejilerinin belirlenmesi 
+✓ Gelecek tahmin mekanizmalarının tutarlı bir biçimde ortaya konması ve yapılan iyileştirmelerin etkisinin 
+belirlenmesine yönelik makine öğrenimi algoritmalarının incelenmesi ve belirlenmesi hedeflenmektedir. 
+Proje çıktılarının, öğrenci ve personel için daha sağlıklı iç ortamlarda eğitim ve çalışma faaliyetlerini 
+sürdürmelerine katkı sağlaması ve iç ortam hava kalitesinin iyileştirilmesine yönelik üniversitenin yapabileceği 
+sürdürebilir iyileştirmelere bir altlık oluşturulması amaçlanmıştır. 
+ 
+ 
+ 
+ 
+2.4. KONU ve KAPSAM : Önerilen projenin konusu ve kapsamı net olarak tanımlanmalı; amaç ile 
+ilişkisi açıklanmalıdır. 
+Projenin kapsamı, Gebze Teknik Üniversitesi kampüsünde yer alan laboratuvar, kantin, derslik ve kütüphane 
+vb. farklı kullanım özelliklerine sahip iç mikro -ortamlardaki hava kirliliği analizini temel almaktadır. Ölçümler, 
+düşük maliyetli taşınabilir sensörler kullanılarak  mevsimsel değişimler (meteorolojik etkenler yağış, sıcaklık, 
+nem, rüzgar yönü ve hızı gibi) ve kampüs kullanım zaman çizelgesi (akademik takvim) gözetilerek periyodik 
+olarak belirli zaman dilimlerinde gerçekleştirilecektir. Ölçüm sonuçları kullanım amacı, kullanıcı yoğunluğu, 
+faaliyet türü ve havalandırma koşulları gibi değişkenler  dikkate alınarak karşılaştırmalı biçimde 
+değerlendirilecektir.  
+Kampüste halihazırda kurulu bulunan ve dış ortam hava kalitesi hakkında bilgi sağlayan ve arka plan PM 2.5 
+konsantrasyonlarının izlenmesinde kullanılan PurpleAir PA -II sensöründen elde edilecek dış ortam verileri, 
+destekleyici veri olarak kullanılacaktır. Bu veriler ile, iç ortam PM 2.5 konsantrasyonlarının dış ortamla ilişkisini 
+incelemek amacıyla iç/dış ortam oranı (I/O oranı) hesaplanacak ve olası kaynakların yorumlanmasında bir 
+gösterge olarak ele alınacaktır.  
+Bunun yanında, ölçüm alınacak mikro -ortamlarda yüksek CO 2 düzeylerinin özellikle kullanıcı yoğunluğu gibi 
+konsantrasyon artışlarına neden olan etkenlere dikkat ederek, toplam UOB düzeylerinin ise temizlik faaliyetleri, 
+yapı malzemeleri, iç mekan donanımları ve ortama özgü kullanım biçimleri ile ilişkili olabileceği dikkate alınarak, 
+bu kirleticilere ait trend de olası kaynaklar açısından değerlendirilecektir.  
+Ayrıca, kaynak karakterizasyonu gerçekleştirilerek kirletici yükü belirlenen alanlarda, bireylerin gelecekteki 
+kişisel maruziyetlerini en aza indirmek hedeflenmektedir. Bu doğrultuda, lokal koşulları temel alan makine 
+öğrenmesi algoritmaları aracılığıyla farklı iyileştirme senaryoları modellenerek; hava kalitesi yönetim 
+çalışmalarının sürdürülebilir, en yüksek verimle ve en düşük maliyetle hayata geçirilmesine katkı sunulacaktır. 
+Böylece proje kapsamında yalnızca kirletici düzeylerinin belirlenmesi değil, aynı zamanda farklı mikro -
+ortamlarda gözlenen PM 2.5, CO 2 ve toplam UOB değişkenliğinin olası nedenlerinin yorumlanması  ve bireysel 
+aktüel kirliliğin en aza indirilmesi için yönetim stratejilerinin oluşturulmasına  da katkı sağlanacaktır. Bu sayede 
+proje, Gebze Teknik Üniversite kampüsündeki iç ortam hava kalitesini tek bir kirletici ya da tek bir ölçüm noktası 
+üzerinden değil aksine farklı mikro -ortamları, çoklu kirletici yapısını v e zamansal değişkenliği birlikte dikkate 
+alan bütüncül bir yaklaşımla incelemeyi amaçlamaktadır. Böylece proje, iç ortam hava kalitesinin detaylı olarak 
+değerlendirilmesi ve olası kaynaklarının yorumlanması hedefi ile doğrudan ilişki kurulacaktır. 
+ 
+ 
+ 
+2.5. LİTERATÜR ÖZETİ: Proje konusu ile ilgili alanda ulusal ve uluslararası literatür taranarak, özet 
+bir literatür analizi verilmelidir. Bu analiz, önerilen araştırma konusunun literatürdeki önemini ve 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+doldurulması gereken boşluğu ortaya koymalıdır. Dikkate alınan literatür kaynak gösterilmeli ve 
+listelenmelidir.  
+Hava kirliliği, günümüzde hem çevresel hem de halk sağlığı açısından önemli sonuçlar doğuran başlıca 
+sorunlardan biri olarak kabul edilmektedir. Özellikle giderek artan sanayileşme ve üretime bağlı olmak üzere 
+emisyon kaynaklarındaki nicel ve nitel artış neticesinde hava kalitesinde zamansal ve konumsal azalmalar çok 
+hızlı bir biçimde gerçekleşebilmekt edir. Bu değişimler neticesinde kötüleşen hava kalitesi k ısa ve uzun vadede 
+farklı sağlık problemlerine yol açabilmekte ve bu durum  sorunun önemini daha da artırmaktadır. Günümüzde 
+insan faaliyetlerine bağlı olarak  ulaşım, sanayi, ısınma ve enerji üretimi gibi faaliyetler özellikle şehirlerdeki 
+başlıca emisyon kaynaklarını oluştururken özellikle ülkemiz gibi Sahradaki sıcak çöl iklimi neticesinde rüzgarlar 
+ile ülkemize taşınan toz (partikül madde)  gibi doğal süreçler de atmosferdeki hava kalitesine etki etme ktedir. 
+Atmosfere çeşitli emisyon kaynaklarından salınan b u kirleticiler, atmosferde geçirdikleri fiziksel ve kimyasal 
+dönüşümler sonucunda farklı bileşiklere veya ikincil partikül maddelere dönüşerek hem yerel hem de bölgesel 
+ölçekte hava kalitesini belirleyen önemli bileşenler haline gelmektedir  (Seinfeld ve Pandis, 2016; Finlayson-Pitts 
+ve Pitts, 2000).  
+Günümüzde birçok sayıda ve çeşitli kaynaktan atmosfere yayılan ve dolayısıyla geniş etki alanına sahip olan 
+Partikül madde (PM), azot oksitler (NOX; NO ve NO2), kükürt oksitler (SOX), karbon monoksit (CO) ve ozon (O3), 
+gibi hava kirletic ileri hava kirliliği kapsamında değerlendirilen başlıca kriter kirleticiler arasında yer almakta  ve 
+hava kalitesinin iyileştirme çalışmalarından önceliklendirilmektedir.  
+Özellikle artan endüstriyel üretim neticesinde başta organize sanayi merkezleri başta olmak üzere sanayileşen 
+bir çok bölgede de üretim proseslerine bağlı olmak üzere çok sayıda uçucu organik bileşik (UOB) de atmosfere 
+salınmaktadır (Dünya Sağlık Örgütü, 2021). Ülkemizde de İstanbul Sakarya aksında yoğunlaşan sanayi üretimi 
+neticesinde üniversitemizin de  merkezinde bulunduğu Gebze Bölgesinde  hava kirliliği kapsamında dış 
+ortamlarda PM, N O2, CO ve O 3 gibi kriter kirleticiler öne çıkarken, özellikle iç ve yar ı kapalı ortamlarda bu 
+kirleticiler dışında karbondioksit (CO2) ve UOB’lerde hava kalitesinin değerlendirilmesinde önemli parametreler 
+arasında yer almaktadır.  Özellikle bireylerin günlük zamanlarının ortalama %90'ını ev, ofis ve taşıt içi gibi kapalı 
+mikroçevrelerde geçirdiği tespit edilmiştir ve bu noktada hava kalitesinin ve hava kalitesine etki eden 
+kaynakların belirlenmesi büyük önem taşımaktadır. Bu kapsamda Dünya Sağlık Örgütü’nün (DSÖ) yayınlamış 
+olduğu iç ortam hava kirliliği raporuna göre iç ortam hava kalitesi ( IAQ) özellikle iç ortam PM, CO2 ve UOB 
+kirleticileriyle ilişkili olduğu, iç ortam kullanıcılarının sağlığı, konforu ve maruziyeti açısından dikkat çekmektedir. 
+Bu durum özellikle  literatürde yapılan çalışmalarla iç ortam çevre kalitesinin, hava kalitesi ve termal  ve görsel 
+konfor gibi farklı bileşenleri kapsamakta o lduğunu ve bu bileşenlerin doğrudan iç ortam kullanıcılarının konforu 
+ve performansı üzerinde etkili olduğu belirtmişlerdir (Felgueiras vd., 2023).  
+Hem iç ortam hem de çevre havasında önemli hava kirleticiler yer arasında olan PM, atmosferdeki katı ve sıvı 
+parçacıkları ifade etmektedir. Atmosferdeki dağılım özellikleri ve solunum yolları ve kardiyovasküler sistem 
+üzerinde kısa ve uzun dönemli etkileri nedeniyle kritik öneme sahiptir ( Seinfeld ve Pandis, 2016 ). Partiküllerin 
+atmosferdeki davranışı, boyutuna göre önemli ölçüde değiştiğinden aerodinamik çapa göre sınıflandırılmaktadır. 
+Bu kapsamda, aerodinamik çapı 10 mikrometreden (µm) küçük olan partikü ller PM10 olarak ifade edilmekte olup 
+çapı 2.5 µm ve daha küçük olan partiküller PM 2.5 olarak tanımlanır. PM 10 solunum sisteminin üst bölgelerine, 
+burun, ağız ve üst solunum yollarına kadar ulaşabilmekte, PM 2.5 ve daha düşük PM fraksiyonları küçük 
+aerodinamik çapları sayesinde üst solunum yollarını geçerek akciğerlerin derin bölgelerine, özellikle akciğer 
+alveollerine kadar ilerleyerek kan dolaşımına geçebilmekte, sistemik inflamasyon ve oksijen satürasyonunda 
+düşüş gibi etkiler yaratabilmektedir ( Brook vd. , 2010 ). Günümüzde PM emisyonları  yaygın kaynak sayısı ve 
+çeşitliliği ile hem faaliyet sayısının artması hem de küresel ısınma neticesinde artan çölleşme neticesinde 
+taşınma ile çevre havasında yasal limit değerlerin üstünde konsantrasyonlarda bulunmakta ve de bu problem 
+kronik solunum ve kardiyovasküler hastalıklara sebebiyet vermektedir (Wang, H., 2018) 
+Endüstriyel faaliyetler yanı sıra iç ortamda canlıların solumu vasıtası ile ortaya çıkan ve hava kalitesi açından 
+değerlendirmeye alınması gereken CO2 doğrudan toksik etkisinden çok, kapalı ortamlarda havalandırma 
+yeterliliğinin ve kullanıcı yoğunluğunun bir göstergesi olarak değerlendirilmektedir ( Korsavi et al., 2020 ). İç 
+ortamlarda y üksek CO 2 konsantrasyonları çoğu zaman diğer insan kaynaklı kirleticilerin de birikimi ile ilişkili 
+olduğundan, yalnızca hava kalitesinin değil, aynı zamanda kullanıcı konfor unun ve bilişsel performansın 
+değerlendirilmesinde de önem taşımaktadır. Özellikle eğitim yapıları, ofisler ve ortak kullanım alanları  (kantin, 
+yemekhane, spor salonu vb.)  gibi kalabalık kapalı ortamlarda CO 2 birikimi; baş ağrısı, yorgunluk, dikkat 
+azalması ve algılanan hava kalitesinde düşüş gibi etkilerle ilişkilendirilmektedir. Literatürde bu durum “Hasta 
+Bina Sendromu” olarak bilinmektedir ve bina kaynaklı hastalıkların, okullarda öğrenim performansının ve ofis 
+ortamlarında çalışanların verimliliklerini n azalması gibi sağlık ve verimlilik sorunlarını beraberinde 
+getirmektedir.Farklı kaynaklar neticesinde çevre ve iç ortam havasına yayılan UOB ise oda sıcaklığında kolayca 
+gaz fazına geçebilen çok sayıdaki organik bileşiği kapsayan geniş bir kirletici grubudur. İç ve dış ortamda farklı 
+kaynaklardan atmosfere salınabilen bu bileşikler , iç ortamda özellikle temizlik ürünleri, yapı malzemeleri, kişisel 
+bakım ürünleri, ofis ekipmanları  gibi çok sayıda temel kaynaktan iç ortam havasına karışmak ta ve hava 
+kalitesinin kötüleşmesine sebebiyet vermektedir . Bazı UOB grubu bileşikler içerisinde benzen, toluen, ksilenler  
+ve formaldehit, gibi toksik ve kanserojenik yapıda maddeler içerebilmektedir . Bu bileşiklerin bazıları kısa süreli 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+maruziyetlerde göz ve burun irritasyonu, baş ağrısı gibi etkilerle, uzun süreli maruziyetlerde ise daha ciddi toksik 
+ve kanserojen etkilerle ilişkilendirilebilmektedir. Ayrıca bazı UOB’ler iç ortamda oksitleyici kirleticilerle 
+reaksiyona girerek ikincil PM oluşumuna neden olmaktadır.  Özellikle üniversite laboratuvarları ve sınıflar başta 
+olmak üzere gerek kullanılan kimyasal maddeler gerekse ofis vb. kapalı alanların temizlenmesi sırasında 
+kullanılan yüzey aktif maddelerden kaynaklı UOM oluşumu gözlemlenmek tedir. Bu durum da iç ortam hava 
+kalitesinin daha karmaşık hale gelmesine neden olur. Bu nedenle, özellikle iç ve yarı kapalı ortamlarda PM, CO2 
+ve UOB’lerin birlikte değerlendirilmesi hem kullanıcı maruziyetinin daha kapsamlı biçimde ortaya konulması 
+hem de kirletici kaynaklarının daha doğru yorumlanabilmesi açısından önem taşımaktadır.  
+Günümüz dünyasında kapalı ortamlarda geçirilen süre  24 saatlik dilimlerde günlük hayatımızı  büyük bir 
+çoğunluğunu oluşturmaktadır. Gerçekleştirilen çalışmalar, kentsel ortamlarda yaşayan insanların zamanlarının 
+ortalama %90'ını kapalı mekanlarda geçirdiğini göstermektedir  (Diffey, 2021) . Bu durum Türkiye İstatistik 
+Kurumu’nun (TÜİK) 2015 yılına air zaman kullanım verileri özelinde değerlendirildiğinde, bireylerin günlük 
+yaşamlarının önemli bir bölümünü uyku, istihdam ve eğitim gibi günlük hayat eyle mlerimin çoğu iç ortamda 
+gerçekleşen faaliyetlere ayırdığını göstermektedir  ve cinsiyet veya fark etmeksizin ortalama 12 saate karşılık 
+gelmektedir (TÜİK, 2025) . Bu durum  düşünüldüğünde, iç ortam hava kalitesinin ve bu ortamlardaki kirletici 
+maruziyetinin değerlendirilmesini önemli hale getirmektedir. Özellikle okullar, üniversite  kampüsleri ve ofisler 
+gibi yoğun insan hareketliliğinin olduğu yarı kapalı ve kapalı mekanlarda CO 2, UOB ve PM düzeylerinin 
+izlenmesi, maruziyetin belirlenmesi ve kirletici kaynaklarının tanımlanması açısından kritik bir önem 
+taşımaktadır.  
+Ortaya konulan bu problemin etkisinin tespitine yönelik olarak  iç ortam hava kalitesinin eğitim kurumları, 
+ilkokullar, üniversite kampüsleri kütüphaneler (Limmongkon vd., 2024) ve ofisler gibi farklı kapalı ortam 
+türlerinde ayrıntılı biçimde incelendiği görülmektedir.  Eğitim kurumları, öğrenci, öğretmen ve personelin günün 
+önemli bir bölümünü bu ortamlarda geçirmesi, kapalı ortamlarda günün belirli zaman diliminde yüksek doluluk 
+oranlarına sahip olması  (örneğin yemekhane öğlen, derslikler, etkinlik anında k onferans salonu vb.)  ve 
+kütüphane, laboratuvar ve ortak çalışma alanları gibi farklı iç ortamları bir arada barındırması nedeniyle IAQ 
+açısından özellikle önem taşımaktadır. Ayrıca bu ortamlarda hava kirleticilere olan maruziyet yalnızca sağlık 
+açısından değil, bireylerin dikkat, öğrenme performansı, konfor ve genel verimlilik açısından da belirleyici 
+olabilmektedir. Eğitim kurumlarında IAQ etkileyen parametreler incelendiğinde,  dış ortam hava kalitesi ve  bina 
+içinde gerçekleşen faaliyetlere  ek olarak aynı zamanda bina konumu, yapı özellikleri, havalandırma sistemi ve 
+sıklığı, kullanıcı yoğunluğu ve sınıf içi aktivitelere de bağlı olarak değiştiği açıkça görülmektedir  (Branco vd., 
+2024). Literatürde yer alan çalı şmalar, eğitim kurumlarının bulunduğu kentsel veya kırsal çevre özelliklerinden 
+de etkilendiği belirtmişlerdir ve dış ortam hava kirliliğinin iç ortama taşınımı gerçekleştiğinden kentsel ve 
+endüstriyel bölgelerde bulunan okullarda dış ortam kirliliğinin iç ortam daha fazla yansıdığı açıkça belirtilmiş tir 
+(Branco vd., 2019; Branco vd., 2024 ). Örneğin, Nunes vd. (2015),  kentsel bölgedeki bir eğitim kurumunda PM 
+fraksiyonları için ortalama düzeylerin kırsal bölgelere göre daha yüksek olduğunu göstermiş , aynı şekilde 
+Oliveira vd. (2019),  kirli kentsel ve endüstriyel alanlardaki okullara devam eden çocukların, kırsal alanlardaki 
+çocuklara kıyasla daha yüksek PM ve PAH maruziyetine sahip olduğunu ortaya koymuştur.  
+Ayrıca, eğitim kurumlarının yalnızca kentsel ya da kırsal bir bölgede bulunması değil, aynı zamanda trafik, 
+sanayi tesisleri ve diğer dış kirletici kaynaklara yakınlığı da dış ortam kaynaklı kirleticilerin iç ortama daha fazla 
+taşındığndan iç ortam hava kalitesini belirleyen önemli bir faktör olarak öne çıkmaktadır.  Özellikle proje önerisi 
+kapsamında ele alınmak istenen Gebze Teknik Üniversitesi kampüsü de yoğun endüstriyel faaliyetlerin 
+gerçekleştiği ve etkilendiği alan içerisinde yer almaktadır.  Dış ortam hava kalitesinin iç ortam hava kalitesine 
+olan etkisinin tespitine yönelik çalışmalarda  da Amato vd. (2014),  iç ortam P M2.5 düzeylerinin yaklaşık %53’ün  
+dış ortamdan taşınım kaynaklı olduğunu göstermiştir ve benzer şekilde Ren vd. (2020) de dış ortam havasının 
+iç ortam PM ve özellikle daha ince partikül boyutu olan PM 1 için önemli bir kaynak olduğunu bildirmiştir.  Bu 
+durum da GTÜ kampüsü özelinde çalışmaların hem kampüs iç dinamikleri hem de lokal emisyonlar neticesinde 
+ele alınması gerekliliğini ortaya k oymaktadır. D-100 karayoluna komşu olan GTU kampüsünün diğer 
+çalışmalarda ortaya konan yoğun trafik alanları ve endüstriyel faaliyetlerin özellikle P M10, PM 2.5, toplam UOB 
+üzerinde önemli etkileri olduğu Becerra vd. (2020) ilkesi neticesinde ayrı bir öneme sahiptir.  
+Bu etkilerin yanı sıra inceleme alanlarındaki  iklimsel koşullar ve mevsimsel değişkenliğin eğitim yapılarındaki iç 
+ortam hava kalitesi üzerinde önemli etkileri olduğu açıkça ortaya konmuştur ( Branco vd., 2024 ). Bu kapsamda 
+yapılan çalışmalar, iklim koşullarının eğitim yapılarında hem kullanım hem de kullanım dışı dönemlerde iç ortam 
+CO2 ve PM 2.5 konsantrasyonlarıyla anlamlı ilişkiler gösterdiğini bildirmektedir ( Korsavi vd., 2020 ). Bunun 
+yanında, mevsimsel değişkenliğin iç ortam hava kirletici konsantrasyon ları üzerinde de etkili olduğu, özellikle 
+sonbahar ve kış dönemlerinde bu kirleticilerin daha yüksek düzeylere ulaşabildiği belirtilmiştir ( Majd vd., 2019). 
+Ayrıca Deng ve Lau (2019) , nem düzeyi, havalandırma oranı, partikül sayısı ve UOB’lerden formaldehit 
+konsantrasyonlarında belirgin mevsimsel farklılıklar bulunduğunu göstermiştir. Bu nedenle, Deng ve Lau (2019), 
+özellikle eğitim kurumlarında iç ortam hava kalitesinin doğru ve kapsamlı biçimde değerlendirilebilmesi için, 
+sıcaklık ve bağıl nem gibi mikro -iklim parametreleri ile birlikte hava kalitesi göstergelerinin tüm yıl boyunca 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+periyodik olarak izlenmesi gerektiğini çalışmalarında vurgulanmaktadır. 
+Eğitim kurumlarındaki binaların fiziksel özellikleri ve yapı malzemeleri ile de yakından ilişkili olduğu literatürde 
+özellikle vurgulanan başka bir konu olup ve bu durum bina yaşı, yenilenme geçmişi ve kullanılan malzemelerin 
+iç ortam hava kalitesi değerlendirmelerinde dikkate alınması gerektiğini göstermektedir ( Korsavi vd., 2020 ). 
+Özellikle farklı katlarda bulunan sınıflar arasında PM açısından farklı maruziyet etkileri görülebileceğini bu 
+nedenle ölçümlerin bina içinde tek bir noktaya değil, farklı kat v e konumlara yayılması gerektiği 
+vurgulanmaktadır. Bunun yanında, yeni yapılmış veya yakın zamanda yenilenmiş binalarda yeni yapı 
+malzemelerinden kaynaklanan UOB emisyonlarının başlangıçta daha yüksek olabildiği ancak zamanla ise 
+azalma gösterebildiği bildirilmektedir (Yang vd., 2015; Jia vd., 2008).  
+Özellikle laboratuvar çalışmaları esnasında ve sınıf ve kapalı alanlardaki temizlik faaliyetleri eğitim kurumlarında 
+IAQ seviyelerini etkileyen önemli ancak çoğu zaman göz ardı edilen bir parametre olarak öne çıkmaktadır. 
+Düzenli temizlik uygulamalarının PM maruziyetini azaltma potansiyeli bulunmakla birlikte, aksine yoğun yüzey 
+aktif madde içeren temizlik ürünlerinin kullanımı UOB, PM 10 ve hatta ikincil PM oluşumu gibi istenmeyen 
+sonuçlara da yol açabildiği kanıtlanmıştır ( Madureira vd., 2016 ). Pandemi dön eminde yapılan çalışmalar, 
+COVID-19 döneminde artan dezenfektan kullanımıyla birlikte, iç ortamda sağlığa olumsuz etkileri olabilecek 
+ikincil PM oluşabileceği bildirilmiştir (Rosales vd., 2022).  
+PM ve UOM yanı sıra iç ortam hava kalitesini belirleyen en temel unsurlardan biri de iç ortam havasında 
+bireylerinin kullanımına bağlı olarak değişen CO2 miktarı olarak değerlendirilmektedir. Özellikle yüksek doluluk 
+yoğunluğu, yetersiz havalandırma ile birleştiğinde iç ortam CO 2 konsantrasyonlarında ciddi derece artışa neden 
+olduğu ve bunun da performans üzerinde olumsuz etkiler yaratabileceği bulunmuştur ( Korsavi vd., 2020; Zhang 
+vd., 2017). Bu problemin ortadan kaldırılması için iç ortam havasında kirlet ici yükünün azaltılması adına doğal 
+ve mekanik havalandırma sistemlerinin eğitim binalarında farklı düzeylerde birey istek ve arzusu neticesinde 
+herhangi bir veriye dayandırılmadan kullanıldığı belirtilmektedir. İç ortam hava kalitesinin CO2 yönünden 
+iyileştirilmesine yönelik kullanılan doğal havalandırma özellikle literatürdeki çalışmalarda da belirtildiği gibi 
+basitçe bir iç ortamdaki pencerenin açılması ile temiz havanın iç ortama girişi ve CO 2 konsantrasyonlarında hızlı 
+bir şekilde düşüşe neden olan temel unsur olarak ön plana çıkmaktadır (Gil-Baez vd., 2017; Almeida vd., 2017). 
+Böylelikle literatürde yer alan birçok çalışmada da belirtildiği üzere eğitim kurumlarında isteğe bağlı şekillenen 
+havalandırma sistemlerinin kullanımında bazı problemli zaman dilimlerinde CO 2 düzeylerinin önerilen 1000 ppm 
+sınırının yönetilmesine katkı sunulmaya çalışılmaktadır ( Gil-Baez et al., 2017 ; Korsavi et al., 2020 ). Ancak bu 
+durum dış ortam hava kalitesinin düşük olduğu durumlarda PM kaynaklı kirlilik başta olmak üzere iç  ortam hava 
+kalitesinin azalmasına sebebiyet verebilmektedir. Özellikle hava kalitesi bakımından hassas alanlarda ortaya 
+çıkabilecek bu senaryo  iç ortam ve dış ortam hava kalite gözlemlerinin beraber dikkate alınmasına ve buna 
+bağlı yönetim stratejilerinin geliştirilmesini zorunlu kılmaktadır. Ayrıca  günümüzde yaygın olarak kullanılan iç 
+ortam hava temizleme sistemleri iç ortam hava kalitesi üzerinde önemli rol oynamaktadır. Ancak mekanik veya 
+portatif hava temizleyicilerin özellikle PM 2.5 ve PM 10 konsantrasyonların azaltılmasında etkili olabildiği bu  
+sistemlerin CO2 konsantrasyonunu düşürmediği vurgulanmaktadır. 
+Tüm bu bilgiler kampüs genelinde hava kalitesinin problemli olduğu alanlarda  hava kalitesinin sürdürülebilir 
+şekilde kişi ihtiyaçları ve maruzatına bağlı olarak izlenmesini ve kampüs genelinde hava kalitesinin iyileştirilmesi 
+için problemin kaynağının tespitine yönelik çalışmaları elzem kılmaktadır. 
+Ancak günümüzde  hava kalitesi ölçümleri genellikle çevre havasının mevcut durumunu ortaya koymak için 
+gerçekleştirilmektedir. İç ortam hava kalitesine etki eden dış ortam hava kalitesinin tespitine yönelik olarak 
+gerçekleştirilen bu ölçümler çevre ve şehircilik bakanlığı uhdesinde ulusal hava kalitesi izleme ağı çerçevesinde 
+yürütülmekte ve ülke genelinde farklı konumlarda kurulu hava kalitesi izleme istasyonlarıyla istasyon özelinde 
+kriter hava kirleticiler arasında yer alan PM10, NOx, SOx gibi kirleticiler çevrimiçi olarak takip edilmektedir. Ancak 
+mevcut koşullar içerisinde bu sabit istasyonlar arasında en yakın konumlandırılan istasyonlarda dahi 
+kilometreler mertebesinde uzun mesafeler bulunması, özellikle proje önerisine konu olan Gebze gibi kentsel ve 
+endüstriyel alanlarda bölgesel kaynakların fazlalığı ile, değişen meteorolojik koşullar mesafeye bağlı olarak 
+ölçülen hava kirletici parametrenin istasyona uzak konumlardaki aktüel temsiliyetini azaltmakta ve hava 
+kalitesinin doğru ve de temsil edici bir ş ekilde belirlenmesini sınırlamaktadır . Bunun yanı sıra sınırlı sayıda 
+gerçekleştirilen iç ortam ölçümleri kapalı alanların  (iç ortam)  sayısal anlamda fazlalığından ötürü sadece 
+önceden belirlenen  problemli alanlara odaklanmış tır. Mevcut olan bu ölçüm metodolojisi kişisel maruziyetin 
+belirlenmesi ve kirlilik kaynaklarının aktüel olarak zamana ve mekana bağlı olarak belirlenebilinmesi konusunda 
+sınırlayıcı olmaktadır. Bu durum özellikle dezavantajlı gruplarda (yaşlı, çocuk, solunum yolu hastaları vb.) 
+bireylerin yaşam konforlarını azaltmakta ve günlük aktivitelerin en az probleme sebebiyet verecek şekilde 
+planlanmasını engellemektedir.  Bireylerin maruz kaldığı kirlilik yükünün ve kirlilik kaynağının belirlenmesi 
+alınması gereken aksiyonlar için büyük önem taşımaktadır . Bu noktada Kişisel maruziyet kavramı ön plana 
+çıkmaktadır. Bu kavram genel anlamda bir bireyin çevresel etmenlere, günlük yaşamı boyunca maruz kaldığı 
+toplam düzeyi ifade eder. Bu kavram projeye konu olan hava kirleticilerin bireylerin gün içinde ki farklı 
+lokasyonlarda (ev, iş yeri, toplu taşıma, açık hava vb.) maruz kaldığı kirletici seviyelerini kapsar ve kişisel 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+maruziyetin değerlendirilmesi, ortalama hava kalitesi verilerine dayanan toplumsal ölçümlerden çok daha 
+kişiselleştirilmiş ve hassas bir yaklaşım sunar (Park ve Kim, 2020). Böylelikle bireyler bölgedeki konvansiyonel 
+ölçümler ile ortaya konan genel bir ölçüm sonucu yerine kirletici tipine ve yüküne göre değil, gün boyunca 
+bulundukları ortamda maruz kaldıkları kirletici yüküne ve bunun potansiyel kaynağına göre planlamalarını 
+gerçekleştirebilirler. 
+Günümüzde kişisel maruziyet ve sürekli ölçüm sistematiğine dayalı sensör teknolojileri hava kirliliğini gerçek 
+zamanlı ölçümler ile mevcut pahalı enstrümanlara kıyasla daha geniş bir mekânsal kapsama alanı sağlayarak 
+tespit etmekte ve bireylerin kişisel maruziyeti hakkında anlık bilgilendirmeler yapabilerek efektif sonuçlar 
+vermektedir (Li ve Chen, 2019; Sá vd., 2024). Bu sensör statik olarak bir alana bir mekanda (ev,  bahçe vb.) 
+kurulabilindiği ve ihtiyaca göre başka alanlara konumlandırılabilindiği gibi t aşınabilir yapıda olan hava kalitesi 
+sensörleri ile de bireylerin günlük hayatlarındaki hareketler, evde, iş yerinde, iç/dış ortam veya toplu taşıma 
+araçlarında maruz kaldıkları kirletici seviyeleri sürekli olarak izlenebilinmektedir.  
+Taşınabilir yapıda olan sensörler genellikle hafif ve kişisel kullanıma uygun cihazlardır  (Tablo 1). Günümüzde 
+düşük maliyetli hava kalite sensörleri, başta PM, CO 2, UOB gibi hava kalite parametreleri olmak üzere birçok 
+farklı hava kirleticinin bireyler üzerindeki kişisel maruziyetin izlenmesinde yaygın olarak kullanılmaktadır ve 
+uygun fiyatları,  geniş coğrafi alanlarda veri toplayabilme kapasiteleri, gerçek zamanlı veri sağlamaları ve de 
+taşınabilir özellikleri sayesinde bireylerin farklı ortamlarda maruz kaldıkları kirletici seviyelerini takip etmelerini 
+sağlar (Chen vd., 2017).  
+Tablo 1. Taşınabilir Düşük Maliyetli Hava Kalite Sensörleri 
+ 
+Taşınabilir hava kalite sensörleri ile yapılan ölçümlerde dikkat edilmesi gereken bir noktada arka plan emisyon 
+konsantrasyonlarıdır. Arka plan konsantrasyonu genel anlamda, belirli bir alandaki insan kaynaklı kirlilikten 
+bağımsız olarak, doğal kaynaklar veya uzak mesafelerden taşınan kirleticiler tarafından oluşan hava kirliliği 
+seviyesi olarak ifade edilmektedir. Özellikle küçük aerodinamik çapa sahip olan PM 2.5 ortaya çıktığı kaynaktan 
+uzak mesafelere çeşitli atmosferik ve meteorolojik koşullar neticesin de taşınabilmekte ve ölçüm sahasında lokal 
+kaynaklardan bağımsız olarak kirlilik yükü oluşturabilmektedir. Özellikle sabit hava kalite izleme istasyonlarına 
+uzak olan sahalarda yapılacak ölçümlerde arka plan konsantrasyonunun tespiti ile yerel kaynaklardan oluşan 
+kirliliğin gerçekçil olarak tespit edilmesi ve yönetilmesi daha temsil edici bir zeminde gerçekleştirilmesini 
+sağlamaktadır (Draper vd, 2023).  
+Bu noktada sabit hava kalite sensörleri aynı konvansiyonel sabit hava kalite istasyonu gibi görev alarak ölçüm 
+sahasındaki arka plan konsantrasyonunun tespitini mümkün kılmaktadır. (Tablo 2) 
+Tablo 2. Sabit Hava Kalite Sensörleri 
+Sensör Adı Doğruluk ve 
+Hassasiyet 
+Yaygın 
+Kullanım 
+Kolay Temin 
+Edilebilirlik 
+Şarj Gereksinimi Ergonomik 
+Kullanım 
+PurpleAir PA-II Yüksek hassasiyet, Ev kullanımı, Geniş çapta Sabit güç kaynağı Kolay kurulabilir, 
+Sensör Adı Doğruluk ve 
+Hassasiyet 
+Yaygın 
+Kullanım 
+Kolay 
+Temin 
+Edilebilirlik 
+Şarj 
+Gereksinimi 
+Ergonomik 
+Kullanım 
+Bilimsel 
+Çalışmalarda 
+Kullanımı  
+Atmotube 
+Pro 
+PM1, PM2.5, 
+PM10; UOB 
+ölçümü ile 
+birlikte 
+Mobil, 
+kişisel 
+kullanımlar 
+Geniş 
+çapta 
+kullanım  
+Taşınabilir, şarj 
+edilebilir  
+Taşınabilir Kişisel maruziyet 
+çalışmalarında 
+Temtop P10 PM2.5 ve PM10 
+ölçümünde iyi 
+hassasiyet 
+Bireysel, 
+kişisel 
+kullanımlar 
+Kolayca 
+temin 
+edilebilir 
+Şarj edilebilir 
+batarya 
+Taşınabilir, el 
+cihazı 
+Epidemiyolojik 
+çalışmalarda ve 
+eğitim amaçlı 
+ölçümlerde 
+Sensirion 
+SPS30 
+Orta seviye  
+hassasiyet 
+optik lazer 
+teknolojisi 
+Endüstriyel 
+ve bilimsel 
+kullanım 
+Yaygın 
+satış 
+noktaları 
+mevcut 
+Sabit güç 
+kaynağı veya 
+pil 
+Sabit kullanım 
+için uygundur 
+Yüksek hassasiyeti 
+ve dayanıklılığı ile 
+HK istasyonlarında 
+INKBIRD 
+IAM-T1 
+CO2 ölçümünde 
+NDIR sensör, 
+taşınabilir 
+kullanım için 
+yüksek doğruluk 
+Mobil, iç 
+ortam 
+izleme 
+Kolayca 
+temin 
+edilebilir 
+AA Pil 
+ 
+Taşınabilir, 
+masaüstü 
+İç ortam hava 
+kalitesi  
+Aranet4 CO2 ölçümünde 
+NDIR sensör; 
+taşınabilir 
+kullanım için 
+yüksek doğruluk 
+Mobil, iç 
+ortam 
+izleme 
+Kolayca 
+temin 
+edilebilir 
+Şarj edilebilir 
+batarya 
+Taşınabilir, 
+masaüstü 
+İç ortam hava 
+kalitesi 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+lazer tabanlı optik 
+ölçüm 
+topluluk 
+projeleri 
+temin edilebilir gerektirir sabit 
+AirVisual Pro İç mekan hava 
+kalitesini ölçmede 
+yüksek doğruluk 
+Ev içi ve ofis 
+ortamları 
+Çeşitli online 
+mağazalarda 
+mevcut 
+Sabit şarj 
+gereksinimi 
+Taşınabilir, 
+ekranlı 
+ 
+Taşınabilir sensörlerin kullanımı bireylere özellikle hava kirliliğine karşı hassas gruplar arasında yer alan 
+çocuklar, yaşlılar, önceden var olan sağlık sorunları olan bireylerlere (örneğin astım, kronik obstrüktif akciğer 
+hastalığı (KOAH), kardiyovasküler hastalıklar), ve hamilelere anlık hava kalitesi hakkında bilgi sağlaması ve 
+kişisel maruziyetin tespiti bu grupların günlük faaliyetlerini planlamalarına katkı sunmaktadır (Chatzidiakou vd., 
+2023). Ancak problemli alanların ve bölgelerin hava kalitesi bakımından tespiti önemli olmak ile beraber hava 
+kalitesini düşüren potansiyel kaynakların kirletici bazlı olarak tespiti de özellikle ofis, laboratuvar, yemekhane, 
+kantin gibi ortak kullanım alanlarında problemin yönetiminde büyük önem taşımaktadır (Hodoli vd., 2023). 
+Özellikle yoğun sanayi, ulaşım ve nüfus gibi dış etkenlere açık ayrıca birçok tip farklı karakterde iç ortam 
+dinamiğine sahip Gebze Teknik Üniversite kampüsü gibi alanlarda yalnızca sınıfların değil, yemek yerleri, 
+laboratuvar, bilgisayar odası, spor salonu ve benzeri farklı mikro -ortamların da birbirinden farklı hava 
+kirleticilerine sahip olabildiği vurgulanmaktadır. Bu nedenle, GTÜ gibi eğitim kurumlarında iç/dış ortam hava 
+kalitesinin değerlendirilmesine yönelik çalışmaların tek bir kirleticiye ya da tek bir ölçüm noktasına 
+odaklanmak yerine, farklı mikro -ortamları ve zamansal değişkenliği kapsayan, çok parametreli ve 
+sistematik izleme yaklaşımlarıyla yürütülmesi önem kazanmıştır . Özellikle üniversite kampüsleri gibi 
+derslik, laboratuvar, kütüphane, ofis ve ortak kullanım alanları gibi farklı kullanım özelliklerine sahip mikro -
+ortamları bir arada barındıran bu eğitim kurumları, bu tür çalışmaların yürütülmesi açısından önemli araştırma 
+ortamları sunmaktadır.  Bu bağlamda, CO 2, UOB ve PM kirleticilerinin birlikte izlenmesi, maruziyet 
+alanlarının belirlenmesi, kirletici düzeylerindeki mekansal ve zamansal değişkenliğin ortaya konulması 
+ve özellikle bu kirleticilere yol açan olası kaynakların tanımlanması açısından önemli bir araştırma 
+gereksinimi oluşturmaktadır 
+Türkiye’de gerçekleştirilen çalışmalar da kampüs içindeki farklı mikro -ortamların hava kalitesi açısından 
+birbirinden farklı özellikler gösterebildiğini ortaya koymaktadır. İstanbul Teknik Üniversitesi Ayazağa 
+Kampüsü’nde yemekhane, kütüphane ve merkezi derslik alanlarında yürütülen bir çalışmada sıcaklık, bağıl nem 
+ve CO 2 parametreleri değerlendirilmiştir ( Yılmaz ve Bayın Sarıahmetoğlu, 2023 ). Bu çalışmada, diğer 
+çalışmalarda olduğu gibi CO 2 konsantrasyonunun kişi sayısı ve yapılan aktiviteye bağlı olarak doğrusal biçimde 
+değiştiğini bulmuşlardır. Aynı çalışmada, yemek yeme alanlarında CO 2 seviyelerinin iç ortam sınır değeri olan 
+1000 ppm’in üzerine çıkabildiğini ve ders çalışma alanlarında ise havalandırma sistemi bulunmasına rağmen 
+kişi yoğunluğuna bağlı olarak bu sınır değerlere yaklaşıldığı belirlenmiştir. Ayrıca, aylık ortalama değerlerin 
+özellikle CO2 açısından günlük pikleri ve gerçek maruziyeti tam olarak yansıtmayabildiğini bu nedenle üniversite 
+ortamlarında IAQ zamansal değişkenliği dikkate alan sü rekli ölçümlerle değerlendirilmesinin önemli olduğu 
+dikkat çekmişlerdir. Benzer şekilde, Tunceli Üniversitesi’nde derslik ve ofislerde yürütülen bir çalışmada da CO 2, 
+sıcaklık ve bağıl nem parametreleri değerlendirilmiş ve bazı alanlarda CO 2 konsantrasyonlarının sınır değerlerin 
+üzerine çıkabildiği ve doğal havalandırmanın belirli dönemlerde yetersiz kalabildiği ortaya konmuştur (Sözen ve 
+Işık, 2016). Kampüs içerisindeki farklı mikro -ortamlardan biri olan laboratuvarlara odaklanan bir başka 
+çalışmada ise, İ zmir Yüksek Teknoloji Enstitüsü’nde PM 2.5, PM 10, toplam UOB, CO 2, sıcaklık ve bağıl nem 
+parametreleri birlikte değerlendirilmiştir ( Toprak vd., 2013 ). Aynı çalışmada, CO 2 konsantrasyonlarının sınır 
+değerlerin altında kalmasına rağmen bazı laboratuvarlarda PM 10, Toplam UOB, sıcaklık ve bağıl nem açısından 
+sorunlar saptanmıştır ve özellikle havalandırma sistemi ve termal konfor açısından büyük oranda ‘Yeterince 
+Uygun Değil’ olarak sınıflandırılmıştır. Ancak gerçekleştirilen bu çalışmalar ortamda bulunan statik bir sensör ya 
+da yapılan periyodik ölçüm ile alan bazlı sonuçlar vermekte farklı kullanım alışkanlarına sahip olan bireylerin 
+kişiye özgü olarak tespit edilen kirlilikten hangi zaman diliminde ne ölçüde etkilendiğine ve kirlilik kaynağına dair 
+bilgi vermemek tedir. Bu durum bireylerin kirliliğe karşı aktüel maruziyetinin belirlenmesini sınırlandırmaktadır.  
+Ayrıca, emisyon kaynaklarının karakterize edildiği ve buna bağlı yönetim stratejilerinin belirlendiği alanlarda, 
+planlanan müdahalelerin sahada nasıl uygulanacağı günümüzde hali hazırda her alanda yaygın olarak 
+kullanılan makine öğrenmesi algoritmaları ile optimize edilerek idealize edilebilmektedir. Bu yaklaşımla, hava 
+kalitesi açısından riskli bölgelerdeki iyileştirme uygulamalarının gelecekteki kişisel mar uziyet seviyelerine 
+etkisinin önceden modellenmesi, mevcut ve ileriye dönük planlamaların çok daha sağlam bir zemine oturmasını 
+sağlayacaktır. Doğrusal regresyon, karar ağaçları ve destek vektör makineleri gibi algoritmalar vasıtasıyla 
+yürütülecek analizler, yalnızca kirleticilerin kontrolünde değil, aynı zamanda yönetim stratejilerinin en verimli 
+şekilde hayata geçirilmesinde de kritik bir rol oynayacaktır . Her ne kadar  makine öğrenimi algoritmasının 
+hava kirliliği ile ilgili maruziyet ve etken tahmini  ile ilgili gerçekleştirilen çalışmalarda da hava kalite 
+sensörlerinden elde edilen verilerin makine öğrenimi algoritmaları ile analiz edilerek günlük yaşam aktivitelerinin 
+tanımlanmasında ve kritik durumlarda acil müdaheleye daha hızlı bir olanak tanıması açısından kayda değer 
+çıktılar verebileceği ortaya konulmuşsa da (Gambi vd 2020), hava kalitesi ile ilgili problem yaşayan mikro 
+alanlarda kaynak – çıktı kirlilik ilişkisini anlık ve dinamik olarak ortaya koyan ve bunu sadece iç ortam 
+dinamikleri ile ele alm ayan  dış ortam hava kalitesi, meteorolojik koşullar gibi dinamikler çerçevesinde kirlilik ve 
+kaynak bazlı yönetim stratejilerin geliştirilmesi ile ilgili yeterli sayıda çalışma bulunmamaktadır.  Proje önerisine 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+konu olan GTÜ ka mpüsünde hali hazırda yü rütülmekte olan TÜBİTAK 1002 projesi kapsamında, kampüs 
+genelinde PM 2.5 odaklı sorunlu alanların (sıcak noktaların) tespitine yönelik yürütülen ön çalışmalar, yerleşke 
+içindeki farklı bölgelerde hava kalitesinde belirgin bozulmalar olduğunu ortaya koymaktadır ( Şekil 1 ve Tablo 4). 
+Bu doğrultuda; kirletici parametrelerin ve emisyon kaynaklarının zamansal ve mek ansal olarak karakterize 
+edilmesi, hava kalitesi yönetim stratejilerinin geliştirilmesine ve ileriye dönük çevresel planlamaların daha 
+rasyonel, kanıta dayalı ve temsil yeteneği yüksek bir temelde kurgulanmasına önemli katkılar sunacaktır. 
+✓ Dış Ortam (Çevre) Havasının Daha Kirli Olduğu Senaryo: 
+ 
+ 
+Şekil 1. GTÜ Kampüs PM2.5 Kirliliği Konsantrasyonları – Senaryo 1 
+✓ Dış Ortam (Çevre) Havasının Daha Temiz Olduğu Senaryo: 
+ 
+Şekil 2. GTÜ Kampüs İç-Dış Ortam PM2.5 Kirliliği Konsantrasyonları – Senaryo 2 
+Bu noktadan hareketle, Gebze Teknik Üniversitesi özelinde kampüs hava kalitesi izleme ve PM maruziyetine 
+yönelik mevcut çalışmaları destekleyecek biçimde, üniversite iç ortamlarında CO 2, UOB ve PM parametrelerinin 
+birlikte izlenmesi ve bu kirleticilerin mekansal ve zamansal değişkenliğinin ortaya konulması gerekmektedir. Bu 
+sayede, projenin temel hedefleri olan kirlilik kaynaklarının karakterize edilmesi ve makine öğrenmesi 
+algoritmaları kullanılarak lokal parametrelere dayalı dinamik bir hava kalitesi tahm in mekanizmasının 
+kurgulanması sağlanacaktır. Geliştirilecek bu mekanizma, gelecekteki hava kalitesi yönetim stratejilerinin 
+oluşturulmasına ve mevcut kirlilik probleminin çözümüne doğrudan katkı sunacaktır. Böylelikle çalışma; 
+"GTÜ Kampüsü mikro ortamlarında tespit edilen hava kirleticilerinin (CO 2, UOB, PM) mek ansal ve 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+zamansal dağılım verileri, makine öğrenmesi algoritmaları kullanılarak mevcut emisyon kaynaklarının 
+tespit edilmesi ve gelecekteki lokal hava kalitesi parametrelerinin öngörülmesi için güvenilir bir tahmin 
+mekanizmasına dönüştürülebilir mi?" hipotezine cevap arayacak şekilde kurgulanacaktır. 
+ 
+ 
+ 
+2.6. ÖZGÜN DEĞERİ : Araştırmanın dayandığı hipotez/ler açıkça ortaya konulmalı ve proje 
+konusunun bilgi birikimi içindeki yeri, hangi boşluğu dolduracağı belirtilmelidir . Önerilen yeni teknoloji, 
+yöntem veya kuramın literatüre nasıl bir katkı sağlayacağı açıklanmalıdır. 
+Bu proje, ilk olarak Gebze Teknik Üniversitesi’nde yürütülmekte olan kampüs alanında PM 2.5 yönünden 
+problemli alanların tespiti ve kişisel maruziyetinin belirlenmesine yönelik projeyi destekleyici (TÜBİTAK 1002 -
+PM2.5 Kaynaklı Hava Kirliliğinin Kişisel Maruziyetinin Düşük Maliyetli Hava Kalite Sensörleri ile Belirlenmesi ve 
+Makine Öğrenmesi ile Kişisel Maruziyetin Modellenmesi) olmayı hedeflemektedir. Mevcut proje, kampüs ve 
+çevresinde PM 2.5 maruziyetinin belirlenmesine önemli katkı sunarken, önerilen bu proje ise üniversite IAQ’nın 
+çoklu kirletici odaklı bir yaklaşımla değerlendirmeyi ve kirleticilerin kaynakların tespitini zamansal ve mekânsal 
+olarak tespitini amaçlamaktadır. Bu noktadan çıkışla, bu proje, söz konusu boşluğu doldurmayı 
+hedefleyerek PM 10 ve PM 2.5 ek olarak CO 2 ve toplam UOB birlikte izlenmesini önermektedir.  Önerisi 
+verilen projenin temel özgünlüğü, üniversite kampüsündeki farklı iç ortamların yalnızca maruziyet 
+düzeyi açısından değil, aynı zamanda kirletici trendlerini ve olası kaynak ilişkileri açısından 
+değerlendirilmesidir. Elde edilen veriler ve yapılan değerlendirmeler makine öğrenimi algoritmaları ile güvenilir 
+bir tahmin mekanizmasına kişiye özgü parametreler çerçevesinde dönüştürülmek istenmektedir. Özellikle düşük 
+maliyetli taşınabilir sensör teknolojilerinin kampüs iç ortamlarında çok noktalı ve zam ansal değişkenliği 
+izleyebilecek şekilde kullanılacak olması sayesinde çok sayıda iç ortamın eş zamanlı ve sürekli izlenmesini 
+sağlayacaktır. Ayrıca arka plan emisyonları da kirletici bazlı değerlendirmeye dahil edilerek kirletici kaynak 
+çalışmaları daha temsil edici ve doğru bir zeminde ele alınacaktır.  Bu sayede temel proje önerisi olan düşük 
+maliyetli sensörler aracılığıyla PM, CO 2 ve toplam UOB parametrelerinin birlikte izlenmesini, farklı 
+mikro-ortamlar arasında karşılaştırılmasını ve bu verilerin olas ı kirletici kaynaklarının yorumlanmasında 
+kullanılmasını mümkün kılacaktır.  Bu kapsamda derslik, laboratuvar, kütüphane, ofis ve ortak kullanım 
+alanları gibi farklı mikro -ortamların birlikte ele alınması, kampüs iç ortam hava kalitesinin tekil ölçümler yerine 
+karşılaştırmalı ve bütüncül bir bakış açısıyla incelenmesini sağlayacaktır. Elde edilen veriler ışığında makine 
+öğrenmesi algoritmalarıyla geliştirilecek tahmin mekanizması; başta dezavantajlı gruplar olmak üzere tüm 
+kampüs bileşenlerinin günlük aktivitelerini kirlilikten en az etkilenecek şekilde planlamalarına imkân tanıyacaktır. 
+Ayrıca bu sistem, kampüs içi hava kalitesini iyileştirme çalışmalarının mekânsal, zamansal ve kirletici bazlı 
+olarak en verimli şekilde yönetilmesine katkı sunacaktır  Belirtilen bu yönler sayesinde, proje önerisi, hem 
+kampüs IAQ literatürüne katkı sağlayacağı hem de Gebze Teknik Üniversitesi’nde kampüsünde iç ortam hava 
+kirliliğini iyileştirmeye yönelik stratejilerinin geliştirilmesine altyapı oluşturması hedeflenmiştir. 
+ 
+ 
+ 
+ 
+2.7. YAYGIN ETKİ/KATMA DEĞER:  Projenin gerçekleştirilmesi sonucunda bilimsel birikime, ulusal 
+ekonomiye ve toplumsal refaha yapılabilecek katkılar ve sağlanabilecek yararlar tartışılmalı , elde 
+edilmesi umulan sonuçlardan kimlerin ne şekilde yararlanabileceği belirtilmelidir.  
+Bu projenin önerisi farklı karakterde ve kullanım sıklığına sahip olan üniversite kampüslerinde iç ortam hava 
+kalitesinin çoklu kirletici yaklaşımıyla değerlendirilmesine ve hava kalitesine etki eden kaynakların tespitine ve 
+hava kalitesinin iyileştirilmesine yönelik faaliyetlerin bireylerde en az maruziyete sebep olacak şekilde 
+planlanmasını sağlayacaktır. Bu kapsamda, özellikle PM, CO 2 ve toplam UOB’lerin kampüs içerisinde yer alan 
+farklı iç mikro -ortamlarda birlikte izlenmesi, bu parametrelerin olası kir letici kaynaklarıyla ilişkilendirilmesi ve 
+Gebze Teknik Üniversitesi  iç ortam hava kalitesin e etki eden kaynakların anlık olarak tespiti ve  
+değerlendirilmesine yönelik mevcut literatüre yeni bir uygulama örneği sunacaktır. Ayrıca proje önerisinde 
+bahsedildiği gibi düşük maliyetli sensörlerin kullanılması sayesinde kampüsteki iç ortamların çok örneklemeli ve 
+zamansal değişkenliği izleyebilecek şekilde kullanılmasına dayalı yöntemsel yaklaşımın, benzer çalışmalar 
+kullanılması için destekleyici bir çalışma ola cağı beklenmektedir. Gelecek tahmin mekanizmasının ve alınacak 
+hava kalite iyileştirme çalışmalarının en verimli ve ekonomik anlamda en makul seviyede olması sağlanacaktır. 
+Projenin üniversite düzeyinde sağlayacağı en önemli katkısı ise Gebze Teknik Üniversitesi kampüsündeki 
+derslik, laboratuvar, kütüphane ve ortak kullanım alanlarında iç ortam hava kalitesine ilişkin bir veri 
+oluşturmaktır. Bu sayede kampüs içerisinde kirletici seviyelerinin yüksek olduğu alanlar, olası etki nedenleri ve 
+öncelikli iyileştirme gereken alanların tespitini kolaylaştıracaktır. Elde edilecek sonuçların, havalandırma 
+uygulamaları, kullanım yoğunluğu yönetimi, temizlik planlaması, iç mekan düzenleme leri ve genel kampüs 
+çevre yönetimi açısından karar vericilere bilimsel anlamsa bir dayanak sağlaması beklenmektedir. Ayrıca, proje 
+sonuçları başta öğrenciler, akademik personel ve idari personel olmak üzere kampüs kullanıcılarının daha 
+sağlıklı iç ortamlarda eğitim ve çalışmalarını sürdürmeye katkı sağlayacağı öngörülmektedir. Bu noktada 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+projenin en önemli çıkış noktalarından bir tanesi ise, iç ortam hava kalitesinin iyileştirilmesine yönelik 
+geliştirilecek önerilerle öğrenci ve personel sağlığına ek olarak aynı zamanda dikkat, konfor, öğrenme ve 
+çalışma verimliliği gibi etkenleri de olumlu yönde etkileyeceği düşünülmektedir. Bu yönüyle proje, Gebze Teknik 
+Üniversitesi kampüsünde daha sağlıklı ve daha sürdürülebilir yaşam ve çalışma ortamlarının oluşturulmasına 
+katkı sunma potansiyeline sahiptir. 
+ 
+2.8. YÖNTEM: Araştırmanın amaç ve kapsamı ile uyumlu olarak, incelenmek üzere seçilen 
+parametreler sıralanmalıdır. Bu parametrelerin incelenmesi için uygulanacak yöntem ile kullanılacak 
+materyal ayrıntılı bir şekilde t anımlanmalıdır. Yapılacak ölçümler (ya da derlenecek veriler), kurulacak 
+ilişkiler ayrıntılı biçimde anlatılmalıdır. (*) 
+ 
+Bu proje önerisi, GTÜ kampüsünde yer alan farklı kullanım özelliklerine sahip  mikro-ortamlarda I AQ 
+değerlendirilmesine yönelik, düşük maliyetli sensör teknolojilerine dayalı bir ölçüm ve analiz yaklaşımına 
+dayanmaktadır. Proje kapsamında PM, C O2 ve toplam UOB kirleticileri farklı kampüs alanlarında takip edilecek 
+ve elde edilen veriler, kirletici düzeylerinin mek ansal-zamansal değişkenliği ile olası kaynaklarla ilişkileri 
+bakımından değerlendirilecektir.  Böylelikle kişisel maruziyetin en aza indirilmesi ne yönelik gelecek tahmin 
+mekanizmaları geliştirilecek ve kampüs hava kalitesinin iyileştirilmesine yönel ik faaliyetlerin kirletici kaynak ve 
+miktarı üzerinden problemli alanlarda sürdürülebilir ve etkin bir şekilde devreye alınmasına katkı sunulacaktır. 
+ 
+İş Paketi 1 : Kampüs İçi Mikro -Ortamlarda Sabit ve Mobil Sensör Entegrasyonunun Sağlanması ile 
+Kullanım Dinamiklerine Bağlı Hava Kalitesi Verilerinin Toplanması ve Analizi 
+ Amaç: Proje kapsamında kullanılacak düşük maliyetli sensörlerin ölçüm sürecine hazır hale getirilmesi, veri 
+toplama altyapısının test edilmesi ve GTÜ kampüsü içeresinde alınacak olan saha ölçümleri sırasında izlenecek 
+standart ölçüm protokolünün oluşturulması  ve Proje kapsamında, GTÜ kampüsünde ölçüm alınacak iç mikro -
+ortamların belirlenmesi ve proje kapsamında analiz edilcek olan iç ortam hava kirleticilerin düşük maliyetli 
+sensörler ile ölçümlerin alınmasıdır. 
+Bu iş paketi kapsamında,  iç ortam PM 2.5 ve toplam UOB ölçümleri için kullanılacak taşınabilir hava kalitesi 
+sensörleri ile C O2 ölçümleri için kullanılacak taşınabilir sensörün kurulum, bağlantı ve veri kayıt özellikleri 
+kontrol edilecektir. Proje kapsamında PM 2.5 ve toplam UOB ölçümleri Atmotube Pro sensörleri aracılığıyla 
+gerçekleştirilecektir. Düşük maliyetli sensörlerden elde edilen verilerin temsil gücünün artırılabilmesi için, 
+sensörlerin uygun biçimde konumlandırılması kritik önem taşımaktadır. Niteki m literatürde sensör yerleşimine 
+ilişkin tek bir standart yaklaşım bulunmamakla birlikte, güvenilir ölçümler elde edilebilmesi için sensörlerin 
+doğrudan güneş ışığı, ölçümlerde hata oluşturacak kuvvetli rüzgar ve emisyon kaynakla doğrudan temas 
+edecek biçimde yerleştirilmemesi, çok düşük veya çok yüksek seviyelerde konumlandırılmaması ve hava 
+dolaşımını engelleyebilecek nesnelerden uzak tutulması gerektiği belirtilmektedir. Benzer şekilde, CO2 ölçümleri 
+INKBIRD IAM -T1 sensörleri ile gerçekleştirilecek olup,  bu cihazların da karşılaştırılabilir ve güvenilir veri 
+üretebilmesi amacıyla benzer ölçüm protokollerine uygun biçimde konumlandırılmasına dikkat edilecektir.  
+Projenin ilk aşamasında, sensörlerin  batarya durumu, veri kayıt aralıkları  ve zaman eşleştirmeleri , mobil 
+uygulama ve son olarak veri aktarım bağlantıları test edilerek ölçüm öncesi teknik hazırlıkları tamamlanacaktır. 
+Ayrıca kampüste h alihazırda kurulu bulunan PurpleAir PA -II sensöründen elde edilecek dış ortam /arka plan  
+PM2.5 konsantrasyonları, projede olası kaynaklarının yorumlanması için destekleyici bir veri  olarak 
+kullanılacağından veri erişim ve kayıt düzeni de bu aşamada kontrol edilecektir. 
+Bu iş paketi kapsamında ayrıca, seçilecek örnek iç ortamlarda kısa süreli pilot ölçümler alınacaktır. Bu pilot 
+ölçümlerin temel amacı, sensörlerin seçili iç ortam koşullarındaki çalışma kararlılığını, oluşturulan ölçüm 
+protokolünün iç ortam koşullarındaki uygulanabilirliğini ve elde edilen verilerin bütünlüğünü değerlendirmektir. 
+Pilot ölçüm sürecinde sensörlerin uygun konumlandırılması, ölçüm kayıt aralıkları, iç ortama ilişkin saha 
+gözlemlerinin kaydedilmesi ve veri dışa aktarma süreçleri test edilerek an a ölçüm aşamasında kullanılacak 
+standart uygulama kesinleştirilecektir. Bu aşamada ayrıca, ölçüm alınan ortamlara ait pencere durumu, 
+havalandırma tipi, kullanıcı yoğunluğu, faaliyet türü ve olası iç kirletici kaynakları gibi temel iç ortam 
+özelliklerinin standart bir kayıt formu aracılığıyla sistematik biçimde not edilmesine yönelik veri toplama düzeni 
+de oluşturulacaktır (Tablo 3).  
+ 
+Tablo 3. İç Ortam Kayıt Tablosu Taslağı 
+Mikro-
+ortam Türü 
+Toplam 
+Kapalı Alan 
+(m²) 
+Havalandır
+ma Tipi 
+Pencere 
+Sayısı / 
+Durumu 
+Kullanıcı 
+Yoğunluğu 
+Faaliyet 
+Türü 
+Olası İç 
+Kaynaklar Ek Gözlem 
+ 
+Bunun yanında, ölçüm süresince ortamda meydana gelebilecek anlık değişimlerin daha doğru 
+yorumlanabilmesi amacıyla temizlik faaliyetleri, laboratuvarda ölçümler alınırsa eğer deneysel uygulamalar, 
+yoğun giriş -çıkış, pencere açılması veya havalandırma koşullarındaki değişimler gibi ek gözlemler de dikkatli 
+biçimde kayıt altına alınacaktır. Bu sayede sonraki iş paketleri için güvenilir ve uygulanabilir bir ölçüm altyapısı 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+oluşturulması hedeflenmiştir. 
+Bu iş paketi kapsamında  ayrıca oluşturulan ölçüm altyapısı çerçevesinde , ilk olarak GTÜ kampüsünde farklı 
+kullanım özelliklerini temsil edecek iç ortamlar belirlenecektir. İç ortam ölçüm alanları; derslik, laboratuvar, 
+kütüphane ve ortak kullanım alanları gibi farklı işlevlere sahip mikro -ortamlardan oluşacaktır. Şekil 3’te, GTÜ 
+kampüsün güney sınırı içerisinde proje kapsamında ölçüm alınması taslak olarak planlanan iç ortam grupları 
+gösterilmektedir.  
+ 
+ 
+Şekil 3. GTÜ Kampüsünün Güney Bölümünde Proje Kapsamında Değerlendirilmesi Planlanan Temsili İç 
+Ortam Bina Grupları 
+Bu binaların belirlenmesinde, önceden belirtildiği gibi kampüs içinde farklı kullanım özelliklerini temsil eden ve 
+IAQ açısından karşılaştırmalı değerlendirme yapılmasına olanak sağlayacak yapıların seçilmesine dikkat 
+edilecektir. Bu doğrultuda, öğrenciler tarafından aktif olarak kullanılan  laboratuvar, kütüphane binası, ortak 
+kullanım alanlarını temsil etmesi amacıyla spor salonu ve havuz binası ile derslik kullanımını temsil etmesi 
+açısından GTÜ merkez amfiler ile Çevre Mühendisliği binasında yer alan amfi örnek olarak değerlendirmeye 
+alınmıştır. Bu seçimlerde dikkat edilecek en önemli unsur, kampüs iç ortam hava kalitesinin yalnızca tek bir bina 
+türü üzerinden değil, farklı kullanıcı profilleri, kullanım yoğunlukları ve faaliyet biçimlerini yansıtacak şekilde 
+incelenmesini amaçlamaktadır. 
+Belirlenen iç mikro -ortamlarda PM 2.5 ve toplam UOB ölçümleri Atmotube Pro sensörleri ile, CO 2 ölçümleri ise 
+INKBIRD IAM -T1 sensörleri veya Atmotube Pro 2 ile gerçekleştirilecektir. Ölçümler, gün içindeki kullanım 
+değişkenliğini bütüncül biçimde temsil edebilmek amacıyla gün boyunca yürütülecek ve sensörlerden dakikalık 
+veri alınacaktır.  Ölçümler, kampüs kullanım yoğunluğunun yüksek olduğu eğitim -öğretim döneminde 
+gerçekleştirilecek olup, bu sayede iç ortam hava kalitesinin aktif kullanım koşullarındaki değişkenliği temsil 
+edilebilecektir. Her bir iç mikro -ortam için temsili bir veya birden fazla ölçüm noktası belirlenecek olup bu 
+seçimde kullanıcı yoğunluğu, kullanım biçimi ve havalandırma özellikleri dikkate alınacaktır. Seçili iç ortamlarda 
+ölçümlerin yalnızca tek bir günle sınırlı kalmaması, günler arası değişkenliğin de değerlendirilebilmesi amacıyla 
+ölçümlerin tekrarlı biçimde yürütülmesi planlanmaktadır.  
+Bu sayede iç ortam hava kalitesinin gün içerisindeki değişimi, kullanıcı yoğunluğu, faaliyet türü ve havalandırma 
+koşullarına bağlı olarak yüksek zamansal çözünürlükte izlenebilecektir. Ölçüm süresince kapı ve pencere 
+durumu, havalandırmanın açık ya da kapalı olması, kullanıcı yoğunluğu, anlık gelişen temizlik faaliyeti, eğir 
+ölçüm alınan laboratuvarda deneysel bir  uygulama gerçekleşiyorsa, ortak kullanım hareketliliği ve ortama özgü 
+diğer etkinlikler saha notu olarak kayıt altına alınacaktır. Böylece yalnı zca kirletici düzeyleri değil, bu düzeylerde 
+gözlenen değişimlerin ortam koşulları ile ilişkisi de değerlendirilebilecektir.  Ayrıca seçili iç ortamlarda tekrarlı 
+veriler eş zamanlı olarak, PurpleAir PA -II sensöründen ( Şekil 3) dış ortam PM 2.5 konsantrasyonlarına ilişkin 
+arka plan verileri de alınacaktır.  Bu veriler, iç ortam PM 2.5 düzeylerinin dış ortamla ilişkisini değerlendirmede 
+destekleyici veri olarak kullanılacak ve özellikle iç/dış ortam oranının yorumlanmasında kullanılacaktır. Son 
+olarak, ölçüm süreci sonunda elde edilen veriler zaman bilgisi ve saha gözlemleri ile eşleştirilerek kontrol 
+edilecek, eksik kayıtlar ve ölçüm kesintileri belirlenerek analiz öncesi veri seti düzenlenecektir. 
+ 
+İş Paketi 2: Mikro-Ortamların Kullanım Amacı, Faaliyet Türü ve Kullanıcı Yoğunluğu Değişkenlerine 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+Bağlı Olarak Emisyon Kaynaklarının Tespiti ve Kirlilik Profillerinin Oluşturulması  
+ 
+Amaç: Proje kapsamında farklı iç mikro -ortamlardan elde edilen iç ortam hava kirleticiler ile veri analizlerinin 
+yapılması, kirletici konsantrasyonlarının mekansal ve zamansal değişkenliğinin ortaya konulması ve belirlenen 
+iç ortamlarda olası kirletici kaynaklarla ilişkilendirilmesi  ve  elde edilen ölçüm, kümeleme ve karşılaştırmalı 
+analiz sonuçlarının birlikte değerlendirilerek farklı mikro -ortamlar için olası kaynak sınıflandırmasının 
+tamamlanması, hassas alanların ve kritik zaman dilimlerinin belirlenmesidir 
+Bu iş paketi kapsamında, iç ortamlarda gerçekleştirilen ölçümlerden elde edilen tüm veriler zaman bilgisi, mikro-
+ortam türü ve saha gözlemleri ile birlikte düzenlenecektir ve analiz için kullanılacak nihai veri tabanı 
+oluşturulacaktır. Bu aşama da ilk olarak ölçümü gerçekleştirilen PM 2.5, CO 2 ve toplam UOB düzeyleri farklı 
+mikro-ortam türleri, farklı ölçüm günleri ve gün içindeki zaman aralıkları açısından karşılaştırmalı olarak 
+değerlendirilecektir. Dakikalık zaman çözünürlüğünde elde edilen ölçümlerden sa atlik ve günlük ortalamalar 
+türetilecektir. Bu noktada, İç ortamlarda CO 2, çoğunlukla kullanıcı kaynaklı birikimin ve havalandırma 
+yeterliliğinin bir göstergesi olduğundan, ölçüm süresince kaydedilen kullanıcı yoğunluğu, kapı/pencere açıklık 
+durumu ve havalandırmanın aktif olup olmaması gibi ölçüm sırasında alınan notlar bu noktada temel alınarak 
+birlikte analiz edilip yorumlanacaktır. Benze şekilde, Toplam UOB düzeyleri ise temizlik faaliyetleri, iç mekan 
+malzemeleri, laboratuvar uygulamaları ve mikro -ortama özgü kullanım biçimleri ile birlikte değerlendirilecektir. 
+Ölçüm süresince kaydedilecek faaliyet bilgileri, toplam UOB düzeylerinde gözlenen kısa süreli artışların hangi iç 
+ortam etkinlikleri ile ilişkili olabileceği yorumlanacaktır. Bu sayede kirletici düzeyleri açısından öne çıkan hassas 
+mikro-ortamların ve kritik zaman dilimlerinin belirlenmesi amaçlanmaktadır. Bu kapsamda kirletici düzeylerindeki 
+artış ve azalış eğilimleri, ortalama konsantrasyonlardan sapmalar ve temel istatistiksel göstergelere ek olarak 
+zaman serisi analizleri ve karşılaştırmalı analizler gerçekleştirilecek olup sonuçlar özet tablolar ve grafiksel 
+değerlendirmeler yardımıyla incelenecektir. 
+PM2.5 için iç ortam ölçümleri ile PurpleAir PA -II sensöründen elde edilen dış ortam PM 2.5 konsantrasyonları 
+birlikte değerlendirilecek olup ve iç/dış ortam oranı (I/O oranı) hesaplanacaktır. Bu oran, iç ortam PM 2.5 
+düzeylerinde dış ortam katkısının önemini ve olası iç kaynakların etkisini değerlendirmede yorumlayıcı bir 
+gösterge olarak kullanılacaktır. Hesaplanması planlanan I/O oranı, literatürde iç ve dış ortam PM ilişkisini ortaya 
+koymak amacıyla yaygın olarak kullanılan bir yaklaşım olup hem farklı yerl eşim tiplerinde hem de farklı 
+mevsimsel koşullarda uygulanmıştır (Song vd., 2023; Kliengchuay vd., 2025).  Bir başka çalışmada ise 
+çalışmasında ise I/O oranı, PM 2.5 konsantrasyonları iç-dış ortam ilişkisini değerlendirmede kullanılmış ve buna 
+ek olarak CPF ve NWR analizleri ile PM açısından olası kaynak yönleri yorumlanmıştır (Pinakana vd., 2026). Bu 
+nedenle önerilen projede I/O oranının, PM 2.5 için olası kaynak değerlendirmesinde önemli bir gösterge olarak 
+kullanılması planlanmaktadır. 
+Projenin bu aşamasında, olası kirletici kaynaklarının daha sistematik biçimde değerlendirilebilmesi amacıyla 
+ölçüm verileri üzerinde kümeleme analizi uygulanacaktır. Bu analiz kapsamında, ölçülen hava kirletici 
+konsantrasyonları ile ölçüm süresince kaydedilen saha gözlemleri birlikte değerlendirilerek, benzer kirletici 
+eğilimlerine sahip zaman dilimleri ve mikro -ortamlar gruplandırılacaktır. Elde edilen kümeler daha sonra 
+ölçümler ve iç ortam özellikleri ile birlikte yorumlanacaktır. Böylece farklı iç mikro -ortamlar için baskın olabilecek 
+olası kaynak eğilimlerinin belirlenebilecektir. Bu yaklaşımda, PMF gibi kesin kimyasal kaynak ayrıştırma 
+yöntemlerinden farklı olarak (Frischmon ve Hannigan, 2024), belirli kirletici kombinasyonları ve ortam 
+koşullarına dayalı örüntü temelli bir kaynak sınıflandırması yapılması amaçlanmaktadır. 
+Ayrıca, kümeleme analizi sonucunda elde edilen gruplar iç ortam özellikleri, saha gözlemleri, kirletici düzeyleri 
+ve zamansal değişkenlik ile birlikte değerlendirilerek farklı mikro -ortamlar için eğilim temelli olası kaynak 
+sınıflandırması tamamlanacaktır. Bu aşamada, ortama özgü kullanım biçimleri dikkate alınarak her bir mikro -
+ortamın baskın kirletici eğilimi belirlenmiş olacaktır. Böylece seçili iç ortamlarda farklı zaman ve koşullara bağlı 
+olarak öne çıkan hassasiyetler sınıflandırılacaktır. Bu sınıflandırma sonuçlarına dayanarak, kampüs içinde 
+kirletici konsantrasyonlarının yüksek seyrettiği alanlar, kritik zaman aralıkları ve öncelikli iyileştirme gerektiren 
+mikro-ortamlar belirlenecektir. Elde edilen sonuçlar doğrultusunda, kampüs genelinde iç ortam hava kalitesine 
+ilişkin yorumlayıcı bir değerlendirme çerçevesi oluşturulacaktır.  
+Bu iş paketi sonunda, GTÜ kampüsündeki İOHK ölçümü gerçekleştirilen iç ortamlarda bütüncül bir 
+değerlendirme ortaya konulmuş olacaktır. Elde edilecek sonuçların, GTÜ’de İOHK kapsamında karar vericilere 
+bilimsel dayanak sağlaması beklenmektedir. Ayrıca proje çıktılarının, kampüs kullanıcılarının daha sağlıklı ve 
+sürdürülebilir iç ortamlarda eğitim ve çalışma faaliyetlerini sürdürmelerine katkı sunacağı öngörülmektedir. 
+ 
+İş Paketi 3: Makine Öğrenmesi Algoritmalarının Kampüs İçi Hava Kirliliği Kaynaklarının Tespitine ve 
+Kişisel Maruziyet Tahminlerine Entegrasyonu 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+ 
+Amaç: Önceki iş paketlerinde elde edilen, kişilerin günlük aktiviteleri bağlı olarak ölçülen PM2.5 ö CO2 ve UOM 
+konsantrasyonları ile bireylerin kişisel özellikleri de dikkate alınarak hesaplanan maruziyet ve kirletici bazlı 
+tanımlanan k irletici kaynak ilişkisi bu iş paketinde temsil edici bir zeminde ele alınarak çalışma kurgusunun 
+doğrusal regresyon, karar ağaçları ve destek vektör makineleri gibi makine öğrenimi algoritmaları ile entegre 
+edilmesi planlanmakta ve gelecek tahmin mekanizmalarının geliştirilmesi hedeflenmektedir. 
+Bu iş paketi kapsamında seçilen makine algoritmaları kullanılarak kampüste hareketli (kişisel) ve sabit 
+sensörlerinden elde edilen veri setleri, ölçüm süresi boyunca kampüsteki metereorolojik koşulları içeren 
+(sıcaklık, rüzgar yönü/hızı, yağış) veri setleri, konum ve kampüs içerisindeki aktivite bilgileri seçilen makine 
+öğrenimi algoritması ile entegre edilerek kampüste farklı kullanım özellikleri ve karakteristiğine sahip problemli 
+alanlarda gelecek tahmin mekanizması geliştirilecektir. 
+ 
+1. Veri Analizi 
+✓ Toplanan veriler, makine öğrenimi algoritmalarının etkin bir şekilde kullanılabilmesi için ön işleme adımlarına 
+tabi tutulacaktır. İlk olarak, veri setindeki eksik veya hatalı ölçümler tespit edilip temizlenecek, ardından 
+birleştirme ve filtreleme işlemleri gerçekleştirilecektir. Bu süreçte, hava kalitesi sensörlerinden elde edilen 
+ölçümler, meteorolojik parametreler ( rüzgar yönü, rüzgar hızı, sıcaklık, nem, basınç gibi) ve kişisel aktivite 
+verileri (bulunulan ortam karakteristiği) analiz edilerek kullanılabilir hale getirilecektir.  
+✓ Makine öğrenimi modellerine giriş olarak kullanılacak özellikler (örneğin, PM 2.5 konsantrasyonu, kişisel 
+maruziyet süresi, bulunduğu konumun çevresel özellikleri) tanımlanacaktır. Özelliklerin zaman -serisi verilerle 
+uyumlu olması sağlanacak ve modellenebilir formata dönüştürülecektir. Son olarak, tüm veriler, 
+algoritmaların daha iyi performans göstermesi için normalize edilecek veya standartlaştırılacaktır. Bu 
+adımlar, verinin doğru ve anlamlı bir şekilde işlenerek sonraki aşamalarda kullanılmasını garanti edecektir. 
+2. Makine Öğrenimi Model Eğitimi 
+✓ Elde edilen veriler ışığında doğrusal regresyon, karar ağaçları ve destek vektör makineleri gibi çeşitli makine 
+öğrenimi algoritmalarının kullanılacağı bir tahmin mekanizması oluşturulacaktır Saha ölçümleri ile eğitilecek 
+bu algoritmalardan oluşan tahmin çalışmaları ileriki zamanlarda yapılacak saha çalışmaları ile 
+değerlendirilerek en az hata ile tahmin metodolojisinin geliştirilmesi için bir temel sistematik oluşturulması.   
+✓ Makine öğrenimi modellerini değerlendirmek ve modellerden elde edilen sonuçların doğruluğunu ölçmek 
+amacıyla çapraz doğrulama tekniği kullanılmaktadır. Makine öğrenimi modellerinin eğitilmediği veri 
+setlerinde çalıştırılması ve modellerden elde edilen neticelerin değerlendirilmesini kapsamaktadır. 
+Özetleyecek olursak, çapraz doğrulama makine öğrenimi modellerinin yeteneklerinin denetlenmesini 
+içermektedir. 
+ 
+ 
+(*) Doğrudan insan veya hayvanlar üzerinde yapılacak çalışmalar için ilgili birimden etik kurul onay 
+kararının alınması zorunludur. 
+ 
+2.9. KURUMUN ARAŞTIRMA OLANAKLARI : Bu bölümde projenin yürütüleceği birimlerde ve 
+Üniversitemizde var olup projede kullanılacak olan altyapı olanakları belirtilmelidir. 
+Projenin tüm ölçüm verileri, Gebze Teknik Üniversitesi kampüsünde yürütülecektir. Üniversite kampüsü, proje 
+kapsamında planlanan iç ortam hava kalitesi ölçümleri açısından uygun fiziksel altyapıya sahiptir ve bu sayede 
+önerisi verilen projenin sensör verileri planlanan derslik, laboratuvar, kütüphane ve ortak kullanım alanları gibi 
+farklı iç ortam mikro -ortamlarından toplanacaktır. Bu sayede projenin uygulanabilirliği için uygun bir çerçeve 
+hazırlanmış olacaktır.  
+Proje kapsamında kullanılacak önemli unsurlarından biri, Gebze Teknik Üniversitesi’nde halihazırda kurulu 
+bulunan PurpleAir PA -II sensörüdür. Söz konusu dış ortam sensörü, Gebze Teknik Üniversitesi SUMER İçme 
+Suyu Laboratuvarı binasın ın çatısında konumlandırılmış olup, kampüs genelindeki dış ortam PM 2.5 
+konsantrasyonları ve özellikle arka plan PM 2.5 konsantrasyonlarının izlenmesinde kullanılacaktır. Böylece 
+kampüs iç ortamlarında taşınabilir sensörlerle elde edilecek ölçümlerin, dış ortam PM yükü ile birlik te 
+yorumlanması mümkün olacaktır. 
+ 
+ 
+2.10. BAŞARI ÖLÇÜTLERİ:  Hangi süreçlerin/işlemlerin, ne ölçüde gerçekleştirilmesi durumunda 
+projenin tam anlamıyla başarıya ulaşmış sayılabileceği belirtilmelidir. Bu ölçütler açık olarak 
+sıralanmalı, her  birinin önem derecesi açıklanmalı, tümünün gerçekleştirilememesi durumunda, 
+projenin başarı oranının belirlenmesine yardımcı olabilecek ipuçları verilmelidir.  
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+ 
+Ölçüt 1: Veri Toplama ve Sensör Entegrasyonu Başarısı (%30) 
+ 
+Proje kapsamında arka plan emisyonlarının tespitine yönelik sabit ve kişisel maruziyetin etkisinin belirlenmesine 
+yönelik taşınabilir hava kalite sensörlerin katılımcılara sorunsuz bir şekilde dağıtılması, sensörlerin düzenli veri 
+toplaması ve mobil cihazlar üzerinden kirletici ve ortam bazlı verilerin güvenli aktarımı.  
+Ölçüm periyodları boyunca temsil edici veri eldesi. Günlük aktivitelerin konum, özellik gibi parametreleri 
+içerecek şekilde sahada en az %90’lık süre zarfını kapsaması 
+ 
+Ölçüt 2: Kaynak Karakterizasyonu Başarısı (%35) 
+ 
+Düşük Ma liyetli taşına bilir hava kalite s ensörlerinden elde edi len anlık hava kalitesi verileri  (kirletici bazlı)  ile 
+ortamın dinamik değişkenlerinin (kullanım amacı, faaliyet türü, kullanıcı yoğunluğu) istatistiksel olarak 
+ilişkilendirilmesi ve incelemeye konu alanlardaki temel kirlilik kaynaklarının karakteristik özelliklerinin istatistiksel 
+olarak anlamlı bir güven aralığında (p < 0.05) başarılı bir şekilde tanımlanması. 
+ 
+Ölçüt 3: Makine Öğrenmesi Modellemesi ve Optimizasyon Başarısı (%35) 
+ 
+Kampüsün far klı kullanım  alanlarında hava kalitesinin azalmasına neden olan emisyonlarının gelecek durum 
+koşulları çerçevesinde tahmin mekanizmasının geliştirilmesi  ve kişisel maruziyetin en aza indirilmesinin 
+sağlanmasına katkı sunmak . Ayrıca hava kalite iyileştirme çalışmalarının etkisinin gelecek zaman dilimleri ve 
+koşulları çerçevesinde ki rletici bazlı tahmin edilmesi.  Doğrusal regresyon, karar ağaçları ve destek vektör 
+makineleri gibi makine algoritmalarının saha sonuçları ile eğitilerek en düşük hata oranına sahip tahmin 
+metodolojisinin tespiti. 
+Ölçülecek performans değerlerimiz R 2, Adj. R2, RMSE, N-RMSE ‘dir. Model test performansının R 2> 0.9 olması 
+hedeflenmiştir. 
+ 
+ 
+ 
+ 
+ 
+2.11. PROJEYİ DESTEKLEYEN DİĞER KURULUŞLAR : Projenin başka bir kuruluş tarafından 
+desteklenip desteklenmediği belirtilmelidir.   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+2.12. Çalışma Takvimi: Projede yer alacak olan iş paketleri tanımı numaralandırılarak açıklanmalı ve bunlar için öngörülen aylar çizelgede (X) ile b elirtilmelidir. 
+ 
+İş-Zaman Çizelgesi 
+Zaman 1.Ay 2.Ay 3.Ay 4.Ay 5.Ay 6.Ay 7.Ay 8.Ay 9.Ay 10.Ay 11.Ay 12. Ay 
+İş Paketleri Tanımı 
+1-İş P aketi 1 : Kampüs İçi Mikro -Ortamlarda 
+Sabit ve Mobil Sensör Entegrasyonunun 
+Sağlanması ile Kullanım Dinamiklerine Bağlı 
+Hava Kalitesi Verilerinin Toplanması ve 
+Analizi 
+X X X X X X X X X    
+2- İş Paketi 2: Mikro -Ortamların Kullanım 
+Amacı, Faaliyet Türü ve Kullanıcı Yoğunluğu 
+Değişkenlerine Bağlı Olarak Emisyon 
+Kaynaklarının Tespiti ve Kirlilik Profillerinin 
+Oluşturulması 
+   X X X X X X X   
+3- İş Paketi 3: Elde Edilen Verilerin Makine 
+Öğrenmesi Algoritmalarına Entegrasyonu ile 
+Kişisel Maruziyet Tahmin Modellerinin 
+Geliştirilmesi ve İyileştirme Senaryolarının 
+Optimize Edilmesi 
+      X X X X X X 
+ 
+ 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+2.13. Proje Yürütücüsünün Diğer Projeleri:  Proje yürütücüsünün son beş yılda yürütücü veya 
+araştırmacı olarak yer aldığı projeler (AB, TÜBİTAK, DPT, BAP, …vb.) belirtilmelidir. 
+ 
+Proje No Projedeki Görevi Proje Adı Başlama/Bitiş 
+Tarihi 
+125R102 Yürütücü PM2.5 Kaynaklı Hava Kirliliğinin Kişisel 
+Maruziyetinin Düşük Maliyetli  Hava Kalite 
+Sensörleri ile Belirlenmesi ve Makine 
+Öğrenmesi ile Kişisel Maruziyetin 
+Modellenmesi 
+04.11.2025-
+04.11.2026 
+125Y253 Araştırmacı Tarımsal Gübre Kullanımının ve Toprak 
+Organik Madde Konsantrasyonunun 
+Denitrifikasyon Bakterileri Üzerindeki 
+Etkisinin Belirlenmesi 
+28.08.2025-
+28.04.2026 
+    
+ 
+2.14. Proje Yürütücüsünün Son 5 Yılda Yapmış Olduğu Yayınlar: 
+ 
+Yazar(lar) Makale Başlığı Dergi Cilt/Sayı/Sayfa Tarih 
+M. SHİHAB, K. 
+ALP, M. 
+TÜRKER, İ. 
+AKMIRZA & R. 
+MHEMİD, 
+Removal of ethanethiol 
+using a biotrickling filter 
+with nitrate as an electron 
+acceptor 
+ENVIRONMENT
+AL 
+TECHNOLOGY 
+ 2022 
+ MHEMİD, K. 
+ALP, M. 
+TÜRKER, İ. 
+AKMIRZA & M. 
+SHİHAB 
+Removal of dimethyl 
+sulphide via a bio-scrubber 
+under anoxic conditions 
+ENVIRONMENT
+AL 
+TECHNOLOGY 
+ 2022 
+C. PASCUAL, I. 
+AKMIRZA, R. 
+PEREZ, E. 
+ARNAIZ, R. 
+MUNOZ & R. 
+LEBRERO 
+Trimethylamine abatement 
+in algal -bacterial 
+photobioreactors 
+ENVIRONMENT
+AL SCIENCE 
+AND 
+POLLUTION 
+RESEARCH,  
+ 2020 
+Faiza I 
+Muhammed, İlker 
+Akmırza 
+Assessment of the Water 
+Quality of the Tigris River 
+in the City of Mosul 
+Journal of 
+Engineering and 
+Sustainable 
+Development 
+ 2025 
+ 
+2.15. Proje Yürütücüsünün BAP Kapsamında Yapmış Olduğu Yayınlar***: (105,ADEP 113) 
+ 
+Proje No  Yazarlar Makale Başlığı Dergi Cilt/Sayı/Sayfa Tarih 
+      
+      
+      
+      
+İlgili Yayınlar Başvuru Formun Eki Olarak Verilmelidir.*** 
+ 
+ 
+3.PROJENİN BÜTÇE BİLGİLERİ 
+ 
+3.1. Önerilen Proje Bütçesi İçin Ödeme Planı: 
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+DÖNEMİ 
+(03.2) 
+Tüketime 
+Yönelik Mal ve 
+Malzeme 
+Alımları 
+(03.3) Yolluk 
+Giderleri 
+(Yurtiçi-Yurtdışı) 
+(03.5) Hizmet 
+Alımları 
+(03.7) Menkul Mal 
+Alımları 
+(Makine/Teçhizat) 
+TOPLAM 
+(TL.) 
+1-12 
+AYLAR 90000 35000   125000 
+13-24 
+AYLAR      
+25-36 
+AYLAR      
+TOPLAM 
+(TL.) 90000 35000   125000 
+(03.2) Tüketime Yönelik Mal ve Malzeme Alımları:  Deney gereçleri, deney hayvanları, kimyasal 
+maddeler ve diğer tüketim malzemeleri bu bölüme yazılır. Demirbaşa kaydedilmez. Toplama KDV 
+dahil edilmelidir.  
+ 
+(03.3) Yolluk (Yurtiçi-Yurtdışı): Bilimsel toplantılar ve veri toplama, yerinde inceleme, arazi çalışması 
+vb. gibi araştırmayla doğrudan ilgili amaçlarla yapılması planlanan yolculuklar bu bölüme yazılır.  
+ 
+(03.5) Hizmet Alımları : Danışmanlık, analiz giderleri, taşıt kiralama giderleri, bilgisayar sistemleri ve 
+yazılımları kiralaması giderleri vb gibi belli bir ücret karşılığında yaptırılacak olan iyi tanımlanmış ve 
+fatura karşılığı satın alınabilecek işler bu bölüme yazılır. Toplama KDV dahil edilmelidir. Hizmet alımı 
+ile ilgili proforma fatura ya da teklif mektubu eklenmelidir. 
+ 
+(03.7) Menkul Mal Alımları (Makine/Teçhizat):  Her türlü makina ve laboratuar cihazları ile yazılım 
+paketleri bu bölüme yazılır ve üniversite demirbaşına kaydedilir. Toplama KDV dahil edilmelidir. 
+İstenen makine -teçhizatların her biri için teknik özelliklerini içeren (marka ve model belirtmeksizin) 
+*teknik şartname(ler)in ve tekliflerin eklenmesi gerekmektedir. 
+ 
+* teknik şartname örneği http://www.gepsis.gtu.edu.tr/projeoneri.html adresinden temin edilebilir. 
+ 
+ 
+2.1.1. (03.2) Tüketime Yönelik Mal ve Malzeme Alımları  
+ 
+Sıra 
+No Adı ve Cinsi Miktarı Birim Fiyatı 
+(TL.) 
+TUTARI 
+(TL.) 
+1     
+2     
+3     
+4     
+5     
+6     
+7     
+8     
+9     
+10     
+11     
+12     
+13     
+14     
+15     
+16     
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+17     
+18     
+19     
+20     
+     
+TOPLAM  
+ 
+ 
+2.1.2. (03.3) Yolluk Giderleri (Yurtiçi-Yurtdışı)  
+ 
+ Kişi Sayısı Toplam (TL.) * 
+Yurt içi Seyahat 2 15000 
+Yurt dışı Seyahat 1 20000 
+TOPLAM   
+(*) Yurt içi/yurt dışı seyahatler için Üniversite Yönetim Kurulu’nun belirlemiş olduğu destek miktarını geçmemek 
+şartıyla ödenek verilir. 
+ 
+Proje yolluklarının ödenebilmesi için, yurtdışı görevlendirmelerde en geç gidiş tarihinden 30 gün önce, 
+yurtiçi görevlendirmelerde ise en geç gidiş tarihinden 15 gün önce tüm evrakların (dilekçe, bildiri özeti, 
+kabul yazısı ve Fakülte Yönetim Kurulu görev kararı) eksiksiz olarak BAP Koordinatörlüğüne teslim 
+edilmesi gerekmektedir. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+2.1.3. (03.5) Hizmet Alımları  
+ 
+Sıra 
+No İşin Tanımı Nereden/Kimden Alınacağı Miktarı Tutarı (TL.) 
+1     
+2     
+3     
+4     
+5     
+6     
+7     
+8     
+9     
+10     
+11     
+12     
+13     
+14     
+15     
+16     
+17     
+18     
+19     
+ 
+GTÜ BİLİMSEL ARAŞTIRMA PROJELERİ 
+(GTU101-102-105-106-107-108-110-112) 
+PROJE BAŞVURU FORMU 
+ 
+Yazım alanları gerektiği kadar uzatılabilir 
+Form No:FR-0165 Yayın Tarihi:01.08.2017 Değ.No:5 Değ. Tarihi:24.05.2024 
+ 
+ 
+20     
+TOPLAM  
+ 
+ 
+2.1.4. (03.7) Menkul Mal Alımları (Makina/Teçhizat) 
+ 
+Sıra 
+No Adı ve Modeli Miktarı Birim Fiyatı 
+(TL.) 
+TUTARI 
+(TL.) Alım Gerekçesi 
+1 Atmotube Pro 2 6 15000 90000 CO2 Ölçümleri, ve 
+UOM Ölçümleri 
+2      
+3      
+4      
+5      
+6      
+7      
+8      
+9      
+10      
+11      
+12      
+13      
+14      
+15      
+16      
+17      
+18      
+19      
+20      
+      
+TOPLAM   
+ 

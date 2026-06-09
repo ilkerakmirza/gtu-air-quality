@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTÜ Hava Kalitesi Haritası</title>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Leaflet.heat -->
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+<!-- noUiSlider (timeline) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.css">
+<script src="https://cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.js"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Top bar ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 16px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    flex-shrink: 0;
+  }
+  .topbar h1 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #c9d1d9;
+    white-space: nowrap;
+  }
+  .topbar a {
+    color: #58a6ff;
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .topbar a:hover { text-decoration: underline; }
+
+  /* ── Main layout ── */
+  .layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: #161b22;
+    border-right: 1px solid #30363d;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .sidebar-section {
+    border-bottom: 1px solid #21262d;
+    padding: 14px;
+  }
+  .sidebar-section h2 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #8b949e;
+    margin-bottom: 10px;
+  }
+
+  /* PurpleAir panel */
+  .pa-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .pa-metric {
+    background: #0d1117;
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+  .pa-metric label { font-size: 10px; color: #8b949e; display: block; }
+  .pa-metric span  { font-size: 18px; font-weight: 700; color: #e6edf3; }
+  .pa-metric.full  { grid-column: 1 / -1; }
+  #pa-status       { font-size: 14px; font-weight: 600; }
+  #pa-time         { font-size: 10px; color: #8b949e; margin-top: 4px; }
+
+  /* Canlı gösterge */
+  .live-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(0,200,100,0.12); border: 1px solid rgba(0,200,100,0.3);
+    border-radius: 10px; padding: 2px 8px; font-size: 10px; font-weight: 600;
+    color: #3fb950; letter-spacing: .5px;
+  }
+  .live-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #3fb950;
+    animation: blink 1.4s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .4; transform: scale(.8); }
+  }
+  .pa-header-row {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;
+  }
+  #pa-countdown { font-size: 10px; color: #8b949e; }
+
+  /* Toggle heatmap */
+  .layer-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #c9d1d9;
+    cursor: pointer;
+  }
+  .layer-toggle input { cursor: pointer; accent-color: #58a6ff; }
+
+  /* Sessions */
+  .session-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: #c9d1d9;
+    padding: 5px 0;
+    cursor: pointer;
+    user-select: none;
+  }
+  .session-item input { cursor: pointer; accent-color: #58a6ff; flex-shrink: 0; }
+  .session-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .session-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .session-meta { font-size: 10px; color: #8b949e; flex-shrink: 0; }
+  .no-data      { font-size: 12px; color: #8b949e; }
+
+  /* Upload form */
+  .upload-form { display: flex; flex-direction: column; gap: 8px; }
+  .upload-form input,
+  .upload-form select,
+  .upload-form textarea {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #e6edf3;
+    padding: 7px 10px;
+    font-size: 12px;
+    width: 100%;
+  }
+  .upload-form textarea { resize: vertical; min-height: 50px; }
+  .upload-form button {
+    background: #238636;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .upload-form button:hover { background: #2ea043; }
+  .upload-form button:disabled { background: #3d4449; cursor: not-allowed; }
+  .upload-result { font-size: 11px; padding: 6px 8px; border-radius: 5px; display: none; }
+  .upload-result.success { display: block; background: #0d2419; color: #3fb950; border: 1px solid #238636; }
+  .upload-result.error   { display: block; background: #2d1117; color: #f85149; border: 1px solid #da3633; }
+
+  /* ── Map ── */
+  #map { flex: 1; }
+
+  /* ── Player panel ── */
+  .player-panel {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    z-index: 1000;
+    background: rgba(22,27,34,0.96);
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 340px;
+    max-width: 380px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    pointer-events: all;
+  }
+  .player-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .player-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .player-time {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e6edf3;
+    font-variant-numeric: tabular-nums;
+  }
+  .player-loc {
+    font-size: 11px;
+    color: #8b949e;
+  }
+  .player-pm {
+    font-size: 22px;
+    font-weight: 800;
+    min-width: 70px;
+    text-align: right;
+    line-height: 1;
+  }
+  .player-pm small { font-size: 10px; font-weight: 400; color: #8b949e; display: block; }
+  .player-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .player-btn {
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #e6edf3;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px 10px;
+    transition: background .15s;
+    line-height: 1;
+  }
+  .player-btn:hover { background: #1f6feb33; border-color: #388bfd; }
+  .player-btn.active { background: #1f6feb55; border-color: #58a6ff; }
+  .player-progress {
+    flex: 1;
+    height: 4px;
+    background: #30363d;
+    border-radius: 2px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .player-progress-bar {
+    height: 100%;
+    background: #58a6ff;
+    border-radius: 2px;
+    width: 0%;
+    transition: width .1s linear;
+  }
+  .player-speed {
+    display: flex;
+    gap: 4px;
+  }
+  .speed-btn {
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    color: #8b949e;
+    font-size: 10px;
+    padding: 3px 6px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .speed-btn.active { background: #1f6feb33; border-color: #388bfd; color: #58a6ff; }
+  .player-session-select {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #e6edf3;
+    font-size: 12px;
+    padding: 5px 8px;
+    flex: 1;
+  }
+  .player-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+  }
+
+  /* PurpleAir sabit istasyon etiketi */
+  .pa-label {
+    background: rgba(20,20,35,0.88) !important;
+    border: 1px solid #8b5cf6 !important;
+    border-radius: 7px !important;
+    color: #e2d4ff !important;
+    font-size: 11px !important;
+    line-height: 1.5 !important;
+    padding: 5px 9px !important;
+    box-shadow: 0 2px 8px rgba(139,92,246,0.4) !important;
+    white-space: nowrap !important;
+  }
+  .pa-label::before { display: none !important; }
+
+  /* ── Karşılaştırma grafiği paneli ── */
+  .chart-panel {
+    background: #161b22;
+    border-top: 1px solid #30363d;
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: height .3s ease;
+  }
+  .chart-panel.collapsed { height: 32px; }
+  .chart-panel.expanded  { height: 220px; }
+  .chart-toggle-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 16px; cursor: pointer; height: 32px;
+    border-bottom: 1px solid #21262d;
+    user-select: none;
+  }
+  .chart-toggle-bar span { font-size: 12px; font-weight: 600; color: #c9d1d9; }
+  .chart-toggle-bar .chart-badge {
+    font-size: 10px; padding: 2px 8px; border-radius: 10px;
+    background: rgba(108,99,255,0.15); color: #8b80f9; border: 1px solid rgba(108,99,255,0.3);
+  }
+  .chart-inner { padding: 6px 16px 8px; height: 180px; }
+
+  /* ── Timeline bar ── */
+  .timeline-bar {
+    background: #161b22;
+    border-top: 1px solid #30363d;
+    padding: 10px 20px;
+    flex-shrink: 0;
+  }
+  .timeline-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .timeline-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  #timeline-label {
+    font-size: 11px;
+    color: #8b949e;
+  }
+  #timeline-presets {
+    display: flex;
+    gap: 6px;
+  }
+  .timeline-preset-btn {
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    color: #8b949e;
+    font-size: 11px;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .timeline-preset-btn:hover,
+  .timeline-preset-btn.active {
+    background: #1f6feb33;
+    border-color: #388bfd;
+    color: #58a6ff;
+  }
+  #timeline-slider { flex: 1; }
+  .noUi-connect { background: #388bfd; }
+  .noUi-target   { background: #21262d; border: none; box-shadow: none; }
+  .noUi-handle   { background: #58a6ff; border: 2px solid #161b22; box-shadow: none; cursor: pointer; }
+  .noUi-handle::before, .noUi-handle::after { display: none; }
+
+  /* ── Leaflet popup ── */
+  .leaflet-popup-content-wrapper {
+    background: #161b22;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+  }
+  .leaflet-popup-tip { background: #161b22; }
+  .pa-popup h3 { font-size: 13px; margin-bottom: 8px; }
+  .popup-table { font-size: 12px; width: 100%; border-collapse: collapse; }
+  .popup-table td { padding: 3px 6px; }
+  .popup-table td:first-child { color: #8b949e; }
+
+  /* ── Pulse marker ── */
+  .pulse-marker {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--marker-color, #00e400);
+    box-shadow: 0 0 0 0 var(--marker-color, #00e400);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 var(--marker-color); }
+    70%  { box-shadow: 0 0 0 12px rgba(0,0,0,0); }
+    100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+  }
+
+  /* ── Legend ── */
+  .map-legend {
+    background: rgba(22,27,34,0.95);
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 11px;
+    color: #c9d1d9;
+    min-width: 240px;
+  }
+  .legend-title    { font-weight: 700; margin-bottom: 8px; font-size: 11px; color: #8b949e; }
+  .legend-gradient { height: 14px; border-radius: 4px; margin-bottom: 2px; }
+  .legend-ticks    { position: relative; height: 14px; }
+  .legend-tick {
+    position: absolute;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: #8b949e;
+    top: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <h1>🌬️ GTÜ Kampüs Hava Kalitesi İzleme Haritası</h1>
+  <a href="../index.html">← Proje Sayfası</a>
+</div>
+
+<!-- Main layout -->
+<div class="layout">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+
+    <!-- PurpleAir panel -->
+    <div class="sidebar-section">
+      <div class="pa-header-row">
+        <h2 style="margin:0">PurpleAir — Sabit Sensör (SUMER Lab)</h2>
+        <span class="live-badge"><span class="live-dot"></span>CANLI</span>
+      </div>
+      <div id="pa-countdown" style="margin-bottom:6px">Güncelleniyor…</div>
+      <div class="pa-grid">
+        <div class="pa-metric">
+          <label>PM₂.₅ (µg/m³)</label>
+          <span id="pa-pm25">--</span>
+        </div>
+        <div class="pa-metric">
+          <label>PM₁₀ (µg/m³)</label>
+          <span id="pa-pm10">--</span>
+        </div>
+        <div class="pa-metric">
+          <label>Sıcaklık</label>
+          <span id="pa-temp">--</span>
+        </div>
+        <div class="pa-metric">
+          <label>Nem</label>
+          <span id="pa-humidity">--</span>
+        </div>
+        <div class="pa-metric full">
+          <label>Hava Kalitesi</label>
+          <span id="pa-status">Bağlanıyor…</span>
+        </div>
+      </div>
+      <div id="pa-time"></div>
+    </div>
+
+    <!-- Animasyon oynatıcı butonu -->
+    <div class="sidebar-section">
+      <h2>Gün Animasyonu</h2>
+      <button id="btn-open-player" style="
+        width:100%;background:#1f6feb;border:none;border-radius:6px;
+        color:#fff;font-size:13px;font-weight:600;padding:9px;cursor:pointer;
+        transition:background .15s;display:flex;align-items:center;justify-content:center;gap:6px">
+        ▶ Günü Oynat
+      </button>
+      <p style="font-size:10px;color:#8b949e;margin-top:5px;line-height:1.4">
+        Seçilen oturumda sensör taşıyıcısının gün içindeki rotasını ve anlık PM₂.₅ değerlerini animasyonla izleyin.
+      </p>
+    </div>
+
+    <!-- Layer toggles -->
+    <div class="sidebar-section">
+      <h2>Katmanlar</h2>
+      <label class="layer-toggle">
+        <input type="checkbox" id="toggle-heatmap">
+        Isı Haritası (Heatmap)
+      </label>
+    </div>
+
+    <!-- Atmotube sessions -->
+    <div class="sidebar-section" style="flex:1">
+      <h2>Atmotube Oturumları</h2>
+      <div id="session-list"><p class="no-data">Yükleniyor…</p></div>
+    </div>
+
+    <!-- CSV Upload -->
+    <div class="sidebar-section">
+      <h2>Veri Yükle (CSV)</h2>
+      <form class="upload-form" id="upload-form" enctype="multipart/form-data">
+        <input type="text"   name="session_name"      placeholder="Oturum adı (zorunlu)" required>
+        <select name="micro_environment">
+          <option value="">Mikro-ortam seçin…</option>
+          <option value="classroom">Derslik</option>
+          <option value="lab">Laboratuvar</option>
+          <option value="library">Kütüphane</option>
+          <option value="canteen">Kantin / Yemekhane</option>
+          <option value="outdoor">Açık Alan</option>
+          <option value="corridor">Koridor</option>
+        </select>
+        <select name="sensor_number">
+          <option value="">Sensör no…</option>
+          <option value="1">Sensör 1</option>
+          <option value="2">Sensör 2</option>
+          <option value="3">Sensör 3</option>
+          <option value="4">Sensör 4</option>
+          <option value="5">Sensör 5</option>
+          <option value="6">Sensör 6</option>
+        </select>
+        <input type="file"   name="file" accept=".csv" required>
+        <textarea name="notes" placeholder="Notlar (isteğe bağlı)"></textarea>
+        <button type="submit">Yükle</button>
+        <div id="upload-result" class="upload-result"></div>
+      </form>
+    </div>
+
+  </div><!-- /sidebar -->
+
+  <!-- Map -->
+  <div id="map">
+    <!-- Player panel (map üstünde yüzer) -->
+    <div class="player-panel" id="player-panel" style="display:none">
+      <div class="player-top">
+        <div class="player-info">
+          <div class="player-time" id="player-time">--:--</div>
+          <div class="player-loc"  id="player-loc">—</div>
+        </div>
+        <div class="player-pm" id="player-pm">
+          -- <small>PM₂.₅ µg/m³</small>
+        </div>
+      </div>
+      <div class="player-controls">
+        <button class="player-btn" id="btn-stop"  title="Başa dön">⏮</button>
+        <button class="player-btn" id="btn-play"  title="Oynat / Durdur">▶</button>
+        <div class="player-progress" id="player-progress">
+          <div class="player-progress-bar" id="player-progress-bar"></div>
+        </div>
+        <div class="player-speed">
+          <button class="speed-btn" data-speed="1">1×</button>
+          <button class="speed-btn active" data-speed="4">4×</button>
+          <button class="speed-btn" data-speed="10">10×</button>
+          <button class="speed-btn" data-speed="30">30×</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;color:#8b949e;white-space:nowrap">Oturum:</span>
+        <select class="player-session-select" id="player-session-select">
+          <option value="">Oturum seçin…</option>
+        </select>
+        <button class="player-btn" id="btn-close-player" title="Kapat">✕</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /layout -->
+
+<!-- Karşılaştırma Grafiği Paneli -->
+<div class="chart-panel collapsed" id="chart-panel">
+  <div class="chart-toggle-bar" id="chart-toggle">
+    <span>📊 Sensör Karşılaştırması — Atmotube vs PurpleAir PA-II</span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="chart-badge" id="chart-advantage-badge">—</span>
+      <span style="font-size:14px;color:#8b949e" id="chart-arrow">▲</span>
+    </div>
+  </div>
+  <div class="chart-inner">
+    <canvas id="compare-chart"></canvas>
+  </div>
+</div>
+
+<!-- Timeline bar -->
+<div class="timeline-bar">
+  <div class="timeline-label-row">
+    <span id="timeline-label">Tarih aralığı seçin</span>
+    <div id="timeline-presets"></div>
+  </div>
+  <div class="timeline-row">
+    <div id="timeline-slider" style="flex:1"></div>
+  </div>
+</div>
+
+<!-- Backend URL config (override before loading scripts if needed) -->
+<script>
+  // Change this URL after deploying to Railway:
+  // window.API_BASE = "https://your-app.railway.app";
+  window.API_BASE = "http://localhost:5000";
+</script>
+
+<script src="js/colorscale.js"></script>
+<script src="js/api.js"></script>
+<script src="js/timeline.js"></script>
+<script src="js/player.js"></script>
+<script src="js/map.js"></script>
+
+</body>
+</html>
