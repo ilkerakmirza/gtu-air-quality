@@ -23,6 +23,32 @@ CORS(app, origins=config.CORS_ORIGINS)
 
 db.init_db()
 
+# Seed demo data if DB is empty
+def _seed_if_empty():
+    import os, sqlite3 as _sq
+    db_path = os.environ.get("DB_PATH", "campus_air.db")
+    seed_path = os.path.join(os.path.dirname(__file__), "seed.sql")
+    if not os.path.exists(seed_path):
+        return
+    try:
+        con = _sq.connect(db_path)
+        cur = con.cursor()
+        cur.execute("SELECT COUNT(*) FROM upload_sessions")
+        count = cur.fetchone()[0]
+        if count == 0:
+            with open(seed_path, "r", encoding="utf-8") as f:
+                sql = f.read()
+            con.executescript(sql)
+            con.commit()
+            print("[seed] Demo veriler yüklendi.")
+        else:
+            print(f"[seed] DB zaten dolu ({count} oturum), seed atlandı.")
+        con.close()
+    except Exception as e:
+        print(f"[seed] Hata: {e}")
+
+_seed_if_empty()
+
 scheduler = BackgroundScheduler()
 scheduler.add_job(purpleair.poll, "interval", minutes=config.POLL_INTERVAL_MINUTES, id="pa_poll")
 scheduler.start()
