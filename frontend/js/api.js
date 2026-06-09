@@ -1,7 +1,7 @@
 // Backend API base URL
 // Yerel: http://localhost:5000
 // Railway deploy sonrası: window.API_BASE değişkenini map.html'de ayarlayın
-const API_BASE = window.API_BASE || "http://localhost:5000";
+const API_BASE = "https://gtu-air-quality.onrender.com";
 
 async function apiFetch(path, options = {}) {
     const res = await fetch(API_BASE + path, options);
