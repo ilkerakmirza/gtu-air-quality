@@ -104,6 +104,36 @@ def purpleair_status():
 
 
 # ---------------------------------------------------------------------------
+# Atmotube Cloud API — canlı cihaz verileri (ATP-1..5)
+# ---------------------------------------------------------------------------
+
+import atmotube_cloud
+
+@app.get("/api/atmotube/live")
+def atmotube_live():
+    """5 Atmotube Pro cihazının bulut API'sindeki son ölçümleri (60 sn önbellekli)."""
+    force = request.args.get("force") == "1"
+    return jsonify({"data": atmotube_cloud.get_live_devices(force=force)})
+
+
+@app.get("/api/atmotube/history")
+def atmotube_history():
+    """Tek cihazın tarih aralığındaki ham bulut verisi.
+    Parametreler: device=ATP-1, start=YYYY-MM-DD, end=YYYY-MM-DD"""
+    device = request.args.get("device", "ATP-1")
+    mac = atmotube_cloud.DEVICES.get(device)
+    if not mac:
+        abort(400, description=f"Bilinmeyen cihaz: {device}")
+    start = request.args.get("start", _days_ago(1)[:10])
+    end   = request.args.get("end", _now_iso()[:10])
+    try:
+        items = atmotube_cloud.fetch_device_history(mac, start, end)
+    except Exception as e:
+        abort(502, description=f"Atmotube API hatası: {e}")
+    return jsonify({"device": device, "count": len(items), "data": items})
+
+
+# ---------------------------------------------------------------------------
 # Atmotube upload
 # ---------------------------------------------------------------------------
 

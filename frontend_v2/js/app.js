@@ -40,6 +40,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadSessions();
     loadHeatmap();
     startCountdown();
+
+    // Atmotube canlı cihazlar — 2 dk'da bir yenile
+    loadAtmotubeLive();
+    setInterval(loadAtmotubeLive, 120000);
 });
 
 async function wakeBackend() {
@@ -172,6 +176,97 @@ function startCountdown() {
         if (s <= 0) { s = 120; loadPurpleAir(); }
         document.getElementById("pa-countdown").textContent = `↻ ${s}s`;
     }, 1000);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Atmotube Cloud — canlı cihazlar (ATP-1..5)
+// ─────────────────────────────────────────────────────────────────
+
+let atpMarkers = {};   // device adı → Leaflet marker
+const ATP_ONLINE_MIN = 15;   // son X dk içinde veri = çevrimiçi
+
+function timeAgo(iso) {
+    const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+    if (mins < 1)   return "şimdi";
+    if (mins < 60)  return `${mins} dk önce`;
+    const h = Math.floor(mins / 60);
+    if (h < 24)     return `${h} sa önce`;
+    return `${Math.floor(h / 24)} gün önce`;
+}
+
+async function loadAtmotubeLive() {
+    try {
+        const res = await API.atmotubeLive();
+        renderAtmotubeDevices(res.data || []);
+    } catch (e) {
+        document.getElementById("atp-list").innerHTML =
+            `<div style="color:var(--red);font-size:12px">Atmotube API'sine ulaşılamadı</div>`;
+    }
+}
+
+function renderAtmotubeDevices(devices) {
+    const wrap = document.getElementById("atp-list");
+    let onlineCount = 0;
+
+    wrap.innerHTML = devices.map(d => {
+        const r = d.reading;
+        const online = r && (Date.now() - new Date(r.recorded_at).getTime()) < ATP_ONLINE_MIN * 60000;
+        if (online) onlineCount++;
+        const pmColor = r ? pm25Color(r.pm2_5) : "#3a4254";
+        return `
+          <div class="atp-row">
+            <span class="atp-status ${online ? "on" : "off"}"></span>
+            <span class="atp-name">${d.device}</span>
+            <span class="atp-info">${r ? timeAgo(r.recorded_at) + (r.lat ? " · GPS" : "") : "veri yok (son 2 gün)"}</span>
+            <span class="atp-val" style="color:${pmColor}">${r && r.pm2_5 != null ? r.pm2_5.toFixed(1) : "--"}<small> µg/m³</small></span>
+          </div>`;
+    }).join("");
+
+    // Rozet: kaç cihaz çevrimiçi
+    const badge = document.getElementById("atp-badge");
+    if (onlineCount > 0) {
+        badge.innerHTML = `<span class="live-dot"></span>${onlineCount} CANLI`;
+        badge.style.cssText = "";
+    } else {
+        badge.innerHTML = "ÇEVRİMDIŞI";
+        badge.style.background = "rgba(255,255,255,0.06)";
+        badge.style.borderColor = "var(--stroke-2)";
+        badge.style.color = "var(--text-2)";
+    }
+
+    updateAtmotubeMarkers(devices);
+}
+
+function updateAtmotubeMarkers(devices) {
+    for (const d of devices) {
+        const r = d.reading;
+        const online = r && r.lat && r.lon &&
+            (Date.now() - new Date(r.recorded_at).getTime()) < ATP_ONLINE_MIN * 60000;
+
+        if (!online) {
+            // Çevrimdışı cihazın işaretçisini kaldır
+            if (atpMarkers[d.device]) { map.removeLayer(atpMarkers[d.device]); delete atpMarkers[d.device]; }
+            continue;
+        }
+
+        const c = pm25Color(r.pm2_5);
+        const html = `<b>📡 ${d.device}</b> — canlı<br>PM₂.₅: <b style="color:${c}">${r.pm2_5?.toFixed(1) ?? "--"}</b> µg/m³<br><small>${timeAgo(r.recorded_at)}</small>`;
+        const icon = L.divIcon({
+            className: "",
+            html: `<div class="pulse-marker" style="--marker-color:${c};border-radius:30%"></div>`,
+            iconSize: [20, 20], iconAnchor: [10, 10],
+        });
+
+        if (!atpMarkers[d.device]) {
+            atpMarkers[d.device] = L.marker([r.lat, r.lon], { icon, zIndexOffset: 600 })
+                .addTo(map)
+                .bindTooltip(html, { direction: "top", offset: [0, -14], className: "pa-label" });
+        } else {
+            atpMarkers[d.device].setLatLng([r.lat, r.lon]);
+            atpMarkers[d.device].setIcon(icon);
+            atpMarkers[d.device].setTooltipContent(html);
+        }
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────

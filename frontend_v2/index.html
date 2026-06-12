@@ -266,6 +266,23 @@ body {
 }
 .session-play:hover { background: var(--accent); border-color: var(--accent); }
 
+/* Atmotube device rows */
+.atp-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 6px; border-radius: var(--r-sm);
+  font-size: 12px;
+}
+.atp-row + .atp-row { border-top: 1px solid rgba(255,255,255,0.04); }
+.atp-status {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.atp-status.on  { background: var(--green); box-shadow: 0 0 8px rgba(52,210,123,0.7); animation: blink 1.6s infinite; }
+.atp-status.off { background: #3a4254; }
+.atp-name { font-weight: 700; font-family: "JetBrains Mono", monospace; width: 52px; }
+.atp-info { flex: 1; color: var(--text-2); font-size: 10.5px; }
+.atp-val  { font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 14px; }
+.atp-val small { font-size: 9px; color: var(--text-2); font-weight: 500; }
+
 /* Layer toggles */
 .toggle-row {
   display: flex; align-items: center; gap: 10px;
@@ -535,6 +552,17 @@ body {
         <span id="pa-time">—</span>
         <span id="pa-countdown"></span>
       </div>
+    </div>
+  </section>
+
+  <!-- Atmotube live devices -->
+  <section class="panel">
+    <div class="panel-head">
+      <span class="ico">📡</span> Atmotube Pro — Canlı Cihazlar
+      <span class="right"><span class="live-badge" id="atp-badge"><span class="live-dot"></span>CANLI</span></span>
+    </div>
+    <div class="panel-body" id="atp-list" style="padding-top:8px; padding-bottom:8px">
+      <div style="color:var(--text-2);font-size:12px">Yükleniyor…</div>
     </div>
   </section>
 
