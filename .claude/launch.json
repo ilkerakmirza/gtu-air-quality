@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "3456"],
       "port": 3456
+    },
+    {
+      "name": "frontend-v2",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "frontend_v2"],
+      "port": 8765
     }
   ]
 }
