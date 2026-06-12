@@ -507,6 +507,13 @@ function loadCompareChart(atmoPts, paHist, person) {
         }
     } else badge.textContent = "";
 
+    // Uç değerler doğrusal ölçeği bozuyorsa logaritmik eksene geç:
+    // hem düşük taban (1-5) hem yüksek tepeler (300+) okunur kalır, veri atılmaz.
+    const allVals = [...atmoVals, ...paVals].filter(v => v != null).sort((a, b) => a - b);
+    const p98 = allVals[Math.floor(allVals.length * 0.98)] ?? 50;
+    const trueMax = allVals[allVals.length - 1] ?? 50;
+    const useLog = trueMax > p98 * 3 && trueMax > 50;
+
     if (cmpChart) cmpChart.destroy();
     cmpChart = new Chart(document.getElementById("cmp-chart"), {
         type: "line",
@@ -540,8 +547,14 @@ function loadCompareChart(atmoPts, paHist, person) {
             },
             scales: {
                 x: { ticks: { color: "#5d6678", font: { size: 9.5 }, maxTicksLimit: 12 }, grid: { color: "rgba(255,255,255,0.04)" } },
-                y: { ticks: { color: "#5d6678", font: { size: 9.5 } }, grid: { color: "rgba(255,255,255,0.05)" },
-                     title: { display: true, text: "PM₂.₅ (µg/m³)", color: "#5d6678", font: { size: 10 } } },
+                y: { type: useLog ? "logarithmic" : "linear",
+                     min: useLog ? Math.max(0.5, allVals[0] * 0.8) : undefined,
+                     ticks: { color: "#5d6678", font: { size: 9.5 },
+                              callback: v => Number(v.toFixed(1)).toLocaleString("tr-TR") },
+                     grid: { color: "rgba(255,255,255,0.05)" },
+                     title: { display: true,
+                              text: useLog ? "PM₂.₅ (µg/m³) — log ölçek" : "PM₂.₅ (µg/m³)",
+                              color: "#5d6678", font: { size: 10 } } },
             },
         },
     });
