@@ -58,17 +58,39 @@ async function wakeBackend() {
 // Harita
 // ─────────────────────────────────────────────────────────────────
 
+let baseLayers = {};
+
 function initMap() {
-    map = L.map("map", { center: GTU_CENTER, zoom: GTU_ZOOM, zoomControl: false });
+    map = L.map("map", { center: GTU_CENTER, zoom: GTU_ZOOM, zoomControl: false, preferCanvas: true });
     L.control.zoom({ position: "bottomleft" }).addTo(map);
 
-    const sat = L.tileLayer(
-        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        { attribution: "© Esri, Maxar", maxZoom: 20 });
-    const labels = L.tileLayer(
-        "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
-        { maxZoom: 20 });
-    L.layerGroup([sat, labels]).addTo(map);
+    // Koyu taban (CARTO) — renkli ölçüm noktaları üzerinde öne çıkar
+    const dark = L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        { attribution: "© CARTO © OpenStreetMap", maxZoom: 20, subdomains: "abcd" });
+
+    const sat = L.layerGroup([
+        L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            { attribution: "© Esri, Maxar", maxZoom: 20 }),
+        L.tileLayer("https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+            { maxZoom: 20 }),
+    ]);
+
+    const street = L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        { attribution: "© CARTO © OpenStreetMap", maxZoom: 20, subdomains: "abcd" });
+
+    baseLayers = { dark, sat, street };
+    dark.addTo(map);
+
+    // Segment kontrol bağlantısı
+    document.querySelectorAll(".seg-btn").forEach(btn =>
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".seg-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            Object.values(baseLayers).forEach(l => map.removeLayer(l));
+            baseLayers[btn.dataset.base].addTo(map);
+        }));
 
     campusOverlay = L.imageOverlay("images/campus_map_22TR.jpg", CAMPUS_BOUNDS,
         { opacity: 0.55, interactive: false });
@@ -241,10 +263,14 @@ async function refreshDots() {
             for (const pt of (track.points || []).filter(p => p.lat && p.lon)) {
                 allPts.push(pt);
                 if (!document.getElementById("tg-dots").checked) continue;
+                // Değer yükseldikçe nokta büyür: temiz hava küçük, kirli hava dikkat çeker
+                const v = pt.pm2_5 ?? 0;
+                const radius = 5 + Math.min(v / 12, 6);
+                const c = pm25Color(pt.pm2_5);
                 L.circleMarker([pt.lat, pt.lon], {
-                    radius: 6.5,
-                    color: "rgba(255,255,255,0.55)", weight: 1,
-                    fillColor: pm25Color(pt.pm2_5), fillOpacity: 0.88,
+                    radius,
+                    color: c, weight: 2, opacity: 0.35,
+                    fillColor: c, fillOpacity: 0.92,
                 }).bindPopup(`
                     <div style="font-family:Inter;min-width:170px">
                       <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
