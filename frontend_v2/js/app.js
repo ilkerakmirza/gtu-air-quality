@@ -307,9 +307,18 @@ function renderSessionGroups() {
         groups.get(p.key).sessions.push(s);
     }
 
-    wrap.innerHTML = [...groups.values()].map(({ person, sessions }) => `
-      <div class="person-group open" data-person="${person.key}">
+    // Üst kontrol çubuğu: Tümünü Seç / Temizle
+    const controls = `
+      <div class="session-controls">
+        <button class="sc-btn" id="sel-all">Tümünü Seç</button>
+        <button class="sc-btn" id="sel-none">Temizle</button>
+      </div>`;
+
+    // Başlangıçta harita temiz gelsin → kutucuklar işaretsiz (kullanıcı istediğini ekler)
+    const html = [...groups.values()].map(({ person, sessions }) => `
+      <div class="person-group" data-person="${person.key}">
         <div class="person-head">
+          <input type="checkbox" class="person-cb" title="Bu kişinin tüm günleri">
           <div class="person-avatar" style="background:${person.color}">${person.initial}</div>
           <span class="person-name">${person.name}</span>
           <span class="person-count">${sessions.length} gün · ${sessions.reduce((a,s)=>a+(s.reading_count||0),0)} ölçüm</span>
@@ -318,7 +327,7 @@ function renderSessionGroups() {
         <div class="person-sessions">
           ${sessions.map(s => `
             <div class="session-item">
-              <input type="checkbox" class="s-cb" value="${s.id}" checked>
+              <input type="checkbox" class="s-cb" value="${s.id}">
               <span class="session-date">${dateLabelOf(s)}</span>
               <span class="session-n">${s.reading_count ?? 0}</span>
               <button class="session-play" data-sid="${s.id}" title="Bu günü oynat">▶</button>
@@ -326,12 +335,54 @@ function renderSessionGroups() {
         </div>
       </div>`).join("");
 
+    wrap.innerHTML = controls + html;
+
+    // Kişi başlığına tıkla → aç/kapa (kutucuk veya oynat düğmesi hariç)
     wrap.querySelectorAll(".person-head").forEach(h =>
-        h.addEventListener("click", () => h.parentElement.classList.toggle("open")));
+        h.addEventListener("click", (e) => {
+            if (e.target.closest(".person-cb")) return;
+            h.parentElement.classList.toggle("open");
+        }));
+
+    // Kişi kutucuğu → o kişinin tüm günlerini seç/kaldır
+    wrap.querySelectorAll(".person-cb").forEach(pcb =>
+        pcb.addEventListener("change", (e) => {
+            e.stopPropagation();
+            const group = pcb.closest(".person-group");
+            group.querySelectorAll(".s-cb").forEach(cb => cb.checked = pcb.checked);
+            if (pcb.checked) group.classList.add("open");
+            refreshDots();
+        }));
+
+    // Tekil gün kutucuğu
     wrap.querySelectorAll(".s-cb").forEach(cb =>
-        cb.addEventListener("change", refreshDots));
+        cb.addEventListener("change", () => { syncPersonCheckboxes(); refreshDots(); }));
+
+    // Oynat düğmeleri
     wrap.querySelectorAll(".session-play").forEach(btn =>
         btn.addEventListener("click", (e) => { e.stopPropagation(); startPlayback(+btn.dataset.sid); }));
+
+    // Tümünü Seç / Temizle
+    document.getElementById("sel-all").addEventListener("click", () => {
+        wrap.querySelectorAll(".s-cb").forEach(cb => cb.checked = true);
+        wrap.querySelectorAll(".person-group").forEach(g => g.classList.add("open"));
+        syncPersonCheckboxes(); refreshDots();
+    });
+    document.getElementById("sel-none").addEventListener("click", () => {
+        wrap.querySelectorAll(".s-cb").forEach(cb => cb.checked = false);
+        syncPersonCheckboxes(); refreshDots();
+    });
+}
+
+// Kişi kutucuğunu, altındaki günlerin durumuna göre güncelle (hepsi/bazısı/hiçbiri)
+function syncPersonCheckboxes() {
+    document.querySelectorAll(".person-group").forEach(group => {
+        const cbs = [...group.querySelectorAll(".s-cb")];
+        const checked = cbs.filter(c => c.checked).length;
+        const pcb = group.querySelector(".person-cb");
+        pcb.checked = checked === cbs.length;
+        pcb.indeterminate = checked > 0 && checked < cbs.length;
+    });
 }
 
 function updateChips() {
