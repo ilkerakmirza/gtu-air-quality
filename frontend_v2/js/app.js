@@ -200,7 +200,6 @@ async function loadIBB() {
         pmEl.style.color = pm25Color(d.pm2_5);
 
         set("ibb-name", `${d.station_name} (${d.type}) — ${d.town}`);
-        set("ibb-pm10", d.pm10_0 != null ? d.pm10_0.toFixed(0) : "--");
         set("ibb-dist", d.distance_km != null ? d.distance_km + " km" : "--");
 
         const badge = document.getElementById("ibb-badge");
@@ -577,6 +576,7 @@ const Player = {
         paLive = true; paHistory = [];
         setPABadge("live");
         loadPurpleAir();
+        restoreAvgBadge();
     },
     render(pt) {
         const color = pm25Color(pt.pm2_5);
@@ -659,16 +659,23 @@ function onStep(pt, idx, total) {
 
     document.getElementById("pl-fill").style.width = `${(idx / (total - 1) * 100).toFixed(1)}%`;
 
-    // PurpleAir senkronizasyonu
+    // PurpleAir senkronizasyonu + anlık fark
     const pa = nearestPA(dt.getTime());
     const paEl = document.getElementById("pl-pa");
+    const deltaEl = document.getElementById("pl-delta");
     if (pa) {
         paEl.textContent = pa.pm2_5?.toFixed(1) ?? "--";
         paEl.style.color = pm25Color(pa.pm2_5);
         updatePAPanel(pa);
         updatePAMarker({ ...pa, lat: GTU_CENTER[0], lon: GTU_CENTER[1] });
+
+        // Anlık fark: Atmotube − PurpleAir
+        if (pt.pm2_5 != null && pa.pm2_5 != null) {
+            showLiveDelta(pt.pm2_5 - pa.pm2_5, deltaEl);
+        }
     } else {
         paEl.textContent = "--";
+        if (deltaEl) deltaEl.textContent = "";
     }
 
     updateChartCursor(idx);
@@ -685,6 +692,7 @@ function initPlayerUI() {
     document.getElementById("pl-close").addEventListener("click", () => {
         Player.stop();
         document.getElementById("player-dock").classList.remove("visible");
+        restoreAvgBadge();
         paLive = true; paHistory = [];
         setPABadge("live");
         loadPurpleAir();
@@ -732,13 +740,15 @@ function loadCompareChart(atmoPts, paHist, person) {
         const pm = pf.reduce((a,b)=>a+b,0)/pf.length;
         const diff = Math.abs(am - pm).toFixed(1);
         if (am > pm) {
-            badge.textContent = `Taşınabilir +${diff} µg/m³ yüksek ölçüyor`;
-            badge.style.cssText = "background:rgba(52,210,123,0.13);color:#34d27b;border-color:rgba(52,210,123,0.3)";
+            _avgBadge = { text: `Ort. fark: Taşınabilir +${diff} µg/m³`,
+                          css: "background:rgba(52,210,123,0.13);color:#34d27b;border-color:rgba(52,210,123,0.3)" };
         } else {
-            badge.textContent = `Sabit istasyon +${diff} µg/m³ yüksek ölçüyor`;
-            badge.style.cssText = "background:rgba(176,122,255,0.13);color:#b07aff;border-color:rgba(176,122,255,0.3)";
+            _avgBadge = { text: `Ort. fark: Sabit +${diff} µg/m³`,
+                          css: "background:rgba(176,122,255,0.13);color:#b07aff;border-color:rgba(176,122,255,0.3)" };
         }
-    } else badge.textContent = "";
+        badge.textContent = _avgBadge.text;
+        badge.style.cssText = _avgBadge.css;
+    } else { badge.textContent = ""; _avgBadge = null; }
 
     // Uç değerler doğrusal ölçeği bozuyorsa logaritmik eksene geç:
     // hem düşük taban (1-5) hem yüksek tepeler (300+) okunur kalır, veri atılmaz.
@@ -803,6 +813,37 @@ function nearestPAIn(hist, ts) {
         if (d < bd) { best = r; bd = d; }
     }
     return bd < 10 * 60 * 1000 ? best : null;
+}
+
+// Oynatma sırasında anlık farkı göster (oynatıcı rozeti + grafik başlığı)
+let _avgBadge = null;
+
+function showLiveDelta(d, deltaEl) {
+    const sign = d >= 0 ? "+" : "−";
+    const abs = Math.abs(d).toFixed(1);
+    const who = d >= 0 ? "Taşınabilir" : "Sabit";
+    const color = d >= 0 ? "#34d27b" : "#b07aff";
+
+    // Oynatıcıdaki küçük rozet
+    if (deltaEl) {
+        deltaEl.textContent = `Δ ${sign}${abs}`;
+        deltaEl.style.background = color + "22";
+        deltaEl.style.color = color;
+    }
+    // Grafik başlığındaki rozet — anlık fark
+    const badge = document.getElementById("adv-badge");
+    if (badge) {
+        badge.textContent = `Anlık fark: ${who} ${sign}${abs} µg/m³`;
+        badge.style.cssText = `background:${color}22;color:${color};border-color:${color}55`;
+    }
+}
+
+function restoreAvgBadge() {
+    const badge = document.getElementById("adv-badge");
+    if (!badge) return;
+    if (_avgBadge) { badge.textContent = _avgBadge.text; badge.style.cssText = _avgBadge.css; }
+    const deltaEl = document.getElementById("pl-delta");
+    if (deltaEl) deltaEl.textContent = "";
 }
 
 function updateChartCursor(idx) {

@@ -450,6 +450,10 @@ body {
   font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 16px;
   margin-left: auto;
 }
+.player-pa-sync .pa-delta {
+  font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 11px;
+  padding: 2px 7px; border-radius: 99px; white-space: nowrap;
+}
 
 /* ───────────────────────── Chart drawer ───────────────────────── */
 .chart-drawer {
@@ -651,7 +655,6 @@ body {
           <div class="ibb-sub" id="ibb-name">İstasyon yükleniyor…</div>
         </div>
         <div class="ibb-meta">
-          <div><span>PM₁₀</span><b id="ibb-pm10">--</b></div>
           <div><span>Uzaklık</span><b id="ibb-dist">--</b></div>
         </div>
       </div>
@@ -710,6 +713,7 @@ body {
   <div class="player-pa-sync">
     🟣 PurpleAir aynı anda
     <span class="pa-mini-val" id="pl-pa">--</span>
+    <span class="pa-delta" id="pl-delta"></span>
   </div>
   <div class="player-progress" id="pl-progress">
     <div class="rail"><div class="fill" id="pl-fill"></div></div>
@@ -739,8 +743,8 @@ body {
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=7"></script>
-<script src="js/api.js?v=7"></script>
-<script src="js/app.js?v=7"></script>
+<script src="js/colorscale.js?v=8"></script>
+<script src="js/api.js?v=8"></script>
+<script src="js/app.js?v=8"></script>
 </body>
 </html>
