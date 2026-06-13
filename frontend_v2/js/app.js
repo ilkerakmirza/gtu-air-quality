@@ -85,7 +85,7 @@ function initMap() {
         { attribution: "© CARTO © OpenStreetMap", maxZoom: 20, subdomains: "abcd" });
 
     baseLayers = { dark, sat, street };
-    dark.addTo(map);
+    sat.addTo(map);   // Açılışta uydu haritası
 
     // Segment kontrol bağlantısı
     document.querySelectorAll(".seg-btn").forEach(btn =>

@@ -239,7 +239,32 @@ body {
 
 /* Session groups */
 .person-group { margin-bottom: 4px; }
-.person-cb { accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer; flex-shrink: 0; }
+/* Belirgin özel kutucuklar — koyu temada görünür */
+.s-cb, .person-cb {
+  appearance: none; -webkit-appearance: none;
+  width: 18px; height: 18px; flex-shrink: 0; cursor: pointer;
+  border: 1.5px solid var(--stroke-2);
+  border-radius: 5px;
+  background: rgba(255,255,255,0.07);
+  position: relative;
+  transition: all 0.15s;
+}
+.s-cb:hover, .person-cb:hover { border-color: var(--accent); background: rgba(108,140,255,0.15); }
+.s-cb:checked, .person-cb:checked {
+  background: var(--accent); border-color: var(--accent);
+}
+.s-cb:checked::after, .person-cb:checked::after {
+  content: "✓"; position: absolute; inset: 0;
+  display: grid; place-items: center;
+  color: #fff; font-size: 12px; font-weight: 800;
+}
+.person-cb:indeterminate {
+  background: var(--accent); border-color: var(--accent);
+}
+.person-cb:indeterminate::after {
+  content: ""; position: absolute; left: 3px; right: 3px; top: 50%;
+  height: 2px; background: #fff; transform: translateY(-50%); border-radius: 2px;
+}
 .person-head {
   display: flex; align-items: center; gap: 9px;
   padding: 8px 6px; cursor: pointer; user-select: none;
@@ -266,7 +291,6 @@ body {
   font-size: 12px;
 }
 .session-item:hover { background: rgba(255,255,255,0.045); }
-.session-item input { accent-color: var(--accent); width: 14px; height: 14px; cursor: pointer; }
 .session-date { font-weight: 600; flex: 1; }
 .session-n { font-size: 10.5px; color: var(--text-2); font-family: "JetBrains Mono", monospace; }
 .session-play {
@@ -533,8 +557,8 @@ body {
   </div>
   <div class="topbar-spacer"></div>
   <div class="seg" id="basemap-seg">
-    <button class="seg-btn active" data-base="dark">🌑 Koyu</button>
-    <button class="seg-btn" data-base="sat">🛰 Uydu</button>
+    <button class="seg-btn active" data-base="sat">🛰 Uydu</button>
+    <button class="seg-btn" data-base="dark">🌑 Koyu</button>
     <button class="seg-btn" data-base="street">🗺 Sokak</button>
   </div>
   <div class="chip" id="chip-readings">📊 <b>—</b>&nbsp;ölçüm</div>
@@ -657,8 +681,8 @@ body {
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=4"></script>
-<script src="js/api.js?v=4"></script>
-<script src="js/app.js?v=4"></script>
+<script src="js/colorscale.js?v=5"></script>
+<script src="js/api.js?v=5"></script>
+<script src="js/app.js?v=5"></script>
 </body>
 </html>
