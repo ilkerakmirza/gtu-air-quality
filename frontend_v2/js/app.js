@@ -314,9 +314,9 @@ function renderSessionGroups() {
         <button class="sc-btn" id="sel-none">Temizle</button>
       </div>`;
 
-    // Başlangıçta harita temiz gelsin → kutucuklar işaretsiz (kullanıcı istediğini ekler)
+    // Gruplar açık başlasın (günler + kutucuklar görünür), kutucuklar işaretsiz (harita temiz)
     const html = [...groups.values()].map(({ person, sessions }) => `
-      <div class="person-group" data-person="${person.key}">
+      <div class="person-group open" data-person="${person.key}">
         <div class="person-head">
           <input type="checkbox" class="person-cb" title="Bu kişinin tüm günleri">
           <div class="person-avatar" style="background:${person.color}">${person.initial}</div>
