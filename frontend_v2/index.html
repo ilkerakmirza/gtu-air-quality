@@ -135,6 +135,8 @@ body {
   position: absolute; top: 70px; left: 14px; bottom: 14px; z-index: 900;
   width: 322px;
   display: flex; flex-direction: column; gap: 12px;
+  overflow-y: auto; overflow-x: visible;
+  padding-right: 2px;
   transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
 }
 .sidebar.hidden { transform: translateX(-360px); }
@@ -328,8 +330,17 @@ body {
 .toggle-row input { accent-color: var(--accent); width: 15px; height: 15px; }
 
 /* ───────────────────────── Player dock ───────────────────────── */
-.player-dock {
+/* Sessions dock — sağ üst, kaydırılabilir */
+.sessions-dock {
   position: absolute; top: 70px; right: 14px; z-index: 900;
+  width: 322px;
+  max-height: calc(100vh - 84px - 56px);
+  display: flex; flex-direction: column;
+}
+.sessions-dock .panel-scroll { max-height: 100%; }
+
+.player-dock {
+  position: absolute; top: 70px; right: 14px; z-index: 960;
   width: 348px;
   background: var(--glass);
   border: 1px solid var(--stroke);
@@ -615,17 +626,6 @@ body {
     </div>
   </section>
 
-  <!-- Sessions -->
-  <section class="panel panel-scroll">
-    <div class="panel-head">
-      <span class="ico">👥</span> Saha Ölçümleri
-      <span class="right" style="font-size:10px; font-weight:600; text-transform:none; letter-spacing:0">▶ = günü oynat</span>
-    </div>
-    <div class="panel-body" id="session-list">
-      <div style="color:var(--text-2);font-size:12px">Yükleniyor…</div>
-    </div>
-  </section>
-
   <!-- Layers -->
   <section class="panel">
     <div class="panel-head"><span class="ico">🗺️</span> Katmanlar</div>
@@ -637,6 +637,19 @@ body {
   </section>
 </aside>
 <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+
+<!-- Sessions dock (sağ üst) -->
+<aside class="sessions-dock" id="sessions-dock">
+  <div class="panel panel-scroll" style="height:100%">
+    <div class="panel-head">
+      <span class="ico">👥</span> Saha Ölçümleri
+      <span class="right" style="font-size:10px; font-weight:600; text-transform:none; letter-spacing:0">▶ = günü oynat</span>
+    </div>
+    <div class="panel-body" id="session-list">
+      <div style="color:var(--text-2);font-size:12px">Yükleniyor…</div>
+    </div>
+  </div>
+</aside>
 
 <!-- Player dock -->
 <div class="player-dock" id="player-dock">
@@ -681,8 +694,8 @@ body {
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=5"></script>
-<script src="js/api.js?v=5"></script>
-<script src="js/app.js?v=5"></script>
+<script src="js/colorscale.js?v=6"></script>
+<script src="js/api.js?v=6"></script>
+<script src="js/app.js?v=6"></script>
 </body>
 </html>
