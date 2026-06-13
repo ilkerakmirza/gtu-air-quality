@@ -116,6 +116,19 @@ def atmotube_live():
     return jsonify({"data": atmotube_cloud.get_live_devices(force=force)})
 
 
+import ibb
+
+@app.get("/api/ibb/latest")
+def ibb_latest():
+    """GTÜ'ye en yakın İBB istasyonunun (Tuzla) PM2.5 arka plan verisi (5 dk önbellekli)."""
+    force = request.args.get("force") == "1"
+    try:
+        data = ibb.get_nearest_station(force=force)
+    except Exception as e:
+        return jsonify({"data": None, "error": str(e)}), 200
+    return jsonify({"data": data})
+
+
 @app.get("/api/atmotube/history")
 def atmotube_history():
     """Tek cihazın tarih aralığındaki ham bulut verisi.

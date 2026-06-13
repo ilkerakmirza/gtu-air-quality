@@ -44,6 +44,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Atmotube canlı cihazlar — 2 dk'da bir yenile
     loadAtmotubeLive();
     setInterval(loadAtmotubeLive, 120000);
+
+    // İBB arka plan istasyonu — 5 dk'da bir yenile (İBB saatlik günceller)
+    loadIBB();
+    setInterval(loadIBB, 300000);
 });
 
 async function wakeBackend() {
@@ -176,6 +180,63 @@ function startCountdown() {
         if (s <= 0) { s = 120; loadPurpleAir(); }
         document.getElementById("pa-countdown").textContent = `↻ ${s}s`;
     }, 1000);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// İBB arka plan istasyonu (en yakın: Tuzla)
+// ─────────────────────────────────────────────────────────────────
+
+let ibbMarker = null;
+
+async function loadIBB() {
+    try {
+        const res = await API.ibbLatest();
+        const d = res.data;
+        const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+        if (!d) { set("ibb-name", "İBB verisi alınamadı"); return; }
+
+        const pmEl = document.getElementById("ibb-pm25");
+        pmEl.innerHTML = `${d.pm2_5 != null ? d.pm2_5.toFixed(1) : "--"}<small> PM₂.₅ µg/m³</small>`;
+        pmEl.style.color = pm25Color(d.pm2_5);
+
+        set("ibb-name", `${d.station_name} (${d.type}) — ${d.town}`);
+        set("ibb-pm10", d.pm10_0 != null ? d.pm10_0.toFixed(0) : "--");
+        set("ibb-dist", d.distance_km != null ? d.distance_km + " km" : "--");
+
+        const badge = document.getElementById("ibb-badge");
+        badge.textContent = pm25Label(d.pm2_5);
+        badge.style.color = pm25Color(d.pm2_5);
+        badge.style.borderColor = pm25Color(d.pm2_5) + "55";
+        badge.style.background = pm25Color(d.pm2_5) + "1f";
+
+        set("ibb-time", d.recorded_at
+            ? "İBB · " + new Date(d.recorded_at).toLocaleString("tr-TR") + " (saatlik)"
+            : "İBB");
+
+        // Haritada gerçek konumunda işaretçi (uzaklaştırınca görünür)
+        if (d.lat && d.lon) updateIBBMarker(d);
+    } catch (e) {
+        const el = document.getElementById("ibb-name");
+        if (el) el.textContent = "İBB bağlantı hatası";
+    }
+}
+
+function updateIBBMarker(d) {
+    const c = pm25Color(d.pm2_5);
+    const html = `<b>🏙️ İBB — ${d.station_name}</b><br>${d.type} arka plan istasyonu<br>PM₂.₅: <b style="color:${c}">${d.pm2_5?.toFixed(1) ?? "--"}</b> µg/m³<br><small>${d.distance_km} km · ${d.recorded_at ? new Date(d.recorded_at).toLocaleString("tr-TR") : ""}</small>`;
+    const icon = L.divIcon({
+        className: "",
+        html: `<div class="ibb-marker" style="--marker-color:${c}">🏙️</div>`,
+        iconSize: [30, 30], iconAnchor: [15, 15],
+    });
+    if (!ibbMarker) {
+        ibbMarker = L.marker([d.lat, d.lon], { icon, zIndexOffset: 400 })
+            .addTo(map)
+            .bindTooltip(html, { direction: "top", offset: [0, -16], className: "pa-label" });
+    } else {
+        ibbMarker.setIcon(icon);
+        ibbMarker.setTooltipContent(html);
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────

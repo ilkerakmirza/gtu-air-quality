@@ -18,6 +18,7 @@ const API = {
     sessionReadings:  (id) => apiFetch(`/api/sessions/${id}/readings`),
     mapSummary:       () => apiFetch("/api/map/summary"),
     mapTracks:        (ids = []) => apiFetch(`/api/map/tracks${ids.length ? "?session_ids=" + ids.join(",") : ""}`),
+    ibbLatest:        () => apiFetch("/api/ibb/latest"),
     atmotubeLive:     () => apiFetch("/api/atmotube/live"),
     atmotubeHistory:  (device, start, end) =>
         apiFetch(`/api/atmotube/history?device=${device}&start=${start}&end=${end}`),

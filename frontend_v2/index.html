@@ -305,6 +305,23 @@ body {
 }
 .session-play:hover { background: var(--accent); border-color: var(--accent); }
 
+/* İBB background station panel */
+.ibb-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: 99px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+  background: rgba(245,184,64,0.12); border: 1px solid rgba(245,184,64,0.32); color: var(--amber);
+}
+.ibb-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.ibb-val { font-family: "JetBrains Mono", monospace; font-size: 30px; font-weight: 700; line-height: 1; letter-spacing: -0.02em; }
+.ibb-val small { font-size: 11px; color: var(--text-2); font-weight: 600; font-family: Inter; }
+.ibb-sub { font-size: 11px; color: var(--text-2); margin-top: 5px; }
+.ibb-meta { display: flex; flex-direction: column; gap: 4px; text-align: right; }
+.ibb-meta div { font-size: 10.5px; color: var(--text-2); }
+.ibb-meta span { margin-right: 6px; }
+.ibb-meta b { font-family: "JetBrains Mono", monospace; color: var(--text); font-size: 12.5px; }
+.ibb-foot { margin-top: 9px; font-size: 10.5px; color: var(--text-2); }
+
 /* Atmotube device rows */
 .atp-row {
   display: flex; align-items: center; gap: 10px;
@@ -512,6 +529,13 @@ body {
   width: 16px; height: 16px; border-radius: 50%;
   border: 2.5px solid #fff;
 }
+.ibb-marker {
+  width: 30px; height: 30px; border-radius: 9px;
+  background: var(--marker-color, #f5b840);
+  border: 2.5px solid #fff;
+  display: grid; place-items: center; font-size: 15px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.45);
+}
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 9px; }
@@ -614,6 +638,27 @@ body {
     </div>
   </section>
 
+  <!-- IBB background station -->
+  <section class="panel">
+    <div class="panel-head">
+      <span class="ico">🏙️</span> İBB Arka Plan İstasyonu
+      <span class="right"><span class="ibb-badge" id="ibb-badge">—</span></span>
+    </div>
+    <div class="panel-body" style="padding-top:10px; padding-bottom:11px">
+      <div class="ibb-row">
+        <div>
+          <div class="ibb-val" id="ibb-pm25">--<small> PM₂.₅ µg/m³</small></div>
+          <div class="ibb-sub" id="ibb-name">İstasyon yükleniyor…</div>
+        </div>
+        <div class="ibb-meta">
+          <div><span>PM₁₀</span><b id="ibb-pm10">--</b></div>
+          <div><span>Uzaklık</span><b id="ibb-dist">--</b></div>
+        </div>
+      </div>
+      <div class="ibb-foot" id="ibb-time">—</div>
+    </div>
+  </section>
+
   <!-- Stats -->
   <section class="panel">
     <div class="panel-head"><span class="ico">📈</span> Seçili Veri Özeti</div>
@@ -694,8 +739,8 @@ body {
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=6"></script>
-<script src="js/api.js?v=6"></script>
-<script src="js/app.js?v=6"></script>
+<script src="js/colorscale.js?v=7"></script>
+<script src="js/api.js?v=7"></script>
+<script src="js/app.js?v=7"></script>
 </body>
 </html>
