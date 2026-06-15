@@ -44,11 +44,22 @@ def get_conn():
             conn.close()
 
 
+import datetime as _dt
+
+def _isoize(d):
+    """datetime/date değerlerini ISO 8601 string'e çevirir (frontend ISO bekler).
+    Postgres'ten gelen datetime'lar aksi halde RFC formatında serileşip 'Invalid Date' verir."""
+    for k, v in d.items():
+        if isinstance(v, (_dt.datetime, _dt.date)):
+            d[k] = v.isoformat()
+    return d
+
+
 def fetchall(cursor):
     rows = cursor.fetchall()
     if _USE_POSTGRES:
         cols = [desc[0] for desc in cursor.description]
-        return [dict(zip(cols, row)) for row in rows]
+        return [_isoize(dict(zip(cols, row))) for row in rows]
     return [dict(row) for row in rows]
 
 
@@ -58,7 +69,7 @@ def fetchone(cursor):
         return None
     if _USE_POSTGRES:
         cols = [desc[0] for desc in cursor.description]
-        return dict(zip(cols, row))
+        return _isoize(dict(zip(cols, row)))
     return dict(row)
 
 
