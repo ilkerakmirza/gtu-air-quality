@@ -140,7 +140,7 @@ def iter_csv(source=None, start=None, end=None):
     if not _enabled:
         return
     con = _connect()
-    cur = con.cursor(name="export_cur")  # server-side cursor (büyük veri için)
+    cur = con.cursor()  # düz cursor (transaction pooler named cursor desteklemez)
     q = f"SELECT {','.join(header[:-1])}, ingested_at FROM measurements WHERE 1=1"
     params = []
     if source: q += " AND source=%s"; params.append(source)
@@ -148,7 +148,11 @@ def iter_csv(source=None, start=None, end=None):
     if end:    q += " AND recorded_at<=%s"; params.append(end)
     q += " ORDER BY recorded_at"
     cur.execute(q, params)
-    for row in cur:
-        w.writerow(row)
+    while True:
+        batch = cur.fetchmany(1000)
+        if not batch:
+            break
+        for row in batch:
+            w.writerow(row)
         yield buf.getvalue(); buf.seek(0); buf.truncate(0)
     con.close()
