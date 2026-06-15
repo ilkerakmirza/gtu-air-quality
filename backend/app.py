@@ -169,6 +169,19 @@ def ibb_latest():
     return jsonify({"data": data})
 
 
+import csb
+
+@app.get("/api/csb/latest")
+def csb_latest():
+    """CSB (Çevre Şehircilik Bakanlığı) Tuzla istasyonu PM2.5 verisi (10 dk önbellekli)."""
+    force = request.args.get("force") == "1"
+    try:
+        data = csb.get_latest(force=force)
+    except Exception as e:
+        return jsonify({"data": None, "error": str(e)}), 200
+    return jsonify({"data": data})
+
+
 @app.get("/api/atmotube/history")
 def atmotube_history():
     """Tek cihazın tarih aralığındaki ham bulut verisi.

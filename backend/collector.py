@@ -7,6 +7,7 @@ import datetime
 import archive
 import db
 import ibb
+import csb
 import atmotube_cloud
 
 # Türkiye sabit UTC+3 (2016'dan beri yaz saati yok)
@@ -61,6 +62,24 @@ def collect_ibb():
         return 0
 
 
+def collect_csb():
+    """CSB Tuzla istasyonu saatlik PM2.5 değerini arşive ekle (Türkiye saati → UTC)."""
+    try:
+        d = csb.get_latest(force=True)
+        if not d or d.get("pm2_5") is None:
+            return 0
+        return archive.log_rows([{
+            "source": "csb", "device": d.get("station_name"),
+            "recorded_at": _tr_local_to_utc(d.get("recorded_at")),
+            "pm1_0": None, "pm2_5": d.get("pm2_5"), "pm10_0": None,
+            "voc_ppm": None, "temperature_c": None, "humidity_pct": None,
+            "pressure_hpa": None, "lat": d.get("lat"), "lon": d.get("lon"),
+        }])
+    except Exception as e:
+        print(f"[collector/csb] {e}")
+        return 0
+
+
 def collect_atmotube():
     """5 Atmotube cihazının son okumalarını arşive ekle."""
     try:
@@ -93,7 +112,7 @@ def collect_fast():
 
 
 def collect_hourly():
-    """Saatte bir: İBB."""
-    n = collect_ibb()
+    """Saatte bir: İBB + CSB."""
+    n = collect_ibb() + collect_csb()
     if n:
-        print(f"[collector] {n} yeni İBB kaydı arşivlendi.")
+        print(f"[collector] {n} yeni İBB/CSB kaydı arşivlendi.")

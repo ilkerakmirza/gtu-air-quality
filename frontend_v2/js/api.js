@@ -19,6 +19,7 @@ const API = {
     mapSummary:       () => apiFetch("/api/map/summary"),
     mapTracks:        (ids = []) => apiFetch(`/api/map/tracks${ids.length ? "?session_ids=" + ids.join(",") : ""}`),
     ibbLatest:        () => apiFetch("/api/ibb/latest"),
+    csbLatest:        () => apiFetch("/api/csb/latest"),
     atmotubeLive:     () => apiFetch("/api/atmotube/live"),
     atmotubeHistory:  (device, start, end) =>
         apiFetch(`/api/atmotube/history?device=${device}&start=${start}&end=${end}`),

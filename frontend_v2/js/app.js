@@ -48,6 +48,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     // İBB arka plan istasyonu — 5 dk'da bir yenile (İBB saatlik günceller)
     loadIBB();
     setInterval(loadIBB, 300000);
+
+    // CSB ulusal istasyon (Tuzla) — 5 dk'da bir
+    loadCSB();
+    setInterval(loadCSB, 300000);
 });
 
 async function wakeBackend() {
@@ -235,6 +239,55 @@ function updateIBBMarker(d) {
     } else {
         ibbMarker.setIcon(icon);
         ibbMarker.setTooltipContent(html);
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// CSB ulusal istasyon (Tuzla)
+// ─────────────────────────────────────────────────────────────────
+
+let csbMarker = null;
+
+async function loadCSB() {
+    try {
+        const res = await API.csbLatest();
+        const d = res.data;
+        const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+        if (!d || d.pm2_5 == null) { set("csb-name", "CSB verisi alınamadı"); return; }
+
+        const pmEl = document.getElementById("csb-pm25");
+        pmEl.innerHTML = `${d.pm2_5.toFixed(1)}<small> PM₂.₅ µg/m³</small>`;
+        pmEl.style.color = pm25Color(d.pm2_5);
+
+        set("csb-name", `${d.station_name} · CSB ağı`);
+        set("csb-dist", d.distance_km != null ? d.distance_km + " km" : "--");
+
+        const badge = document.getElementById("csb-badge");
+        badge.textContent = pm25Label(d.pm2_5);
+        badge.style.color = pm25Color(d.pm2_5);
+        badge.style.borderColor = pm25Color(d.pm2_5) + "55";
+        badge.style.background = pm25Color(d.pm2_5) + "1f";
+
+        set("csb-time", d.recorded_at ? "CSB · " + d.recorded_at.replace("T", " ") + " (saatlik)" : "CSB");
+
+        if (d.lat && d.lon) {
+            // İBB Tuzla ile aynı noktada — üst üste binmesin diye hafif offset
+            const c = pm25Color(d.pm2_5);
+            const html = `<b>🏛️ CSB — ${d.station_name}</b><br>Çevre Şehircilik Bak. ulusal ağ<br>PM₂.₅: <b style="color:${c}">${d.pm2_5.toFixed(1)}</b> µg/m³<br><small>${d.distance_km} km · ${d.recorded_at ? d.recorded_at.replace("T"," ") : ""}</small>`;
+            const icon = L.divIcon({ className: "",
+                html: `<div class="ibb-marker" style="--marker-color:${c}">🏛️</div>`,
+                iconSize: [30, 30], iconAnchor: [15, 15] });
+            const pos = [d.lat + 0.0008, d.lon + 0.0008];
+            if (!csbMarker) {
+                csbMarker = L.marker(pos, { icon, zIndexOffset: 400 }).addTo(map)
+                    .bindTooltip(html, { direction: "top", offset: [0, -16], className: "pa-label" });
+            } else {
+                csbMarker.setIcon(icon); csbMarker.setTooltipContent(html);
+            }
+        }
+    } catch (e) {
+        const el = document.getElementById("csb-name");
+        if (el) el.textContent = "CSB bağlantı hatası";
     }
 }
 
