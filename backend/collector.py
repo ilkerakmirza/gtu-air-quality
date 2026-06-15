@@ -104,9 +104,61 @@ def collect_atmotube():
         return 0
 
 
+def sync_atmotube_sessions():
+    """Arşivdeki Atmotube (ATP-1..5) verisini, saha ölçümleri panelinde seçilebilir
+    olsun diye cihaz-gün bazlı oturumlara (upload_sessions + atmotube_readings) dönüştürür.
+    Son 3 gün işlenir; tekrar çalıştırılabilir (ON CONFLICT ile mükerrer engellenir)."""
+    if not archive.is_enabled():
+        return
+    try:
+        with db.get_conn() as conn:
+            cur = conn.cursor()
+            cur.execute("""
+                SELECT device, (recorded_at AT TIME ZONE 'Europe/Istanbul')::date AS d,
+                       COUNT(*), MIN(recorded_at), MAX(recorded_at)
+                FROM measurements
+                WHERE source='atmotube' AND recorded_at > now() - interval '3 days'
+                GROUP BY device, d ORDER BY device, d
+            """)
+            groups = cur.fetchall()
+            for device, d, cnt, mn, mx in groups:
+                name = f"{device}_{d.strftime('%Y%m%d')}"
+                try:
+                    sn = int(str(device).split("-")[1])
+                except Exception:
+                    sn = 1
+                cur.execute("SELECT id FROM upload_sessions WHERE session_name=%s", (name,))
+                row = cur.fetchone()
+                if row:
+                    sid = row[0]
+                    cur.execute("UPDATE upload_sessions SET reading_count=%s, end_time=%s WHERE id=%s",
+                                (cnt, mx, sid))
+                else:
+                    cur.execute("""INSERT INTO upload_sessions
+                        (session_name, micro_environment, sensor_number, reading_count, start_time, end_time, notes)
+                        VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
+                        (name, 'portable', sn, cnt, mn, mx, f"{device} canlı saha ölçümü"))
+                    sid = cur.fetchone()[0]
+                # Ölçümleri ekle (mükerrer atlanır)
+                cur.execute("""
+                    INSERT INTO atmotube_readings
+                        (session_id, recorded_at, voc_ppm, pm1_0, pm2_5, pm10_0,
+                         temperature_c, humidity_pct, pressure_hpa, lat, lon)
+                    SELECT %s, recorded_at, voc_ppm, pm1_0, pm2_5, pm10_0,
+                           temperature_c, humidity_pct, pressure_hpa, lat, lon
+                    FROM measurements
+                    WHERE source='atmotube' AND device=%s
+                      AND (recorded_at AT TIME ZONE 'Europe/Istanbul')::date = %s
+                    ON CONFLICT (session_id, recorded_at) DO NOTHING
+                """, (sid, device, d))
+    except Exception as e:
+        print(f"[sync_atmotube] {e}")
+
+
 def collect_fast():
-    """2 dakikada bir: PurpleAir + Atmotube."""
+    """2 dakikada bir: PurpleAir + Atmotube (+ cihaz oturumlarını güncelle)."""
     n = collect_purpleair() + collect_atmotube()
+    sync_atmotube_sessions()
     if n:
         print(f"[collector] {n} yeni kayıt arşivlendi (PurpleAir+Atmotube).")
 

@@ -10,6 +10,12 @@ const PEOPLE = [
     { key: "Ayse",  name: "Ayşe",  color: "#34d27b", initial: "A" },
     { key: "Ilker", name: "İlker", color: "#6c8cff", initial: "İ" },
     { key: "Serra", name: "Serra", color: "#f5b840", initial: "S" },
+    // Canlı Atmotube cihazları (saha ölçümleri panelinde cihaz-gün bazlı)
+    { key: "ATP-1", name: "ATP-1", color: "#e06c9f", initial: "1" },
+    { key: "ATP-2", name: "ATP-2", color: "#5ec6c2", initial: "2" },
+    { key: "ATP-3", name: "ATP-3", color: "#c98bff", initial: "3" },
+    { key: "ATP-4", name: "ATP-4", color: "#ff9f45", initial: "4" },
+    { key: "ATP-5", name: "ATP-5", color: "#7ed957", initial: "5" },
 ];
 
 let map, heatLayer, dotsLayer, trailLayer, paMarker, campusOverlay;
