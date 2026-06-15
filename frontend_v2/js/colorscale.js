@@ -45,7 +45,7 @@ function buildLegend() {
     const ticks = [0,5,10,15,20,25,30,40,55,75].map(t =>
         `<span style="left:${Math.min(t/75*100,100).toFixed(1)}%">${t}</span>`).join("");
     return `
-      <div class="legend-title">PM₂.₅ (µg/m³) — her 2.5'te ton, her 5'te renk değişir</div>
+      <div class="legend-title">PM₂.₅ <span style="text-transform:none">(µg/m³)</span> — her 2.5'te ton, her 5'te renk değişir</div>
       <div class="legend-bar">${cells}</div>
       <div class="legend-ticks">${ticks}</div>
       <div class="legend-cats">
