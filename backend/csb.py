@@ -9,6 +9,12 @@ import re
 import time
 import datetime
 import requests
+import urllib3
+
+# CSB sunucusunun sertifika zinciri bazı ortamlarda doğrulanamıyor; kamuya açık
+# veri olduğu için SSL doğrulamasını kapatıyoruz (curl --ssl-no-revoke gibi).
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+_VERIFY = False
 
 BASE = "https://sim.csb.gov.tr/STN/STN_Report"
 PAGE = BASE + "/StationDataDownloadNew"
@@ -42,6 +48,7 @@ def get_latest(force=False):
         return _cache["data"]
 
     s = requests.Session()
+    s.verify = _VERIFY
     s.headers.update({"User-Agent": "Mozilla/5.0", "X-Requested-With": "XMLHttpRequest"})
 
     page = s.get(PAGE, timeout=20)

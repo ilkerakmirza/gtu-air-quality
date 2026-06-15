@@ -112,7 +112,8 @@ def collect_fast():
 
 
 def collect_hourly():
-    """Saatte bir: İBB + CSB."""
-    n = collect_ibb() + collect_csb()
+    """Saatte bir: İBB (CSB hariç — CSB sitesi buluttan erişilemez,
+    Türkiye'deki yerel toplayıcı tarafından toplanır)."""
+    n = collect_ibb()
     if n:
-        print(f"[collector] {n} yeni İBB/CSB kaydı arşivlendi.")
+        print(f"[collector] {n} yeni İBB kaydı arşivlendi.")

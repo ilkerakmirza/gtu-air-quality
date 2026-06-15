@@ -105,6 +105,26 @@ def log_rows(rows):
         return 0
 
 
+def latest_by_source(source):
+    """Bir kaynağın arşivdeki en son kaydını döner (Türkiye saatiyle)."""
+    if not _enabled:
+        return None
+    try:
+        con = _connect(); cur = con.cursor()
+        cur.execute("""SELECT device, pm2_5, pm10_0, lat, lon,
+                         to_char(recorded_at AT TIME ZONE 'Europe/Istanbul','YYYY-MM-DD HH24:MI')
+                       FROM measurements WHERE source=%s
+                       ORDER BY recorded_at DESC LIMIT 1""", (source,))
+        r = cur.fetchone(); con.close()
+        if not r:
+            return None
+        return {"device": r[0], "pm2_5": r[1], "pm10_0": r[2],
+                "lat": r[3], "lon": r[4], "recorded_at": r[5]}
+    except Exception as e:
+        print(f"[archive] latest_by_source hatası: {e}")
+        return None
+
+
 def stats():
     """Özet: kaynak başına kayıt sayısı ve tarih aralığı."""
     if not _enabled:

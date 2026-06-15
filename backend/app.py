@@ -173,13 +173,19 @@ import csb
 
 @app.get("/api/csb/latest")
 def csb_latest():
-    """CSB (Çevre Şehircilik Bakanlığı) Tuzla istasyonu PM2.5 verisi (10 dk önbellekli)."""
-    force = request.args.get("force") == "1"
-    try:
-        data = csb.get_latest(force=force)
-    except Exception as e:
-        return jsonify({"data": None, "error": str(e)}), 200
-    return jsonify({"data": data})
+    """CSB Tuzla PM2.5 — arşivden okur (CSB sitesi yurtdışı IP engelli olduğu için
+    veriyi Türkiye'deki yerel toplayıcı Supabase'e yazar; web buradan okur)."""
+    row = archive.latest_by_source("csb")
+    if not row:
+        return jsonify({"data": None, "message": "Henüz CSB verisi yok (yerel toplayıcı çalışmalı)."})
+    return jsonify({"data": {
+        "station_name": row["device"] or csb.STATION_NAME,
+        "pm2_5": row["pm2_5"],
+        "lat": row["lat"] if row["lat"] is not None else csb.STATION_LAT,
+        "lon": row["lon"] if row["lon"] is not None else csb.STATION_LON,
+        "distance_km": 6.4,
+        "recorded_at": row["recorded_at"],
+    }})
 
 
 @app.get("/api/atmotube/history")
