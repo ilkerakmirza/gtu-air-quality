@@ -8237,6 +8237,3 @@ INSERT INTO "upload_sessions" VALUES(48,'Serra_20260427_Demo','outdoor',1,NULL,4
 INSERT INTO "upload_sessions" VALUES(49,'Serra_20260428_Demo','outdoor',1,NULL,572,'2026-04-28 08:51:00','2026-04-28 18:22:00','Serra 2026-04-28 kampüs ölçümleri','2026-06-15 05:25:24');
 INSERT INTO "upload_sessions" VALUES(50,'Serra_20260429_Demo','outdoor',1,NULL,498,'2026-04-29 09:31:00','2026-04-29 18:08:00','Serra 2026-04-29 kampüs ölçümleri','2026-06-15 05:25:25');
 INSERT INTO "upload_sessions" VALUES(51,'Serra_20260430_Demo','outdoor',1,NULL,496,'2026-04-30 10:01:00','2026-04-30 18:16:00','Serra 2026-04-30 kampüs ölçümleri','2026-06-15 05:25:26');
-INSERT INTO "sqlite_sequence" VALUES('upload_sessions',51);
-INSERT INTO "sqlite_sequence" VALUES('atmotube_readings',16149);
-INSERT INTO "sqlite_sequence" VALUES('purpleair_readings',4212);

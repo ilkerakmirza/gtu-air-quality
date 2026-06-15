@@ -23,9 +23,12 @@ CORS(app, origins=config.CORS_ORIGINS)
 
 db.init_db()
 
-# Seed demo data if DB is empty
+# Seed demo data if DB is empty (yalnızca SQLite modunda; Postgres'te veri kalıcı)
 def _seed_if_empty():
     import os, sqlite3 as _sq
+    if os.environ.get("DATABASE_URL", "").strip():
+        # Postgres (Supabase) kullanılıyor — demo verisi orada kalıcı, SQLite seed gereksiz
+        return
     db_path = os.environ.get("DB_PATH", "campus_air.db")
     seed_path = os.path.join(os.path.dirname(__file__), "seed.sql")
     if not os.path.exists(seed_path):
