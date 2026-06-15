@@ -20,44 +20,48 @@ np.random.seed(42)
 # PurpleAir / SUMER Lab çatısı — ÖLÇÜMLER BURAYA KONMAMALI
 PA = (40.806155, 29.360985)
 
-# GTÜ kampüs lokasyonları (PurpleAir noktasından ayrı, gerçekçi dağılım)
+# Çevre Mühendisliği binası — uydudan doğrulandı (avlulu binanın batı kanadı çatısı).
+# Eski (40.80586, 29.36297) binanın doğu kenarına/yola düşüyordu; bina merkezine alındı.
+CEVRE  = (40.80570, 29.36260)                       # Çevre binası (çatı, bina içi)
+KUTUP  = (40.80660983568877, 29.36001945835103)    # Kütüphane
+GUZIDE = (40.80605556, 29.36080556)                # Güzide kafe
+KONGRE = (40.81448660918803, 29.360856307563672)   # Kongre/Kültür merkezi
+YURT   = (40.81100, 29.36150)                       # Yurt
+
+# Ofis/lab/derslik aktiviteleri Çevre binası ÇATISI üzerinde kalır (küçük ofset + ~4m jitter).
+# İlker Çevre Müh. öğretim üyesi, Serra da Çevre (CEV111) — ofis/lab Çevre binasında.
 L = {
-    # Çevre Mühendisliği binası bölgesi
-    'cevre_amfi':    (40.805863, 29.362970),
-    'cevre_koridor': (40.805820, 29.362900),
-    'cevre_arka':    (40.805650, 29.363300),
-    'cev111':        (40.805900, 29.362930),
-    # Kütüphane
-    'kutuphane':     (40.806610, 29.360019),
-    'kutuphane_onu': (40.806550, 29.360110),
-    # Güzide kafe
-    'ic_guzide':     (40.806056, 29.360806),
-    'dis_guzide':    (40.806140, 29.360760),
-    # Kongre / Kültür merkezi
-    'kongre':        (40.814487, 29.360856),
-    # Laboratuvarlar / derslikler
-    'kimya_lab':     (40.806500, 29.362800),
-    'merkezi_ders':  (40.807200, 29.360500),
-    'amfi1':         (40.807000, 29.360800),
-    'seminer':       (40.806600, 29.362200),
-    # Yurt
-    'yurt':          (40.811000, 29.361500),
-    # İlker ofisi (Çevre binası ofis kanadı) — PA'dan AYRI
-    'ilker_ofis':    (40.805750, 29.363150),
-    'ilker_ofis2':   (40.805950, 29.363250),
-    'ilker_koridor': (40.805840, 29.363050),
-    'otopark':       (40.805200, 29.362400),
-    # Serra ZL binası — PA'dan AYRI
-    'zl_ofis':       (40.805250, 29.361750),
-    'zl_lab':        (40.805320, 29.361850),
-    # Kampüs ortası (varsayılan — PA değil!)
-    'kampus':        (40.806400, 29.361600),
+    'cevre_koridor': CEVRE,
+    'cev111':        CEVRE,
+    'kimya_lab':     (CEVRE[0] - 0.00003, CEVRE[1] + 0.00004),
+    'seminer':       (CEVRE[0] + 0.00003, CEVRE[1] - 0.00002),
+    'cevre_amfi':    (CEVRE[0] + 0.00004, CEVRE[1] + 0.00003),
+    'amfi1':         (CEVRE[0] + 0.00005, CEVRE[1] + 0.00004),
+    'merkezi_ders':  (CEVRE[0] + 0.00006, CEVRE[1] + 0.00005),
+    # İlker ofisi — bina batı kanadı
+    'ilker_ofis':    (CEVRE[0] + 0.00002, CEVRE[1] - 0.00002),
+    'ilker_koridor': CEVRE,
+    # Serra ofis/lab — bina (farklı köşe)
+    'zl_ofis':       (CEVRE[0] - 0.00003, CEVRE[1] + 0.00003),
+    'zl_lab':        (CEVRE[0] - 0.00004, CEVRE[1] + 0.00004),
+    # Kasıtlı dış mekanlar
+    'cevre_arka':    (CEVRE[0] - 0.00010, CEVRE[1] + 0.00012),  # arka bahçe
+    'otopark':       (CEVRE[0] - 0.00012, CEVRE[1] - 0.00010),  # otopark
+    # Bina dışı bilinen noktalar
+    'kutuphane':     KUTUP,
+    'kutuphane_onu': (KUTUP[0] - 0.00004, KUTUP[1] + 0.00006),
+    'ic_guzide':     GUZIDE,
+    'dis_guzide':    (GUZIDE[0] + 0.00008, GUZIDE[1] - 0.00005),
+    'kongre':        KONGRE,
+    'yurt':          YURT,
+    # Varsayılan: Çevre binası
+    'kampus':        CEVRE,
 }
 
 WALK = [
-    L['kutuphane'], (40.806400, 29.360200), (40.806250, 29.360500),
-    L['ic_guzide'], (40.805980, 29.361200), (40.805900, 29.362000),
-    L['cevre_amfi'], (40.806000, 29.362400), (40.806300, 29.361500), (40.806450, 29.360900),
+    KUTUP, (40.806400, 29.360200), (40.806250, 29.360500),
+    GUZIDE, (40.805980, 29.361200), (40.805900, 29.362000),
+    CEVRE, (40.806000, 29.362400), (40.806300, 29.361500), (40.806450, 29.360900),
 ]
 
 # Aktivite → lokasyon eşlemesi. ÖNEM SIRASINA göre kontrol edilir (en özgül önce).
@@ -65,8 +69,8 @@ WALK = [
 RULES = [
     ('zl-16 ofis',    'zl_ofis'),
     ('zl-07 lab',     'zl_lab'),
-    ('başka ofis',    'ilker_ofis2'),
-    ('ofis /cam',     'ilker_ofis2'),
+    ('başka ofis',    'ilker_ofis'),
+    ('ofis /cam',     'ilker_ofis'),
     ('ofis/kolonya',  'ilker_ofis'),
     ('ofis /kolonya', 'ilker_ofis'),
     ('yemek',         'ilker_ofis'),
@@ -101,7 +105,8 @@ TRANSPORT = ('araba', 'marmaray', 'otobüs', 'istasyon', 'sogutlucesme', 'soğut
 
 walk_idx = 0
 
-def jitter(coord, amt=0.00012):
+def jitter(coord, amt=0.00004):
+    # Küçük dağılım (~4m) — noktalar bina çatısında kalır, üst üste binmez
     return (coord[0] + np.random.uniform(-amt, amt),
             coord[1] + np.random.uniform(-amt, amt))
 
@@ -109,17 +114,17 @@ def assign(activity):
     global walk_idx
     a = str(activity).strip().lower()
     if a in ('nan', 'none', ''):
-        return jitter(L['kampus'], 0.0002)
+        return jitter(L['kampus'])
     # Yürüyüş → rota üzerinde ilerle
     if any(k in a for k in WALK_KEYS):
         walk_idx = (walk_idx + 1) % len(WALK)
-        return jitter(WALK[walk_idx], 0.00010)
+        return jitter(WALK[walk_idx], 0.00008)
     # Kurallar (özgülden genele)
     for key, loc in RULES:
         if key in a:
             return jitter(L[loc])
-    # Varsayılan: kampüs ortası (PA DEĞİL)
-    return jitter(L['kampus'], 0.0002)
+    # Varsayılan: Çevre binası (PA/bahçe DEĞİL)
+    return jitter(L['kampus'])
 
 def is_transport(activity):
     a = str(activity).strip().lower()
