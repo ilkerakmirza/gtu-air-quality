@@ -1,0 +1,154 @@
+"""
+Kalıcı veri arşivi — Supabase/PostgreSQL.
+
+Üç kaynaktan (PurpleAir, İBB, Atmotube) gelen canlı ölçümleri tek ortak
+`measurements` tablosunda biriktirir. İleride CSV olarak indirilip analiz edilir.
+
+DATABASE_URL ortam değişkeni ayarlı değilse modül sessizce devre dışı kalır
+(uygulama yine çalışır, sadece arşivleme yapılmaz).
+
+Tablo:
+  source        kaynak: 'purpleair' | 'ibb' | 'atmotube'
+  device        cihaz/istasyon: 'PA-II' | 'Tuzla' | 'ATP-1'..'ATP-5'
+  recorded_at   ölçüm zamanı (UTC)
+  pm1_0, pm2_5, pm10_0, voc_ppm, temperature_c, humidity_pct, pressure_hpa
+  lat, lon      konum (varsa)
+  ingested_at   kayda eklenme zamanı
+  UNIQUE(source, device, recorded_at) — aynı ölçüm iki kez yazılmaz
+"""
+
+import os
+import datetime
+
+DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+_enabled = bool(DATABASE_URL)
+
+try:
+    import psycopg2
+    import psycopg2.extras
+except Exception:
+    psycopg2 = None
+    _enabled = False
+
+
+def is_enabled():
+    return _enabled
+
+
+def _connect():
+    # Supabase bağlantıları SSL ister
+    return psycopg2.connect(DATABASE_URL, sslmode="require", connect_timeout=15)
+
+
+SCHEMA = """
+CREATE TABLE IF NOT EXISTS measurements (
+    id            BIGSERIAL PRIMARY KEY,
+    source        TEXT NOT NULL,
+    device        TEXT,
+    recorded_at   TIMESTAMPTZ NOT NULL,
+    pm1_0         DOUBLE PRECISION,
+    pm2_5         DOUBLE PRECISION,
+    pm10_0        DOUBLE PRECISION,
+    voc_ppm       DOUBLE PRECISION,
+    temperature_c DOUBLE PRECISION,
+    humidity_pct  DOUBLE PRECISION,
+    pressure_hpa  DOUBLE PRECISION,
+    lat           DOUBLE PRECISION,
+    lon           DOUBLE PRECISION,
+    ingested_at   TIMESTAMPTZ DEFAULT now(),
+    UNIQUE (source, device, recorded_at)
+);
+CREATE INDEX IF NOT EXISTS idx_meas_time   ON measurements (recorded_at);
+CREATE INDEX IF NOT EXISTS idx_meas_source ON measurements (source);
+"""
+
+_COLS = ["source", "device", "recorded_at", "pm1_0", "pm2_5", "pm10_0",
+         "voc_ppm", "temperature_c", "humidity_pct", "pressure_hpa", "lat", "lon"]
+
+
+def init():
+    """Tabloyu oluştur (varsa dokunma). Açılışta bir kez çağrılır."""
+    if not _enabled:
+        print("[archive] DATABASE_URL yok — kalıcı arşiv devre dışı.")
+        return
+    try:
+        con = _connect()
+        cur = con.cursor()
+        cur.execute(SCHEMA)
+        con.commit()
+        con.close()
+        print("[archive] measurements tablosu hazır (Supabase).")
+    except Exception as e:
+        print(f"[archive] init hatası: {e}")
+
+
+def log_rows(rows):
+    """rows: dict listesi. Aynı (source,device,recorded_at) varsa atlanır."""
+    if not _enabled or not rows:
+        return 0
+    try:
+        con = _connect()
+        cur = con.cursor()
+        values = [tuple(r.get(c) for c in _COLS) for r in rows if r.get("recorded_at")]
+        if not values:
+            con.close()
+            return 0
+        sql = f"""INSERT INTO measurements ({','.join(_COLS)})
+                  VALUES %s ON CONFLICT (source, device, recorded_at) DO NOTHING"""
+        psycopg2.extras.execute_values(cur, sql, values)
+        n = cur.rowcount
+        con.commit()
+        con.close()
+        return n
+    except Exception as e:
+        print(f"[archive] log hatası: {e}")
+        return 0
+
+
+def stats():
+    """Özet: kaynak başına kayıt sayısı ve tarih aralığı."""
+    if not _enabled:
+        return {"enabled": False}
+    try:
+        con = _connect()
+        cur = con.cursor()
+        cur.execute("""SELECT source, COUNT(*), MIN(recorded_at), MAX(recorded_at)
+                       FROM measurements GROUP BY source ORDER BY source""")
+        by_source = [
+            {"source": r[0], "count": r[1],
+             "first": r[2].isoformat() if r[2] else None,
+             "last": r[3].isoformat() if r[3] else None}
+            for r in cur.fetchall()
+        ]
+        cur.execute("SELECT COUNT(*) FROM measurements")
+        total = cur.fetchone()[0]
+        con.close()
+        return {"enabled": True, "total": total, "by_source": by_source}
+    except Exception as e:
+        return {"enabled": True, "error": str(e)}
+
+
+def iter_csv(source=None, start=None, end=None):
+    """Tüm ölçümleri CSV satırları olarak akıt (export endpoint için)."""
+    import io, csv
+    header = ["source", "device", "recorded_at"] + _COLS[3:] + ["ingested_at"]
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow(header)
+    yield buf.getvalue(); buf.seek(0); buf.truncate(0)
+
+    if not _enabled:
+        return
+    con = _connect()
+    cur = con.cursor(name="export_cur")  # server-side cursor (büyük veri için)
+    q = f"SELECT {','.join(header[:-1])}, ingested_at FROM measurements WHERE 1=1"
+    params = []
+    if source: q += " AND source=%s"; params.append(source)
+    if start:  q += " AND recorded_at>=%s"; params.append(start)
+    if end:    q += " AND recorded_at<=%s"; params.append(end)
+    q += " ORDER BY recorded_at"
+    cur.execute(q, params)
+    for row in cur:
+        w.writerow(row)
+        yield buf.getvalue(); buf.seek(0); buf.truncate(0)
+    con.close()

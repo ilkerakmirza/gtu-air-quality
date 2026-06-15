@@ -5,7 +5,7 @@ Production:   gunicorn app:app (Procfile)
 """
 
 import datetime
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, jsonify, abort, Response
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -49,13 +49,25 @@ def _seed_if_empty():
 
 _seed_if_empty()
 
+# Kalıcı arşiv (Supabase) — DATABASE_URL ayarlıysa aktifleşir
+import archive
+import collector
+archive.init()
+
 scheduler = BackgroundScheduler()
 scheduler.add_job(purpleair.poll, "interval", minutes=config.POLL_INTERVAL_MINUTES, id="pa_poll")
+# Üç kaynağı kalıcı arşive yaz: hızlı (PurpleAir+Atmotube) + saatlik (İBB)
+scheduler.add_job(collector.collect_fast, "interval", minutes=config.POLL_INTERVAL_MINUTES, id="archive_fast")
+scheduler.add_job(collector.collect_hourly, "interval", minutes=60, id="archive_ibb")
 scheduler.start()
 
-# Run first poll immediately on startup (in background thread)
+# Run first poll + collection immediately on startup (background thread)
 import threading
-threading.Thread(target=purpleair.poll, daemon=True).start()
+def _startup_jobs():
+    purpleair.poll()
+    collector.collect_fast()
+    collector.collect_hourly()
+threading.Thread(target=_startup_jobs, daemon=True).start()
 
 
 # ---------------------------------------------------------------------------
@@ -117,6 +129,31 @@ def atmotube_live():
 
 
 import ibb
+
+# ---------------------------------------------------------------------------
+# Kalıcı arşiv — istatistik + CSV indirme (analiz için)
+# ---------------------------------------------------------------------------
+
+@app.get("/api/archive/stats")
+def archive_stats():
+    """Arşivdeki kayıt sayısı ve tarih aralığı (kaynak başına)."""
+    return jsonify(archive.stats())
+
+
+@app.get("/api/export.csv")
+def export_csv():
+    """Tüm ölçümleri tek CSV olarak indir.
+    Opsiyonel: ?source=ibb|purpleair|atmotube&start=YYYY-MM-DD&end=YYYY-MM-DD"""
+    source = request.args.get("source")
+    start  = request.args.get("start")
+    end    = request.args.get("end")
+    fname  = "gtu_hava_kalitesi_" + datetime.date.today().isoformat() + ".csv"
+    return Response(
+        archive.iter_csv(source, start, end),
+        mimetype="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="{fname}"'},
+    )
+
 
 @app.get("/api/ibb/latest")
 def ibb_latest():
