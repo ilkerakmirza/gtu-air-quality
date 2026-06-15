@@ -3,10 +3,22 @@ Canlı veri toplayıcı — üç kaynağı (PurpleAir, İBB, Atmotube) kalıcı 
 Scheduler tarafından düzenli çağrılır (app.py).
 """
 
+import datetime
 import archive
 import db
 import ibb
 import atmotube_cloud
+
+# Türkiye sabit UTC+3 (2016'dan beri yaz saati yok)
+def _tr_local_to_utc(naive_iso):
+    """İBB'nin Türkiye yerel saatini (tz'siz) UTC ISO'ya çevirir."""
+    if not naive_iso:
+        return naive_iso
+    try:
+        dt = datetime.datetime.fromisoformat(naive_iso.replace("Z", ""))
+        return (dt - datetime.timedelta(hours=3)).isoformat() + "+00:00"
+    except Exception:
+        return naive_iso
 
 
 def collect_purpleair():
@@ -37,7 +49,7 @@ def collect_ibb():
             return 0
         return archive.log_rows([{
             "source": "ibb", "device": d.get("station_name"),
-            "recorded_at": d.get("recorded_at"),
+            "recorded_at": _tr_local_to_utc(d.get("recorded_at")),
             "pm1_0": None, "pm2_5": d.get("pm2_5"), "pm10_0": d.get("pm10_0"),
             "voc_ppm": None,
             "temperature_c": d.get("temperature_c"), "humidity_pct": d.get("humidity_pct"),

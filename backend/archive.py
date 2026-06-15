@@ -112,12 +112,12 @@ def stats():
     try:
         con = _connect()
         cur = con.cursor()
-        cur.execute("""SELECT source, COUNT(*), MIN(recorded_at), MAX(recorded_at)
+        cur.execute("""SELECT source, COUNT(*),
+                         to_char(MIN(recorded_at) AT TIME ZONE 'Europe/Istanbul','YYYY-MM-DD HH24:MI'),
+                         to_char(MAX(recorded_at) AT TIME ZONE 'Europe/Istanbul','YYYY-MM-DD HH24:MI')
                        FROM measurements GROUP BY source ORDER BY source""")
         by_source = [
-            {"source": r[0], "count": r[1],
-             "first": r[2].isoformat() if r[2] else None,
-             "last": r[3].isoformat() if r[3] else None}
+            {"source": r[0], "count": r[1], "first_TR": r[2], "last_TR": r[3]}
             for r in cur.fetchall()
         ]
         cur.execute("SELECT COUNT(*) FROM measurements")
@@ -129,9 +129,11 @@ def stats():
 
 
 def iter_csv(source=None, start=None, end=None):
-    """Tüm ölçümleri CSV satırları olarak akıt (export endpoint için)."""
+    """Tüm ölçümleri CSV satırları olarak akıt (export endpoint için).
+    Zaman sütunları Türkiye saatiyle (Europe/Istanbul) verilir."""
     import io, csv
-    header = ["source", "device", "recorded_at"] + _COLS[3:] + ["ingested_at"]
+    # Başlık: zaman sütunları Türkiye saati olduğunu belli etsin
+    header = (["source", "device", "recorded_at_TR"] + _COLS[3:] + ["ingested_at_TR"])
     buf = io.StringIO()
     w = csv.writer(buf)
     w.writerow(header)
@@ -141,7 +143,13 @@ def iter_csv(source=None, start=None, end=None):
         return
     con = _connect()
     cur = con.cursor()  # düz cursor (transaction pooler named cursor desteklemez)
-    q = f"SELECT {','.join(header[:-1])}, ingested_at FROM measurements WHERE 1=1"
+    # recorded_at / ingested_at → Türkiye yerel saatine çevir
+    mid = ",".join(_COLS[3:])  # pm/sensor kolonları
+    q = (f"SELECT source, device, "
+         f"to_char(recorded_at AT TIME ZONE 'Europe/Istanbul','YYYY-MM-DD HH24:MI:SS'), "
+         f"{mid}, "
+         f"to_char(ingested_at AT TIME ZONE 'Europe/Istanbul','YYYY-MM-DD HH24:MI:SS') "
+         f"FROM measurements WHERE 1=1")
     params = []
     if source: q += " AND source=%s"; params.append(source)
     if start:  q += " AND recorded_at>=%s"; params.append(start)
