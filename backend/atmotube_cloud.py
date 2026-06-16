@@ -36,7 +36,7 @@ def _fetch_device_latest(mac):
         "mac": mac,
         "start_date": (today - datetime.timedelta(days=2)).isoformat(),
         "end_date": (today + datetime.timedelta(days=1)).isoformat(),
-        "limit": 2000,
+        "limit": 300,   # son okuma + son bilinen GPS için yeterli, hızlı
         "offset": 0,
     }
     r = requests.get(ATMOTUBE_URL, params=params, timeout=20)
