@@ -51,26 +51,31 @@ def get_nearest_station(force=False):
     r.raise_for_status()
     objects = r.json().get("objects", [])
 
+    # ANLIK (saatlik) değer için LastMeasurement kullanılır; Values.PM25 ise
+    # AQI'nin 24 saatlik ortalamasıdır (kullanıcı anlık istiyor).
     best = None
     best_km = 1e9
     for s in objects:
         lat, lon = _parse_location(s.get("Location"))
         if lat is None:
             continue
-        vals = s.get("Values") or {}
-        pm25 = vals.get("PM25")
+        last = s.get("LastMeasurement") or {}
+        pm25 = last.get("PM25")
+        if pm25 is None:
+            pm25 = (s.get("Values") or {}).get("PM25")  # yedek
         if pm25 is None:
             continue  # sadece PM2.5 verisi olan istasyonlar
         km = _haversine_km(GTU_LAT, GTU_LON, lat, lon)
         if km < best_km:
             best_km = km
-            best = (s, lat, lon, vals)
+            best = (s, lat, lon)
 
     if not best:
         result = None
     else:
-        s, lat, lon, vals = best
+        s, lat, lon = best
         last = s.get("LastMeasurement") or {}
+        vals = s.get("Values") or {}
         result = {
             "station_name": s.get("Name"),
             "town": s.get("Town_Title"),
@@ -78,15 +83,12 @@ def get_nearest_station(force=False):
             "lat": lat,
             "lon": lon,
             "distance_km": round(best_km, 1),
-            "pm2_5": vals.get("PM25"),
-            "pm10_0": vals.get("PM10"),
-            "o3": vals.get("O3"),
-            "no2": vals.get("NO2"),
-            "so2": vals.get("SO2"),
+            "pm2_5": last.get("PM25") if last.get("PM25") is not None else vals.get("PM25"),  # anlık
+            "pm10_0": last.get("PM10") if last.get("PM10") is not None else vals.get("PM10"),
             "temperature_c": last.get("Sicaklik"),
             "humidity_pct": last.get("Nem"),
             "wind_speed": last.get("RuzgarHizi"),
-            "recorded_at": vals.get("Date"),
+            "recorded_at": last.get("DataDate") or vals.get("Date"),  # anlık zaman
         }
 
     _cache["ts"] = now

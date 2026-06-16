@@ -28,23 +28,33 @@ CACHE_SECONDS = 60
 
 
 def _fetch_device_latest(mac):
-    """Bir cihazın son ölçümünü döner (son 2 gün içinde yoksa None)."""
+    """Bir cihazın son ölçümünü döner. Son okumada GPS yoksa, yakın geçmişteki
+    son bilinen konumu (lat/lon) ekler — böylece kapalı alanda bile harita işaretçisi çıkar."""
     today = datetime.date.today()
     params = {
         "api_key": ATMOTUBE_API_KEY,
         "mac": mac,
-        "start_date": (today - datetime.timedelta(days=1)).isoformat(),
+        "start_date": (today - datetime.timedelta(days=2)).isoformat(),
         "end_date": (today + datetime.timedelta(days=1)).isoformat(),
-        "limit": 1,
+        "limit": 2000,
         "offset": 0,
     }
-    r = requests.get(ATMOTUBE_URL, params=params, timeout=15)
+    r = requests.get(ATMOTUBE_URL, params=params, timeout=20)
     r.raise_for_status()
     items = r.json().get("data", {}).get("items", [])
     if not items:
         return None
+    # En yeni okuma (değerler için)
     it = items[0]
     coords = it.get("coords") or {}
+    lat, lon = coords.get("lat"), coords.get("lon")
+    # GPS yoksa: en yakın geçmişteki konumu bul (son bilinen konum)
+    if lat is None or lon is None:
+        for prev in items:
+            c = prev.get("coords") or {}
+            if c.get("lat") is not None and c.get("lon") is not None:
+                lat, lon = c["lat"], c["lon"]
+                break
     return {
         "recorded_at": it.get("time"),
         "voc_ppm": it.get("voc"),
@@ -54,8 +64,8 @@ def _fetch_device_latest(mac):
         "temperature_c": it.get("t"),
         "humidity_pct": it.get("h"),
         "pressure_hpa": it.get("p"),
-        "lat": coords.get("lat"),
-        "lon": coords.get("lon"),
+        "lat": lat,
+        "lon": lon,
     }
 
 

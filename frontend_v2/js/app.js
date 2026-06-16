@@ -148,7 +148,7 @@ function updatePAPanel(d) {
     set("pa-pm10", d.pm10_0 != null ? d.pm10_0.toFixed(1) : "--");
     set("pa-temp", d.temperature_c != null ? d.temperature_c.toFixed(1) + "°" : "--");
     set("pa-hum",  d.humidity_pct != null ? d.humidity_pct.toFixed(0) + "%" : "--");
-    set("pa-time", d.recorded_at ? new Date(d.recorded_at).toLocaleString("tr-TR") : "—");
+    set("pa-time", d.recorded_at ? new Date(d.recorded_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) : "—");
 }
 
 function updatePAMarker(d) {
@@ -219,7 +219,7 @@ async function loadIBB() {
         badge.style.background = pm25Color(d.pm2_5) + "1f";
 
         set("ibb-time", d.recorded_at
-            ? "İBB · " + new Date(d.recorded_at).toLocaleString("tr-TR") + " (saatlik)"
+            ? "İBB · " + new Date(d.recorded_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) + " (saatlik)"
             : "İBB");
 
         // Haritada gerçek konumunda işaretçi (uzaklaştırınca görünür)
@@ -232,7 +232,7 @@ async function loadIBB() {
 
 function updateIBBMarker(d) {
     const c = pm25Color(d.pm2_5);
-    const html = `<b>🏙️ İBB — ${d.station_name}</b><br>${d.type} arka plan istasyonu<br>PM₂.₅: <b style="color:${c}">${d.pm2_5?.toFixed(1) ?? "--"}</b> µg/m³<br><small>${d.distance_km} km · ${d.recorded_at ? new Date(d.recorded_at).toLocaleString("tr-TR") : ""}</small>`;
+    const html = `<b>🏙️ İBB — ${d.station_name}</b><br>${d.type} arka plan istasyonu<br>PM₂.₅: <b style="color:${c}">${d.pm2_5?.toFixed(1) ?? "--"}</b> µg/m³<br><small>${d.distance_km} km · ${d.recorded_at ? new Date(d.recorded_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) : ""}</small>`;
     const icon = L.divIcon({
         className: "",
         html: `<div class="ibb-marker" style="--marker-color:${c}">🏙️</div>`,
@@ -302,7 +302,9 @@ async function loadCSB() {
 // ─────────────────────────────────────────────────────────────────
 
 let atpMarkers = {};   // device adı → Leaflet marker
-const ATP_ONLINE_MIN = 15;   // son X dk içinde veri = çevrimiçi
+let atpVisible = true; // Atmotube cihazları aç/kapa
+const ATP_ONLINE_MIN = 60;   // son X dk içinde veri = canlı (bulut gecikmesi için geniş)
+const ATP_SHOW_HOURS = 24;   // son X saat içinde GPS varsa haritada göster (eski=soluk)
 
 function timeAgo(iso) {
     const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
@@ -356,25 +358,27 @@ function renderAtmotubeDevices(devices) {
     updateAtmotubeMarkers(devices);
 }
 
+function removeAtpMarker(dev) {
+    if (atpMarkers[dev]) { map.removeLayer(atpMarkers[dev]); delete atpMarkers[dev]; }
+}
+
 function updateAtmotubeMarkers(devices) {
     for (const d of devices) {
         const r = d.reading;
-        const online = r && r.lat && r.lon &&
-            (Date.now() - new Date(r.recorded_at).getTime()) < ATP_ONLINE_MIN * 60000;
+        const hasGps = r && r.lat != null && r.lon != null;
+        const ageMin = r ? (Date.now() - new Date(r.recorded_at).getTime()) / 60000 : Infinity;
+        // Toggle kapalıysa veya GPS yoksa veya 24 saatten eskiyse gösterme
+        if (!atpVisible || !hasGps || ageMin > ATP_SHOW_HOURS * 60) { removeAtpMarker(d.device); continue; }
 
-        if (!online) {
-            // Çevrimdışı cihazın işaretçisini kaldır
-            if (atpMarkers[d.device]) { map.removeLayer(atpMarkers[d.device]); delete atpMarkers[d.device]; }
-            continue;
-        }
-
+        const recent = ageMin < ATP_ONLINE_MIN;     // canlı mı
         const c = pm25Color(r.pm2_5);
-        const html = `<b>📡 ${d.device}</b> — canlı<br>PM₂.₅: <b style="color:${c}">${r.pm2_5?.toFixed(1) ?? "--"}</b> µg/m³<br><small>${timeAgo(r.recorded_at)}</small>`;
-        const icon = L.divIcon({
-            className: "",
-            html: `<div class="pulse-marker" style="--marker-color:${c};border-radius:30%"></div>`,
-            iconSize: [20, 20], iconAnchor: [10, 10],
-        });
+        const durum = recent ? "canlı" : "son bilinen konum";
+        const html = `<b>📡 ${d.device}</b> — ${durum}<br>PM₂.₅: <b style="color:${c}">${r.pm2_5?.toFixed(1) ?? "--"}</b> µg/m³<br><small>${timeAgo(r.recorded_at)}</small>`;
+        // Canlı: nabız atan; eski: soluk sabit kare
+        const inner = recent
+            ? `<div class="pulse-marker" style="--marker-color:${c};border-radius:30%"></div>`
+            : `<div style="width:18px;height:18px;border-radius:30%;background:${c};border:2px dashed #fff;opacity:0.55"></div>`;
+        const icon = L.divIcon({ className: "", html: inner, iconSize: [20, 20], iconAnchor: [10, 10] });
 
         if (!atpMarkers[d.device]) {
             atpMarkers[d.device] = L.marker([r.lat, r.lon], { icon, zIndexOffset: 600 })
@@ -401,7 +405,7 @@ function dateLabelOf(s) {
     // start_time'dan gün etiketi üret
     if (!s.start_time) return s.session_name;
     const d = new Date(s.start_time.replace(" ", "T"));
-    return d.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+    return d.toLocaleDateString("tr-TR", { timeZone: "Europe/Istanbul", day: "numeric", month: "long", year: "numeric" });
 }
 
 async function loadSessions() {
@@ -544,7 +548,7 @@ async function refreshDots() {
                       </div>
                       <div style="font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;color:${pm25Color(pt.pm2_5)}">${pt.pm2_5?.toFixed(1) ?? "--"} <span style="font-size:10px;color:#9aa4b8">µg/m³</span></div>
                       <div style="font-size:11px;color:${pm25Color(pt.pm2_5)};font-weight:600">${pm25Label(pt.pm2_5)}</div>
-                      <div style="font-size:10.5px;color:#9aa4b8;margin-top:4px">${pt.recorded_at ? new Date(pt.recorded_at).toLocaleString("tr-TR") : ""}</div>
+                      <div style="font-size:10.5px;color:#9aa4b8;margin-top:4px">${pt.recorded_at ? new Date(pt.recorded_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) : ""}</div>
                     </div>`)
                   .addTo(dotsLayer);
             }
@@ -583,6 +587,11 @@ function initSidebar() {
     document.getElementById("tg-campus").addEventListener("change", e =>
         e.target.checked ? campusOverlay.addTo(map) : map.removeLayer(campusOverlay));
     document.getElementById("tg-dots").addEventListener("change", refreshDots);
+    document.getElementById("tg-atp").addEventListener("change", e => {
+        atpVisible = e.target.checked;
+        if (!atpVisible) { Object.keys(atpMarkers).forEach(removeAtpMarker); }
+        loadAtmotubeLive();  // yeniden çiz (açıksa işaretçileri geri getirir)
+    });
 
     const sb = document.getElementById("sidebar");
     document.getElementById("sidebar-toggle").addEventListener("click", () => sb.classList.remove("hidden"));
@@ -680,7 +689,7 @@ async function startPlayback(sessionId) {
     // O günün PurpleAir geçmişini çek
     paHistory = []; paLive = false;
     const day = pts[0].recorded_at.slice(0, 10);
-    setPABadge("hist", new Date(day).toLocaleDateString("tr-TR", { day: "numeric", month: "short" }));
+    setPABadge("hist", new Date(day).toLocaleDateString("tr-TR", { timeZone: "Europe/Istanbul", day: "numeric", month: "short" }));
     try {
         const hist = await API.purpleairHistory(day + "T00:00:00", day + "T23:59:59", "raw");
         paHistory = (hist.data || []).map(r => ({ ...r, ts: new Date(r.recorded_at).getTime() }));
@@ -708,7 +717,7 @@ function nearestPA(ts) {
 function onStep(pt, idx, total) {
     const dt = new Date(pt.recorded_at);
     document.getElementById("pl-time").textContent =
-        dt.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+        dt.toLocaleTimeString("tr-TR", { timeZone: "Europe/Istanbul", hour: "2-digit", minute: "2-digit" });
     document.getElementById("pl-loc").textContent =
         pt.activity || `${pt.lat.toFixed(5)}, ${pt.lon.toFixed(5)}`;
 
@@ -784,7 +793,7 @@ function initChartDrawer() {
 
 function loadCompareChart(atmoPts, paHist, person) {
     const labels = atmoPts.map(r =>
-        new Date(r.recorded_at).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }));
+        new Date(r.recorded_at).toLocaleTimeString("tr-TR", { timeZone: "Europe/Istanbul", hour: "2-digit", minute: "2-digit" }));
     const atmoVals = atmoPts.map(r => r.pm2_5);
     const paVals = atmoPts.map(r => {
         const pa = nearestPAIn(paHist, new Date(r.recorded_at).getTime());
@@ -852,7 +861,7 @@ function loadCompareChart(atmoPts, paHist, person) {
                 y: { type: useLog ? "logarithmic" : "linear",
                      min: useLog ? Math.max(0.5, allVals[0] * 0.8) : undefined,
                      ticks: { color: "#5d6678", font: { size: 9.5 },
-                              callback: v => Number(v.toFixed(1)).toLocaleString("tr-TR") },
+                              callback: v => Number(v.toFixed(1)).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) },
                      grid: { color: "rgba(255,255,255,0.05)" },
                      title: { display: true,
                               text: useLog ? "PM₂.₅ (µg/m³) — log ölçek" : "PM₂.₅ (µg/m³)",
