@@ -80,7 +80,7 @@ let baseLayers = {};
 
 function initMap() {
     map = L.map("map", { center: GTU_CENTER, zoom: GTU_ZOOM, zoomControl: false, preferCanvas: true });
-    L.control.zoom({ position: "bottomleft" }).addTo(map);
+    L.control.zoom({ position: "bottomright", zoomInTitle: "Yakınlaştır", zoomOutTitle: "Uzaklaştır" }).addTo(map);
 
     // Koyu taban (CARTO) — renkli ölçüm noktaları üzerinde öne çıkar
     const dark = L.tileLayer(
