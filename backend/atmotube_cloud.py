@@ -46,15 +46,20 @@ def _fetch_device_latest(mac):
         return None
     # En yeni okuma (değerler için)
     it = items[0]
-    coords = it.get("coords") or {}
-    lat, lon = coords.get("lat"), coords.get("lon")
-    # GPS yoksa: en yakın geçmişteki konumu bul (son bilinen konum)
-    if lat is None or lon is None:
-        for prev in items:
-            c = prev.get("coords") or {}
-            if c.get("lat") is not None and c.get("lon") is not None:
-                lat, lon = c["lat"], c["lon"]
-                break
+    # GPS yumuşatma: son ~10 GPS'li okumanın ortalaması (ham GPS ~5-10m titrer;
+    # sabit cihazda ortalama daha kararlı/doğru konum verir). items en yeniden eskiye sıralı.
+    gps = []
+    for r in items:
+        c = r.get("coords") or {}
+        if c.get("lat") is not None and c.get("lon") is not None:
+            gps.append((c["lat"], c["lon"]))
+        if len(gps) >= 10:
+            break
+    if gps:
+        lat = sum(g[0] for g in gps) / len(gps)
+        lon = sum(g[1] for g in gps) / len(gps)
+    else:
+        lat = lon = None
     return {
         "recorded_at": it.get("time"),
         "voc_ppm": it.get("voc"),

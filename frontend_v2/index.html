@@ -322,6 +322,20 @@ body {
 .ibb-meta b { font-family: "JetBrains Mono", monospace; color: var(--text); font-size: 12.5px; }
 .ibb-foot { margin-top: 9px; font-size: 10.5px; color: var(--text-2); }
 
+/* Kampüs vs Bölge karşılaştırması */
+.cmp-verdict {
+  font-size: 13.5px; font-weight: 800; line-height: 1.3; margin-bottom: 11px;
+  padding: 9px 11px; border-radius: var(--r-sm);
+  border: 1px solid var(--stroke-2);
+}
+.cmp-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cmp-cell {
+  background: rgba(255,255,255,0.035); border: 1px solid var(--stroke);
+  border-radius: var(--r-sm); padding: 9px 11px;
+}
+.cmp-k { font-size: 10px; font-weight: 700; line-height: 1.35; }
+.cmp-v { font-family: "JetBrains Mono", monospace; font-size: 22px; font-weight: 700; margin-top: 5px; }
+
 /* Atmotube device rows */
 .atp-row {
   display: flex; align-items: center; gap: 10px;
@@ -642,23 +656,22 @@ body {
     </div>
   </section>
 
-  <!-- IBB background station -->
+  <!-- Kampüs vs Bölge karşılaştırması -->
   <section class="panel">
-    <div class="panel-head">
-      <span class="ico">🏙️</span> İBB Arka Plan İstasyonu
-      <span class="right"><span class="ibb-badge" id="ibb-badge">—</span></span>
-    </div>
-    <div class="panel-body" style="padding-top:10px; padding-bottom:11px">
-      <div class="ibb-row">
-        <div>
-          <div class="ibb-val" id="ibb-pm25">--<small> PM₂.₅ µg/m³</small></div>
-          <div class="ibb-sub" id="ibb-name">İstasyon yükleniyor…</div>
+    <div class="panel-head"><span class="ico">⚖️</span> Kampüs vs Bölge</div>
+    <div class="panel-body" style="padding-top:11px; padding-bottom:12px">
+      <div class="cmp-verdict" id="cmp-verdict">Hesaplanıyor…</div>
+      <div class="cmp-row">
+        <div class="cmp-cell">
+          <div class="cmp-k">🟣 Kampüs (PurpleAir)<br><span style="font-weight:500;color:var(--text-2)">saatlik ort.</span></div>
+          <div class="cmp-v" id="cmp-pa">--</div>
         </div>
-        <div class="ibb-meta">
-          <div><span>Uzaklık</span><b id="ibb-dist">--</b></div>
+        <div class="cmp-cell">
+          <div class="cmp-k">🏛️ Bölge (CSB Tuzla)<br><span style="font-weight:500;color:var(--text-2)">~6.4 km</span></div>
+          <div class="cmp-v" id="cmp-csb">--</div>
         </div>
       </div>
-      <div class="ibb-foot" id="ibb-time">—</div>
+      <div class="ibb-foot" id="cmp-note">PM₂.₅ µg/m³ karşılaştırması</div>
     </div>
   </section>
 
@@ -764,8 +777,8 @@ body {
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=12"></script>
-<script src="js/api.js?v=12"></script>
-<script src="js/app.js?v=12"></script>
+<script src="js/colorscale.js?v=13"></script>
+<script src="js/api.js?v=13"></script>
+<script src="js/app.js?v=13"></script>
 </body>
 </html>

@@ -51,13 +51,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadAtmotubeLive();
     setInterval(loadAtmotubeLive, 120000);
 
-    // İBB arka plan istasyonu — 5 dk'da bir yenile (İBB saatlik günceller)
-    loadIBB();
-    setInterval(loadIBB, 300000);
-
     // CSB ulusal istasyon (Tuzla) — 5 dk'da bir
     loadCSB();
     setInterval(loadCSB, 300000);
+
+    // Kampüs (PurpleAir saatlik ort.) vs Bölge (CSB) karşılaştırması
+    loadComparison();
+    setInterval(loadComparison, 300000);
 });
 
 async function wakeBackend() {
@@ -193,58 +193,51 @@ function startCountdown() {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// İBB arka plan istasyonu (en yakın: Tuzla)
+// Kampüs (PurpleAir saatlik ort.) vs Bölge (CSB Tuzla) karşılaştırması
 // ─────────────────────────────────────────────────────────────────
 
-let ibbMarker = null;
-
-async function loadIBB() {
+async function loadComparison() {
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
     try {
-        const res = await API.ibbLatest();
-        const d = res.data;
-        const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-        if (!d) { set("ibb-name", "İBB verisi alınamadı"); return; }
+        // PurpleAir saatlik ortalama (son saat)
+        const now = new Date();
+        const start = new Date(now.getTime() - 3 * 3600 * 1000).toISOString();
+        const hist = await API.purpleairHistory(start, now.toISOString(), "hourly");
+        const paRows = (hist.data || []).filter(r => r.pm2_5 != null);
+        const paAvg = paRows.length ? paRows[paRows.length - 1].pm2_5 : null;
 
-        const pmEl = document.getElementById("ibb-pm25");
-        pmEl.innerHTML = `${d.pm2_5 != null ? d.pm2_5.toFixed(1) : "--"}<small> PM₂.₅ µg/m³</small>`;
-        pmEl.style.color = pm25Color(d.pm2_5);
+        // CSB bölge değeri
+        const csbRes = await API.csbLatest();
+        const csb = csbRes.data ? csbRes.data.pm2_5 : null;
 
-        set("ibb-name", `${d.station_name} (${d.type}) — ${d.town}`);
-        set("ibb-dist", d.distance_km != null ? d.distance_km + " km" : "--");
+        const paEl = document.getElementById("cmp-pa");
+        const csbEl = document.getElementById("cmp-csb");
+        paEl.textContent  = paAvg != null ? paAvg.toFixed(1) : "--";
+        paEl.style.color  = pm25Color(paAvg);
+        csbEl.textContent = csb != null ? csb.toFixed(1) : "--";
+        csbEl.style.color = pm25Color(csb);
 
-        const badge = document.getElementById("ibb-badge");
-        badge.textContent = pm25Label(d.pm2_5);
-        badge.style.color = pm25Color(d.pm2_5);
-        badge.style.borderColor = pm25Color(d.pm2_5) + "55";
-        badge.style.background = pm25Color(d.pm2_5) + "1f";
-
-        set("ibb-time", d.recorded_at
-            ? "İBB · " + new Date(d.recorded_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) + " (saatlik)"
-            : "İBB");
-
-        // Haritada gerçek konumunda işaretçi (uzaklaştırınca görünür)
-        if (d.lat && d.lon) updateIBBMarker(d);
+        const verdict = document.getElementById("cmp-verdict");
+        if (paAvg == null || csb == null) {
+            verdict.textContent = "Veri bekleniyor…";
+            verdict.style.cssText = "border:1px solid var(--stroke-2);color:var(--text-2)";
+            return;
+        }
+        const diff = paAvg - csb;
+        const abs = Math.abs(diff).toFixed(1);
+        if (diff < -0.5) {
+            verdict.innerHTML = `✅ Kampüs bölgeden <b>${abs} µg/m³ daha temiz</b>`;
+            verdict.style.cssText = "background:rgba(52,210,123,0.13);color:#34d27b;border:1px solid rgba(52,210,123,0.35)";
+        } else if (diff > 0.5) {
+            verdict.innerHTML = `⚠️ Kampüs bölgeden <b>${abs} µg/m³ daha kirli</b>`;
+            verdict.style.cssText = "background:rgba(244,97,94,0.13);color:#f4615e;border:1px solid rgba(244,97,94,0.35)";
+        } else {
+            verdict.innerHTML = `≈ Kampüs ve bölge <b>benzer</b> (~${abs} fark)`;
+            verdict.style.cssText = "background:rgba(245,184,64,0.13);color:#f5b840;border:1px solid rgba(245,184,64,0.35)";
+        }
     } catch (e) {
-        const el = document.getElementById("ibb-name");
-        if (el) el.textContent = "İBB bağlantı hatası";
-    }
-}
-
-function updateIBBMarker(d) {
-    const c = pm25Color(d.pm2_5);
-    const html = `<b>🏙️ İBB — ${d.station_name}</b><br>${d.type} arka plan istasyonu<br>PM₂.₅: <b style="color:${c}">${d.pm2_5?.toFixed(1) ?? "--"}</b> µg/m³<br><small>${d.distance_km} km · ${d.recorded_at ? new Date(d.recorded_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) : ""}</small>`;
-    const icon = L.divIcon({
-        className: "",
-        html: `<div class="ibb-marker" style="--marker-color:${c}">🏙️</div>`,
-        iconSize: [30, 30], iconAnchor: [15, 15],
-    });
-    if (!ibbMarker) {
-        ibbMarker = L.marker([d.lat, d.lon], { icon, zIndexOffset: 400 })
-            .addTo(map)
-            .bindTooltip(html, { direction: "top", offset: [0, -16], className: "pa-label" });
-    } else {
-        ibbMarker.setIcon(icon);
-        ibbMarker.setTooltipContent(html);
+        const v = document.getElementById("cmp-verdict");
+        if (v) { v.textContent = "Karşılaştırma alınamadı"; }
     }
 }
 
