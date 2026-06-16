@@ -46,18 +46,40 @@ def _fetch_device_latest(mac):
         return None
     # En yeni okuma (değerler için)
     it = items[0]
-    # GPS yumuşatma: son ~10 GPS'li okumanın ortalaması (ham GPS ~5-10m titrer;
-    # sabit cihazda ortalama daha kararlı/doğru konum verir). items en yeniden eskiye sıralı.
-    gps = []
+    # GPS: ANKOR = en yeni fix (cihazın ŞU ANKİ yeri). Sadece bu ankora hem
+    # zamanca (≤15 dk) hem mekanca (~50 m) yakın fixler ortalanır → sabitken
+    # titreme azalır, cihaz yer değiştirince güncel konum korunur (eski yerlerle karışmaz).
+    anchor = None
     for r in items:
         c = r.get("coords") or {}
         if c.get("lat") is not None and c.get("lon") is not None:
-            gps.append((c["lat"], c["lon"]))
-        if len(gps) >= 10:
+            anchor = (r.get("time"), c["lat"], c["lon"])
             break
-    if gps:
-        lat = sum(g[0] for g in gps) / len(gps)
-        lon = sum(g[1] for g in gps) / len(gps)
+    if anchor:
+        try:
+            at = datetime.datetime.fromisoformat(anchor[0].replace("Z", "+00:00"))
+        except Exception:
+            at = None
+        cluster = []
+        for r in items:
+            c = r.get("coords") or {}
+            if c.get("lat") is None:
+                continue
+            close_space = abs(c["lat"] - anchor[1]) < 0.0005 and abs(c["lon"] - anchor[2]) < 0.0005
+            close_time = True
+            if at is not None:
+                try:
+                    rt = datetime.datetime.fromisoformat(r["time"].replace("Z", "+00:00"))
+                    close_time = abs((at - rt).total_seconds()) <= 900
+                except Exception:
+                    close_time = True
+            if close_space and close_time:
+                cluster.append((c["lat"], c["lon"]))
+        if cluster:
+            lat = sum(x[0] for x in cluster) / len(cluster)
+            lon = sum(x[1] for x in cluster) / len(cluster)
+        else:
+            lat, lon = anchor[1], anchor[2]
     else:
         lat = lon = None
     return {
