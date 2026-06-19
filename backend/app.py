@@ -173,19 +173,53 @@ import csb
 
 @app.get("/api/csb/latest")
 def csb_latest():
-    """CSB Tuzla PM2.5 — arşivden okur (CSB sitesi yurtdışı IP engelli olduğu için
-    veriyi Türkiye'deki yerel toplayıcı Supabase'e yazar; web buradan okur)."""
+    """Tuzla bölge istasyonu PM2.5.
+    Öncelik: arşivdeki CSB (resmi, yerel toplayıcıdan) TAZE ise onu kullan.
+    Eski/yoksa: AYNI Tuzla istasyonunun canlı değeri İBB API'den (bulut erişimli,
+    otomatik güncel) alınır — CSB sitesi yurtdışı IP engelli olduğu için."""
     row = archive.latest_by_source("csb")
-    if not row:
-        return jsonify({"data": None, "message": "Henüz CSB verisi yok (yerel toplayıcı çalışmalı)."})
-    return jsonify({"data": {
-        "station_name": row["device"] or csb.STATION_NAME,
-        "pm2_5": row["pm2_5"],
-        "lat": row["lat"] if row["lat"] is not None else csb.STATION_LAT,
-        "lon": row["lon"] if row["lon"] is not None else csb.STATION_LON,
-        "distance_km": 6.4,
-        "recorded_at": row["recorded_at"],
-    }})
+    # Arşivdeki CSB taze mi? (son 2 saat, Türkiye saati)
+    fresh = False
+    if row and row.get("recorded_at"):
+        try:
+            dt = datetime.datetime.strptime(row["recorded_at"], "%Y-%m-%d %H:%M")
+            now_ist = datetime.datetime.utcnow() + datetime.timedelta(hours=3)
+            fresh = (now_ist - dt).total_seconds() < 7200
+        except Exception:
+            fresh = False
+
+    if fresh:
+        return jsonify({"data": {
+            "station_name": row["device"] or csb.STATION_NAME,
+            "pm2_5": row["pm2_5"],
+            "lat": row["lat"] if row["lat"] is not None else csb.STATION_LAT,
+            "lon": row["lon"] if row["lon"] is not None else csb.STATION_LON,
+            "distance_km": 6.4, "recorded_at": row["recorded_at"], "source": "csb",
+        }})
+
+    # CSB eski/yok → aynı Tuzla istasyonunun canlı değeri (İBB API, bulut, güncel)
+    try:
+        d = ibb.get_nearest_station()
+        if d and d.get("pm2_5") is not None:
+            return jsonify({"data": {
+                "station_name": "Tuzla (canlı)",
+                "pm2_5": d["pm2_5"],
+                "lat": d.get("lat", csb.STATION_LAT), "lon": d.get("lon", csb.STATION_LON),
+                "distance_km": d.get("distance_km", 6.4),
+                "recorded_at": d.get("recorded_at"), "source": "live",
+            }})
+    except Exception:
+        pass
+
+    # Son çare: eski arşiv kaydı
+    if row:
+        return jsonify({"data": {
+            "station_name": (row["device"] or csb.STATION_NAME) + " (eski)",
+            "pm2_5": row["pm2_5"], "lat": row["lat"] or csb.STATION_LAT,
+            "lon": row["lon"] or csb.STATION_LON, "distance_km": 6.4,
+            "recorded_at": row["recorded_at"], "source": "csb-stale",
+        }})
+    return jsonify({"data": None, "message": "Tuzla verisi alınamadı."})
 
 
 @app.get("/api/atmotube/history")
