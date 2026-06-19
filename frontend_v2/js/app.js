@@ -322,19 +322,34 @@ function renderAtmotubeDevices(devices) {
     const wrap = document.getElementById("atp-list");
     let onlineCount = 0;
 
+    // Kampüsten uzak mı? (kampüs merkezine > ~3 km)
+    const farFrom = (lat, lon) => Math.hypot((lat - GTU_CENTER[0]) * 111, (lon - GTU_CENTER[1]) * 84.3) > 3;
+
     wrap.innerHTML = devices.map(d => {
         const r = d.reading;
         const online = r && (Date.now() - new Date(r.recorded_at).getTime()) < ATP_ONLINE_MIN * 60000;
         if (online) onlineCount++;
         const pmColor = r ? pm25Color(r.pm2_5) : "#3a4254";
+        const hasGps = r && r.lat != null && r.lon != null;
+        const far = hasGps && farFrom(r.lat, r.lon);
+        const info = r
+            ? timeAgo(r.recorded_at) + (hasGps ? (far ? " · 📍 uzakta" : " · GPS") : " · GPS yok")
+            : "veri yok (son 2 gün)";
         return `
-          <div class="atp-row">
+          <div class="atp-row" ${hasGps ? `data-lat="${r.lat}" data-lon="${r.lon}" style="cursor:pointer"` : ""} title="${hasGps ? "Haritada göster" : ""}">
             <span class="atp-status ${online ? "on" : "off"}"></span>
             <span class="atp-name">${d.device}</span>
-            <span class="atp-info">${r ? timeAgo(r.recorded_at) + (r.lat ? " · GPS" : "") : "veri yok (son 2 gün)"}</span>
+            <span class="atp-info">${info}</span>
             <span class="atp-val" style="color:${pmColor}">${r && r.pm2_5 != null ? r.pm2_5.toFixed(1) : "--"}<small> µg/m³</small></span>
           </div>`;
     }).join("");
+
+    // Cihaza tıkla → haritada o konuma uç
+    wrap.querySelectorAll(".atp-row[data-lat]").forEach(row => {
+        row.addEventListener("click", () => {
+            map.flyTo([parseFloat(row.dataset.lat), parseFloat(row.dataset.lon)], 16, { duration: 1 });
+        });
+    });
 
     // Rozet: kaç cihaz çevrimiçi
     const badge = document.getElementById("atp-badge");
