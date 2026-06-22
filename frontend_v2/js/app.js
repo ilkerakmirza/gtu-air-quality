@@ -312,6 +312,14 @@ function timeAgo(iso) {
     return `${Math.floor(h / 24)} gün önce`;
 }
 
+// Türkiye saatiyle (Europe/Istanbul) tam tarih-saat
+function trClock(iso) {
+    return new Date(iso).toLocaleString("tr-TR", {
+        timeZone: "Europe/Istanbul", day: "2-digit", month: "2-digit", year: "numeric",
+        hour: "2-digit", minute: "2-digit", second: "2-digit",
+    });
+}
+
 async function loadAtmotubeLive() {
     try {
         const res = await API.atmotubeLive();
@@ -489,7 +497,8 @@ function updateCO2Markers(devices) {
         const ppm = Math.round(r.co2_ppm);
         const html = `<b>🔺 ${d.device}</b> — ${where}<br>` +
             `CO₂: <b style="color:${c}">${ppm}</b> ppm · ${co2Label(r.co2_ppm)}<br>` +
-            `<small>🌡️ ${t} · 💧 ${h} · ${timeAgo(r.recorded_at)}</small>`;
+            `<small>🌡️ ${t} · 💧 ${h} · ${timeAgo(r.recorded_at)}</small><br>` +
+            `<small style="opacity:.7">🕐 ${trClock(r.recorded_at)} (TR)</small>`;
         // Üçgen işaretçi — CO₂'yi PM dairelerinden/ATP noktalarından ayırır. İçinde ppm değeri.
         const svg = `<svg width="40" height="34" viewBox="0 0 40 34">
             <polygon points="20,2 38,32 2,32" fill="${c}" stroke="#fff" stroke-width="2.5"
