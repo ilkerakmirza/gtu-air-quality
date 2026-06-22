@@ -41,32 +41,35 @@ function pm25Intensity(v, maxVal = 75) {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// CO₂ renk skalası (ppm) — kapalı alan hava kalitesi eşikleri
-// Dış ortam ~420 ppm. 1000 üstü havalandırma yetersiz; 2000 üstü baş ağrısı/uyuşukluk.
+// CO₂ renk skalası (ppm) — WHO/sağlık temelli havalandırma eşikleri
+// Dış ortam ~420 ppm. WHO COVID havalandırma rehberi <800 ppm hedefler;
+// dünyada en yaygın iç mekân sınırı 1000 ppm. 1000+ bilişsel düşüş,
+// 1500+ uyuşukluk/baş ağrısı, 5000 ppm 8 saatlik mesleki maruziyet sınırı (OSHA).
 // ─────────────────────────────────────────────────────────────────
 const CO2_SCALE = [
-    { max:  600,     color: "#00cc00", label: "<600 (çok iyi)"      },
-    { max:  800,     color: "#99ee00", label: "600–800 (iyi)"       },
-    { max: 1000,     color: "#ffff00", label: "800–1000 (kabul)"    },
-    { max: 1400,     color: "#ffcc00", label: "1000–1400 (orta)"    },
-    { max: 2000,     color: "#ff8800", label: "1400–2000 (kötü)"    },
-    { max: 5000,     color: "#ff0000", label: "2000–5000 (çok kötü)" },
-    { max: Infinity, color: "#bb44bb", label: ">5000 (tehlikeli)"   },
+    { max:  600,     color: "#00cc00", label: "<600 — mükemmel (dış ortam ~420)" },
+    { max:  800,     color: "#99ee00", label: "600–800 — iyi (WHO hedefi)"       },
+    { max: 1000,     color: "#ffff00", label: "800–1000 — yeterli havalandırma"  },
+    { max: 1500,     color: "#ffaa00", label: "1000–1500 — zayıf (iyileştir)"    },
+    { max: 2000,     color: "#ff6600", label: "1500–2000 — kötü (uyuşukluk)"     },
+    { max: 5000,     color: "#ee0000", label: "2000–5000 — çok kötü"             },
+    { max: Infinity, color: "#990099", label: ">5000 — tehlikeli (mesleki sınır)" },
 ];
 
 function co2Color(v) {
     if (v == null || isNaN(v)) return "#8a93a6";
     for (const b of CO2_SCALE) if (v <= b.max) return b.color;
-    return "#bb44bb";
+    return "#990099";
 }
 
 function co2Label(v) {
     if (v == null || isNaN(v)) return "Veri yok";
+    if (v <= 600)  return "Mükemmel havalandırma";
     if (v <= 800)  return "İyi havalandırma";
-    if (v <= 1000) return "Kabul edilebilir";
-    if (v <= 1400) return "Havalandırma zayıf";
-    if (v <= 2000) return "Havalandırma yetersiz";
-    return "Tehlikeli — havalandır";
+    if (v <= 1000) return "Yeterli havalandırma";
+    if (v <= 1500) return "Havalandırma zayıf — iyileştir";
+    if (v <= 2000) return "Yetersiz — uyuşukluk/baş ağrısı";
+    return "Tehlikeli — acil havalandır";
 }
 
 function buildLegend() {

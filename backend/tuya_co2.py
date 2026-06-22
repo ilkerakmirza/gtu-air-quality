@@ -144,35 +144,46 @@ def _fetch_device(dev):
 
 
 def _anchor_coords():
-    """anchor olarak kullanılan Atmotube cihazlarının canlı GPS konumlarını döner:
-    {'ATP-2': (lat, lon)}. GPS'i olmayan/çevrimdışı cihazlar atlanır."""
+    """anchor olarak kullanılan Atmotube cihazlarının konumlarını döner:
+    {'ATP-2': (lat, lon, live)}. Önce canlı GPS; yoksa arşivdeki son bilinen konum.
+    live=True canlı GPS, live=False son bilinen (saha ölçümü/eski) konum demek."""
     needed = {d["anchor"] for d in DEVICES if d.get("anchor")}
     if not needed:
         return {}
+    coords = {}
+    # 1) canlı GPS (Atmotube bulut)
     try:
         import atmotube_cloud
-        coords = {}
         for dev in atmotube_cloud.get_live_devices():
             if dev.get("device") not in needed:
                 continue
             r = dev.get("reading") or {}
             if r.get("lat") is not None and r.get("lon") is not None:
-                coords[dev["device"]] = (r["lat"], r["lon"])
-        return coords
+                coords[dev["device"]] = (r["lat"], r["lon"], True)
     except Exception as e:
-        print(f"[tuya_co2] anchor konumu alınamadı: {e}")
-        return {}
+        print(f"[tuya_co2] canlı anchor konumu alınamadı: {e}")
+    # 2) canlı GPS olmayanlar için arşivdeki son bilinen konum
+    for name in needed - set(coords):
+        try:
+            import archive
+            g = archive.last_device_gps(name)
+            if g:
+                coords[name] = (g[0], g[1], False)
+        except Exception as e:
+            print(f"[tuya_co2] arşiv anchor konumu alınamadı ({name}): {e}")
+    return coords
 
 
 def _apply_anchor(entry, dev, coords):
-    """Cihaz bir Atmotube'a bağlıysa ve o cihazın canlı GPS'i varsa, CO₂ işaretçisini
-    o konuma taşı (lat/lon yedeği yerine). Hem entry hem reading güncellenir."""
+    """Cihaz bir Atmotube'a bağlıysa, CO₂ işaretçisini o cihazın konumuna taşı
+    (canlı GPS ya da son bilinen). Hem entry hem reading güncellenir."""
     anchor = dev.get("anchor")
     if not anchor or anchor not in coords:
         return
-    lat, lon = coords[anchor]
+    lat, lon, live = coords[anchor]
     entry["lat"], entry["lon"] = lat, lon
     entry["anchored_to"] = anchor
+    entry["anchor_live"] = live   # True: ATP'nin canlı GPS'i; False: son bilinen konum
     if entry.get("reading"):
         entry["reading"]["lat"], entry["reading"]["lon"] = lat, lon
 

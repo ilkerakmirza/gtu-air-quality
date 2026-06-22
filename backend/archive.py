@@ -132,6 +132,32 @@ def latest_by_source(source):
         return None
 
 
+def last_device_gps(name_prefix):
+    """Bir Atmotube cihazının (örn. 'ATP-2') arşivdeki SON bilinen GPS konumu.
+    Önce canlı measurements, yoksa saha ölçümleri (atmotube_readings, oturum adı
+    ATP-x ile başlar) tablosuna bakar. (lat, lon) ya da None döner."""
+    if not _enabled:
+        return None
+    try:
+        con = _connect(); cur = con.cursor()
+        cur.execute("""SELECT lat, lon FROM measurements
+                       WHERE device=%s AND lat IS NOT NULL AND lon IS NOT NULL
+                       ORDER BY recorded_at DESC LIMIT 1""", (name_prefix,))
+        r = cur.fetchone()
+        if not r:
+            cur.execute("""SELECT ar.lat, ar.lon FROM atmotube_readings ar
+                           JOIN upload_sessions s ON ar.session_id = s.id
+                           WHERE s.session_name LIKE %s
+                             AND ar.lat IS NOT NULL AND ar.lon IS NOT NULL
+                           ORDER BY ar.recorded_at DESC LIMIT 1""", (name_prefix + "%",))
+            r = cur.fetchone()
+        con.close()
+        return (float(r[0]), float(r[1])) if r else None
+    except Exception as e:
+        print(f"[archive] last_device_gps hatası: {e}")
+        return None
+
+
 def stats():
     """Özet: kaynak başına kayıt sayısı ve tarih aralığı."""
     if not _enabled:

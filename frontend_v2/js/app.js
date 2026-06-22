@@ -443,7 +443,9 @@ function renderCO2Devices(devices) {
                 (Date.now() - new Date(r.recorded_at).getTime()) < CO2_ONLINE_MIN * 60000;
             if (online) onlineCount++;
             const c = r ? co2Color(r.co2_ppm) : "#3a4254";
-            const loc = d.anchored_to ? `📍 ${d.anchored_to} ile` : (d.location || "kampüs");
+            const loc = d.anchored_to
+                ? `📍 ${d.anchored_to} ile${d.anchor_live === false ? " (son konum)" : ""}`
+                : (d.location || "kampüs");
             const info = r && r.co2_ppm != null
                 ? timeAgo(r.recorded_at) + " · " + loc
                 : (d.error ? "kurulum bekliyor" : "veri yok");
@@ -493,7 +495,9 @@ function updateCO2Markers(devices) {
         const lat = d.lat + (d.anchored_to ? 0.00008 : 0), lon = d.lon;
         const t = r.temperature_c != null ? `${r.temperature_c.toFixed(1)}°C` : "--";
         const h = r.humidity_pct != null ? `${Math.round(r.humidity_pct)}%` : "--";
-        const where = d.anchored_to ? `${d.anchored_to} ile birlikte` : (d.location || "kampüs");
+        const where = d.anchored_to
+            ? `${d.anchored_to} ile birlikte${d.anchor_live === false ? " (son bilinen konum)" : ""}`
+            : (d.location || "kampüs");
         const ppm = Math.round(r.co2_ppm);
         const html = `<b>🔺 ${d.device}</b> — ${where}<br>` +
             `CO₂: <b style="color:${c}">${ppm}</b> ppm · ${co2Label(r.co2_ppm)}<br>` +
