@@ -132,6 +132,19 @@ def atmotube_live():
 
 
 import ibb
+import tuya_co2
+
+# ---------------------------------------------------------------------------
+# CO₂ sensörleri (Tuya Cloud) — sabit kapalı-alan cihazları
+# ---------------------------------------------------------------------------
+
+@app.get("/api/co2/live")
+def co2_live():
+    """CO₂ sensörlerinin Tuya Cloud'daki son ölçümleri (60 sn önbellekli).
+    Her cihaz: {device, location, lat, lon, reading:{co2_ppm,temperature_c,humidity_pct,...}}"""
+    force = request.args.get("force") == "1"
+    return jsonify({"data": tuya_co2.get_live_devices(force=force)})
+
 
 # ---------------------------------------------------------------------------
 # Kalıcı arşiv — istatistik + CSV indirme (analiz için)

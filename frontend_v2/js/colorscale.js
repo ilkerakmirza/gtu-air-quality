@@ -40,6 +40,35 @@ function pm25Intensity(v, maxVal = 75) {
     return Math.min(v / maxVal, 1);
 }
 
+// ─────────────────────────────────────────────────────────────────
+// CO₂ renk skalası (ppm) — kapalı alan hava kalitesi eşikleri
+// Dış ortam ~420 ppm. 1000 üstü havalandırma yetersiz; 2000 üstü baş ağrısı/uyuşukluk.
+// ─────────────────────────────────────────────────────────────────
+const CO2_SCALE = [
+    { max:  600,     color: "#00cc00", label: "<600 (çok iyi)"      },
+    { max:  800,     color: "#99ee00", label: "600–800 (iyi)"       },
+    { max: 1000,     color: "#ffff00", label: "800–1000 (kabul)"    },
+    { max: 1400,     color: "#ffcc00", label: "1000–1400 (orta)"    },
+    { max: 2000,     color: "#ff8800", label: "1400–2000 (kötü)"    },
+    { max: 5000,     color: "#ff0000", label: "2000–5000 (çok kötü)" },
+    { max: Infinity, color: "#bb44bb", label: ">5000 (tehlikeli)"   },
+];
+
+function co2Color(v) {
+    if (v == null || isNaN(v)) return "#8a93a6";
+    for (const b of CO2_SCALE) if (v <= b.max) return b.color;
+    return "#bb44bb";
+}
+
+function co2Label(v) {
+    if (v == null || isNaN(v)) return "Veri yok";
+    if (v <= 800)  return "İyi havalandırma";
+    if (v <= 1000) return "Kabul edilebilir";
+    if (v <= 1400) return "Havalandırma zayıf";
+    if (v <= 2000) return "Havalandırma yetersiz";
+    return "Tehlikeli — havalandır";
+}
+
 function buildLegend() {
     const cells = PM25_SCALE.slice(0, 17).map(b => `<span style="background:${b.color}"></span>`).join("");
     const ticks = [0,5,10,15,20,25,30,40,55,75].map(t =>

@@ -561,6 +561,13 @@ body {
   display: grid; place-items: center; font-size: 15px;
   box-shadow: 0 3px 12px rgba(0,0,0,0.45);
 }
+/* CO₂ sabit sensör işaretçisi — değere göre renklenen ÜÇGEN (PM dairelerinden ayırt edilir) */
+.co2-marker {
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+  animation: blink 1.8s infinite;
+}
+.co2-marker svg { display: block; }
+.co2-marker.stale { animation: none; opacity: 0.55; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 12px; }
@@ -669,6 +676,17 @@ body {
     </div>
   </section>
 
+  <!-- CO₂ sensörleri (Tuya, sabit kapalı-alan) -->
+  <section class="panel">
+    <div class="panel-head">
+      <span class="ico">🫁</span> CO₂ Sensörleri — Canlı
+      <span class="right"><span class="live-badge" id="co2-badge"><span class="live-dot"></span>CANLI</span></span>
+    </div>
+    <div class="panel-body" id="co2-list" style="padding-top:8px; padding-bottom:8px">
+      <div style="color:var(--text-2);font-size:12px">Yükleniyor…</div>
+    </div>
+  </section>
+
   <!-- Kampüs vs Bölge karşılaştırması -->
   <section class="panel">
     <div class="panel-head"><span class="ico">⚖️</span> Kampüs vs Bölge</div>
@@ -728,6 +746,7 @@ body {
       <label class="toggle-row"><input type="checkbox" id="tg-campus"> Kampüs planı (22TR)</label>
       <label class="toggle-row"><input type="checkbox" id="tg-dots" checked> Ölçüm noktaları</label>
       <label class="toggle-row"><input type="checkbox" id="tg-atp" checked> Atmotube canlı cihazlar (ATP)</label>
+      <label class="toggle-row"><input type="checkbox" id="tg-co2" checked> CO₂ sensörleri (sabit)</label>
     </div>
   </section>
 </aside>

@@ -9,6 +9,7 @@ import db
 import ibb
 import csb
 import atmotube_cloud
+import tuya_co2
 
 # Türkiye sabit UTC+3 (2016'dan beri yaz saati yok)
 def _tr_local_to_utc(naive_iso):
@@ -104,6 +105,32 @@ def collect_atmotube():
         return 0
 
 
+def collect_co2():
+    """CO₂ sensörlerinin (Tuya) son okumalarını arşive ekle."""
+    try:
+        devices = tuya_co2.get_live_devices(force=True)
+        rows = []
+        for d in devices:
+            r = d.get("reading")
+            if not r or r.get("co2_ppm") is None:
+                continue
+            rows.append({
+                "source": "co2", "device": d.get("device"),
+                "recorded_at": r.get("recorded_at"),
+                "pm1_0": None, "pm2_5": None, "pm10_0": None,
+                "voc_ppm": None, "co2_ppm": r.get("co2_ppm"),
+                "temperature_c": r.get("temperature_c"), "humidity_pct": r.get("humidity_pct"),
+                "pressure_hpa": None,
+                "lat": r.get("lat"), "lon": r.get("lon"),
+                # konumu hangi Atmotube'dan aldı (ATP-2) — CSV'de yan yana eşlemek için
+                "anchor_device": d.get("anchored_to"),
+            })
+        return archive.log_rows(rows)
+    except Exception as e:
+        print(f"[collector/co2] {e}")
+        return 0
+
+
 def sync_atmotube_sessions():
     """Arşivdeki Atmotube (ATP-1..5) verisini, saha ölçümleri panelinde seçilebilir
     olsun diye cihaz-gün bazlı oturumlara (upload_sessions + atmotube_readings) dönüştürür.
@@ -156,11 +183,11 @@ def sync_atmotube_sessions():
 
 
 def collect_fast():
-    """2 dakikada bir: PurpleAir + Atmotube (+ cihaz oturumlarını güncelle)."""
-    n = collect_purpleair() + collect_atmotube()
+    """2 dakikada bir: PurpleAir + Atmotube + CO₂ (+ cihaz oturumlarını güncelle)."""
+    n = collect_purpleair() + collect_atmotube() + collect_co2()
     sync_atmotube_sessions()
     if n:
-        print(f"[collector] {n} yeni kayıt arşivlendi (PurpleAir+Atmotube).")
+        print(f"[collector] {n} yeni kayıt arşivlendi (PurpleAir+Atmotube+CO₂).")
 
 
 def collect_hourly():

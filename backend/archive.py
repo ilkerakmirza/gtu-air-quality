@@ -50,20 +50,27 @@ CREATE TABLE IF NOT EXISTS measurements (
     pm2_5         DOUBLE PRECISION,
     pm10_0        DOUBLE PRECISION,
     voc_ppm       DOUBLE PRECISION,
+    co2_ppm       DOUBLE PRECISION,
     temperature_c DOUBLE PRECISION,
     humidity_pct  DOUBLE PRECISION,
     pressure_hpa  DOUBLE PRECISION,
     lat           DOUBLE PRECISION,
     lon           DOUBLE PRECISION,
+    anchor_device TEXT,
     ingested_at   TIMESTAMPTZ DEFAULT now(),
     UNIQUE (source, device, recorded_at)
 );
 CREATE INDEX IF NOT EXISTS idx_meas_time   ON measurements (recorded_at);
 CREATE INDEX IF NOT EXISTS idx_meas_source ON measurements (source);
+-- Sonradan eklenen kolonlar (eski tablolar için):
+ALTER TABLE measurements ADD COLUMN IF NOT EXISTS co2_ppm DOUBLE PRECISION;
+-- CO₂ sensörünün konumunu aldığı Atmotube (örn. 'ATP-2') — verileri yan yana eşlemek için
+ALTER TABLE measurements ADD COLUMN IF NOT EXISTS anchor_device TEXT;
 """
 
 _COLS = ["source", "device", "recorded_at", "pm1_0", "pm2_5", "pm10_0",
-         "voc_ppm", "temperature_c", "humidity_pct", "pressure_hpa", "lat", "lon"]
+         "voc_ppm", "co2_ppm", "temperature_c", "humidity_pct", "pressure_hpa",
+         "lat", "lon", "anchor_device"]
 
 
 def init():

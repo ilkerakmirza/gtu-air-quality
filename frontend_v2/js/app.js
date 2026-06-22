@@ -51,6 +51,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadAtmotubeLive();
     setInterval(loadAtmotubeLive, 120000);
 
+    // CO₂ sensörleri (Tuya, sabit) — 2 dk'da bir yenile
+    loadCO2Live();
+    setInterval(loadCO2Live, 120000);
+
     // CSB ulusal istasyon (Tuzla) — 5 dk'da bir
     loadCSB();
     setInterval(loadCSB, 300000);
@@ -401,6 +405,113 @@ function updateAtmotubeMarkers(devices) {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// CO₂ sensörleri (Tuya Cloud) — sabit kapalı-alan cihazları
+// ─────────────────────────────────────────────────────────────────
+
+let co2Markers = {};    // cihaz adı → Leaflet marker
+let co2Visible = true;  // CO₂ cihazları aç/kapa
+const CO2_ONLINE_MIN = 30;   // son X dk içinde veri = canlı
+
+async function loadCO2Live() {
+    try {
+        const res = await API.co2Live();
+        renderCO2Devices(res.data || []);
+    } catch (e) {
+        document.getElementById("co2-list").innerHTML =
+            `<div style="color:var(--red);font-size:12px">CO₂ sensörlerine ulaşılamadı</div>`;
+    }
+}
+
+function renderCO2Devices(devices) {
+    const wrap = document.getElementById("co2-list");
+    let onlineCount = 0;
+
+    if (!devices.length) {
+        wrap.innerHTML = `<div style="color:var(--text-2);font-size:12px">CO₂ sensörü tanımlı değil</div>`;
+    } else {
+        wrap.innerHTML = devices.map(d => {
+            const r = d.reading;
+            const online = r && r.co2_ppm != null &&
+                (Date.now() - new Date(r.recorded_at).getTime()) < CO2_ONLINE_MIN * 60000;
+            if (online) onlineCount++;
+            const c = r ? co2Color(r.co2_ppm) : "#3a4254";
+            const loc = d.anchored_to ? `📍 ${d.anchored_to} ile` : (d.location || "kampüs");
+            const info = r && r.co2_ppm != null
+                ? timeAgo(r.recorded_at) + " · " + loc
+                : (d.error ? "kurulum bekliyor" : "veri yok");
+            return `
+              <div class="atp-row" data-lat="${d.lat}" data-lon="${d.lon}" style="cursor:pointer" title="Haritada göster">
+                <span class="atp-status ${online ? "on" : "off"}"></span>
+                <span class="atp-name">${d.device}</span>
+                <span class="atp-info">${info}</span>
+                <span class="atp-val" style="color:${c}">${r && r.co2_ppm != null ? Math.round(r.co2_ppm) : "--"}<small> ppm</small></span>
+              </div>`;
+        }).join("");
+
+        // Cihaza tıkla → haritada o konuma uç
+        wrap.querySelectorAll(".atp-row[data-lat]").forEach(row =>
+            row.addEventListener("click", () =>
+                map.flyTo([parseFloat(row.dataset.lat), parseFloat(row.dataset.lon)], 18, { duration: 1 })));
+    }
+
+    const badge = document.getElementById("co2-badge");
+    if (onlineCount > 0) {
+        badge.innerHTML = `<span class="live-dot"></span>${onlineCount} CANLI`;
+        badge.style.cssText = "";
+    } else {
+        badge.innerHTML = "ÇEVRİMDIŞI";
+        badge.style.background = "rgba(255,255,255,0.06)";
+        badge.style.borderColor = "var(--stroke-2)";
+        badge.style.color = "var(--text-2)";
+    }
+
+    updateCO2Markers(devices);
+}
+
+function removeCO2Marker(dev) {
+    if (co2Markers[dev]) { map.removeLayer(co2Markers[dev]); delete co2Markers[dev]; }
+}
+
+function updateCO2Markers(devices) {
+    for (const d of devices) {
+        const r = d.reading;
+        // Toggle kapalıysa ya da hiç ölçüm yoksa işaretçiyi gösterme
+        if (!co2Visible || !r || r.co2_ppm == null) { removeCO2Marker(d.device); continue; }
+
+        const ageMin = (Date.now() - new Date(r.recorded_at).getTime()) / 60000;
+        const recent = ageMin < CO2_ONLINE_MIN;
+        const c = co2Color(r.co2_ppm);
+        // ATP'ye bağlıysa o işaretçiyle tam üst üste binmesin diye küçük kuzey offseti (~9 m)
+        const lat = d.lat + (d.anchored_to ? 0.00008 : 0), lon = d.lon;
+        const t = r.temperature_c != null ? `${r.temperature_c.toFixed(1)}°C` : "--";
+        const h = r.humidity_pct != null ? `${Math.round(r.humidity_pct)}%` : "--";
+        const where = d.anchored_to ? `${d.anchored_to} ile birlikte` : (d.location || "kampüs");
+        const ppm = Math.round(r.co2_ppm);
+        const html = `<b>🔺 ${d.device}</b> — ${where}<br>` +
+            `CO₂: <b style="color:${c}">${ppm}</b> ppm · ${co2Label(r.co2_ppm)}<br>` +
+            `<small>🌡️ ${t} · 💧 ${h} · ${timeAgo(r.recorded_at)}</small>`;
+        // Üçgen işaretçi — CO₂'yi PM dairelerinden/ATP noktalarından ayırır. İçinde ppm değeri.
+        const svg = `<svg width="40" height="34" viewBox="0 0 40 34">
+            <polygon points="20,2 38,32 2,32" fill="${c}" stroke="#fff" stroke-width="2.5"
+              stroke-linejoin="round"${recent ? "" : ' stroke-dasharray="4 2.5"'}/>
+            <text x="20" y="28" text-anchor="middle" font-family="JetBrains Mono,monospace"
+              font-size="9.5" font-weight="800" fill="#0b0e14">${ppm}</text></svg>`;
+        const inner = `<div class="co2-marker${recent ? "" : " stale"}">${svg}</div>`;
+        const icon = L.divIcon({ className: "", html: inner, iconSize: [40, 34], iconAnchor: [20, 32] });
+
+        if (!co2Markers[d.device]) {
+            co2Markers[d.device] = L.marker([lat, lon], { icon, zIndexOffset: 550 })
+                .addTo(map)
+                .bindTooltip(html, { direction: "top", offset: [0, -34], className: "pa-label" });
+        } else {
+            co2Markers[d.device].setLatLng([lat, lon]);
+            co2Markers[d.device].setIcon(icon);
+            co2Markers[d.device].setTooltipContent(html);
+        }
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────
 // Oturumlar — kişiye göre gruplu liste
 // ─────────────────────────────────────────────────────────────────
 
@@ -599,6 +710,11 @@ function initSidebar() {
         atpVisible = e.target.checked;
         if (!atpVisible) { Object.keys(atpMarkers).forEach(removeAtpMarker); }
         loadAtmotubeLive();  // yeniden çiz (açıksa işaretçileri geri getirir)
+    });
+    document.getElementById("tg-co2").addEventListener("change", e => {
+        co2Visible = e.target.checked;
+        if (!co2Visible) { Object.keys(co2Markers).forEach(removeCO2Marker); }
+        loadCO2Live();  // yeniden çiz (açıksa işaretçileri geri getirir)
     });
 
     const sb = document.getElementById("sidebar");
