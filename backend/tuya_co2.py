@@ -14,6 +14,8 @@ Gerekli ortam değişkenleri (Render/Railway → Environment, ya da yerel .env):
 Cihaz kayıtları — iki yoldan biri:
   (a) Çok sensör (önerilen, ölçeklenir): TUYA_CO2_DEVICES = JSON liste, örn:
       [{"name":"CO2-1","device_id":"abc","location":"SUMER Lab","lat":40.806,"lon":29.361}]
+      Her kayıt İSTEĞE BAĞLI kendi kimliğini taşıyabilir (farklı Tuya projesi/hesabı):
+      "access_id", "access_secret", "endpoint" — verilmezse global TUYA_* kullanılır.
   (b) Tek sensör (hızlı başlangıç):
       TUYA_CO2_DEVICE_ID, TUYA_CO2_LAT, TUYA_CO2_LON, TUYA_CO2_LOCATION
 
@@ -49,7 +51,9 @@ DP_MAP = {
 _cache = {"ts": 0, "data": None}
 CACHE_SECONDS = 60
 
-_api = None  # TuyaOpenAPI istemcisi (tembel başlatılır)
+# Kimlik seti başına bir TuyaOpenAPI istemcisi: {(endpoint, access_id): api}
+# (Farklı Tuya projelerindeki cihazlar farklı kimlikle bağlanır.)
+_clients = {}
 
 
 def _load_devices():
@@ -69,6 +73,10 @@ def _load_devices():
                     "anchor": (d.get("anchor") or "").strip() or None,
                     "lat": float(d.get("lat", GTU_CENTER[0])),
                     "lon": float(d.get("lon", GTU_CENTER[1])),
+                    # cihaz kendi Tuya projesindeyse kimliği kayıtta taşır
+                    "access_id": (d.get("access_id") or "").strip() or None,
+                    "access_secret": (d.get("access_secret") or "").strip() or None,
+                    "endpoint": (d.get("endpoint") or "").strip() or None,
                 })
             return out
         except Exception as e:
@@ -83,28 +91,43 @@ def _load_devices():
         "anchor": os.environ.get("TUYA_CO2_ANCHOR", "").strip() or None,
         "lat": float(os.environ.get("TUYA_CO2_LAT", GTU_CENTER[0])),
         "lon": float(os.environ.get("TUYA_CO2_LON", GTU_CENTER[1])),
+        "access_id": None, "access_secret": None, "endpoint": None,
     }]
 
 
 DEVICES = _load_devices()
 
 
+def _dev_creds(dev):
+    """Cihazın kullanacağı kimlik: kayıttaki kendi kimliği, yoksa global TUYA_*."""
+    aid = dev.get("access_id") or ACCESS_ID
+    sec = dev.get("access_secret") or ACCESS_SECRET
+    ep = dev.get("endpoint") or API_ENDPOINT
+    return aid, sec, ep
+
+
+def _dev_ready(dev):
+    aid, sec, _ = _dev_creds(dev)
+    return bool(dev["device_id"] and aid and sec)
+
+
 def _is_configured():
-    return bool(ACCESS_ID and ACCESS_SECRET and any(d["device_id"] for d in DEVICES))
+    return any(_dev_ready(d) for d in DEVICES)
 
 
-def _get_api():
-    """TuyaOpenAPI istemcisini tembel başlat (kütüphane yoksa zarifçe None)."""
-    global _api
-    if _api is not None:
-        return _api
+def _get_api(dev):
+    """Cihazın kimlik setine ait TuyaOpenAPI istemcisi (tembel + önbellekli)."""
+    aid, sec, ep = _dev_creds(dev)
+    key = (ep, aid)
+    if key in _clients:
+        return _clients[key]
     try:
         from tuya_connector import TuyaOpenAPI
     except Exception as e:
         raise RuntimeError(f"tuya-connector-python kurulu değil: {e}")
-    api = TuyaOpenAPI(API_ENDPOINT, ACCESS_ID, ACCESS_SECRET)
+    api = TuyaOpenAPI(ep, aid, sec)
     api.connect()
-    _api = api
+    _clients[key] = api
     return api
 
 
@@ -131,7 +154,7 @@ def _parse_status(status_list):
 
 def _fetch_device(dev):
     """Tek cihazın anlık durumunu çeker → reading dict (konum eklenmiş)."""
-    api = _get_api()
+    api = _get_api(dev)
     resp = api.get(f"/v1.0/iot-03/devices/{dev['device_id']}/status")
     if not resp.get("success", False):
         raise RuntimeError(f"Tuya API: {resp.get('msg') or resp}")
@@ -216,6 +239,8 @@ def get_live_devices(force=False):
                  "lat": d["lat"], "lon": d["lon"], "reading": None, "error": None}
         if not d["device_id"]:
             entry["error"] = "device_id boş"
+        elif not _dev_ready(d):
+            entry["error"] = "kimlik bilgisi eksik (access_id/secret)"
         else:
             try:
                 entry["reading"] = _fetch_device(d)
