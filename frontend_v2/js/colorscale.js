@@ -72,6 +72,18 @@ function co2Label(v) {
     return "Tehlikeli — acil havalandır";
 }
 
+// Lejant için kompakt CO₂ şeridi (chip'lerdeki sayı = bandın üst sınırı, ppm)
+function buildCO2Legend() {
+    const chips = [
+        ["#00cc00", "600"], ["#99ee00", "800"], ["#ffff00", "1000"],
+        ["#ffaa00", "1500"], ["#ff6600", "2000"], ["#ee0000", "5000"], ["#990099", "5000+"],
+    ].map(([c, t], i) =>
+        `<span style="background:${c};color:${i >= 5 ? "#fff" : "#0b0e14"}">${t}</span>`).join("");
+    return `
+      <div class="legend-title" style="margin-top:9px">CO₂ <span style="text-transform:none">(ppm)</span> — WHO/sağlık eşikleri</div>
+      <div class="legend-co2">${chips}</div>`;
+}
+
 function buildLegend() {
     const cells = PM25_SCALE.slice(0, 17).map(b => `<span style="background:${b.color}"></span>`).join("");
     const ticks = [0,5,10,15,20,25,30,40,55,75].map(t =>

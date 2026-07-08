@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     initPlayerUI();
     initChartDrawer();
 
-    document.getElementById("legend").innerHTML = buildLegend();
+    document.getElementById("legend").innerHTML = buildLegend() + buildCO2Legend();
 
     // İlk yükleme: backend uyanana kadar dene
     await wakeBackend();
@@ -339,17 +339,25 @@ function renderAtmotubeDevices(devices) {
 
     wrap.innerHTML = devices.map(d => {
         const r = d.reading;
-        const online = r && (Date.now() - new Date(r.recorded_at).getTime()) < ATP_ONLINE_MIN * 60000;
+        const ageMin = r ? (Date.now() - new Date(r.recorded_at).getTime()) / 60000 : Infinity;
+        const online = ageMin < ATP_ONLINE_MIN;
+        const recentish = ageMin < ATP_SHOW_HOURS * 60;   // son 24 saat içinde senkron olmuş
         if (online) onlineCount++;
+        // 3 kademe: yeşil=canlı, sarı=senkron eski (24 sa), gri=veri yok/çok eski
+        const statusCls = online ? "on" : (recentish ? "warn" : "off");
         const pmColor = r ? pm25Color(r.pm2_5) : "#3a4254";
         const hasGps = r && r.lat != null && r.lon != null;
         const far = hasGps && farFrom(r.lat, r.lon);
-        const info = r
-            ? timeAgo(r.recorded_at) + (hasGps ? (far ? " · 📍 uzakta" : " · GPS") : " · GPS yok")
-            : "veri yok (son 2 gün)";
+        const gpsTxt = !hasGps ? "GPS yok"
+            : far ? "📍 uzakta"
+            : online ? "📍 GPS canlı" : "📍 son konum";
+        const info = r ? `${timeAgo(r.recorded_at)} · ${gpsTxt}` : "senkron bekliyor 📶";
+        const tip = r
+            ? `Son veri (TR): ${trClock(r.recorded_at)}${hasGps ? " — haritada göster" : ""}`
+            : "Cihaz telefondaki Atmotube uygulamasıyla senkronlanınca veri düşer";
         return `
-          <div class="atp-row" ${hasGps ? `data-lat="${r.lat}" data-lon="${r.lon}" style="cursor:pointer"` : ""} title="${hasGps ? "Haritada göster" : ""}">
-            <span class="atp-status ${online ? "on" : "off"}"></span>
+          <div class="atp-row" ${hasGps ? `data-lat="${r.lat}" data-lon="${r.lon}" style="cursor:pointer"` : ""} title="${tip}">
+            <span class="atp-status ${statusCls}"></span>
             <span class="atp-name">${d.device}</span>
             <span class="atp-info">${info}</span>
             <span class="atp-val" style="color:${pmColor}">${r && r.pm2_5 != null ? r.pm2_5.toFixed(1) : "--"}<small> µg/m³</small></span>
@@ -375,6 +383,11 @@ function renderAtmotubeDevices(devices) {
         badge.style.color = "var(--text-2)";
     }
 
+    // Son yenileme saati (TR)
+    const upd = document.getElementById("atp-upd");
+    if (upd) upd.textContent = "↻ " + new Date().toLocaleTimeString("tr-TR",
+        { timeZone: "Europe/Istanbul", hour: "2-digit", minute: "2-digit" });
+
     updateAtmotubeMarkers(devices);
 }
 
@@ -394,11 +407,12 @@ function updateAtmotubeMarkers(devices) {
         const c = pm25Color(r.pm2_5);
         const durum = recent ? "canlı" : "son bilinen konum";
         const html = `<b>📡 ${d.device}</b> — ${durum}<br>PM₂.₅: <b style="color:${c}">${r.pm2_5?.toFixed(1) ?? "--"}</b> µg/m³<br><small>${timeAgo(r.recorded_at)}</small>`;
-        // Canlı: nabız atan; eski: soluk sabit kare
-        const inner = recent
+        // Canlı: nabız atan; eski: soluk sabit kare. Altında cihaz adı etiketi.
+        const dot = recent
             ? `<div class="pulse-marker" style="--marker-color:${c};border-radius:30%"></div>`
             : `<div style="width:18px;height:18px;border-radius:30%;background:${c};border:2px dashed #fff;opacity:0.55"></div>`;
-        const icon = L.divIcon({ className: "", html: inner, iconSize: [20, 20], iconAnchor: [10, 10] });
+        const inner = `<div class="mk-wrap">${dot}<div class="mini-label"${recent ? "" : ' style="opacity:.6"'}>${d.device}</div></div>`;
+        const icon = L.divIcon({ className: "", html: inner, iconSize: [60, 40], iconAnchor: [30, 10] });
 
         if (!atpMarkers[d.device]) {
             atpMarkers[d.device] = L.marker([r.lat, r.lon], { icon, zIndexOffset: 600 })
@@ -449,8 +463,11 @@ function renderCO2Devices(devices) {
             const info = r && r.co2_ppm != null
                 ? timeAgo(r.recorded_at) + " · " + loc
                 : (d.error ? "kurulum bekliyor" : "veri yok");
+            const tip = r && r.recorded_at
+                ? `Son veri (TR): ${trClock(r.recorded_at)} — haritada göster`
+                : "Haritada göster";
             return `
-              <div class="atp-row" data-lat="${d.lat}" data-lon="${d.lon}" style="cursor:pointer" title="Haritada göster">
+              <div class="atp-row" data-lat="${d.lat}" data-lon="${d.lon}" style="cursor:pointer" title="${tip}">
                 <span class="atp-status ${online ? "on" : "off"}"></span>
                 <span class="atp-name">${d.device}</span>
                 <span class="atp-info">${info}</span>
@@ -474,6 +491,11 @@ function renderCO2Devices(devices) {
         badge.style.borderColor = "var(--stroke-2)";
         badge.style.color = "var(--text-2)";
     }
+
+    // Son yenileme saati (TR)
+    const upd = document.getElementById("co2-upd");
+    if (upd) upd.textContent = "↻ " + new Date().toLocaleTimeString("tr-TR",
+        { timeZone: "Europe/Istanbul", hour: "2-digit", minute: "2-digit" });
 
     updateCO2Markers(devices);
 }
@@ -509,8 +531,8 @@ function updateCO2Markers(devices) {
               stroke-linejoin="round"${recent ? "" : ' stroke-dasharray="4 2.5"'}/>
             <text x="20" y="28" text-anchor="middle" font-family="JetBrains Mono,monospace"
               font-size="9.5" font-weight="800" fill="#0b0e14">${ppm}</text></svg>`;
-        const inner = `<div class="co2-marker${recent ? "" : " stale"}">${svg}</div>`;
-        const icon = L.divIcon({ className: "", html: inner, iconSize: [40, 34], iconAnchor: [20, 32] });
+        const inner = `<div class="mk-wrap"><div class="co2-marker${recent ? "" : " stale"}">${svg}</div><div class="mini-label">${d.device}</div></div>`;
+        const icon = L.divIcon({ className: "", html: inner, iconSize: [60, 52], iconAnchor: [30, 32] });
 
         if (!co2Markers[d.device]) {
             co2Markers[d.device] = L.marker([lat, lon], { icon, zIndexOffset: 550 })
