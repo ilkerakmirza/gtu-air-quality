@@ -133,8 +133,28 @@ async function loadPurpleAir() {
         const res = await API.purpleairLatest();
         updatePAPanel(res.data);
         updatePAMarker(res.data);
+        markPAFreshness(res.data);
     } catch (e) {
         document.getElementById("pa-cat").textContent = "Bağlantı hatası";
+    }
+}
+
+// Sensör 2 saatten uzun süredir veri göndermiyorsa "CANLI" rozeti yanıltmasın
+const PA_STALE_MIN = 120;
+
+function markPAFreshness(d) {
+    if (!paLive || !d || !d.recorded_at) return;   // animasyon modunda dokunma
+    const b = document.getElementById("pa-badge");
+    const ageMin = (Date.now() - new Date(d.recorded_at).getTime()) / 60000;
+    if (ageMin > PA_STALE_MIN) {
+        b.innerHTML = "⏻ ÇEVRİMDIŞI";
+        b.style.background = "rgba(244,97,94,0.12)";
+        b.style.borderColor = "rgba(244,97,94,0.4)";
+        b.style.color = "#f4615e";
+        b.title = "Sensör veri göndermiyor — son veri (TR): " + trClock(d.recorded_at);
+    } else {
+        setPABadge("live");
+        b.title = "";
     }
 }
 
@@ -208,7 +228,21 @@ async function loadComparison() {
         const start = new Date(now.getTime() - 3 * 3600 * 1000).toISOString();
         const hist = await API.purpleairHistory(start, now.toISOString(), "hourly");
         const paRows = (hist.data || []).filter(r => r.pm2_5 != null);
-        const paAvg = paRows.length ? paRows[paRows.length - 1].pm2_5 : null;
+        let paAvg = paRows.length ? paRows[paRows.length - 1].pm2_5 : null;
+
+        // Saatlik pencere boşsa son kayda bak: tazeyse onu kullan, eskiyse sensör çevrimdışı
+        let paStaleAt = null;
+        if (paAvg == null) {
+            try {
+                const latest = await API.purpleairLatest();
+                const ld = latest.data;
+                if (ld && ld.pm2_5 != null && ld.recorded_at) {
+                    const ageMin = (Date.now() - new Date(ld.recorded_at).getTime()) / 60000;
+                    if (ageMin <= PA_STALE_MIN) paAvg = ld.pm2_5;
+                    else paStaleAt = ld.recorded_at;
+                }
+            } catch (_) {}
+        }
 
         // CSB bölge değeri
         const csbRes = await API.csbLatest();
@@ -222,6 +256,11 @@ async function loadComparison() {
         csbEl.style.color = pm25Color(csb);
 
         const verdict = document.getElementById("cmp-verdict");
+        if (paStaleAt) {
+            verdict.innerHTML = `🔌 PurpleAir çevrimdışı — son veri: ${trClock(paStaleAt)}`;
+            verdict.style.cssText = "background:rgba(244,97,94,0.10);color:#f4615e;border:1px solid rgba(244,97,94,0.3)";
+            return;
+        }
         if (paAvg == null || csb == null) {
             verdict.textContent = "Veri bekleniyor…";
             verdict.style.cssText = "border:1px solid var(--stroke-2);color:var(--text-2)";
