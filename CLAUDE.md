@@ -24,17 +24,28 @@ https://ilkerakmirza.github.io/gtu-air-quality/frontend_v2/
 Duyurular `frontend_v2/data/duyurular.json` dosyasında. Kullanıcı "duyuru ekle: …" dediğinde listeye yeni bir öğe ekle
 (sıra önemli değil, uygulama tarihe göre sıralar), commit'le ve `main`'e push et. Birkaç dakika içinde herkesin uygulamasına gelir.
 
+Sade duyuru (çoğu duyuru için yeterli):
 ```json
 {
   "id": "2026-10-15-saha-olcumu",      // benzersiz; okunmamış sayacı buna göre çalışır, sonradan değiştirme
   "tarih": "2026-10-15",               // YYYY-AA-GG
   "etiket": "Saha",                    // isteğe bağlı: Duyuru, Saha, Toplantı, Sensör…
   "baslik": "Kısa başlık",
-  "metin": "Açıklama. Satır atlamak için \n",
+  "metin": "Açıklama. **kalın** yazılabilir, satır atlamak için \\n",
   "link": "https://…",                 // isteğe bağlı
   "link_metni": "Formu aç"             // isteğe bağlı
 }
 ```
+
+Renkli (zengin) duyuru — `renk` ya da `bolumler` varsa renkli başlık alanıyla kart olarak gösterilir
+(örnek: `duyurular.json` içindeki uygulama tanıtımı):
+- `renk`: `mor` | `mavi` | `yesil` | `turuncu` | `pembe` (başlık alanının degradesi)
+- `ikon`: başlıktaki emoji · `ozet`: başlığın altındaki kısa cümle · `sabit: true`: listenin en üstünde kalır
+- `bolumler`: sırayla gösterilen bölümler
+  - `{ "tur": "ozellikler", "baslik": "…", "ogeler": [{ "ikon": "📡", "baslik": "…", "metin": "…" }] }` — renkli özellik kartları
+  - `{ "tur": "adimlar", "ikon": "📱", "baslik": "…", "alt": "…", "renk": "#6c8cff", "adimlar": ["…", "…"] }` — numaralı adımlar
+  - `{ "tur": "not", "ikon": "✨", "metin": "…" }` — yeşil not kutusu
+  - `{ "tur": "metin", "baslik": "…", "metin": "…" }` — ara başlık / paragraf
 
 ## Telefon uygulaması (PWA)
 - `frontend_v2/manifest.webmanifest`, `frontend_v2/sw.js`, `frontend_v2/icons/`, `frontend_v2/js/shell.js` (alt sekmeler, duyurular, kurulum).

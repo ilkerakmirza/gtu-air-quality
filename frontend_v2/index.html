@@ -787,6 +787,75 @@ body {
 .news-item p { font-size: 12.5px; line-height: 1.55; color: #c9d0dd; }
 .news-item a { color: #a9b9ff; font-weight: 600; }
 .news-empty { font-size: 12px; color: var(--text-2); padding: 4px 0; }
+.news-link { display: inline-block; margin-top: 8px; color: #a9b9ff; font-size: 12.5px; font-weight: 700; }
+
+/* Zengin duyuru kartı */
+.news-item.rich {
+  padding: 0; margin: 2px 0 16px; border: 1px solid var(--stroke-2); border-radius: 16px;
+  overflow: hidden; background: rgba(255,255,255,0.025);
+}
+.news-item.rich:last-child { margin-bottom: 4px; border-bottom: 1px solid var(--stroke-2); }
+.news-hero {
+  position: relative; overflow: hidden; padding: 14px 16px 16px;
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+}
+.news-hero::before, .news-hero::after {
+  content: ""; position: absolute; border-radius: 50%; pointer-events: none;
+  background: rgba(255,255,255,0.14);
+}
+.news-hero::before { width: 150px; height: 150px; right: -40px; top: -60px; }
+.news-hero::after  { width: 90px; height: 90px; right: 60px; bottom: -55px; background: rgba(255,255,255,0.09); }
+.news-hero .news-meta { position: relative; color: rgba(255,255,255,0.85); margin-bottom: 10px; }
+.news-hero .news-tag { background: rgba(255,255,255,0.22); color: #fff; }
+.news-hero .news-new { color: #fff; background: rgba(11,14,20,0.35); padding: 2px 7px; border-radius: 99px; }
+.nh-ico {
+  position: relative; width: 46px; height: 46px; margin-bottom: 10px; border-radius: 14px;
+  display: grid; place-items: center; font-size: 25px;
+  background: rgba(255,255,255,0.2); box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+}
+.news-item.rich .news-hero h3 { position: relative; color: #fff; font-size: 17px; font-weight: 800; line-height: 1.3; margin: 0; }
+.nh-sub { position: relative; margin-top: 6px; font-size: 12.5px; line-height: 1.5; color: rgba(255,255,255,0.9) !important; }
+.news-content { padding: 14px 14px 16px; }
+.news-item .news-lead { font-size: 13px; line-height: 1.6; color: #d7dce6; margin-bottom: 4px; }
+.nsec-title {
+  margin: 16px 0 8px; font-size: 10.5px; font-weight: 800; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--text-2);
+}
+.nf-grid { display: grid; gap: 7px; }
+.nf-item {
+  display: flex; align-items: flex-start; gap: 11px; padding: 9px 11px; border-radius: 12px;
+  background: color-mix(in srgb, var(--c) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c) 28%, transparent);
+}
+.nf-ico {
+  flex-shrink: 0; width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center;
+  font-size: 16px; background: color-mix(in srgb, var(--c) 24%, transparent);
+}
+.nf-item b { display: block; font-size: 12.5px; color: var(--c); margin-top: 1px; }
+.nf-item small { display: block; font-size: 11.5px; line-height: 1.45; color: #c9d0dd; margin-top: 2px; }
+.ns-card {
+  margin-top: 10px; border-radius: 12px; overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--c) 35%, transparent);
+}
+.ns-head {
+  display: flex; align-items: center; gap: 8px; padding: 9px 12px;
+  font-size: 13px; font-weight: 800; color: var(--c);
+  background: color-mix(in srgb, var(--c) 16%, transparent);
+}
+.ns-head small { margin-left: auto; font-size: 10.5px; font-weight: 600; color: var(--text-2); }
+.ns-steps { list-style: none; padding: 8px 12px 10px; }
+.ns-steps li { display: flex; align-items: flex-start; gap: 10px; padding: 5px 0; font-size: 12.5px; line-height: 1.45; color: #d7dce6; }
+.ns-num {
+  flex-shrink: 0; width: 21px; height: 21px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--c); color: #0b0e14; font: 800 11px "JetBrains Mono", monospace;
+}
+.ns-steps b { color: #fff; }
+.news-note {
+  display: flex; gap: 10px; margin-top: 14px; padding: 10px 12px; border-radius: 12px;
+  background: rgba(52,210,123,0.1); border: 1px solid rgba(52,210,123,0.3);
+  font-size: 12px; line-height: 1.5; color: #d7dce6;
+}
+.news-note b { color: #fff; }
 
 .install-card {
   margin-bottom: 14px; padding: 12px 13px; border-radius: var(--r-md);
@@ -1137,10 +1206,10 @@ body {
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=20"></script>
-<script src="js/api.js?v=20"></script>
-<script src="js/campus.js?v=20"></script>
-<script src="js/app.js?v=20"></script>
-<script src="js/shell.js?v=20"></script>
+<script src="js/colorscale.js?v=21"></script>
+<script src="js/api.js?v=21"></script>
+<script src="js/campus.js?v=21"></script>
+<script src="js/app.js?v=21"></script>
+<script src="js/shell.js?v=21"></script>
 </body>
 </html>

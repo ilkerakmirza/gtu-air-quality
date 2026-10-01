@@ -3,7 +3,73 @@
     "id": "2026-10-01-uygulama",
     "tarih": "2026-10-01",
     "etiket": "Duyuru",
-    "baslik": "Platform artık telefona uygulama olarak kurulabiliyor",
-    "metin": "GTÜ Hava Kalitesi platformunu telefonunuzun ana ekranına ekleyip uygulama gibi kullanabilirsiniz. Canlı sensör verileri, saha ölçümleri ve ekip duyuruları buradan takip edilecek.\niPhone: Safari → Paylaş → Ana Ekrana Ekle\nAndroid: Chrome → menü (⋮) → Uygulamayı yükle"
+    "sabit": true,
+    "renk": "mor",
+    "ikon": "📲",
+    "baslik": "GTÜ Hava Kalitesi artık telefonunuzda",
+    "ozet": "Kampüsümüzün havasını artık her an, her yerden takip edebilirsiniz.",
+    "metin": "GTÜ Hava Kalitesi Platformu, Gebze Teknik Üniversitesi kampüsündeki hava kalitesini **ölçmek, haritalamak ve yorumlamak** için geliştirdiğimiz ekip uygulamasıdır. Sabit istasyonlar, taşınabilir sensörler ve saha ölçümlerimizden gelen veriler tek ekranda buluşur. Böylece ekibin her üyesi projenin güncel durumunu aynı yerden izler.",
+    "bolumler": [
+      {
+        "tur": "ozellikler",
+        "baslik": "Uygulamada neler var?",
+        "ogeler": [
+          { "ikon": "📡", "baslik": "Canlı ölçümler", "metin": "PurpleAir, Atmotube ve CO₂ sensörlerinin anlık değerleri" },
+          { "ikon": "🗺️", "baslik": "Kampüs haritası", "metin": "Bina bazında PM₂.₅ ortalamaları ve aylık karşılaştırmalar" },
+          { "ikon": "👥", "baslik": "Saha ölçümleri", "metin": "Ekibin ölçüm günlerini haritada gün gün izleyin ve yeniden oynatın" },
+          { "ikon": "⚖️", "baslik": "Kampüs ve bölge", "metin": "Kampüs ölçümlerini Bakanlığın Tuzla hava kalitesi istasyonuyla karşılaştırın" },
+          { "ikon": "📢", "baslik": "Ekip duyuruları", "metin": "Saha günleri, toplantılar ve proje gelişmeleri tek yerde" }
+        ]
+      },
+      {
+        "tur": "metin",
+        "baslik": "Nasıl kurulur?"
+      },
+      {
+        "tur": "adimlar",
+        "ikon": "📱",
+        "baslik": "iPhone / iPad",
+        "alt": "Safari ile",
+        "renk": "#6c8cff",
+        "adimlar": [
+          "Platform bağlantısını **Safari**'de açın",
+          "Alttaki **Paylaş** düğmesine (⬆️) dokunun",
+          "Listeden **Ana Ekrana Ekle**'yi seçin",
+          "Sağ üstteki **Ekle**'ye dokunun"
+        ]
+      },
+      {
+        "tur": "adimlar",
+        "ikon": "🤖",
+        "baslik": "Android",
+        "alt": "Chrome ile",
+        "renk": "#34d27b",
+        "adimlar": [
+          "Platform bağlantısını **Chrome**'da açın",
+          "Sağ üstteki **⋮** menüsüne dokunun",
+          "**Uygulamayı yükle** (ya da **Ana ekrana ekle**) seçeneğine dokunun",
+          "**Yükle** ile onaylayın"
+        ]
+      },
+      {
+        "tur": "adimlar",
+        "ikon": "💻",
+        "baslik": "Bilgisayar",
+        "alt": "Chrome veya Edge ile",
+        "renk": "#f5b840",
+        "adimlar": [
+          "Platformu **Chrome** ya da **Edge**'de açın",
+          "Adres çubuğunun sağındaki **yükle** simgesine (⊕) tıklayın",
+          "**Yükle** ile onaylayın"
+        ]
+      },
+      {
+        "tur": "not",
+        "ikon": "✨",
+        "metin": "Kurulumdan sonra uygulama, ana ekranınızdaki **GTÜ Hava** simgesiyle tam ekran açılır. Güncellemeler kendiliğinden gelir, yeniden kurmanız gerekmez."
+      }
+    ],
+    "link": "https://ilkerakmirza.github.io/gtu-air-quality/frontend_v2/",
+    "link_metni": "Platform bağlantısı"
   }
 ]
