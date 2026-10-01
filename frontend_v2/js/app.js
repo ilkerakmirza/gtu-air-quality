@@ -1,4 +1,4 @@
-// GTÜ Hava Kalitesi Platformu v2 — ana uygulama
+// GTÜ AirLab (kampüs hava kalitesi platformu) v2 — ana uygulama
 // Bağımlılıklar: Leaflet, Leaflet.heat, Chart.js, colorscale.js, api.js
 
 const GTU_CENTER = [40.806155, 29.360985];

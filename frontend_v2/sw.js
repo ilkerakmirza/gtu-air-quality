@@ -1,4 +1,4 @@
-// GTÜ Hava Kalitesi — service worker (telefona kurulan uygulama için)
+// GTÜ AirLab — service worker (telefona kurulan uygulama için)
 // Uygulama dosyaları: önce ağ → her açılışta en güncel sürüm; ağ yoksa son kopya.
 // Sürümlü CDN kütüphaneleri: önce önbellek.
 // API ve harita karoları önbelleğe alınmaz (veri her zaman canlı).

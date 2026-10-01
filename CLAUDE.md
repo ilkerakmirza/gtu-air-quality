@@ -1,4 +1,4 @@
-# GTÜ Hava Kalitesi — Claude çalışma kuralları
+# GTÜ AirLab (kampüs hava kalitesi) — Claude çalışma kuralları
 
 Bu proje hem Claude masaüstü uygulamasında hem de Claude Code web (bulut) oturumlarında geliştiriliyor.
 Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.

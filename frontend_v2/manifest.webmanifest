@@ -1,7 +1,7 @@
 {
-  "name": "GTÜ Hava Kalitesi",
-  "short_name": "GTÜ Hava",
-  "description": "GTÜ kampüs hava kalitesi izleme platformu: canlı sensörler, saha ölçümleri ve ekip duyuruları.",
+  "name": "GTÜ AirLab — Kampüs Hava Kalitesi",
+  "short_name": "GTÜ AirLab",
+  "description": "GTÜ AirLab: kampüs hava kalitesi laboratuvarı. Canlı sensörler, saha ölçümleri, WHO karşılaştırması ve ekip duyuruları.",
   "lang": "tr",
   "start_url": "./",
   "scope": "./",
@@ -10,8 +10,21 @@
   "background_color": "#0b0e14",
   "theme_color": "#0b0e14",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }

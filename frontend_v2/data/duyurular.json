@@ -6,9 +6,9 @@
     "sabit": true,
     "renk": "mor",
     "ikon": "📲",
-    "baslik": "GTÜ Hava Kalitesi artık telefonunuzda",
+    "baslik": "GTÜ AirLab artık telefonunuzda",
     "ozet": "Kampüsümüzün havasını artık her an, her yerden takip edebilirsiniz.",
-    "metin": "GTÜ Hava Kalitesi Platformu, Gebze Teknik Üniversitesi kampüsündeki hava kalitesini **ölçmek, haritalamak ve yorumlamak** için geliştirdiğimiz ekip uygulamasıdır. Sabit istasyonlar, taşınabilir sensörler ve saha ölçümlerimizden gelen veriler tek ekranda buluşur. Böylece ekibin her üyesi projenin güncel durumunu aynı yerden izler.",
+    "metin": "GTÜ AirLab, Gebze Teknik Üniversitesi kampüsündeki hava kalitesini **ölçmek, haritalamak ve yorumlamak** için geliştirdiğimiz ekip uygulamasıdır. Sabit istasyonlar, taşınabilir sensörler ve saha ölçümlerimizden gelen veriler tek ekranda buluşur. Böylece ekibin her üyesi projenin güncel durumunu aynı yerden izler.",
     "bolumler": [
       {
         "tur": "ozellikler",
@@ -66,7 +66,7 @@
       {
         "tur": "not",
         "ikon": "✨",
-        "metin": "Kurulumdan sonra uygulama, ana ekranınızdaki **GTÜ Hava** simgesiyle tam ekran açılır. Güncellemeler kendiliğinden gelir, yeniden kurmanız gerekmez."
+        "metin": "Kurulumdan sonra uygulama, ana ekranınızdaki **GTÜ AirLab** simgesiyle tam ekran açılır. Güncellemeler kendiliğinden gelir, yeniden kurmanız gerekmez."
       }
     ],
     "link": "https://ilkerakmirza.github.io/gtu-air-quality/frontend_v2/",
