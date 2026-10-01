@@ -117,6 +117,9 @@ function initMap() {
     campusOverlay = L.imageOverlay("images/campus_map_22TR.jpg", CAMPUS_BOUNDS,
         { opacity: 0.55, interactive: false });
 
+    // Kampüs bileşenleri (binalar, yeşil alan, yol, otopark…) — ölçümlerin altında
+    Campus.init(map).catch(e => console.warn("[campus]", e));
+
     dotsLayer  = L.layerGroup().addTo(map);
     trailLayer = L.layerGroup().addTo(map);
     heatLayer  = L.heatLayer([], { radius: 26, blur: 16, maxZoom: 17, gradient: {
@@ -711,18 +714,23 @@ function updateChips() {
 // Ölçüm noktaları + istatistik
 // ─────────────────────────────────────────────────────────────────
 
+let _dotsReq = 0;   // üst üste binen çağrılarda yalnızca en sonuncusu çizsin
+
 async function refreshDots() {
     const ids = [...document.querySelectorAll(".s-cb:checked")].map(cb => +cb.value);
+    const req = ++_dotsReq;
     dotsLayer.clearLayers();
     setStats([]);
-    if (!ids.length) return;
+    if (!ids.length) { Campus.colorByPoints([]); return; }
 
     try {
         const res = await API.mapTracks(ids);
+        if (req !== _dotsReq) return;   // bu arada yeni bir seçim yapıldı
         const allPts = [];
         for (const track of res.tracks || []) {
             const person = personOf(track.session_name);
             for (const pt of (track.points || []).filter(p => p.lat && p.lon)) {
+                pt._person = person.name;   // bina popup'ında kişi kırılımı için
                 allPts.push(pt);
                 if (!document.getElementById("tg-dots").checked) continue;
                 // Değer yükseldikçe nokta büyür: temiz hava küçük, kirli hava dikkat çeker
@@ -747,6 +755,7 @@ async function refreshDots() {
             }
         }
         setStats(allPts);
+        Campus.colorByPoints(allPts);   // binaları ortalama PM₂.₅ ile boya
     } catch (e) { console.error("[tracks]", e); }
 }
 
@@ -780,6 +789,11 @@ function initSidebar() {
     document.getElementById("tg-campus").addEventListener("change", e =>
         e.target.checked ? campusOverlay.addTo(map) : map.removeLayer(campusOverlay));
     document.getElementById("tg-dots").addEventListener("change", refreshDots);
+    document.getElementById("tg-campuslayer").addEventListener("change", e => Campus.setVisible(e.target.checked));
+    document.getElementById("tg-bchoro").addEventListener("change", e => Campus.setChoropleth(e.target.checked));
+
+    // Panel başlığına tıkla → paneli katla/aç (izleyici tercihi tarayıcıda hatırlanır)
+    initCollapsiblePanels();
     document.getElementById("tg-atp").addEventListener("change", e => {
         atpVisible = e.target.checked;
         if (!atpVisible) { Object.keys(atpMarkers).forEach(removeAtpMarker); }
@@ -793,6 +807,23 @@ function initSidebar() {
 
     const sb = document.getElementById("sidebar");
     document.getElementById("sidebar-toggle").addEventListener("click", () => sb.classList.remove("hidden"));
+}
+
+// Kenar çubuğu panelleri katlanabilir — kalabalığı azaltır. Tercih yalnızca bu tarayıcıda saklanır.
+function initCollapsiblePanels() {
+    const KEY = "gtu.collapsed";
+    let saved = [];
+    try { saved = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (_) {}
+    document.querySelectorAll("#sidebar .panel[data-key]").forEach(p => {
+        const k = p.dataset.key;
+        if (saved.includes(k)) p.classList.add("folded");
+        p.querySelector(".panel-head").addEventListener("click", ev => {
+            if (ev.target.closest("input,button,a")) return;
+            p.classList.toggle("folded");
+            const now = [...document.querySelectorAll("#sidebar .panel.folded[data-key]")].map(x => x.dataset.key);
+            try { localStorage.setItem(KEY, JSON.stringify(now)); } catch (_) {}
+        });
+    });
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -1042,6 +1073,13 @@ function loadCompareChart(atmoPts, paHist, person) {
                 borderWidth: 2, pointRadius: 0, tension: 0.35, fill: true,
                 spanGaps: true,
             },
+            {
+                // Referans: DSÖ 2021 PM₂.₅ 24 saatlik kılavuz değeri
+                label: "DSÖ 24 sa kılavuzu (15 µg/m³)",
+                data: atmoVals.map(() => 15),
+                borderColor: "rgba(232,236,244,0.45)",
+                borderWidth: 1.2, borderDash: [5, 5], pointRadius: 0, fill: false,
+            },
         ]},
         options: {
             responsive: true, maintainAspectRatio: false, animation: false,
@@ -1115,6 +1153,7 @@ function restoreAvgBadge() {
 function updateChartCursor(idx) {
     if (!cmpChart) return;
     cmpChart.data.datasets.forEach(ds => {
+        if (ds.borderDash) return;   // referans çizgisinde imleç noktası yok
         ds.pointRadius = ds.data.map((_, i) => i === idx ? 5 : 0);
         ds.pointBackgroundColor = ds.borderColor;
     });

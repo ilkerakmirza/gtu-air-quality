@@ -366,6 +366,64 @@ body {
 /* Panel başlığındaki son yenileme saati */
 .upd-time { font-family: "JetBrains Mono", monospace; font-size: 9.5px; color: var(--text-2); }
 
+/* Katlanabilir paneller */
+#sidebar .panel[data-key] > .panel-head { cursor: pointer; user-select: none; }
+#sidebar .panel[data-key] > .panel-head::after {
+  content: "▾"; margin-left: auto; font-size: 12px; color: var(--text-3);
+  transition: transform .2s ease;
+}
+#sidebar .panel[data-key] > .panel-head:has(.right)::after { margin-left: 4px; }
+#sidebar .panel.folded > .panel-head { border-bottom-color: transparent; }
+#sidebar .panel.folded > .panel-head::after { transform: rotate(-90deg); }
+#sidebar .panel.folded > .panel-body { display: none; }
+
+/* Kampüs katman kategorileri */
+.cat-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 8px 25px; }
+.cat-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 9px 4px 6px; border-radius: 99px;
+  border: 1px solid var(--stroke-2); background: rgba(255,255,255,0.04);
+  color: var(--text); font: 600 11px Inter, sans-serif; cursor: pointer;
+  transition: opacity .15s, background .15s;
+}
+.cat-chip:hover { background: rgba(255,255,255,0.09); }
+.cat-chip em { font-style: normal; font: 600 9.5px "JetBrains Mono", monospace; color: var(--text-2); }
+.cat-chip.off { opacity: 0.38; }
+.cat-chip.off .cat-sw { filter: grayscale(1); }
+.cat-sw { width: 13px; height: 11px; border-radius: 3px; flex-shrink: 0; }
+.campus-note { margin: -2px 0 6px 25px; font-size: 10.5px; color: var(--text-2); line-height: 1.35; }
+.toggle-sep { height: 1px; background: var(--stroke); margin: 6px 0 4px; }
+
+/* Bina / bölge etiketleri */
+.leaflet-tooltip.bld-label {
+  background: rgba(11,14,20,0.72); border: 1px solid rgba(91,141,239,0.45);
+  color: #e8ecf4; box-shadow: 0 2px 8px rgba(0,0,0,0.45);
+  font: 600 10px Inter, sans-serif; padding: 2px 6px; border-radius: 5px;
+  white-space: nowrap; pointer-events: none;
+}
+.leaflet-tooltip.bld-label::before { display: none; }
+.leaflet-tooltip.region-label {
+  background: transparent; border: none; box-shadow: none;
+  color: rgba(255,255,255,0.85); font: 800 13px Inter, sans-serif; letter-spacing: .14em;
+  text-transform: uppercase; text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+.leaflet-tooltip.region-label::before { display: none; }
+
+/* Bina popup'ı */
+.bld-pop { font-family: Inter, sans-serif; min-width: 230px; }
+.bp-title { font-weight: 800; font-size: 13.5px; line-height: 1.25; }
+.bp-sub { font-size: 10.5px; color: var(--text-2); margin: 2px 0 9px; }
+.bp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.bp-grid div { background: rgba(255,255,255,0.04); border: 1px solid var(--stroke); border-radius: 8px; padding: 6px 8px; }
+.bp-grid span { display: block; font-size: 9px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--text-2); }
+.bp-grid b { font: 700 16px "JetBrains Mono", monospace; }
+.bp-cat { font-size: 11px; font-weight: 700; margin-top: 8px; }
+.bp-who { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
+.bp-chip { font: 600 10px "JetBrains Mono", monospace; padding: 2px 6px; border-radius: 5px;
+  background: rgba(255,255,255,0.06); border: 1px solid var(--stroke); color: var(--text); }
+.bp-empty { font-size: 11.5px; color: var(--text-2); line-height: 1.4; }
+
 /* Layer toggles */
 .toggle-row {
   display: flex; align-items: center; gap: 10px;
@@ -647,7 +705,7 @@ body {
     <div class="brand-logo">🌍</div>
     <div>
       GTÜ Hava Kalitesi
-      <small>Kampüs İzleme Platformu — PurpleAir + Atmotube</small>
+      <small>Kampüs İzleme Platformu · PurpleAir · Atmotube · CO₂ · CSB</small>
     </div>
   </div>
   <div class="topbar-spacer"></div>
@@ -664,9 +722,9 @@ body {
 <aside class="sidebar" id="sidebar">
 
   <!-- PurpleAir live -->
-  <section class="panel">
+  <section class="panel" data-key="pa">
     <div class="panel-head">
-      <span class="ico">🟣</span> PurpleAir PA-II — Sabit İstasyon
+      <span class="ico">🟣</span> PurpleAir PA-II
       <span class="right"><span class="live-badge" id="pa-badge"><span class="live-dot"></span>CANLI</span></span>
     </div>
     <div class="panel-body">
@@ -688,9 +746,9 @@ body {
   </section>
 
   <!-- Atmotube live devices -->
-  <section class="panel">
+  <section class="panel" data-key="atp">
     <div class="panel-head">
-      <span class="ico">📡</span> Atmotube Pro — Canlı Cihazlar
+      <span class="ico">📡</span> Atmotube Pro
       <span class="right"><span class="upd-time" id="atp-upd"></span><span class="live-badge" id="atp-badge"><span class="live-dot"></span>CANLI</span></span>
     </div>
     <div class="panel-body" id="atp-list" style="padding-top:8px; padding-bottom:8px">
@@ -699,9 +757,9 @@ body {
   </section>
 
   <!-- CO₂ sensörleri (Tuya, sabit kapalı-alan) -->
-  <section class="panel">
+  <section class="panel" data-key="co2">
     <div class="panel-head">
-      <span class="ico">🫁</span> CO₂ Sensörleri — Canlı
+      <span class="ico">🫁</span> CO₂ Sensörleri
       <span class="right"><span class="upd-time" id="co2-upd"></span><span class="live-badge" id="co2-badge"><span class="live-dot"></span>CANLI</span></span>
     </div>
     <div class="panel-body" id="co2-list" style="padding-top:8px; padding-bottom:8px">
@@ -710,7 +768,7 @@ body {
   </section>
 
   <!-- Kampüs vs Bölge karşılaştırması -->
-  <section class="panel">
+  <section class="panel" data-key="cmp">
     <div class="panel-head"><span class="ico">⚖️</span> Kampüs vs Bölge</div>
     <div class="panel-body" style="padding-top:11px; padding-bottom:12px">
       <div class="cmp-verdict" id="cmp-verdict">Hesaplanıyor…</div>
@@ -729,9 +787,9 @@ body {
   </section>
 
   <!-- CSB background station -->
-  <section class="panel">
+  <section class="panel" data-key="csb">
     <div class="panel-head">
-      <span class="ico">🏛️</span> CSB Ulusal İstasyon
+      <span class="ico">🏛️</span> CSB Tuzla
       <span class="right"><span class="ibb-badge" id="csb-badge">—</span></span>
     </div>
     <div class="panel-body" style="padding-top:10px; padding-bottom:11px">
@@ -749,7 +807,7 @@ body {
   </section>
 
   <!-- Stats -->
-  <section class="panel">
+  <section class="panel" data-key="stats">
     <div class="panel-head"><span class="ico">📈</span> Seçili Veri Özeti</div>
     <div class="panel-body">
       <div class="stats-strip">
@@ -761,9 +819,14 @@ body {
   </section>
 
   <!-- Layers -->
-  <section class="panel">
+  <section class="panel" data-key="layers">
     <div class="panel-head"><span class="ico">🗺️</span> Katmanlar</div>
     <div class="panel-body" style="padding-top:6px; padding-bottom:8px">
+      <label class="toggle-row"><input type="checkbox" id="tg-campuslayer" checked> Kampüs bileşenleri</label>
+      <div class="cat-chips" id="campus-cats"></div>
+      <label class="toggle-row"><input type="checkbox" id="tg-bchoro" checked> Binaları ölçüme göre renklendir</label>
+      <div class="campus-note" id="campus-note">Ölçüm seçince binalar ortalama PM₂.₅ ile boyanır</div>
+      <div class="toggle-sep"></div>
       <label class="toggle-row"><input type="checkbox" id="tg-heat"> Isı haritası (Heatmap)</label>
       <label class="toggle-row"><input type="checkbox" id="tg-campus"> Kampüs planı (22TR)</label>
       <label class="toggle-row"><input type="checkbox" id="tg-dots" checked> Ölçüm noktaları</label>
@@ -831,8 +894,9 @@ body {
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=15"></script>
-<script src="js/api.js?v=15"></script>
-<script src="js/app.js?v=15"></script>
+<script src="js/colorscale.js?v=16"></script>
+<script src="js/api.js?v=16"></script>
+<script src="js/campus.js?v=16"></script>
+<script src="js/app.js?v=16"></script>
 </body>
 </html>
