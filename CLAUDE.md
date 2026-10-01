@@ -7,6 +7,9 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
 1. `git fetch origin main`
 2. `main`'e geç ve güncelle: `git checkout main && git pull origin main`
    (Yerelde commit'lenmemiş değişiklik varsa önce kullanıcıya sor.)
+3. Kullanıcıya ilk yanıtında kısaca hatırlat: "`main`'den en güncel sürümü çektim (son commit: `<hash> <mesaj>`).
+   Bu projede tek kaynak `main`; iş bitince `main`'e push edeceğim."
+   `git pull` başarısız olduysa veya `main`'e geçilemediyse bunu açıkça söyle; kullanıcı eski sürümle çalışmasın.
 
 ## İş bitince
 1. Değişiklikleri açıklayıcı bir mesajla commit'le.
