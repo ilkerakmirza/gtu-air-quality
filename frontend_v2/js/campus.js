@@ -34,8 +34,35 @@ const Campus = (() => {
     const FEW = 30;             // bunun altındaki ortalamalar "az ölçüm" diye işaretlenir
     // Kart açılınca harita, kart sol/sağ panellerin altında kalmayacak şekilde kaysın
     const POPUP_OPTS = { maxWidth: 360, autoPanPaddingTopLeft: [270, 80], autoPanPaddingBottomRight: [350, 60] };
-    const LABEL_ZOOM = 16;      // bina adları bu yakınlıktan itibaren (çakışanlar gizlenerek) görünür
     const GENERIC = /^(bina \d+|küçük binalar)$/i;   // adı tanımlayıcı olmayan binalar: en düşük öncelik
+
+    // Kademeli etiketler (Google Haritalar gibi): her binanın adı kendi yakınlık eşiğinden itibaren görünür.
+    // Uzaktan yalnızca simge yapılar, yaklaştıkça bölümler, en yakında küçük birimler ve açık alanlar.
+    // Çakışan etiketler yine öncelik sırasıyla gizlenir.
+    const LABEL_ZOOM = 15;      // en erken etiket eşiği
+    const FULL_NAME_ZOOM = 18;  // bunun altında uzun adlar kısaltılır (Müh., Fak., Lab. …)
+    const REGION_MAX_ZOOM = 16; // Kuzey/Güney Kampüs yazısı yalnızca uzaktan
+    const KEY = /rektörlük|^kütüphane$|kongre|ana kapı|teknopark/i;       // her zaman uzaktan
+    const LANDMARK = /fakülte|yurdu|yemekhane/i;
+    const MINOR = /açık alan|saha|ön bahçe|^tenis|kelebek ön|lojman|kırtasiye/i;
+    function labelTier(e) {
+        const name = e.feature.properties.name, a = e.areaM2;
+        if (GENERIC.test(name) || MINOR.test(name)) return 4;          // ≥19
+        if (KEY.test(name) || a > 3000 || (LANDMARK.test(name) && a > 1000)) return 1;   // ≥15
+        if (a > 1500 || LANDMARK.test(name) || /salon/i.test(name)) return 2;          // ≥16
+        if (a > 800 || e.unit === "bolum") return 3;                                   // ≥17 (açılış yakınlığı)
+        if (a > 400 || e.unit === "sosyal" || e.unit === "giris") return 3.5;          // ≥18
+        return 4;                                                                       // ≥19
+    }
+    const TIER_ZOOM = { 1: 15, 2: 16, 3: 17, 3.5: 18, 4: 19 };
+
+    // Ad düzeltmeleri (kaynaktaki yazım hataları) ve kısaltmalar
+    const TIDY = [[/Mühendsiliği/g, "Mühendisliği"], [/Laboratuvaru/g, "Laboratuvarı"], [/\s*,\s*/g, ", "], [/^tenis\s*(\d*)$/i, "Tenis Kortu $1"]];
+    const ABBR = [[/Mühendisliği/g, "Müh."], [/Müh\. Bölümü/g, "Müh."], [/Fakültesi/g, "Fak."], [/Laboratuvarı/g, "Lab."],
+                  [/Enstitüsü/g, "Enst."], [/Daire(si)? Başkanlığı/g, "D. Bşk."], [/^(Gebze Teknik Üniversitesi|GTÜ) /, ""],
+                  [/, /g, " / "]];
+    const tidyName = n => TIDY.reduce((t, [re, to]) => t.replace(re, to), n).trim();
+    const shortName = n => ABBR.reduce((t, [re, to]) => t.replace(re, to), n).trim();
 
     let map, layer, labelLayer;
     let features = [];          // { feature, leafletLayer, cat, bbox, unit, tip }
@@ -92,6 +119,18 @@ const Campus = (() => {
         }
         return inside;
     }
+    // Yaklaşık alan (m²) — etiket önceliği için
+    function areaM2(geom) {
+        const k = 111320 * 111320 * Math.cos(40.8 * Math.PI / 180);
+        let a = 0;
+        for (const poly of ringsOf(geom)) {
+            const r = poly[0];
+            let s = 0;
+            for (let i = 0; i < r.length - 1; i++) s += r[i][0] * r[i + 1][1] - r[i + 1][0] * r[i][1];
+            a += Math.abs(s) / 2;
+        }
+        return a * k;
+    }
     function contains(f, lon, lat) {
         const [a, b, c, d] = f.bbox;
         if (lon < a || lon > c || lat < b || lat > d) return false;
@@ -139,7 +178,12 @@ const Campus = (() => {
             if (e.cat !== "bina" || !e.feature.properties.name) continue;
             const ll = e.leafletLayer.getBounds();
             e.area = (ll.getEast() - ll.getWest()) * (ll.getNorth() - ll.getSouth());
-            e.tip = L.tooltip({ permanent: true, direction: "center", className: "bld-label", pane: "tooltipPane" })
+            e.areaM2 = areaM2(e.feature.geometry);
+            e.full = tidyName(e.feature.properties.name);
+            e.short = shortName(e.full);
+            e.tier = labelTier(e);
+            e.tip = L.tooltip({ permanent: true, direction: "center", pane: "tooltipPane",
+                                className: `bld-label t${Math.floor(e.tier)}` })
                 .setLatLng(ll.getCenter()).setContent(labelHtml(e)).addTo(labelLayer);
         }
         map.on("zoomend", syncLabels);
@@ -161,32 +205,60 @@ const Campus = (() => {
 
     function labelHtml(e) {
         const s = choropleth ? disp(e) : null;
+        const near = map.getZoom() >= FULL_NAME_ZOOM;      // yakında tam ad ve ölçüm sayısı
         const pm = s ? `<b class="bl-pm" style="background:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</b>`
-                     + `<span class="bl-n">n=${s.n.toLocaleString("tr-TR")}</span>` : "";
-        return `<span class="bl-ico">${UNIT[e.unit].icon}</span><span class="bl-name">${e.feature.properties.name}</span>${pm}`;
+                     + (near ? `<span class="bl-n">n=${s.n.toLocaleString("tr-TR")}</span>` : "") : "";
+        const name = near ? e.full : e.short;
+        // değer simgenin hemen yanında: ad alt satıra kaysa da değerden kopmaz
+        return `<span class="bl-ico">${UNIT[e.unit].icon}</span>${pm}<span class="bl-name">${name}</span>`;
     }
 
+    let fullNames = null;
     function syncLabels() {
-        const want = visible && !hiddenCats.has("bina") && map.getZoom() >= LABEL_ZOOM;
+        const z = map.getZoom();
+        const want = visible && !hiddenCats.has("bina") && z >= LABEL_ZOOM;
         if (want && !map.hasLayer(labelLayer)) labelLayer.addTo(map);
         if (!want && map.hasLayer(labelLayer)) map.removeLayer(labelLayer);
+        map.getContainer().classList.toggle("hide-regions", z > REGION_MAX_ZOOM);
+        if (fullNames !== (z >= FULL_NAME_ZOOM)) {          // kısa ↔ tam ad geçişi
+            fullNames = z >= FULL_NAME_ZOOM;
+            for (const e of features) if (e.tip) e.tip.setContent(labelHtml(e));
+        }
         cullLabels();
+    }
+
+    // Etiketin göründüğü en düşük yakınlık; ölçüm verisi olan binalar bir kademe erken görünür
+    function minZoomOf(e) {
+        const z = TIER_ZOOM[e.tier];
+        return choropleth && disp(e) ? Math.min(z, 16) : z;
     }
 
     // Çakışan etiketleri gizle: önce ölçümlü binalar, sonra adı tanımlayıcı olanlar, sonra büyük olanlar
     function cullLabels() {
         if (!labelLayer || !map.hasLayer(labelLayer)) return;
-        const rank = e => (disp(e) ? 0 : 2) +(GENERIC.test(e.feature.properties.name) ? 1 : 0);
-        const order = features.filter(e => e.tip).sort((a, b) => rank(a) - rank(b) || b.area - a.area);
-        const placed = [], placedG = new Set();
+        const z = map.getZoom();
+        const rank = e => (disp(e) ? 0 : 10) + e.tier;
+        const order = features.filter(e => e.tip).sort((a, b) => rank(a) - rank(b) || b.areaM2 - a.areaM2);
+        // Arayüzün (üst çubuk, paneller, lejant) altında kalan yere etiket koyma
+        const ui = (z <= REGION_MAX_ZOOM ? ".region-label, " : "") + ".leaflet-tooltip.pa-label, " + (window.innerWidth > 760
+            ? ".topbar > *, #sidebar:not(.hidden) .panel, #sessions-dock .panel, .legend, .chart-handle, .player-dock.visible, .news-dock .panel"
+            : ".topbar > *, .chart-handle, .player-dock.visible, .install-banner");
+        const placed = [...document.querySelectorAll(ui)].map(el => el.getBoundingClientRect()).filter(r => r.width && r.height);
+        const placedG = new Set();
+        const view = map.getContainer().getBoundingClientRect();
         for (const e of order) {
             const el = e.tip.getElement();
             if (!el) continue;
             el.style.display = "";
             // birimi gizli ya da aynı binanın başka bloğu zaten etiketli
-            if (hiddenUnits.has(e.unit) || (e.gk && placedG.has(e.gk))) { el.style.display = "none"; continue; }
+            if (z < minZoomOf(e) || hiddenUnits.has(e.unit) || (e.gk && placedG.has(e.gk))) { el.style.display = "none"; continue; }
             const r = el.getBoundingClientRect();
-            const hit = placed.some(p => r.left < p.right + 2 && r.right > p.left - 2 && r.top < p.bottom + 1 && r.bottom > p.top - 1);
+            // ekrana tam sığmayan (kenarda kesilen) etiketi gösterme
+            if (r.left < view.left + 2 || r.right > view.right - 2 || r.top < view.top || r.bottom > view.bottom) {
+                el.style.display = "none"; continue;
+            }
+            // etiketler arasında nefes payı bırak (Google Haritalar'daki gibi seyrek)
+            const hit = placed.some(p => r.left < p.right + 8 && r.right > p.left - 8 && r.top < p.bottom + 4 && r.bottom > p.top - 4);
             if (hit) el.style.display = "none"; else { placed.push(r); if (e.gk) placedG.add(e.gk); }
         }
     }
