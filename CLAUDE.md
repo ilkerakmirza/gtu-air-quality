@@ -11,6 +11,16 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
    Bu projede tek kaynak `main`; iş bitince `main`'e push edeceğim."
    `git pull` başarısız olduysa veya `main`'e geçilemediyse bunu açıkça söyle; kullanıcı eski sürümle çalışmasın.
 
+## Bekleyen işler (oturum başında kullanıcıya kısaca hatırlat, bitenleri buradan sil)
+- **PurpleAir verisi 4 Ağustos 2026'dan beri gelmiyor** (API kotası bitti). Çözüm: sensörün yerel ağdaki
+  `http://<sensör-IP>/json` adresinden 2 dakikada bir okuyup veritabanına yazan yerel toplayıcı betiği
+  (`csb_yerel_toplayici.py` gibi). Kullanıcıdan beklenen: sensörün yerel IP adresi ve sensörle aynı ağda
+  sürekli açık kalacak bir bilgisayar. PurpleAir haritasından veri çekmek kullanım koşullarına aykırı, önerme.
+- **Tuzla resmî ÇŞB toplayıcısı Haziran 2026'dan beri çalışmıyor** (yerel bilgisayardaki zamanlanmış görev);
+  şimdilik İBB canlı verisi kullanılıyor.
+- **CO₂ sensörlerinden 21 Temmuz 2026'dan beri veri yok** (Tuya).
+- **Adsız 20 bina:** ekip numaralı haritadan eşleştirince `campus.geojson`'a adları işle.
+
 ## İş bitince
 1. Değişiklikleri açıklayıcı bir mesajla commit'le.
 2. Push'tan hemen önce tekrar `git pull origin main` (diğer ortamda yapılan iş varsa birleştir).

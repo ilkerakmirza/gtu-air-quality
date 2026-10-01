@@ -886,6 +886,22 @@ body {
 .who-table th:first-child, .who-table td:first-child, .who-info th:first-child, .who-info td:first-child { text-align: left; }
 .who-table th, .who-info th { font-size: 10.5px; color: var(--text-2); font-weight: 700; }
 .who-table td.bad { color: #ff9b98; font-weight: 700; } .who-table td.na { color: var(--text-3); }
+.wh-sub { margin-top: 8px; font-size: 12px; line-height: 1.5; color: #c9d0dd; }
+.wh-sub b { color: #fff; }
+.who-banner {
+  margin-bottom: 10px; padding: 9px 11px; border-radius: 11px; font-size: 12px; line-height: 1.5;
+  background: rgba(245,184,64,0.10); border: 1px solid rgba(245,184,64,0.32); color: #f7d58c;
+}
+.who-banner b { color: #fff; }
+.who-periods { margin: 0 0 10px; }
+.who-month { width: 100%; border-collapse: collapse; font-size: 12px; }
+.who-month th, .who-month td { text-align: right; padding: 6px; border-bottom: 1px solid var(--stroke); font-variant-numeric: tabular-nums; }
+.who-month th:first-child, .who-month td:first-child { text-align: left; }
+.who-month th { font-size: 10.5px; color: var(--text-2); font-weight: 700; }
+.who-month tbody tr { cursor: pointer; }
+.who-month tbody tr:hover, .who-month tr.sel { background: rgba(108,140,255,0.12); }
+.who-month td.bad { color: #ff9b98; font-weight: 700; }
+.who-cap { margin-top: 5px; font-size: 10.5px; line-height: 1.45; color: var(--text-2); }
 .who-info { margin-top: 6px; font-size: 12px; color: #d7dce6; }
 .who-info p { margin-top: 10px; line-height: 1.55; }
 .who-note { font-size: 11px; color: var(--text-2); }
@@ -1371,7 +1387,7 @@ body {
 <script src="js/api.js?v=24"></script>
 <script src="js/campus.js?v=24"></script>
 <script src="js/app.js?v=24"></script>
-<script src="js/who.js?v=24"></script>
+<script src="js/who.js?v=25"></script>
 <script src="js/shell.js?v=24"></script>
 </body>
 </html>
