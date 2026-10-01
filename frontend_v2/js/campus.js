@@ -19,12 +19,25 @@ const Campus = (() => {
     const CAT_LABEL = { bina: "Bina", yesil: "Yeşil alan", orman: "Orman", yol: "Yol", otopark: "Otopark", sinir: "Bölge sınırı" };
     const REGION_LABEL = { KD: "Kuzey-Doğu", KB: "Kuzey-Batı", GB: "Güney-Batı", SE: "Güney-Doğu",
                            NORTH: "Kuzey Kampüs", SOUTH: "Güney Kampüs" };
+    // Birim türleri — Serra'nın haritasındaki sınıflama. Renk değil simge ile kodlanır:
+    // bina dolgusu PM₂.₅ ölçeğine ayrıldığı için ikinci bir renk anlamı yüklenmez.
+    const UNIT = {
+        bolum:     { icon: "🎓", label: "Bölüm / Fakülte" },
+        arastirma: { icon: "🔬", label: "Araştırma / Lab" },
+        sosyal:    { icon: "☕", label: "Sosyal / Yemek / Yurt" },
+        spor:      { icon: "⚽", label: "Spor / Açık alan" },
+        ozel:      { icon: "🏛️", label: "İdari / Hizmet" },
+        giris:     { icon: "🚪", label: "Giriş" },
+        diger:     { icon: "🏢", label: "Diğer" },
+    };
     const MIN_PTS = 3;          // bina ortalaması için gereken en az ölçüm
-    const LABEL_ZOOM = 18;      // bina adları bu yakınlıktan itibaren kalıcı görünür
+    const LABEL_ZOOM = 16;      // bina adları bu yakınlıktan itibaren (çakışanlar gizlenerek) görünür
+    const GENERIC = /^(bina \d+|küçük binalar)$/i;   // adı tanımlayıcı olmayan binalar: en düşük öncelik
 
     let map, layer, labelLayer;
-    let features = [];          // { feature, leafletLayer, cat, bbox }
+    let features = [];          // { feature, leafletLayer, cat, bbox, unit, tip }
     const hiddenCats = new Set();
+    const hiddenUnits = new Set();
     let visible = true, choropleth = true;
     let lastPoints = [];
     let ready = false;
@@ -62,9 +75,10 @@ const Campus = (() => {
     // ── kurulum ──────────────────────────────────────────────────────
     async function init(leafletMap) {
         map = leafletMap;
-        map.createPane("campus");
-        map.getPane("campus").style.zIndex = 350;       // ölçüm noktalarının altında
-        const renderer = L.svg({ pane: "campus" });
+        // Ölçüm noktalarıyla AYNI canvas'a çizilir: ayrı bir SVG/canvas katmanı tüm haritayı
+        // kaplayan nokta canvas'ının altında kalıp fare olaylarını hiç alamıyordu.
+        // Sıra çizim sırasıyla korunur (aşağıda bringToBack ile kampüs en alta iner).
+        const renderer = map.getRenderer(L.polygon([]));
 
         const res = await fetch("data/campus.geojson");
         const fc = await res.json();
@@ -73,10 +87,12 @@ const Campus = (() => {
             ["NORTH", "SOUTH"].includes(f.properties.region));
 
         layer = L.geoJSON(fc, {
-            pane: "campus", renderer,
+            renderer,
             style: f => STYLE[f.properties.cat] || STYLE.yol,
             onEachFeature: (f, l) => {
-                const entry = { feature: f, leafletLayer: l, cat: f.properties.cat, bbox: bboxOf(f.geometry) };
+                const entry = { feature: f, leafletLayer: l, cat: f.properties.cat, bbox: bboxOf(f.geometry),
+                                unit: f.properties.unit || "diger" };
+                l.options.interactive = entry.cat === "bina";     // yol/yeşil fareyi binadan çalmasın
                 features.push(entry);
                 if (f.properties.cat === "bina") wireBuilding(entry);
                 if (f.properties.cat === "sinir") {
@@ -86,16 +102,19 @@ const Campus = (() => {
                 }
             },
         }).addTo(map);
+        sendToBack();
 
-        // Kalıcı bina adları (yakın zoomda)
+        // Kalıcı bina/birim adları: birim simgesi + ad (+ ölçüm varsa ort. PM₂.₅)
         labelLayer = L.layerGroup();
         for (const e of features) {
             if (e.cat !== "bina" || !e.feature.properties.name) continue;
-            const c = e.leafletLayer.getBounds().getCenter();
-            L.tooltip({ permanent: true, direction: "center", className: "bld-label", pane: "tooltipPane" })
-                .setLatLng(c).setContent(e.feature.properties.name).addTo(labelLayer);
+            const ll = e.leafletLayer.getBounds();
+            e.area = (ll.getEast() - ll.getWest()) * (ll.getNorth() - ll.getSouth());
+            e.tip = L.tooltip({ permanent: true, direction: "center", className: "bld-label", pane: "tooltipPane" })
+                .setLatLng(ll.getCenter()).setContent(labelHtml(e)).addTo(labelLayer);
         }
         map.on("zoomend", syncLabels);
+        map.on("moveend", cullLabels);
         syncLabels();
 
         ready = true;
@@ -103,32 +122,79 @@ const Campus = (() => {
         colorByPoints(lastPoints);
     }
 
+    // Kampüsü canvas'ta en alta indir (önceden çizilmiş ölçüm noktaları üstte kalsın);
+    // kendi içinde alttan üste: yol, otopark, yeşil, orman, sınır, bina
+    const DRAW_ORDER = ["yol", "otopark", "yesil", "orman", "sinir", "bina"];
+    function sendToBack() {
+        [...features].sort((a, b) => DRAW_ORDER.indexOf(b.cat) - DRAW_ORDER.indexOf(a.cat))
+            .forEach(e => e.leafletLayer.bringToBack());
+    }
+
+    function labelHtml(e) {
+        const s = e.stats;
+        const pm = s ? `<b class="bl-pm" style="background:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</b>` : "";
+        return `<span class="bl-ico">${UNIT[e.unit].icon}</span><span class="bl-name">${e.feature.properties.name}</span>${pm}`;
+    }
+
     function syncLabels() {
         const want = visible && !hiddenCats.has("bina") && map.getZoom() >= LABEL_ZOOM;
         if (want && !map.hasLayer(labelLayer)) labelLayer.addTo(map);
         if (!want && map.hasLayer(labelLayer)) map.removeLayer(labelLayer);
+        cullLabels();
+    }
+
+    // Çakışan etiketleri gizle: önce ölçümlü binalar, sonra adı tanımlayıcı olanlar, sonra büyük olanlar
+    function cullLabels() {
+        if (!labelLayer || !map.hasLayer(labelLayer)) return;
+        const rank = e => (e.stats ? 0 : 2) + (GENERIC.test(e.feature.properties.name) ? 1 : 0);
+        const order = features.filter(e => e.tip).sort((a, b) => rank(a) - rank(b) || b.area - a.area);
+        const placed = [];
+        for (const e of order) {
+            const el = e.tip.getElement();
+            if (!el) continue;
+            el.style.display = "";
+            if (hiddenUnits.has(e.unit)) { el.style.display = "none"; continue; }
+            const r = el.getBoundingClientRect();
+            const hit = placed.some(p => r.left < p.right + 2 && r.right > p.left - 2 && r.top < p.bottom + 1 && r.bottom > p.top - 1);
+            if (hit) el.style.display = "none"; else placed.push(r);
+        }
     }
 
     // ── bina etkileşimi ──────────────────────────────────────────────
     function wireBuilding(e) {
         const l = e.leafletLayer, name = e.feature.properties.name || "İsimsiz bina";
         l.bindTooltip(() => tooltipHtml(e, name), { sticky: true, className: "pa-label", direction: "top", offset: [0, -6] });
-        l.on("mouseover", () => { l.setStyle({ weight: 2.6, opacity: 1 }); l.bringToFront(); });
+        l.on("mouseover", () => l.setStyle({ weight: 2.6, opacity: 1 }));
         l.on("mouseout",  () => applyStyle(e));
         l.on("click", ev => {
             L.popup({ maxWidth: 300 }).setLatLng(ev.latlng).setContent(popupHtml(e, name)).openOn(map);
         });
     }
 
+    function unitLine(e) {
+        const u = UNIT[e.unit], p = e.feature.properties;
+        return `${u.label}${p.unit_guess ? " (adından)" : ""} · ${REGION_LABEL[p.region] || ""}`;
+    }
+
     function tooltipHtml(e, name) {
         const s = e.stats;
-        const region = REGION_LABEL[e.feature.properties.region] || "";
-        if (!s) return `<b>🏢 ${name}</b><br><small>${region}</small>`;
-        return `<b>🏢 ${name}</b><br>Ort. PM₂.₅: <b style="color:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</b> µg/m³ · ${s.n} ölçüm`;
+        const head = `<b>${UNIT[e.unit].icon} ${name}</b><br><small>${unitLine(e)}</small>`;
+        if (!s) return head;
+        return `${head}<br>Ort. PM₂.₅: <b style="color:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</b> µg/m³ · ${s.n} ölçüm`;
+    }
+
+    function roomsHtml(e) {
+        const rooms = e.feature.properties.rooms;
+        if (!rooms || !rooms.length) return "";
+        const byFloor = {};
+        rooms.forEach(r => (byFloor[r.kat] ||= []).push(r.oda));
+        const lvl = k => k === "Zemin" ? 0 : parseInt(k, 10) || 0;
+        return `<div class="bp-rooms">${Object.entries(byFloor).sort((a, b) => lvl(a[0]) - lvl(b[0])).map(([k, list]) =>
+            `<div><span>${k === "Zemin" ? "Zemin" : k + ". kat"}</span>${list.join(" · ")}</div>`).join("")}</div>`;
     }
 
     function popupHtml(e, name) {
-        const region = REGION_LABEL[e.feature.properties.region] || "";
+        const region = unitLine(e);
         const s = e.stats;
         let body;
         if (!s) {
@@ -147,14 +213,14 @@ const Campus = (() => {
               <div class="bp-cat" style="color:${pm25Color(s.avg)}">${pm25Label(s.avg)} · ${s.n} ölçüm (µg/m³)</div>
               <div class="bp-who">${who}</div>`;
         }
-        return `<div class="bld-pop"><div class="bp-title">🏢 ${name}</div><div class="bp-sub">${region}</div>${body}</div>`;
+        return `<div class="bld-pop"><div class="bp-title">${UNIT[e.unit].icon} ${name}</div><div class="bp-sub">${region}</div>${roomsHtml(e)}${body}</div>`;
     }
 
     // ── stil / koroplet ──────────────────────────────────────────────
     function applyStyle(e) {
         const l = e.leafletLayer;
         const hidden = hiddenCats.has(e.cat);
-        if (l._path) l._path.style.pointerEvents = hidden ? "none" : "";   // gizli katman fareyi yakalamasın
+        l.options.interactive = e.cat === "bina" && !hidden;   // gizli katman fareyi yakalamasın
         if (hidden) { l.setStyle({ opacity: 0, fillOpacity: 0 }); return; }
         const base = STYLE[e.cat] || STYLE.yol;
         if (e.cat === "bina" && choropleth && e.stats) {
@@ -189,8 +255,10 @@ const Campus = (() => {
                 colored++;
             }
             delete b._vals; delete b._by;
+            if (b.tip) b.tip.setContent(labelHtml(b));
         }
         features.forEach(applyStyle);
+        cullLabels();
         const note = document.getElementById("campus-note");
         if (note) note.textContent = !lastPoints.length
             ? "Ölçüm seçince binalar ortalama PM₂.₅ ile boyanır"
@@ -219,12 +287,27 @@ const Campus = (() => {
             features.forEach(applyStyle);
             syncLabels();
         }));
+
+        // Birim türü çipleri: hangi birimlerin adı haritada yazsın
+        const uw = document.getElementById("campus-units");
+        if (!uw) return;
+        const uc = {};
+        features.forEach(f => { if (f.tip) uc[f.unit] = (uc[f.unit] || 0) + 1; });
+        uw.innerHTML = Object.keys(UNIT).filter(u => uc[u]).map(u =>
+            `<button class="cat-chip${hiddenUnits.has(u) ? " off" : ""}" data-unit="${u}" title="Adları göster/gizle">
+               <span class="unit-ico">${UNIT[u].icon}</span>${UNIT[u].label}<em>${uc[u]}</em></button>`).join("");
+        uw.querySelectorAll(".cat-chip").forEach(btn => btn.addEventListener("click", () => {
+            const u = btn.dataset.unit;
+            hiddenUnits.has(u) ? hiddenUnits.delete(u) : hiddenUnits.add(u);
+            btn.classList.toggle("off");
+            cullLabels();
+        }));
     }
 
     function setVisible(v) {
         visible = v;
         if (!ready) return;
-        if (v && !map.hasLayer(layer)) { layer.addTo(map); features.forEach(applyStyle); }
+        if (v && !map.hasLayer(layer)) { layer.addTo(map); sendToBack(); features.forEach(applyStyle); }
         if (!v && map.hasLayer(layer)) map.removeLayer(layer);
         syncLabels();
     }

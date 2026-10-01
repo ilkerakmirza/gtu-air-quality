@@ -395,12 +395,23 @@ body {
 .toggle-sep { height: 1px; background: var(--stroke); margin: 6px 0 4px; }
 
 /* Bina / bölge etiketleri */
+.sub-head { margin: 0 0 5px 25px; font: 700 9.5px Inter, sans-serif; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--text-2); }
+.unit-ico { font-size: 11px; line-height: 1; }
 .leaflet-tooltip.bld-label {
-  background: rgba(11,14,20,0.72); border: 1px solid rgba(91,141,239,0.45);
+  display: flex; align-items: center; gap: 4px;
+  background: rgba(11,14,20,0.74); border: 1px solid rgba(91,141,239,0.45);
   color: #e8ecf4; box-shadow: 0 2px 8px rgba(0,0,0,0.45);
-  font: 600 10px Inter, sans-serif; padding: 2px 6px; border-radius: 5px;
-  white-space: nowrap; pointer-events: none;
+  font: 600 10px/1.2 Inter, sans-serif; padding: 2px 6px 2px 4px; border-radius: 5px;
+  white-space: normal; width: max-content; max-width: 150px; pointer-events: none;
 }
+.bld-label .bl-ico { font-size: 10px; flex-shrink: 0; }
+.bld-label .bl-name { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.bld-label .bl-pm { flex-shrink: 0; color: #0b0e14; font: 700 9.5px "JetBrains Mono", monospace;
+  padding: 1px 4px; border-radius: 3px; }
+.bp-rooms { margin: 6px 0 2px; padding: 6px 8px; border-radius: 6px; background: rgba(255,255,255,0.05);
+  font-size: 11px; line-height: 1.45; }
+.bp-rooms span { display: inline-block; min-width: 46px; color: var(--text-2); font-weight: 700; }
 .leaflet-tooltip.bld-label::before { display: none; }
 .leaflet-tooltip.region-label {
   background: transparent; border: none; box-shadow: none;
@@ -824,6 +835,8 @@ body {
     <div class="panel-body" style="padding-top:6px; padding-bottom:8px">
       <label class="toggle-row"><input type="checkbox" id="tg-campuslayer" checked> Kampüs bileşenleri</label>
       <div class="cat-chips" id="campus-cats"></div>
+      <div class="sub-head">Haritada adı yazan birimler</div>
+      <div class="cat-chips" id="campus-units"></div>
       <label class="toggle-row"><input type="checkbox" id="tg-bchoro" checked> Binaları ölçüme göre renklendir</label>
       <div class="campus-note" id="campus-note">Ölçüm seçince binalar ortalama PM₂.₅ ile boyanır</div>
       <div class="toggle-sep"></div>
@@ -894,9 +907,9 @@ body {
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=16"></script>
-<script src="js/api.js?v=16"></script>
-<script src="js/campus.js?v=16"></script>
-<script src="js/app.js?v=16"></script>
+<script src="js/colorscale.js?v=17"></script>
+<script src="js/api.js?v=17"></script>
+<script src="js/campus.js?v=17"></script>
+<script src="js/app.js?v=17"></script>
 </body>
 </html>
