@@ -715,11 +715,32 @@ function updateChips() {
 // ─────────────────────────────────────────────────────────────────
 
 let _dotsReq = 0;   // üst üste binen çağrılarda yalnızca en sonuncusu çizsin
+let _selPts = [];   // seçili oturumların tüm noktaları (özet istatistik için)
+
+// İki ayrı görünüm: tek tek ölçüm noktaları ya da bina bazında ortalamalar (üst üste binmesin)
+let viewMode = "points";
+function setViewMode(m) {
+    viewMode = m;
+    try { localStorage.setItem("gtu.view", m); } catch (_) {}
+    document.querySelectorAll(".vs-btn").forEach(b => b.classList.toggle("on", b.dataset.view === m));
+    document.getElementById("avg-tools").hidden = m !== "avg";
+    if (m === "avg") map.removeLayer(dotsLayer); else if (!map.hasLayer(dotsLayer)) dotsLayer.addTo(map);
+    Campus.setChoropleth(m === "avg");
+    setStats(_selPts);
+}
+function initViewMode() {
+    let m = "points";
+    try { m = localStorage.getItem("gtu.view") || "points"; } catch (_) {}
+    document.querySelectorAll(".vs-btn").forEach(b => b.addEventListener("click", () => setViewMode(b.dataset.view)));
+    document.addEventListener("campus:period", () => setStats(_selPts));
+    setViewMode(m === "avg" ? "avg" : "points");
+}
 
 async function refreshDots() {
     const ids = [...document.querySelectorAll(".s-cb:checked")].map(cb => +cb.value);
     const req = ++_dotsReq;
     dotsLayer.clearLayers();
+    _selPts = [];
     setStats([]);
     if (!ids.length) { Campus.colorByPoints([]); return; }
 
@@ -732,7 +753,6 @@ async function refreshDots() {
             for (const pt of (track.points || []).filter(p => p.lat && p.lon)) {
                 pt._person = person.name;   // bina popup'ında kişi kırılımı için
                 allPts.push(pt);
-                if (!document.getElementById("tg-dots").checked) continue;
                 // Değer yükseldikçe nokta büyür: temiz hava küçük, kirli hava dikkat çeker
                 const v = pt.pm2_5 ?? 0;
                 const radius = 5 + Math.min(v / 12, 6);
@@ -754,12 +774,16 @@ async function refreshDots() {
                   .addTo(dotsLayer);
             }
         }
+        _selPts = allPts;
+        Campus.colorByPoints(allPts);   // binaları ortalama PM₂.₅ ile boya (dönem burada düzelebilir)
         setStats(allPts);
-        Campus.colorByPoints(allPts);   // binaları ortalama PM₂.₅ ile boya
     } catch (e) { console.error("[tracks]", e); }
 }
 
+// Ortalama görünümünde bir ay seçiliyse özet de o aya göre
 function setStats(pts) {
+    const per = viewMode === "avg" ? Campus.getPeriod() : "all";
+    if (per !== "all") pts = pts.filter(p => Campus.monthOf(p) === per);
     const vals = pts.map(p => p.pm2_5).filter(v => v != null);
     const set = (id, v) => document.getElementById(id).textContent = v;
     if (!vals.length) { set("st-count","—"); set("st-avg","—"); set("st-max","—"); return; }
@@ -788,9 +812,8 @@ function initSidebar() {
         e.target.checked ? heatLayer.addTo(map) : map.removeLayer(heatLayer));
     document.getElementById("tg-campus").addEventListener("change", e =>
         e.target.checked ? campusOverlay.addTo(map) : map.removeLayer(campusOverlay));
-    document.getElementById("tg-dots").addEventListener("change", refreshDots);
     document.getElementById("tg-campuslayer").addEventListener("change", e => Campus.setVisible(e.target.checked));
-    document.getElementById("tg-bchoro").addEventListener("change", e => Campus.setChoropleth(e.target.checked));
+    initViewMode();
 
     // Panel başlığına tıkla → paneli katla/aç (izleyici tercihi tarayıcıda hatırlanır)
     initCollapsiblePanels();
@@ -927,7 +950,8 @@ async function startPlayback(sessionId) {
     // Karşılaştırma grafiği
     loadCompareChart(pts, paHistory, person);
 
-    // Statik noktaları gizle, animasyonu başlat
+    // Statik noktaları gizle, animasyonu başlat (oynatma nokta görünümünde izlenir)
+    setViewMode("points");
     dotsLayer.clearLayers();
     map.flyTo([pts[0].lat, pts[0].lon], 17, { duration: 1 });
     Player.play();

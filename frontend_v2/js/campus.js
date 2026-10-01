@@ -31,6 +31,9 @@ const Campus = (() => {
         diger:     { icon: "🏢", label: "Diğer" },
     };
     const MIN_PTS = 3;          // bina ortalaması için gereken en az ölçüm
+    const FEW = 30;             // bunun altındaki ortalamalar "az ölçüm" diye işaretlenir
+    // Kart açılınca harita, kart sol/sağ panellerin altında kalmayacak şekilde kaysın
+    const POPUP_OPTS = { maxWidth: 360, autoPanPaddingTopLeft: [270, 80], autoPanPaddingBottomRight: [350, 60] };
     const LABEL_ZOOM = 16;      // bina adları bu yakınlıktan itibaren (çakışanlar gizlenerek) görünür
     const GENERIC = /^(bina \d+|küçük binalar)$/i;   // adı tanımlayıcı olmayan binalar: en düşük öncelik
 
@@ -39,8 +42,34 @@ const Campus = (() => {
     const hiddenCats = new Set();
     const hiddenUnits = new Set();
     let visible = true, choropleth = true;
+    let period = "all";         // "all" = genel ortalama, "YYYY-MM" = o ayın ortalaması
+    let months = [];            // binalara düşen ölçümlerin ayları (MIN_PTS'i geçen)
     let lastPoints = [];
     let ready = false;
+
+    // ── dönem (ay) yardımcıları — Türkiye saatine göre ───────────────
+    const ymFmt = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit" });
+    function monthOf(p) {
+        if (!p.recorded_at) return null;
+        const d = new Date(p.recorded_at);
+        return isNaN(d) ? null : ymFmt.format(d).slice(0, 7);
+    }
+    function monthLabel(ym, short) {
+        const [y, m] = ym.split("-").map(Number);
+        return new Date(Date.UTC(y, m - 1, 15)).toLocaleDateString("tr-TR",
+            short ? { month: "short", timeZone: "UTC" } : { month: "long", year: "numeric", timeZone: "UTC" });
+    }
+    function periodLabel() { return period === "all" ? "Genel" : monthLabel(period); }
+    function statsOf(vals, byPerson) {
+        const v = [...vals].sort((x, y) => x - y);
+        const avg = v.reduce((a, c) => a + c, 0) / v.length;
+        return { n: v.length, avg, med: v[Math.floor(v.length / 2)], max: v[v.length - 1], byPerson };
+    }
+    // Seçili döneme göre gösterilecek istatistik
+    function disp(e) {
+        if (period === "all") return e.stats;
+        return (e.monthly || []).find(m => m.ym === period) || null;
+    }
 
     // ── geometri yardımcıları ────────────────────────────────────────
     function ringsOf(geom) {
@@ -131,8 +160,9 @@ const Campus = (() => {
     }
 
     function labelHtml(e) {
-        const s = e.stats;
-        const pm = s ? `<b class="bl-pm" style="background:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</b>` : "";
+        const s = choropleth ? disp(e) : null;
+        const pm = s ? `<b class="bl-pm" style="background:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</b>`
+                     + `<span class="bl-n">n=${s.n.toLocaleString("tr-TR")}</span>` : "";
         return `<span class="bl-ico">${UNIT[e.unit].icon}</span><span class="bl-name">${e.feature.properties.name}</span>${pm}`;
     }
 
@@ -146,17 +176,18 @@ const Campus = (() => {
     // Çakışan etiketleri gizle: önce ölçümlü binalar, sonra adı tanımlayıcı olanlar, sonra büyük olanlar
     function cullLabels() {
         if (!labelLayer || !map.hasLayer(labelLayer)) return;
-        const rank = e => (e.stats ? 0 : 2) + (GENERIC.test(e.feature.properties.name) ? 1 : 0);
+        const rank = e => (disp(e) ? 0 : 2) +(GENERIC.test(e.feature.properties.name) ? 1 : 0);
         const order = features.filter(e => e.tip).sort((a, b) => rank(a) - rank(b) || b.area - a.area);
-        const placed = [];
+        const placed = [], placedG = new Set();
         for (const e of order) {
             const el = e.tip.getElement();
             if (!el) continue;
             el.style.display = "";
-            if (hiddenUnits.has(e.unit)) { el.style.display = "none"; continue; }
+            // birimi gizli ya da aynı binanın başka bloğu zaten etiketli
+            if (hiddenUnits.has(e.unit) || (e.gk && placedG.has(e.gk))) { el.style.display = "none"; continue; }
             const r = el.getBoundingClientRect();
             const hit = placed.some(p => r.left < p.right + 2 && r.right > p.left - 2 && r.top < p.bottom + 1 && r.bottom > p.top - 1);
-            if (hit) el.style.display = "none"; else placed.push(r);
+            if (hit) el.style.display = "none"; else { placed.push(r); if (e.gk) placedG.add(e.gk); }
         }
     }
 
@@ -167,7 +198,7 @@ const Campus = (() => {
         l.on("mouseover", () => l.setStyle({ weight: 2.6, opacity: 1 }));
         l.on("mouseout",  () => applyStyle(e));
         l.on("click", ev => {
-            L.popup({ maxWidth: 300 }).setLatLng(ev.latlng).setContent(popupHtml(e, name)).openOn(map);
+            L.popup(POPUP_OPTS).setLatLng(ev.latlng).setContent(popupHtml(e, name)).openOn(map);
         });
     }
 
@@ -177,10 +208,33 @@ const Campus = (() => {
     }
 
     function tooltipHtml(e, name) {
-        const s = e.stats;
+        const s = disp(e);
         const head = `<b>${UNIT[e.unit].icon} ${name}</b><br><small>${unitLine(e)}</small>`;
         if (!s) return head;
-        return `${head}<br>Ort. PM₂.₅: <b style="color:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</b> µg/m³ · ${s.n} ölçüm`;
+        return `${head}<br>${periodLabel()} ort. PM₂.₅: <b style="color:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</b> µg/m³ · ${s.n.toLocaleString("tr-TR")} ölçümün ortalaması`;
+    }
+
+    // Aylık kırılım: her ayın ortalaması, genelden farkı, en sorunlu ay
+    function monthsHtml(e) {
+        const ms = e.monthly || [];
+        if (!ms.length || !e.stats) return "";
+        const top = Math.max(...ms.map(m => m.avg));
+        const worst = ms.length > 1 ? ms.reduce((a, b) => b.avg > a.avg ? b : a) : null;
+        const sgn = d => { const r = Math.round(d * 10) / 10; return (r > 0 ? "+" : r < 0 ? "−" : "±") + Math.abs(r).toFixed(1); };
+        const rows = ms.map(m => {
+            const d = m.avg - e.stats.avg;
+            return `<div class="bpm-row${m === worst ? " worst" : ""}${m.ym === period ? " sel" : ""}">
+                <span class="bpm-m">${monthLabel(m.ym)}</span>
+                <span class="bpm-bar"><i style="width:${(m.avg / top * 100).toFixed(0)}%;background:${pm25Color(m.avg)}"></i></span>
+                <b style="color:${pm25Color(m.avg)}">${m.avg.toFixed(1)}</b>
+                <em>${ms.length > 1 ? sgn(d) : ""}</em>
+                <small class="${m.n < FEW ? "few" : ""}">${m.n.toLocaleString("tr-TR")}</small></div>`;
+        }).join("");
+        const foot = worst
+            ? `<div class="bpm-foot">⚠️ En sorunlu ay: <b>${monthLabel(worst.ym)}</b> — genel ortalamanın ${(worst.avg - e.stats.avg).toFixed(1)} µg/m³ üstünde`
+              + (worst.n < FEW ? `<div class="bpm-warn">Yalnızca ${worst.n} ölçüme dayanıyor; dikkatli yorumlayın.</div>` : "") + `</div>`
+            : `<div class="bpm-foot">Ölçümler tek ayda (${monthLabel(ms[0].ym)})</div>`;
+        return `<div class="bp-months"><div class="bpm-head"><span>Aylık ortalama</span><span>µg/m³ · genelden fark · ölçüm</span></div>${rows}${foot}</div>`;
     }
 
     function roomsHtml(e) {
@@ -210,8 +264,8 @@ const Campus = (() => {
                 <div><span>Medyan</span><b style="color:${pm25Color(s.med)}">${s.med.toFixed(1)}</b></div>
                 <div><span>Maks.</span><b style="color:${pm25Color(s.max)}">${s.max.toFixed(1)}</b></div>
               </div>
-              <div class="bp-cat" style="color:${pm25Color(s.avg)}">${pm25Label(s.avg)} · ${s.n} ölçüm (µg/m³)</div>
-              <div class="bp-who">${who}</div>`;
+              <div class="bp-cat" style="color:${pm25Color(s.avg)}">Genel · ${pm25Label(s.avg)} · ${s.n.toLocaleString("tr-TR")} ölçümün ortalaması (µg/m³)</div>
+              <div class="bp-who">${who}</div>${monthsHtml(e)}`;
         }
         return `<div class="bld-pop"><div class="bp-title">${UNIT[e.unit].icon} ${name}</div><div class="bp-sub">${region}</div>${roomsHtml(e)}${body}</div>`;
     }
@@ -223,8 +277,9 @@ const Campus = (() => {
         l.options.interactive = e.cat === "bina" && !hidden;   // gizli katman fareyi yakalamasın
         if (hidden) { l.setStyle({ opacity: 0, fillOpacity: 0 }); return; }
         const base = STYLE[e.cat] || STYLE.yol;
-        if (e.cat === "bina" && choropleth && e.stats) {
-            const c = pm25Color(e.stats.avg);
+        const s = e.cat === "bina" && choropleth ? disp(e) : null;
+        if (s) {
+            const c = pm25Color(s.avg);
             l.setStyle({ ...base, color: "#ffffff", weight: 1.4, opacity: 0.85, fillColor: c, fillOpacity: 0.62, dashArray: null });
         } else {
             l.setStyle({ ...base, dashArray: base.dashArray || null });
@@ -235,34 +290,102 @@ const Campus = (() => {
     function colorByPoints(points) {
         lastPoints = points || [];
         if (!ready) return;
+        // Aynı adlı bloklar (ör. KYK Yurdu'nun 3 poligonu) tek bina olarak hesaplanır
         const buildings = features.filter(f => f.cat === "bina");
-        for (const b of buildings) { b.stats = null; b.rawN = 0; b._vals = []; b._by = {}; }
+        const groups = new Map();
+        buildings.forEach((b, i) => {
+            const p = b.feature.properties;
+            b.gk = p.name ? `${p.region}|${p.name}` : `#${i}`;
+            if (!groups.has(b.gk)) groups.set(b.gk, { vals: [], by: {}, m: {}, members: [] });
+            groups.get(b.gk).members.push(b);
+        });
         for (const p of lastPoints) {
             if (p.pm2_5 == null || !p.lat || !p.lon) continue;
             const b = buildings.find(f => contains(f, p.lon, p.lat));
             if (!b) continue;
-            b._vals.push(p.pm2_5);
+            const g = groups.get(b.gk);
+            g.vals.push(p.pm2_5);
             const who = p._person || "—";
-            (b._by[who] ||= { n: 0, sum: 0 }); b._by[who].n++; b._by[who].sum += p.pm2_5;
+            (g.by[who] ||= { n: 0, sum: 0 }); g.by[who].n++; g.by[who].sum += p.pm2_5;
+            const ym = monthOf(p);
+            if (ym) (g.m[ym] ||= []).push(p.pm2_5);
         }
-        let colored = 0;
-        for (const b of buildings) {
-            b.rawN = b._vals.length;
-            if (b._vals.length >= MIN_PTS) {
-                const v = [...b._vals].sort((x, y) => x - y);
-                const avg = v.reduce((a, c) => a + c, 0) / v.length;
-                b.stats = { n: v.length, avg, med: v[Math.floor(v.length / 2)], max: v[v.length - 1], byPerson: b._by };
-                colored++;
+        const mset = new Set();
+        for (const g of groups.values()) {
+            let stats = null, monthly = [];
+            if (g.vals.length >= MIN_PTS) {
+                stats = statsOf(g.vals, g.by);
+                monthly = Object.entries(g.m).filter(([, v]) => v.length >= MIN_PTS)
+                    .map(([ym, v]) => ({ ym, ...statsOf(v) })).sort((x, y) => x.ym.localeCompare(y.ym));
+                monthly.forEach(m => mset.add(m.ym));
             }
-            delete b._vals; delete b._by;
-            if (b.tip) b.tip.setContent(labelHtml(b));
+            for (const b of g.members) { b.stats = stats; b.monthly = monthly; b.rawN = g.vals.length; }
         }
+        months = [...mset].sort();
+        if (period !== "all" && !months.includes(period)) period = "all";
+        refresh();
+    }
+
+    // Etiket, boya, dönem çipleri, sıralama ve notu güncel duruma getir
+    function refresh() {
+        for (const b of features) if (b.tip) b.tip.setContent(labelHtml(b));
         features.forEach(applyStyle);
         cullLabels();
+        renderPeriods();
+        renderRanking();
+        const shown = new Set(features.filter(e => e.cat === "bina" && disp(e)).map(e => e.gk)).size;
         const note = document.getElementById("campus-note");
         if (note) note.textContent = !lastPoints.length
-            ? "Ölçüm seçince binalar ortalama PM₂.₅ ile boyanır"
-            : colored ? `${colored} bina ölçüme göre boyandı (≥${MIN_PTS} ölçüm)` : "Seçili ölçümler bina içine düşmüyor";
+            ? "Sağ panelden ölçüm seçince binalar ortalama PM₂.₅ ile boyanır"
+            : !choropleth ? "Bina ortalamaları için sağ panelde 🏢 görünümünü seçin"
+            : shown ? `${periodLabel()}: ${shown} bina boyandı (≥${MIN_PTS} ölçüm)` : "Bu dönemde bina içine düşen ölçüm yok";
+    }
+
+    // Dönem seçimi: Genel + ölçüm olan aylar
+    function renderPeriods() {
+        const wrap = document.getElementById("period-chips");
+        if (!wrap) return;
+        if (!months.length) { wrap.innerHTML = ""; return; }
+        const chip = (p, txt) => `<button class="pd-chip${p === period ? " on" : ""}" data-p="${p}">${txt}</button>`;
+        wrap.innerHTML = chip("all", "Genel") + months.map(m => chip(m, monthLabel(m))).join("");
+        wrap.querySelectorAll(".pd-chip").forEach(b => b.addEventListener("click", () => setPeriod(b.dataset.p)));
+    }
+
+    // Seçili döneme göre bina sıralaması (yüksekten düşüğe); tıklayınca binaya git
+    function renderRanking() {
+        const wrap = document.getElementById("bld-rank");
+        if (!wrap) return;
+        const seen = new Set();
+        const list = features.filter(e => e.cat === "bina" && disp(e) && !seen.has(e.gk) && seen.add(e.gk))
+            .sort((a, b) => disp(b).avg - disp(a).avg);
+        if (!list.length) {
+            wrap.innerHTML = `<div class="rk-empty">${lastPoints.length ? "Bu dönemde bina içine düşen ölçüm yok" : "Ölçüm seçilmedi"}</div>`;
+            return;
+        }
+        wrap.innerHTML = list.map((e, i) => {
+            const s = disp(e), name = e.feature.properties.name || "İsimsiz bina";
+            const ms = e.monthly || [];
+            const worst = period === "all" && ms.length > 1 ? ms.reduce((a, b) => b.avg > a.avg ? b : a) : null;
+            const diff = period !== "all" && e.stats ? s.avg - e.stats.avg : null;
+            const sub = worst ? `en kötü ay: ${monthLabel(worst.ym, true)} ${worst.avg.toFixed(1)}${worst.n < FEW ? ` (${worst.n} ölçüm)` : ""}`
+                      : diff != null ? `genelden ${diff >= 0 ? "+" : "−"}${Math.abs(diff).toFixed(1)}` : "";
+            return `<button class="rk-row" data-i="${features.indexOf(e)}">
+                <span class="rk-no">${i + 1}</span>
+                <span class="rk-name">${UNIT[e.unit].icon} ${name}<small>${s.n.toLocaleString("tr-TR")} ölçümün ortalaması${sub ? " · " + sub : ""}</small></span>
+                <b class="rk-val" style="background:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</b></button>`;
+        }).join("");
+        wrap.querySelectorAll(".rk-row").forEach(btn => btn.addEventListener("click", () => {
+            const e = features[+btn.dataset.i], l = e.leafletLayer;
+            map.fitBounds(l.getBounds(), { maxZoom: 18, padding: [60, 60] });
+            L.popup(POPUP_OPTS).setLatLng(l.getBounds().getCenter())
+                .setContent(popupHtml(e, e.feature.properties.name || "İsimsiz bina")).openOn(map);
+        }));
+    }
+
+    function setPeriod(p) {
+        period = p;
+        if (ready) refresh();
+        document.dispatchEvent(new CustomEvent("campus:period", { detail: p }));
     }
 
     // ── katman paneli ────────────────────────────────────────────────
@@ -311,7 +434,8 @@ const Campus = (() => {
         if (!v && map.hasLayer(layer)) map.removeLayer(layer);
         syncLabels();
     }
-    function setChoropleth(v) { choropleth = v; if (ready) features.forEach(applyStyle); }
+    function setChoropleth(v) { choropleth = v; if (ready) refresh(); }
+    function getPeriod() { return period; }
 
-    return { init, colorByPoints, setVisible, setChoropleth };
+    return { init, colorByPoints, setVisible, setChoropleth, setPeriod, getPeriod, monthOf };
 })();
