@@ -26,6 +26,7 @@ const Shell = (() => {
         document.body.dataset.tab = tab;
         document.querySelectorAll("#tabbar [data-tab]").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
         if (tab === "news") markSeen();
+        if (tab === "who" && typeof WHO !== "undefined") WHO.load();
         updateMapCta(false);
     }
 
@@ -174,7 +175,16 @@ const Shell = (() => {
     }
 
     function initNews() {
+        $("who-btn").addEventListener("click", () => {
+            document.body.classList.remove("news-open");
+            if (document.body.classList.toggle("who-open")) WHO.load();
+        });
+        $("who-close").addEventListener("click", () => {
+            if (MOBILE.matches) showTab("map");
+            document.body.classList.remove("who-open");
+        });
         $("news-btn").addEventListener("click", () => {
+            document.body.classList.remove("who-open");
             document.body.classList.toggle("news-open");
             if (newsVisible()) { renderNews(); markSeen(); }
         });

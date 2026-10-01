@@ -156,10 +156,30 @@ function markPAFreshness(d) {
         b.style.borderColor = "rgba(244,97,94,0.4)";
         b.style.color = "#f4615e";
         b.title = "Sensör veri göndermiyor — son veri (TR): " + trClock(d.recorded_at);
+        explainPAOffline(d);
     } else {
         setPABadge("live");
         b.title = "";
     }
+}
+
+// Çevrimdışı nedeni: sunucunun PurpleAir'e son bağlanma denemesine bak.
+// Deneme başarılı ama veri eskiyse sorun sensörde (elektrik / Wi-Fi);
+// deneme başarısızsa sorun sunucu ile PurpleAir arasında (API anahtarı, kota).
+async function explainPAOffline(d) {
+    const cat = document.getElementById("pa-cat");
+    const last = `son veri ${timeAgo(d.recorded_at)}`;
+    let msg = `🔌 Sensör veri göndermiyor (${last}) — elektrik/Wi-Fi bağlantısını kontrol edin`;
+    try {
+        const st = await API.purpleairStatus();
+        if (st && st.success === false) {
+            msg = `⚠️ Sunucu PurpleAir'den veri alamıyor (${last})` + (st.error ? ` — ${st.error}` : "");
+        }
+    } catch (_) {}
+    cat.textContent = msg;
+    cat.style.color = "#f4615e";
+    document.getElementById("pa-pm25").style.opacity = "0.55";   // eski değer canlı gibi görünmesin
+    cat.style.fontSize = "12px";
 }
 
 function updatePAPanel(d) {
@@ -172,6 +192,8 @@ function updatePAPanel(d) {
     const cat = document.getElementById("pa-cat");
     cat.textContent = pm25Label(d.pm2_5);
     cat.style.color = pm25Color(d.pm2_5);
+    cat.style.fontSize = "";
+    document.getElementById("pa-pm25").style.opacity = "";
 
     set("pa-pm10", d.pm10_0 != null ? d.pm10_0.toFixed(1) : "--");
     set("pa-temp", d.temperature_c != null ? d.temperature_c.toFixed(1) + "°" : "--");
@@ -248,9 +270,9 @@ async function loadComparison() {
             } catch (_) {}
         }
 
-        // CSB bölge değeri
-        const csbRes = await API.csbLatest();
-        const csb = csbRes.data ? csbRes.data.pm2_5 : null;
+        // CSB bölge değeri (eskiyse karşılaştırmaya katma)
+        const tz = await getTuzla();
+        const csb = tz && !tz.stale ? tz.pm2_5 : null;
 
         const paEl = document.getElementById("cmp-pa");
         const csbEl = document.getElementById("cmp-csb");
@@ -263,6 +285,11 @@ async function loadComparison() {
         if (paStaleAt) {
             verdict.innerHTML = `🔌 PurpleAir çevrimdışı — son veri: ${trClock(paStaleAt)}`;
             verdict.style.cssText = "background:rgba(244,97,94,0.10);color:#f4615e;border:1px solid rgba(244,97,94,0.3)";
+            return;
+        }
+        if (paAvg != null && tz && tz.stale) {
+            verdict.innerHTML = `🕒 Tuzla verisi güncel değil (${timeAgo(trTime(tz.recorded_at))}) — karşılaştırma bekliyor`;
+            verdict.style.cssText = "background:rgba(245,184,64,0.10);color:#f5b840;border:1px solid rgba(245,184,64,0.3)";
             return;
         }
         if (paAvg == null || csb == null) {
@@ -292,29 +319,87 @@ async function loadComparison() {
 // CSB ulusal istasyon (Tuzla)
 // ─────────────────────────────────────────────────────────────────
 
+// Tuzla değeri sunucudan gelir (resmî ÇŞB arşivi → İBB canlı → eski arşiv).
+// Sunucu eski veri verirse kullanıcının tarayıcısından İBB'ye doğrudan sorulur:
+// ÇŞB/İBB yurt dışı sunucuları engelleyebiliyor, kullanıcı ise Türkiye'de.
+const TUZLA_STALE_MIN = 180;
+const IBB_URL = "https://havakalitesi.ibb.gov.tr/Pages/GetAirQualityStations?type=0";
+const TUZLA_SOURCE = { csb: "ÇŞB resmî", live: "İBB canlı", "csb-stale": "ÇŞB arşivi", ibb: "İBB canlı (doğrudan)" };
+let _tuzla = { at: 0, p: null };
+
+// Saat dilimi yazmayan zamanlar Türkiye saatidir
+function trTime(s) {
+    if (!s) return null;
+    const t = /Z$|[+-]\d\d:?\d\d$|GMT/.test(s) ? new Date(s) : new Date(s.replace(" ", "T") + "+03:00");
+    return isNaN(t) ? null : t;
+}
+
+async function ibbDirect() {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 8000);
+    try {
+        const r = await fetch(IBB_URL, { signal: ctl.signal });
+        const objs = (await r.json()).objects || [];
+        let best = null, bestKm = 1e9;
+        for (const o of objs) {
+            const m = /POINT \(([\d.]+) ([\d.]+)\)/.exec(o.Location || "");
+            const last = o.LastMeasurement || {};
+            if (!m || last.PM25 == null) continue;
+            const lat = +m[2], lon = +m[1];
+            const km = Math.hypot((lat - GTU_CENTER[0]) * 111.2, (lon - GTU_CENTER[1]) * 84.2);
+            if (km < bestKm) { bestKm = km; best = { o, lat, lon, last }; }
+        }
+        if (!best) return null;
+        return { station_name: best.o.Name, pm2_5: best.last.PM25, lat: best.lat, lon: best.lon,
+                 distance_km: Math.round(bestKm * 10) / 10, recorded_at: best.last.DataDate, source: "ibb" };
+    } catch (_) { return null; }       // CORS / ağ engeli: sessizce vazgeç
+    finally { clearTimeout(timer); }
+}
+
+function getTuzla() {
+    if (_tuzla.p && Date.now() - _tuzla.at < 240000) return _tuzla.p;
+    _tuzla.at = Date.now();
+    _tuzla.p = (async () => {
+        let d = null;
+        try { d = (await API.csbLatest()).data; } catch (_) {}
+        const age = t => { const x = trTime(t && t.recorded_at); return x ? (Date.now() - x) / 60000 : Infinity; };
+        if (!d || d.pm2_5 == null || age(d) > TUZLA_STALE_MIN) {
+            const direct = await ibbDirect();
+            if (direct && age(direct) < age(d)) d = direct;
+        }
+        if (d) { d.ageMin = age(d); d.stale = d.ageMin > TUZLA_STALE_MIN; }
+        return d;
+    })();
+    return _tuzla.p;
+}
+
 let csbMarker = null;
 
 async function loadCSB() {
     try {
-        const res = await API.csbLatest();
-        const d = res.data;
+        const d = await getTuzla();
         const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-        if (!d || d.pm2_5 == null) { set("csb-name", "CSB verisi alınamadı"); return; }
+        if (!d || d.pm2_5 == null) { set("csb-name", "Tuzla verisi alınamadı"); return; }
+        const when = trTime(d.recorded_at);
 
         const pmEl = document.getElementById("csb-pm25");
         pmEl.innerHTML = `${d.pm2_5.toFixed(1)}<small> PM₂.₅ µg/m³</small>`;
         pmEl.style.color = pm25Color(d.pm2_5);
 
-        set("csb-name", `${d.station_name} · CSB ağı`);
+        set("csb-name", `${d.station_name.replace(/ \((eski|canlı)\)$/, "")} · ${TUZLA_SOURCE[d.source] || "CSB ağı"}`);
         set("csb-dist", d.distance_km != null ? d.distance_km + " km" : "--");
 
         const badge = document.getElementById("csb-badge");
-        badge.textContent = pm25Label(d.pm2_5);
-        badge.style.color = pm25Color(d.pm2_5);
-        badge.style.borderColor = pm25Color(d.pm2_5) + "55";
-        badge.style.background = pm25Color(d.pm2_5) + "1f";
+        const c = d.stale ? "#f4615e" : pm25Color(d.pm2_5);
+        badge.textContent = d.stale ? "🕒 ESKİ VERİ" : pm25Label(d.pm2_5);
+        badge.style.color = c;
+        badge.style.borderColor = c + "55";
+        badge.style.background = c + "1f";
+        pmEl.style.opacity = d.stale ? "0.55" : "";
 
-        set("csb-time", d.recorded_at ? "CSB · " + d.recorded_at.replace("T", " ") + " (saatlik)" : "CSB");
+        set("csb-time", when
+            ? `Ölçüm: ${trClock(when.toISOString())} · ${timeAgo(when)}${d.stale ? " — kaynaklar güncel veri vermiyor" : ""}`
+            : "Ölçüm zamanı bilinmiyor");
 
         if (d.lat && d.lon) {
             // İBB Tuzla ile aynı noktada — üst üste binmesin diye hafif offset

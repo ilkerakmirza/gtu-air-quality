@@ -5,7 +5,7 @@
 const CACHE = "gtu-hava-v1";
 const SHELL = [
     "./", "index.html", "manifest.webmanifest",
-    "js/colorscale.js", "js/api.js", "js/campus.js", "js/app.js", "js/shell.js",
+    "js/colorscale.js", "js/api.js", "js/campus.js", "js/app.js", "js/who.js", "js/shell.js",
     "data/campus.geojson", "data/duyurular.json",
     "icons/icon.svg", "icons/icon-192.png",
 ];
