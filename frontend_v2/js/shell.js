@@ -26,11 +26,29 @@ const Shell = (() => {
         document.body.dataset.tab = tab;
         document.querySelectorAll("#tabbar [data-tab]").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
         if (tab === "news") markSeen();
+        updateMapCta(false);
+    }
+
+    // Panelden haritaya dönüş düğmesi: Saha sekmesinde seçilen gün sayısını gösterir
+    function updateMapCta(bump) {
+        const n = document.querySelectorAll(".s-cb:checked").length;
+        const avg = document.querySelector('.vs-btn.on[data-view="avg"]');
+        $("map-cta-text").textContent = document.body.dataset.tab === "field" && n
+            ? `${avg ? "Bina ortalamalarını" : "Ölçümleri"} haritada gör · ${n} gün`
+            : "Haritaya dön";
+        const btn = $("map-cta");
+        if (bump) { btn.classList.remove("bump"); void btn.offsetWidth; btn.classList.add("bump"); }
     }
 
     function initTabs() {
         document.querySelectorAll("#tabbar [data-tab]").forEach(b =>
             b.addEventListener("click", () => showTab(b.dataset.tab)));
+        $("map-cta").addEventListener("click", () => showTab("map"));
+        // seçim değişince düğme metni güncellensin ve dikkat çeksin
+        document.addEventListener("change", ev => { if (ev.target.closest(".s-cb, .person-cb")) updateMapCta(true); });
+        document.addEventListener("click", ev => {
+            if (ev.target.closest("#sel-all, #sel-none, .vs-btn")) setTimeout(() => updateMapCta(true), 0);
+        });
 
         // Panelden haritada bir yere gidildiğinde (cihaz satırı, bina sıralaması, ▶ oynat) haritaya geç.
         // Panel açıkken harita kapalı olduğundan bu hareketler hep panelden tetiklenir.

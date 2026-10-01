@@ -279,7 +279,7 @@ body {
 .rk-row:hover { background: rgba(255,255,255,0.06); }
 .rk-no { width: 16px; flex-shrink: 0; text-align: right; font: 600 10px "JetBrains Mono", monospace; color: var(--text-2); }
 .rk-name { flex: 1; min-width: 0; font: 600 11.5px/1.25 Inter, sans-serif; overflow: hidden; }
-.rk-name small { display: block; font-weight: 500; font-size: 10px; color: var(--text-2); }
+.rk-name small { display: block; font-weight: 500; font-size: 11px; color: #b4bccb; }
 .rk-val { flex-shrink: 0; min-width: 38px; text-align: center; padding: 2px 6px; border-radius: 5px;
   color: #0b0e14; font: 700 11px "JetBrains Mono", monospace; }
 .rk-empty { font-size: 11px; color: var(--text-2); padding: 4px 4px 8px; }
@@ -339,7 +339,7 @@ body {
 }
 .session-item:hover { background: rgba(255,255,255,0.045); }
 .session-date { font-weight: 600; flex: 1; }
-.session-n { font-size: 10.5px; color: var(--text-2); font-family: "JetBrains Mono", monospace; }
+.session-n { font-size: 11.5px; color: #b4bccb; font-family: "JetBrains Mono", monospace; }
 .session-play {
   width: 24px; height: 24px; border-radius: 7px;
   border: 1px solid var(--stroke-2);
@@ -455,9 +455,9 @@ body {
 .bld-label.t1 .bl-ico { width: 22px; height: 22px; font-size: 12px; border-color: rgba(140,165,255,0.7); }
 .leaflet-tooltip.bld-label:has(.bl-pm) { max-width: 200px; }
 .bld-label .bl-name { min-width: 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-.bld-label .bl-pm { flex-shrink: 0; color: #0b0e14; font: 700 9.5px "JetBrains Mono", monospace; text-shadow: none;
+.bld-label .bl-pm { flex-shrink: 0; color: #0b0e14; font: 700 11px "JetBrains Mono", monospace; text-shadow: none;
   padding: 1px 4px; border-radius: 3px; }
-.bld-label .bl-n { flex-shrink: 0; color: #9aa4b8; font: 600 9px "JetBrains Mono", monospace; }
+.bld-label .bl-n { flex-shrink: 0; color: #e3e8f1; font: 700 11px "JetBrains Mono", monospace; }
 .hide-regions .region-label { display: none; }
 /* Seçili bina: diğer adlar soluklaşır, seçilinin adı öne çıkar */
 .has-sel .leaflet-tooltip.bld-label { opacity: 0.4; transition: opacity .2s; }
@@ -518,7 +518,7 @@ body {
 .bpm-bar i { display: block; height: 100%; border-radius: 4px; }
 .bpm-row b { font: 700 11px "JetBrains Mono", monospace; text-align: right; }
 .bpm-row em { font: 600 10px "JetBrains Mono", monospace; font-style: normal; color: #9aa4b8; text-align: right; }
-.bpm-row small { font: 500 9.5px "JetBrains Mono", monospace; color: #9aa4b8; text-align: right; }
+.bpm-row small { font: 600 11px "JetBrains Mono", monospace; color: #c9d0dd; text-align: right; }
 .bpm-row small.few { color: #f2b84b; }
 .bpm-row small.few::after { content: " az"; }
 .bpm-foot { margin-top: 5px; font-size: 10.5px; color: #e8ecf4; }
@@ -917,7 +917,7 @@ body {
 }
 
 /* Telefon öğeleri — masaüstünde gizli */
-.tabbar, .install-banner { display: none; }
+.tabbar, .install-banner, .map-cta { display: none; }
 
 @media (min-width: 761px) {
   body.news-open .news-dock {
@@ -989,6 +989,18 @@ body {
   }
   body[data-tab="field"] .sessions-dock .panel,
   body[data-tab="news"] .news-dock .panel { height: 100%; }
+  body[data-tab="live"] .map-cta, body[data-tab="field"] .map-cta {
+    display: flex; align-items: center; gap: 8px;
+    position: fixed; z-index: 1150; left: 50%; transform: translateX(-50%);
+    bottom: calc(var(--tab-h) + 12px); white-space: nowrap;
+    padding: 12px 22px; border: none; border-radius: 99px; cursor: pointer;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff;
+    font: 700 14px Inter, sans-serif;
+    box-shadow: 0 8px 24px rgba(108,140,255,0.45), 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .map-cta.bump { animation: ctaBump .45s ease; }
+  @keyframes ctaBump { 40% { transform: translateX(-50%) scale(1.08); } }
+  body[data-tab="live"] .sidebar, body[data-tab="field"] .sessions-dock .panel-body { padding-bottom: 76px; }
   body:not([data-tab="map"]) .player-dock,
   body:not([data-tab="map"]) .chart-drawer { display: none; }
 
@@ -1227,6 +1239,9 @@ body {
   <button type="button" id="install-banner-close" aria-label="Kapat">✕</button>
 </div>
 
+<!-- Telefon: paneldeyken haritaya dönüş düğmesi -->
+<button class="map-cta" id="map-cta" type="button">🗺️ <span id="map-cta-text">Haritaya dön</span></button>
+
 <!-- Telefon: alt sekme çubuğu -->
 <nav class="tabbar" id="tabbar" aria-label="Bölümler">
   <button type="button" data-tab="map" class="on"><span class="tb-ico">🗺️</span>Harita</button>
@@ -1279,10 +1294,10 @@ body {
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=22"></script>
-<script src="js/api.js?v=22"></script>
-<script src="js/campus.js?v=22"></script>
-<script src="js/app.js?v=22"></script>
-<script src="js/shell.js?v=22"></script>
+<script src="js/colorscale.js?v=23"></script>
+<script src="js/api.js?v=23"></script>
+<script src="js/campus.js?v=23"></script>
+<script src="js/app.js?v=23"></script>
+<script src="js/shell.js?v=23"></script>
 </body>
 </html>
