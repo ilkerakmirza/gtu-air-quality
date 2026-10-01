@@ -18,6 +18,7 @@ const WHO = (() => {
     const BAD = "#f4615e", BAR = "#6c8cff", THIN = "#5d6678";
     let chart = null, loadedAt = 0, busy = false;
     let rows = [], period = null;
+    let field = null;          // saha ölçüm noktaları (tüm oturumlar), bina karşılaştırması için
 
     const $ = id => document.getElementById(id);
     const dayKey = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit" });
@@ -38,6 +39,12 @@ const WHO = (() => {
         }
         return [...by.entries()].sort((a, b) => a[0].localeCompare(b[0]))
             .map(([k, vals]) => ({ k, n: vals.length, v: mean(vals) }));
+    }
+
+    function pointInPeriod(p) {
+        const t = new Date(p.recorded_at);
+        if (isNaN(t)) return false;
+        return inPeriod({ k: dayKey.format(t) });
     }
 
     function inPeriod(d) {
@@ -198,6 +205,36 @@ const WHO = (() => {
             <div class="who-cap">Gri değerler ${MIN_H} saatten az ölçüme dayanır, değerlendirmeye girmez.</div></details>`;
     }
 
+    // Bina bazında: saha ölçümlerinin bina ortalamaları ve WHO günlük değeri
+    function buildingsHtml() {
+        const head = `<div class="nsec-title">Bina bazında · saha ölçümleri (Atmotube)</div>`;
+        if (field == null) return head + `<div class="who-cap">Saha ölçümleri yükleniyor…</div>`;
+        const list = typeof Campus !== "undefined" ? Campus.buildingStats(field.filter(pointInPeriod)) : null;
+        if (list == null) return head + `<div class="who-cap">Kampüs haritası yükleniyor…</div>`;
+        if (!list.length) return head + `<div class="who-cap">${periodLabel()} döneminde bina içine düşen saha ölçümü yok.</div>`;
+        const g = G.pm2_5;
+        list.sort((a, b) => b.avg - a.avg);
+        const over = list.filter(b => b.avg > g.day).length;
+        const max = Math.max(g.day * 1.6, list[0].avg) * 1.05;
+        const pct = v => (v / max * 100).toFixed(1);
+        const rowHtml = b => `
+            <button type="button" class="wb-row${b.few ? " few" : ""}" data-gk="${b.gk.replace(/"/g, "&quot;")}" title="Haritada göster">
+              <span class="wb-name">${b.icon} ${b.name}<small>${b.n.toLocaleString("tr-TR")} ölçüm${b.few ? " · az ölçüm" : ""} · ${b.region}</small></span>
+              <span class="wb-bar"><i style="width:${pct(b.avg)}%;background:${b.avg > g.day ? BAD : BAR}"></i><em style="left:${pct(g.day)}%"></em></span>
+              <span class="wb-val ${b.avg > g.day ? "bad" : ""}">${f1(b.avg)}${b.avg > g.day ? " ⚠" : ""}</span>
+            </button>`;
+        const TOP = 10;
+        const rowsHtml = list.slice(0, TOP).map(rowHtml).join("") + (list.length > TOP
+            ? `<details class="wb-more"><summary>Tüm binaları göster (${list.length})</summary>${list.slice(TOP).map(rowHtml).join("")}</details>` : "");
+        return head + `<div class="wh-sub" style="margin:0 0 8px">${periodLabel()}: ölçüm yapılan <b>${list.length}</b> binadan
+              <b>${over}</b> tanesinde ortalama PM₂.₅, WHO günlük değeri olan ${g.day} µg/m³'ün üzerinde.</div>
+            <div class="wb-list">${rowsHtml}</div>
+            <div class="who-legend"><span><i style="background:${BAR}"></i>WHO altında</span><span><i style="background:${BAD}"></i>WHO üstünde</span>
+              <span><i class="tick"></i>WHO ${g.day}</span><span>Soluk: 30'dan az ölçüm</span></div>
+            <div class="who-cap">Saha ölçümleri yürürken alınan kısa süreli değerlerdir; WHO değeri ise 24 saatlik ortalama içindir.
+              Bu karşılaştırma binaların birbirine göre durumunu gösterir, gösterge niteliğindedir. Binaya dokununca haritada açılır.</div>`;
+    }
+
     const INFO = `<div class="who-info">
         <div class="nsec-title">WHO kılavuz değerleri (2021)</div>
         <table><thead><tr><th></th><th>24 saat</th><th>Yıllık</th></tr></thead><tbody>
@@ -216,9 +253,14 @@ const WHO = (() => {
         return period === "all" ? "Tüm ölçümler" : period === "last30" ? "Son 30 gün" : monthName(period);
     }
 
+    function fieldDays() {
+        return (field || []).map(p => new Date(p.recorded_at)).filter(t => !isNaN(t)).map(t => ({ k: dayKey.format(t) }));
+    }
+
     function periodChips(all) {
-        const months = [...new Set(all.map(d => d.k.slice(0, 7)))].sort().reverse();
-        const has30 = all.some(d => Date.now() - new Date(d.k + "T12:00:00") < 30 * 86400e3);
+        const every = all.concat(fieldDays());
+        const months = [...new Set(every.map(d => d.k.slice(0, 7)))].sort().reverse();
+        const has30 = every.some(d => Date.now() - new Date(d.k + "T12:00:00") < 30 * 86400e3);
         const opts = [...(has30 ? [["last30", "Son 30 gün"]] : []), ["all", "Tüm ölçümler"],
                       ...months.map(m => [m, new Date(m + "-15T12:00:00").toLocaleDateString("tr-TR", { month: "long" })])];
         return `<div class="pd-chips who-periods">${opts.map(([p, t]) =>
@@ -249,9 +291,13 @@ const WHO = (() => {
                 <div class="who-legend"><span><i style="background:${BAR}"></i>WHO altında</span><span><i style="background:${BAD}"></i>WHO değerini aşan gün</span>
                 <span><i style="background:${THIN}88"></i>${MIN_H} saatten az ölçüm</span><span><i class="dash"></i>WHO günlük değer</span></div>`
                 : `<div class="news-empty" style="margin-top:12px">Bu dönemde ölçüm yok.</div>`)
-            + tilesHtml(s, s10) + monthlyHtml(all, all10) + tableHtml(days, days10) + INFO;
+            + tilesHtml(s, s10) + buildingsHtml() + monthlyHtml(all, all10) + tableHtml(days, days10) + INFO;
         $("who-body").querySelectorAll("[data-p]").forEach(el =>
             el.addEventListener("click", () => { period = el.dataset.p; render(); }));
+        $("who-body").querySelectorAll(".wb-row").forEach(el => el.addEventListener("click", () => {
+            document.body.classList.remove("who-open");         // masaüstünde panel haritayı kapatmasın
+            Campus.focusByKey(el.dataset.gk);                    // telefonda harita sekmesine kendiliğinden geçer
+        }));
         drawChart(days);
     }
 
@@ -264,9 +310,18 @@ const WHO = (() => {
             rows = res.data || [];
             render();
             loadedAt = Date.now();
+            if (field == null) loadField();
         } catch (e) {
             if (!loadedAt) $("who-body").innerHTML = `<div class="news-empty">Veri alınamadı (${e.message}). Biraz sonra tekrar deneyin.</div>`;
         } finally { busy = false; }
+    }
+
+    async function loadField() {
+        try {
+            const res = await API.mapTracks();
+            field = (res.tracks || []).flatMap(t => t.points || []).filter(p => p.lat && p.lon && p.pm2_5 != null);
+        } catch (_) { field = []; }
+        render();
     }
 
     return { load };

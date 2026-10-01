@@ -489,10 +489,8 @@ const Campus = (() => {
     }
 
     // Seçili ölçüm noktalarını binalara düşür, bina başına istatistik çıkar
-    function colorByPoints(points) {
-        lastPoints = points || [];
-        if (!ready) return;
-        // Aynı adlı bloklar (ör. KYK Yurdu'nun 3 poligonu) tek bina olarak hesaplanır
+    // Ölçüm noktalarını binalara düşür. Aynı adlı bloklar (ör. KYK Yurdu'nun 3 poligonu) tek bina sayılır.
+    function groupPoints(points) {
         const buildings = features.filter(f => f.cat === "bina");
         const groups = new Map();
         buildings.forEach((b, i) => {
@@ -501,7 +499,7 @@ const Campus = (() => {
             if (!groups.has(b.gk)) groups.set(b.gk, { vals: [], by: {}, m: {}, members: [] });
             groups.get(b.gk).members.push(b);
         });
-        for (const p of lastPoints) {
+        for (const p of points) {
             if (p.pm2_5 == null || !p.lat || !p.lon) continue;
             const b = buildings.find(f => contains(f, p.lon, p.lat));
             if (!b) continue;
@@ -512,6 +510,30 @@ const Campus = (() => {
             const ym = monthOf(p);
             if (ym) (g.m[ym] ||= []).push(p.pm2_5);
         }
+        return groups;
+    }
+
+    // Haritayı değiştirmeden bina istatistikleri (WHO sekmesi için): en az MIN_PTS ölçümü olan binalar
+    function buildingStats(points) {
+        if (!ready) return null;
+        const out = [];
+        for (const [gk, g] of groupPoints(points || [])) {
+            if (g.vals.length < MIN_PTS) continue;
+            const e = g.members[0], p = e.feature.properties;
+            out.push({ gk, name: p.name || "İsimsiz bina", icon: UNIT[e.unit].icon, unit: UNIT[e.unit].label,
+                       region: REGION_LABEL[p.region] || "", ...statsOf(g.vals, g.by), few: g.vals.length < FEW });
+        }
+        return out;
+    }
+    function focusByKey(gk) {
+        const e = features.find(f => f.cat === "bina" && f.gk === gk);
+        if (e) focusBuilding(e);
+    }
+
+    function colorByPoints(points) {
+        lastPoints = points || [];
+        if (!ready) return;
+        const groups = groupPoints(lastPoints);
         const mset = new Set();
         for (const g of groups.values()) {
             let stats = null, monthly = [];
@@ -638,5 +660,5 @@ const Campus = (() => {
     function setChoropleth(v) { choropleth = v; if (ready) refresh(); }
     function getPeriod() { return period; }
 
-    return { init, colorByPoints, setVisible, setChoropleth, setPeriod, getPeriod, monthOf, fitCampus };
+    return { init, colorByPoints, setVisible, setChoropleth, setPeriod, getPeriod, monthOf, fitCampus, buildingStats, focusByKey };
 })();
