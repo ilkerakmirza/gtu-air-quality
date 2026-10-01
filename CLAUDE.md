@@ -20,8 +20,29 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
 Değişiklikler `main`'e geldiğinde GitHub Pages sitesi de güncellenir:
 https://ilkerakmirza.github.io/gtu-air-quality/frontend_v2/
 
+## Duyuru eklemek
+Duyurular `frontend_v2/data/duyurular.json` dosyasında. Kullanıcı "duyuru ekle: …" dediğinde listeye yeni bir öğe ekle
+(sıra önemli değil, uygulama tarihe göre sıralar), commit'le ve `main`'e push et. Birkaç dakika içinde herkesin uygulamasına gelir.
+
+```json
+{
+  "id": "2026-10-15-saha-olcumu",      // benzersiz; okunmamış sayacı buna göre çalışır, sonradan değiştirme
+  "tarih": "2026-10-15",               // YYYY-AA-GG
+  "etiket": "Saha",                    // isteğe bağlı: Duyuru, Saha, Toplantı, Sensör…
+  "baslik": "Kısa başlık",
+  "metin": "Açıklama. Satır atlamak için \n",
+  "link": "https://…",                 // isteğe bağlı
+  "link_metni": "Formu aç"             // isteğe bağlı
+}
+```
+
+## Telefon uygulaması (PWA)
+- `frontend_v2/manifest.webmanifest`, `frontend_v2/sw.js`, `frontend_v2/icons/`, `frontend_v2/js/shell.js` (alt sekmeler, duyurular, kurulum).
+- `sw.js` uygulama dosyalarını "önce ağ" ile sunar; güncellemeler bir sonraki açılışta gelir, önbellek sürümünü değiştirmek gerekmez.
+- Telefon düzeni `index.html` içindeki `@media (max-width: 760px)` bloğunda; masaüstü düzenini bozmamaya dikkat et.
+
 ## Proje yapısı
-- `frontend_v2/` — yayındaki arayüz (`index.html`, `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `data/campus.geojson`)
+- `frontend_v2/` — yayındaki arayüz (`index.html`, `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `js/shell.js`, `data/campus.geojson`, `data/duyurular.json`)
 - `frontend/` — önceki harita arayüzü (`map.html`)
-- `backend/` — Python sunucu ve veri toplayıcılar (PurpleAir, Atmotube, Tuya CO2, ÇSB, İBB); Railway ile çalışır (`Procfile`, `railway.json`)
+- `backend/` — Python sunucu ve veri toplayıcılar (PurpleAir, Atmotube, Tuya CO2, ÇSB, İBB); arayüzün kullandığı API: https://gtu-air-quality.onrender.com (`frontend_v2/js/api.js`)
 - Yerelde önizleme: `python -m http.server 8765 --directory frontend_v2` → http://localhost:8765

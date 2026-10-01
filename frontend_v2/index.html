@@ -2,8 +2,18 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>GTÜ Hava Kalitesi — Kampüs İzleme Platformu</title>
+
+<!-- Telefona uygulama olarak kurulum (PWA) -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b0e14">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GTÜ Hava">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -743,9 +753,128 @@ body {
   .player-dock { width: 300px; }
   .legend { display: none; }
 }
+
+/* ───────────────────────── Duyurular ───────────────────────── */
+.chip-btn { cursor: pointer; font-family: Inter, sans-serif; position: relative; }
+.chip-btn:hover, body.news-open .chip-btn { color: var(--text); border-color: var(--stroke-2); }
+.badge {
+  min-width: 18px; height: 18px; padding: 0 5px; border-radius: 99px;
+  background: var(--red); color: #fff;
+  font: 800 10.5px/18px "JetBrains Mono", monospace; text-align: center;
+}
+.news-dock { display: none; flex-direction: column; z-index: 970; }
+.news-item { padding: 12px 0; border-bottom: 1px solid var(--stroke); }
+.news-item:first-child { padding-top: 2px; }
+.news-item:last-child { border-bottom: none; }
+.news-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 10.5px; color: var(--text-2); }
+.news-tag {
+  padding: 2px 8px; border-radius: 99px; font-weight: 700; font-size: 10px;
+  background: rgba(108,140,255,0.16); color: #a9b9ff;
+}
+.news-new { color: var(--green); font-weight: 800; letter-spacing: .04em; }
+.news-item h3 { font-size: 14px; font-weight: 700; line-height: 1.35; margin-bottom: 5px; }
+.news-item p { font-size: 12.5px; line-height: 1.55; color: #c9d0dd; }
+.news-item a { color: #a9b9ff; font-weight: 600; }
+.news-empty { font-size: 12px; color: var(--text-2); padding: 4px 0; }
+
+.install-card {
+  margin-bottom: 14px; padding: 12px 13px; border-radius: var(--r-md);
+  background: linear-gradient(135deg, rgba(108,140,255,0.16), rgba(176,122,255,0.14));
+  border: 1px solid rgba(108,140,255,0.35);
+}
+.ic-title { font-weight: 700; font-size: 13px; margin-bottom: 5px; }
+.ic-text { font-size: 12px; line-height: 1.55; color: #c9d0dd; }
+.ic-btn, .install-banner button {
+  margin-top: 9px; padding: 8px 14px; border: none; border-radius: var(--r-sm);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff;
+  font: 700 12.5px Inter, sans-serif; cursor: pointer;
+}
+
+/* Telefon öğeleri — masaüstünde gizli */
+.tabbar, .install-banner { display: none; }
+
+@media (min-width: 761px) {
+  body.news-open .news-dock {
+    display: flex; position: absolute; top: 70px; right: 14px;
+    width: 360px; max-height: calc(100vh - 140px);
+    animation: slideIn 0.35s cubic-bezier(0.22,1,0.36,1);
+  }
+}
+
+/* ───────────────────────── Telefon düzeni ─────────────────────────
+   Harita tam ekran; paneller alttaki sekmelerden açılır. */
+@media (max-width: 760px) {
+  :root {
+    --top-h: calc(54px + env(safe-area-inset-top));
+    --tab-h: calc(60px + env(safe-area-inset-bottom));
+  }
+  .topbar { height: var(--top-h); padding: env(safe-area-inset-top) 12px 0; gap: 10px; }
+  .brand { font-size: 14.5px; gap: 9px; }
+  .brand small, .topbar .chip { display: none; }
+  .brand-logo { width: 30px; height: 30px; font-size: 15px; }
+  .seg-btn { padding: 6px 10px; font-size: 14px; }
+  .sb-txt { display: none; }
+
+  .tabbar {
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 1200;
+    height: var(--tab-h); padding-bottom: env(safe-area-inset-bottom);
+    background: rgba(11,14,20,0.96); border-top: 1px solid var(--stroke);
+    backdrop-filter: blur(18px);
+  }
+  .tabbar button {
+    flex: 1; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    border: none; background: none; color: var(--text-3);
+    font: 600 10.5px Inter, sans-serif; cursor: pointer;
+  }
+  .tabbar .tb-ico { font-size: 20px; line-height: 1; filter: grayscale(1) opacity(.7); transition: filter .15s; }
+  .tabbar button.on { color: var(--text); }
+  .tabbar button.on .tb-ico { filter: none; }
+  .tabbar .badge { position: absolute; top: 6px; left: calc(50% + 6px); }
+
+  /* Paneller: yalnızca kendi sekmesinde, harita üstünde tam ekran */
+  .sidebar, .sessions-dock, .news-dock { display: none; }
+  .sidebar-toggle { display: none !important; }
+  body[data-tab="live"] .sidebar,
+  body[data-tab="field"] .sessions-dock,
+  body[data-tab="news"] .news-dock {
+    display: flex; position: fixed; z-index: 1100;
+    top: var(--top-h); bottom: var(--tab-h); left: 0; right: 0;
+    width: auto; max-height: none; transform: none;
+    padding: 10px 10px 12px; overflow-y: auto;
+    background: rgba(11,14,20,0.9); backdrop-filter: blur(6px);
+  }
+  body[data-tab="field"] .sessions-dock .panel,
+  body[data-tab="news"] .news-dock .panel { height: 100%; }
+  body:not([data-tab="map"]) .player-dock,
+  body:not([data-tab="map"]) .chart-drawer { display: none; }
+
+  .leaflet-bottom.leaflet-right { bottom: calc(var(--tab-h) + 52px); }
+  .leaflet-control-attribution { display: none; }
+
+  .player-dock { top: calc(var(--top-h) + 6px); left: 8px; right: 8px; width: auto; }
+  .chart-drawer, .chart-drawer.collapsed { left: 0; width: 100%; bottom: var(--tab-h); border-radius: var(--r-lg) var(--r-lg) 0 0; }
+  .chart-drawer { transform: none; }
+  .chart-drawer.collapsed { transform: translateY(calc(100% - 42px)); }
+  .chart-handle { padding: 0 14px; font-size: 11.5px; white-space: nowrap; overflow: hidden; }
+  .chart-body { height: 190px; padding: 4px 10px 12px; }
+
+  .install-banner:not([hidden]) {
+    display: flex; align-items: center; gap: 8px;
+    position: fixed; left: 8px; right: 8px; top: calc(var(--top-h) + 4px); z-index: 1150;
+    padding: 9px 10px 9px 13px; border-radius: var(--r-md);
+    background: var(--glass-2); border: 1px solid rgba(108,140,255,0.4);
+    box-shadow: var(--shadow); backdrop-filter: blur(18px);
+    font-size: 12.5px; font-weight: 600;
+  }
+  body:not([data-tab="map"]) .install-banner { display: none; }
+  body:has(.player-dock.visible) .install-banner { display: none; }
+  .install-banner span { flex: 1; }
+  .install-banner button { margin-top: 0; padding: 7px 11px; }
+  .install-banner #install-banner-close { background: none; color: var(--text-2); padding: 7px 6px; }
+}
 </style>
 </head>
-<body>
+<body data-tab="map">
 
 <div class="boot" id="boot">
   <div class="boot-inner">
@@ -768,12 +897,13 @@ body {
   </div>
   <div class="topbar-spacer"></div>
   <div class="seg" id="basemap-seg">
-    <button class="seg-btn active" data-base="sat">🛰 Uydu</button>
-    <button class="seg-btn" data-base="dark">🌑 Koyu</button>
-    <button class="seg-btn" data-base="street">🗺 Sokak</button>
+    <button class="seg-btn active" data-base="sat" title="Uydu">🛰<span class="sb-txt"> Uydu</span></button>
+    <button class="seg-btn" data-base="dark" title="Koyu">🌑<span class="sb-txt"> Koyu</span></button>
+    <button class="seg-btn" data-base="street" title="Sokak">🗺<span class="sb-txt"> Sokak</span></button>
   </div>
   <div class="chip" id="chip-readings">📊 <b>—</b>&nbsp;ölçüm</div>
   <div class="chip" id="chip-sessions">🗂 <b>—</b>&nbsp;oturum</div>
+  <button class="chip chip-btn" id="news-btn" type="button">📢 Duyurular<span class="badge" id="news-badge" hidden></span></button>
 </div>
 
 <!-- Sidebar -->
@@ -919,6 +1049,39 @@ body {
   </div>
 </aside>
 
+<!-- Duyurular (masaüstünde sağ panel, telefonda "Duyurular" sekmesi) -->
+<aside class="news-dock" id="news-dock">
+  <div class="panel panel-scroll" style="height:100%">
+    <div class="panel-head">
+      <span class="ico">📢</span> Duyurular
+      <span class="right"><button class="pbtn sq" id="news-close" type="button" title="Kapat">✕</button></span>
+    </div>
+    <div class="panel-body">
+      <div class="install-card" id="install-card" hidden>
+        <div class="ic-title">📲 Telefona uygulama olarak kur</div>
+        <div class="ic-text" id="install-text"></div>
+        <button class="ic-btn" id="install-btn" type="button" hidden>Uygulamayı kur</button>
+      </div>
+      <div id="news-list"><div class="news-empty">Yükleniyor…</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- Telefon: kurulum önerisi (bir kez, kapatılabilir) -->
+<div class="install-banner" id="install-banner" hidden>
+  <span>📲 Platformu telefonuna uygulama olarak kur</span>
+  <button type="button" id="install-banner-how">Nasıl?</button>
+  <button type="button" id="install-banner-close" aria-label="Kapat">✕</button>
+</div>
+
+<!-- Telefon: alt sekme çubuğu -->
+<nav class="tabbar" id="tabbar" aria-label="Bölümler">
+  <button type="button" data-tab="map" class="on"><span class="tb-ico">🗺️</span>Harita</button>
+  <button type="button" data-tab="live"><span class="tb-ico">📡</span>Canlı</button>
+  <button type="button" data-tab="field"><span class="tb-ico">👥</span>Saha</button>
+  <button type="button" data-tab="news"><span class="tb-ico">📢</span>Duyurular<span class="badge" id="tab-news-badge" hidden></span></button>
+</nav>
+
 <!-- Player dock -->
 <div class="player-dock" id="player-dock">
   <div class="player-now">
@@ -963,9 +1126,10 @@ body {
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=18"></script>
-<script src="js/api.js?v=18"></script>
-<script src="js/campus.js?v=18"></script>
-<script src="js/app.js?v=18"></script>
+<script src="js/colorscale.js?v=19"></script>
+<script src="js/api.js?v=19"></script>
+<script src="js/campus.js?v=19"></script>
+<script src="js/app.js?v=19"></script>
+<script src="js/shell.js?v=19"></script>
 </body>
 </html>
