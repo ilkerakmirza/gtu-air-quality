@@ -34,34 +34,35 @@ const Campus = (() => {
     const FEW = 30;             // bunun altındaki ortalamalar "az ölçüm" diye işaretlenir
     // Kart açılınca harita, kart sol/sağ panellerin altında kalmayacak şekilde kaysın
     const POPUP_OPTS = { maxWidth: 360, autoPanPaddingTopLeft: [270, 80], autoPanPaddingBottomRight: [350, 60] };
+    const POPUP_OPTS_PHONE = { maxWidth: 300, autoPanPaddingTopLeft: [10, 70], autoPanPaddingBottomRight: [10, 130] };
+    const isPhone = () => window.innerWidth <= 760;
+    const popupOpts = () => isPhone() ? POPUP_OPTS_PHONE : POPUP_OPTS;
     const GENERIC = /^(bina \d+|küçük binalar)$/i;   // adı tanımlayıcı olmayan binalar: en düşük öncelik
 
     // Kademeli etiketler (Google Haritalar gibi): her binanın adı kendi yakınlık eşiğinden itibaren görünür.
     // Uzaktan yalnızca simge yapılar, yaklaştıkça bölümler, en yakında küçük birimler ve açık alanlar.
     // Çakışan etiketler yine öncelik sırasıyla gizlenir.
-    const LABEL_ZOOM = 15;      // en erken etiket eşiği
+    const LABEL_ZOOM = 14;      // en erken etiket eşiği (kampüsün tamamı görünürken)
     const FULL_NAME_ZOOM = 18;  // bunun altında uzun adlar kısaltılır (Müh., Fak., Lab. …)
     const REGION_MAX_ZOOM = 16; // Kuzey/Güney Kampüs yazısı yalnızca uzaktan
     const KEY = /rektörlük|^kütüphane$|kongre|ana kapı|teknopark/i;       // her zaman uzaktan
     const LANDMARK = /fakülte|yurdu|yemekhane/i;
-    const MINOR = /açık alan|saha|ön bahçe|^tenis|kelebek ön|lojman|kırtasiye/i;
+    const MINOR = /açık alan|saha|ön bahçe|tenis|kelebek ön|lojman|kırtasiye/i;
     function labelTier(e) {
         const name = e.feature.properties.name, a = e.areaM2;
         if (GENERIC.test(name) || MINOR.test(name)) return 4;          // ≥19
-        if (KEY.test(name) || a > 3000 || (LANDMARK.test(name) && a > 1000)) return 1;   // ≥15
+        if (KEY.test(name) || a > 3000 || (LANDMARK.test(name) && a > 1000)) return 1;   // ≥14
         if (a > 1500 || LANDMARK.test(name) || /salon/i.test(name)) return 2;          // ≥16
         if (a > 800 || e.unit === "bolum") return 3;                                   // ≥17 (açılış yakınlığı)
         if (a > 400 || e.unit === "sosyal" || e.unit === "giris") return 3.5;          // ≥18
         return 4;                                                                       // ≥19
     }
-    const TIER_ZOOM = { 1: 15, 2: 16, 3: 17, 3.5: 18, 4: 19 };
+    const TIER_ZOOM = { 1: 14, 2: 16, 3: 17, 3.5: 18, 4: 19 };
 
-    // Ad düzeltmeleri (kaynaktaki yazım hataları) ve kısaltmalar
-    const TIDY = [[/Mühendsiliği/g, "Mühendisliği"], [/Laboratuvaru/g, "Laboratuvarı"], [/\s*,\s*/g, ", "], [/^tenis\s*(\d*)$/i, "Tenis Kortu $1"]];
+    // Uzak planda kısaltmalar (tam ad yakında ve kartta)
     const ABBR = [[/Mühendisliği/g, "Müh."], [/Müh\. Bölümü/g, "Müh."], [/Fakültesi/g, "Fak."], [/Laboratuvarı/g, "Lab."],
                   [/Enstitüsü/g, "Enst."], [/Daire(si)? Başkanlığı/g, "D. Bşk."], [/^(Gebze Teknik Üniversitesi|GTÜ) /, ""],
-                  [/, /g, " / "]];
-    const tidyName = n => TIDY.reduce((t, [re, to]) => t.replace(re, to), n).trim();
+                  [/Müh\., /g, "Müh. / "]];
     const shortName = n => ABBR.reduce((t, [re, to]) => t.replace(re, to), n).trim();
 
     let map, layer, labelLayer;
@@ -73,6 +74,7 @@ const Campus = (() => {
     let months = [];            // binalara düşen ölçümlerin ayları (MIN_PTS'i geçen)
     let lastPoints = [];
     let ready = false;
+    let selectedGk = null, selPopup = null;   // vurgulanan bina (kartı açık olan)
 
     // ── dönem (ay) yardımcıları — Türkiye saatine göre ───────────────
     const ymFmt = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit" });
@@ -179,7 +181,7 @@ const Campus = (() => {
             const ll = e.leafletLayer.getBounds();
             e.area = (ll.getEast() - ll.getWest()) * (ll.getNorth() - ll.getSouth());
             e.areaM2 = areaM2(e.feature.geometry);
-            e.full = tidyName(e.feature.properties.name);
+            e.full = e.feature.properties.name.trim();
             e.short = shortName(e.full);
             e.tier = labelTier(e);
             e.tip = L.tooltip({ permanent: true, direction: "center", pane: "tooltipPane",
@@ -193,6 +195,132 @@ const Campus = (() => {
         ready = true;
         renderLegend();
         colorByPoints(lastPoints);
+
+        addHomeControl();
+        fitCampus(false);
+        initSearch();
+        map.on("popupclose", ev => { if (ev.popup === selPopup) clearSelection(); });
+    }
+
+    // ── kampüsün tamamı ──────────────────────────────────────────────
+    function campusBounds() {
+        const b = L.latLngBounds([]);
+        features.filter(e => e.cat === "sinir").forEach(e => b.extend(e.leafletLayer.getBounds()));
+        return b.isValid() ? b : layer.getBounds();
+    }
+    // Paneller haritanın kenarlarını kapladığı için kampüs kalan boş alana sığdırılır
+    function fitCampus(animate = true) {
+        const pad = isPhone()
+            ? { paddingTopLeft: [8, 64], paddingBottomRight: [8, 120] }
+            : { paddingTopLeft: [350, 70], paddingBottomRight: [350, 40] };
+        map.fitBounds(campusBounds(), { ...pad, animate });
+    }
+    function addHomeControl() {
+        const Home = L.Control.extend({
+            options: { position: "bottomright" },
+            onAdd() {
+                const div = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-zoom home-control");
+                const a = L.DomUtil.create("a", "", div);
+                a.href = "#"; a.title = "Kampüsün tamamı"; a.setAttribute("role", "button");
+                a.setAttribute("aria-label", "Kampüsün tamamını göster");
+                a.textContent = "🏫";
+                L.DomEvent.disableClickPropagation(div);
+                L.DomEvent.on(a, "click", ev => { L.DomEvent.preventDefault(ev); map.closePopup(); fitCampus(); });
+                return div;
+            },
+        });
+        new Home().addTo(map);
+    }
+
+    // ── seçili binayı vurgula ────────────────────────────────────────
+    function openBuilding(e, latlng) {
+        const name = e.feature.properties.name || "İsimsiz bina";
+        const popup = L.popup(popupOpts()).setLatLng(latlng || e.leafletLayer.getBounds().getCenter())
+            .setContent(popupHtml(e, name));
+        popup.openOn(map);            // önce eski kart kapanır (ve onun vurgusu kalkar)
+        selPopup = popup;
+        selectedGk = e.gk;
+        map.getContainer().classList.add("has-sel");
+        features.forEach(applyStyle);
+        cullLabels();
+    }
+    function clearSelection() {
+        selectedGk = null; selPopup = null;
+        map.getContainer().classList.remove("has-sel");
+        features.forEach(applyStyle);
+        cullLabels();
+    }
+    function focusBuilding(e) {
+        map.fitBounds(e.leafletLayer.getBounds(), { maxZoom: 18, ...(isPhone()
+            ? { paddingTopLeft: [20, 120], paddingBottomRight: [20, 140] }
+            : { paddingTopLeft: [380, 120], paddingBottomRight: [380, 80] }) });
+        map.once("moveend", () => openBuilding(e));
+    }
+
+    // ── bina arama ───────────────────────────────────────────────────
+    // Türkçe karakterden bağımsız: "kutuphane" → Kütüphane, "bilgisayar muh" → Bilgisayar Müh.
+    const fold = t => t.toLocaleLowerCase("tr").replace(/[çğıöşüâî]/g, c => ({ ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u", â: "a", î: "i" }[c]));
+    function search(q) {
+        const words = fold(q).split(/[\s.,/]+/).filter(Boolean);
+        if (!words.length) return [];
+        const seen = new Set(), out = [];
+        for (const e of features) {
+            if (e.cat !== "bina" || !e.full || seen.has(e.gk)) continue;
+            const hay = fold(`${e.full} ${e.short} ${UNIT[e.unit].label}`);
+            if (!words.every(w => hay.includes(w))) continue;
+            seen.add(e.gk);
+            const starts = fold(e.full).startsWith(words[0]) ? 0 : 1;
+            out.push({ e, score: starts * 10 + e.tier });
+        }
+        return out.sort((a, b) => a.score - b.score || a.e.full.localeCompare(b.e.full, "tr")).slice(0, 8).map(r => r.e);
+    }
+
+    function initSearch() {
+        const box = document.getElementById("search"), input = document.getElementById("search-input");
+        const list = document.getElementById("search-results");
+        if (!box || !input) return;
+        let hits = [], active = 0;
+
+        const close = () => { list.hidden = true; box.classList.remove("open"); input.blur(); };
+        const render = () => {
+            hits = search(input.value);
+            active = 0;
+            if (!input.value.trim()) { list.hidden = true; return; }
+            list.innerHTML = hits.length ? hits.map((e, i) => {
+                const s = choropleth ? disp(e) : null;
+                return `<button type="button" class="sr-row${i === active ? " on" : ""}" data-i="${i}">
+                    <span class="sr-ico">${UNIT[e.unit].icon}</span>
+                    <span class="sr-txt"><b>${e.full}</b><small>${UNIT[e.unit].label} · ${REGION_LABEL[e.feature.properties.region] || ""}</small></span>
+                    ${s ? `<span class="sr-pm" style="background:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</span>` : ""}</button>`;
+            }).join("") : `<div class="sr-empty">“${input.value.replace(/[<>&]/g, "")}” için bina bulunamadı</div>`;
+            list.hidden = false;
+        };
+        const pick = i => {
+            const e = hits[i];
+            if (!e) return;
+            input.value = e.full;
+            close();
+            focusBuilding(e);
+        };
+
+        input.addEventListener("input", render);
+        input.addEventListener("focus", () => { if (input.value.trim()) render(); });
+        input.addEventListener("keydown", ev => {
+            if (ev.key === "ArrowDown" || ev.key === "ArrowUp") {
+                if (!hits.length) return;
+                ev.preventDefault();
+                active = (active + (ev.key === "ArrowDown" ? 1 : hits.length - 1)) % hits.length;
+                list.querySelectorAll(".sr-row").forEach((r, i) => r.classList.toggle("on", i === active));
+            } else if (ev.key === "Enter") { ev.preventDefault(); pick(active); }
+            else if (ev.key === "Escape") { input.value = ""; close(); }
+        });
+        list.addEventListener("click", ev => { const r = ev.target.closest(".sr-row"); if (r) pick(+r.dataset.i); });
+        document.getElementById("search-open").addEventListener("click", () => {
+            if (typeof Shell !== "undefined") Shell.showTab("map");   // telefonda sonuçlar haritanın üstünde açılsın
+            box.classList.add("open"); input.focus();
+        });
+        document.getElementById("search-close").addEventListener("click", () => { input.value = ""; close(); });
+        document.addEventListener("pointerdown", ev => { if (!box.contains(ev.target)) list.hidden = true; });
     }
 
     // Kampüsü canvas'ta en alta indir (önceden çizilmiş ölçüm noktaları üstte kalsın);
@@ -237,7 +365,7 @@ const Campus = (() => {
     function cullLabels() {
         if (!labelLayer || !map.hasLayer(labelLayer)) return;
         const z = map.getZoom();
-        const rank = e => (disp(e) ? 0 : 10) + e.tier;
+        const rank = e => (selectedGk && e.gk === selectedGk ? -1 : disp(e) ? 0 : 10) + e.tier;
         const order = features.filter(e => e.tip).sort((a, b) => rank(a) - rank(b) || b.areaM2 - a.areaM2);
         // Arayüzün (üst çubuk, paneller, lejant) altında kalan yere etiket koyma
         const ui = (z <= REGION_MAX_ZOOM ? ".region-label, " : "") + ".leaflet-tooltip.pa-label, " + (window.innerWidth > 760
@@ -250,8 +378,10 @@ const Campus = (() => {
             const el = e.tip.getElement();
             if (!el) continue;
             el.style.display = "";
+            const sel = !!selectedGk && e.gk === selectedGk;
+            el.classList.toggle("sel", sel);
             // birimi gizli ya da aynı binanın başka bloğu zaten etiketli
-            if (z < minZoomOf(e) || hiddenUnits.has(e.unit) || (e.gk && placedG.has(e.gk))) { el.style.display = "none"; continue; }
+            if ((!sel && (z < minZoomOf(e) || hiddenUnits.has(e.unit))) || (e.gk && placedG.has(e.gk))) { el.style.display = "none"; continue; }
             const r = el.getBoundingClientRect();
             // ekrana tam sığmayan (kenarda kesilen) etiketi gösterme
             if (r.left < view.left + 2 || r.right > view.right - 2 || r.top < view.top || r.bottom > view.bottom) {
@@ -269,9 +399,7 @@ const Campus = (() => {
         l.bindTooltip(() => tooltipHtml(e, name), { sticky: true, className: "pa-label", direction: "top", offset: [0, -6] });
         l.on("mouseover", () => l.setStyle({ weight: 2.6, opacity: 1 }));
         l.on("mouseout",  () => applyStyle(e));
-        l.on("click", ev => {
-            L.popup(POPUP_OPTS).setLatLng(ev.latlng).setContent(popupHtml(e, name)).openOn(map);
-        });
+        l.on("click", ev => openBuilding(e, ev.latlng));
     }
 
     function unitLine(e) {
@@ -350,12 +478,14 @@ const Campus = (() => {
         if (hidden) { l.setStyle({ opacity: 0, fillOpacity: 0 }); return; }
         const base = STYLE[e.cat] || STYLE.yol;
         const s = e.cat === "bina" && choropleth ? disp(e) : null;
-        if (s) {
-            const c = pm25Color(s.avg);
-            l.setStyle({ ...base, color: "#ffffff", weight: 1.4, opacity: 0.85, fillColor: c, fillOpacity: 0.62, dashArray: null });
-        } else {
-            l.setStyle({ ...base, dashArray: base.dashArray || null });
+        const st = s
+            ? { ...base, color: "#ffffff", weight: 1.4, opacity: 0.85, fillColor: pm25Color(s.avg), fillOpacity: 0.62, dashArray: null }
+            : { ...base, dashArray: base.dashArray || null };
+        if (selectedGk && e.cat === "bina") {
+            if (e.gk === selectedGk) Object.assign(st, { color: "#ffffff", weight: 3.2, opacity: 1, fillOpacity: Math.max(st.fillOpacity, 0.5) });
+            else Object.assign(st, { opacity: st.opacity * 0.35, fillOpacity: st.fillOpacity * 0.35 });
         }
+        l.setStyle(st);
     }
 
     // Seçili ölçüm noktalarını binalara düşür, bina başına istatistik çıkar
@@ -449,8 +579,7 @@ const Campus = (() => {
         wrap.querySelectorAll(".rk-row").forEach(btn => btn.addEventListener("click", () => {
             const e = features[+btn.dataset.i], l = e.leafletLayer;
             map.fitBounds(l.getBounds(), { maxZoom: 18, padding: [60, 60] });
-            L.popup(POPUP_OPTS).setLatLng(l.getBounds().getCenter())
-                .setContent(popupHtml(e, e.feature.properties.name || "İsimsiz bina")).openOn(map);
+            openBuilding(e);
         }));
     }
 
@@ -509,5 +638,5 @@ const Campus = (() => {
     function setChoropleth(v) { choropleth = v; if (ready) refresh(); }
     function getPeriod() { return period; }
 
-    return { init, colorByPoints, setVisible, setChoropleth, setPeriod, getPeriod, monthOf };
+    return { init, colorByPoints, setVisible, setChoropleth, setPeriod, getPeriod, monthOf, fitCampus };
 })();

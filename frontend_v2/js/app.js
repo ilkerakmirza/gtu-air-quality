@@ -83,7 +83,8 @@ async function wakeBackend() {
 let baseLayers = {};
 
 function initMap() {
-    map = L.map("map", { center: GTU_CENTER, zoom: GTU_ZOOM, zoomControl: false, preferCanvas: true });
+    // zoomSnap 0.25: kampüsün tamamı panellerin arasına tam sığsın (Campus.fitCampus)
+    map = L.map("map", { center: GTU_CENTER, zoom: GTU_ZOOM, zoomControl: false, preferCanvas: true, zoomSnap: 0.25 });
     L.control.zoom({ position: "bottomright", zoomInTitle: "Yakınlaştır", zoomOutTitle: "Uzaklaştır" }).addTo(map);
 
     // Koyu taban (CARTO) — renkli ölçüm noktaları üzerinde öne çıkar

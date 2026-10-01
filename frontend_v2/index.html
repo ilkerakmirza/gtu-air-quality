@@ -459,6 +459,52 @@ body {
   padding: 1px 4px; border-radius: 3px; }
 .bld-label .bl-n { flex-shrink: 0; color: #9aa4b8; font: 600 9px "JetBrains Mono", monospace; }
 .hide-regions .region-label { display: none; }
+/* Seçili bina: diğer adlar soluklaşır, seçilinin adı öne çıkar */
+.has-sel .leaflet-tooltip.bld-label { opacity: 0.4; transition: opacity .2s; }
+.has-sel .leaflet-tooltip.bld-label.sel { opacity: 1; font-weight: 800; z-index: 10; }
+.home-control a { font-size: 17px !important; }
+
+/* ───────────────────────── Bina arama ───────────────────────── */
+.search { position: relative; margin-left: 18px; }
+.search-open { display: none; }
+.search-box {
+  display: flex; align-items: center; gap: 8px; width: 270px; height: 38px; padding: 0 8px 0 12px;
+  background: var(--glass); border: 1px solid var(--stroke); border-radius: 11px;
+  backdrop-filter: blur(12px); transition: border-color .15s, box-shadow .15s;
+}
+.search-box:focus-within { border-color: rgba(108,140,255,0.6); box-shadow: 0 0 0 3px rgba(108,140,255,0.18); }
+.search-ico { font-size: 13px; opacity: .75; }
+#search-input {
+  flex: 1; min-width: 0; border: none; outline: none; background: none;
+  color: var(--text); font: 500 13px Inter, sans-serif;
+}
+#search-input::placeholder { color: var(--text-3); }
+#search-input::-webkit-search-cancel-button { display: none; }
+.search-close {
+  border: none; background: none; color: var(--text-2); cursor: pointer;
+  font-size: 13px; padding: 4px 5px; border-radius: 6px; visibility: hidden;
+}
+.search-box:has(#search-input:not(:placeholder-shown)) .search-close { visibility: visible; }
+.search-results {
+  position: absolute; top: 44px; left: 0; width: 340px; max-height: 60vh; overflow-y: auto; padding: 5px;
+  background: var(--glass-2); border: 1px solid var(--stroke-2); border-radius: var(--r-md);
+  backdrop-filter: blur(18px); box-shadow: var(--shadow); z-index: 1300;
+}
+.sr-row {
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 9px; border: none; border-radius: 9px;
+  background: none; color: var(--text); text-align: left; cursor: pointer; font-family: Inter, sans-serif;
+}
+.sr-row:hover, .sr-row.on { background: rgba(108,140,255,0.16); }
+.sr-ico {
+  flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 14px;
+  background: rgba(255,255,255,0.06); border: 1px solid var(--stroke-2);
+}
+.sr-txt { flex: 1; min-width: 0; }
+.sr-txt b { display: block; font-size: 12.5px; font-weight: 700; line-height: 1.3; }
+.sr-txt small { display: block; font-size: 10.5px; color: var(--text-2); margin-top: 1px; }
+.sr-pm { flex-shrink: 0; padding: 2px 6px; border-radius: 5px; color: #0b0e14; font: 700 11px "JetBrains Mono", monospace; }
+.sr-empty { padding: 12px; font-size: 12px; color: var(--text-2); }
+@media (max-width: 1240px) and (min-width: 761px) { #chip-readings, #chip-sessions { display: none; } }
 /* Bina kartı: aylık kırılım */
 .bp-months { min-width: 318px; margin-top: 8px; padding-top: 7px; border-top: 1px solid rgba(255,255,255,0.08); }
 .bpm-head { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 4px;
@@ -892,8 +938,26 @@ body {
   .brand { font-size: 14.5px; gap: 9px; }
   .brand small, .topbar .chip { display: none; }
   .brand-logo { width: 30px; height: 30px; font-size: 15px; }
-  .seg-btn { padding: 6px 10px; font-size: 14px; }
+  .seg-btn { padding: 6px 8px; font-size: 14px; }
+  .brand { white-space: nowrap; min-width: 0; }
   .sb-txt { display: none; }
+
+  .search { margin-left: auto; order: 2; }
+  .seg { order: 3; }
+  .search-open {
+    display: grid; place-items: center; width: 38px; height: 38px; cursor: pointer;
+    background: var(--glass); border: 1px solid var(--stroke); border-radius: 11px;
+    font-size: 15px; backdrop-filter: blur(12px);
+  }
+  .search-box { display: none; }
+  .search.open .search-box {
+    display: flex; position: fixed; z-index: 1300;
+    top: calc(env(safe-area-inset-top) + 8px); left: 10px; right: 10px; width: auto; height: 42px;
+    background: var(--glass-2); border-color: rgba(108,140,255,0.6);
+  }
+  .search.open .search-close { visibility: visible; }
+  .search-results { position: fixed; top: calc(env(safe-area-inset-top) + 56px); left: 10px; right: 10px; width: auto; }
+  .bp-months { min-width: 0; }
 
   .tabbar {
     display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 1200;
@@ -974,6 +1038,15 @@ body {
       GTÜ Hava Kalitesi
       <small>Kampüs İzleme Platformu · PurpleAir · Atmotube · CO₂ · CSB</small>
     </div>
+  </div>
+  <div class="search" id="search">
+    <button class="search-open" id="search-open" type="button" aria-label="Bina ara">🔍</button>
+    <div class="search-box">
+      <span class="search-ico">🔍</span>
+      <input id="search-input" type="search" placeholder="Bina ara… (ör. kütüphane)" autocomplete="off" enterkeyhint="search" aria-label="Bina ara">
+      <button class="search-close" id="search-close" type="button" aria-label="Aramayı kapat">✕</button>
+    </div>
+    <div class="search-results" id="search-results" hidden></div>
   </div>
   <div class="topbar-spacer"></div>
   <div class="seg" id="basemap-seg">
@@ -1206,10 +1279,10 @@ body {
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=21"></script>
-<script src="js/api.js?v=21"></script>
-<script src="js/campus.js?v=21"></script>
-<script src="js/app.js?v=21"></script>
-<script src="js/shell.js?v=21"></script>
+<script src="js/colorscale.js?v=22"></script>
+<script src="js/api.js?v=22"></script>
+<script src="js/campus.js?v=22"></script>
+<script src="js/app.js?v=22"></script>
+<script src="js/shell.js?v=22"></script>
 </body>
 </html>
