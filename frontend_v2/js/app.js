@@ -41,7 +41,7 @@ async function openTeamVault(code) {
 function initTeamMode() {
     const btn = document.getElementById("team-btn");
     if (!btn) return;
-    btn.textContent = TEAM_MODE ? "🔓 Ekip görünümü açık · kapat" : "🔒 Ekip görünümü";
+    btn.innerHTML = ico("lock") + (TEAM_MODE ? " Ekip görünümü açık · kapat" : " Ekip görünümü");
     btn.addEventListener("click", async () => {
         if (TEAM_MODE) {
             try { localStorage.removeItem(TEAM_KEY); } catch (_) {}
@@ -191,7 +191,7 @@ function markPAFreshness(d) {
     const b = document.getElementById("pa-badge");
     const ageMin = (Date.now() - new Date(d.recorded_at).getTime()) / 60000;
     if (ageMin > PA_STALE_MIN) {
-        b.innerHTML = "⏻ ÇEVRİMDIŞI";
+        b.innerHTML = "Çevrimdışı";
         b.style.background = "rgba(244,97,94,0.12)";
         b.style.borderColor = "rgba(244,97,94,0.4)";
         b.style.color = "#f4615e";
@@ -209,11 +209,11 @@ function markPAFreshness(d) {
 async function explainPAOffline(d) {
     const cat = document.getElementById("pa-cat");
     const last = `son veri ${timeAgo(d.recorded_at)}`;
-    let msg = `🔌 Sensör veri göndermiyor (${last}) — elektrik/Wi-Fi bağlantısını kontrol edin`;
+    let msg = `Sensör veri göndermiyor (${last}) — elektrik/Wi-Fi bağlantısını kontrol edin`;
     try {
         const st = await API.purpleairStatus();
         if (st && st.success === false) {
-            msg = `⚠️ Sunucu PurpleAir'den veri alamıyor (${last})` + (st.error ? ` — ${st.error}` : "");
+            msg = `Sunucu PurpleAir'den veri alamıyor (${last})` + (st.error ? ` — ${st.error}` : "");
         }
     } catch (_) {}
     cat.textContent = msg;
@@ -265,7 +265,7 @@ function setPABadge(mode, dateLabel) {
         b.innerHTML = `<span class="live-dot"></span>CANLI`;
         b.style.cssText = "";
     } else {
-        b.innerHTML = `⏪ ${dateLabel || "GEÇMİŞ"}`;
+        b.innerHTML = `${ico("clock")} ${dateLabel || "Geçmiş"}`;
         b.style.background = "rgba(245,184,64,0.12)";
         b.style.borderColor = "rgba(245,184,64,0.4)";
         b.style.color = "#f5b840";
@@ -336,15 +336,15 @@ async function loadComparison() {
                 verdict.style.cssText = v.cls === "ok" ? "background:rgba(52,210,123,0.13);color:#34d27b;border:1px solid rgba(52,210,123,0.35)"
                     : v.cls === "bad" ? "background:rgba(244,97,94,0.13);color:#f4615e;border:1px solid rgba(244,97,94,0.35)"
                     : "background:rgba(245,184,64,0.13);color:#f5b840;border:1px solid rgba(245,184,64,0.35)";
-                set("cmp-note", `🔌 Kampüs sensörü çevrimdışı · ${dl(hs.first)} – ${dl(hs.last)} arası ${hs.n} ortak saatin PM₂.₅ ortalaması`);
+                set("cmp-note", `Kampüs sensörü çevrimdışı · ${dl(hs.first)} – ${dl(hs.last)} arası ${hs.n} ortak saatin PM₂.₅ ortalaması`);
                 return;
             }
-            verdict.innerHTML = `🔌 PurpleAir çevrimdışı — son veri: ${trClock(paStaleAt)}`;
+            verdict.innerHTML = `${ico("plug")} PurpleAir çevrimdışı — son veri: ${trClock(paStaleAt)}`;
             verdict.style.cssText = "background:rgba(244,97,94,0.10);color:#f4615e;border:1px solid rgba(244,97,94,0.3)";
             return;
         }
         if (paAvg != null && tz && tz.stale) {
-            verdict.innerHTML = `🕒 Tuzla verisi güncel değil (${timeAgo(trTime(tz.recorded_at))}) — karşılaştırma bekliyor`;
+            verdict.innerHTML = `${ico("clock")} Tuzla verisi güncel değil (${timeAgo(trTime(tz.recorded_at))}) — karşılaştırma bekliyor`;
             verdict.style.cssText = "background:rgba(245,184,64,0.10);color:#f5b840;border:1px solid rgba(245,184,64,0.3)";
             return;
         }
@@ -356,13 +356,13 @@ async function loadComparison() {
         const diff = paAvg - csb;
         const abs = Math.abs(diff).toFixed(1);
         if (diff < -0.5) {
-            verdict.innerHTML = `✅ Kampüs bölgeden <b>${abs} µg/m³ daha temiz</b>`;
+            verdict.innerHTML = `${ico("trending-down")} Kampüs bölgeden <b>${abs} µg/m³ daha temiz</b>`;
             verdict.style.cssText = "background:rgba(52,210,123,0.13);color:#34d27b;border:1px solid rgba(52,210,123,0.35)";
         } else if (diff > 0.5) {
-            verdict.innerHTML = `⚠️ Kampüs bölgeden <b>${abs} µg/m³ daha kirli</b>`;
+            verdict.innerHTML = `${ico("trending-up")} Kampüs bölgeden <b>${abs} µg/m³ daha kirli</b>`;
             verdict.style.cssText = "background:rgba(244,97,94,0.13);color:#f4615e;border:1px solid rgba(244,97,94,0.35)";
         } else {
-            verdict.innerHTML = `≈ Kampüs ve bölge <b>benzer</b> (~${abs} fark)`;
+            verdict.innerHTML = `${ico("equal")} Kampüs ve bölge <b>benzer</b> (~${abs} fark)`;
             verdict.style.cssText = "background:rgba(245,184,64,0.13);color:#f5b840;border:1px solid rgba(245,184,64,0.35)";
         }
     } catch (e) {
@@ -447,7 +447,7 @@ async function loadCSB() {
 
         const badge = document.getElementById("csb-badge");
         const c = d.stale ? "#f4615e" : pm25Color(d.pm2_5);
-        badge.textContent = d.stale ? "🕒 ESKİ VERİ" : pm25Label(d.pm2_5);
+        badge.textContent = d.stale ? "Eski veri" : pm25Label(d.pm2_5);
         badge.style.color = c;
         badge.style.borderColor = c + "55";
         badge.style.background = c + "1f";
@@ -533,9 +533,9 @@ function renderAtmotubeDevices(devices) {
         const hasGps = r && r.lat != null && r.lon != null;
         const far = hasGps && farFrom(r.lat, r.lon);
         const gpsTxt = !hasGps ? "GPS yok"
-            : far ? "📍 uzakta"
-            : online ? "📍 GPS canlı" : "📍 son konum";
-        const info = r ? `${timeAgo(r.recorded_at)} · ${gpsTxt}` : "senkron bekliyor 📶";
+            : far ? "uzakta"
+            : online ? "GPS canlı" : "son konum";
+        const info = r ? `${timeAgo(r.recorded_at)} · ${gpsTxt}` : "senkron bekliyor";
         const tip = r
             ? `Son veri (TR): ${trClock(r.recorded_at)}${hasGps ? " — haritada göster" : ""}`
             : "Cihaz telefondaki Atmotube uygulamasıyla senkronlanınca veri düşer";
@@ -713,7 +713,7 @@ function updateCO2Markers(devices) {
         const svg = `<svg width="40" height="34" viewBox="0 0 40 34">
             <polygon points="20,2 38,32 2,32" fill="${c}" stroke="#fff" stroke-width="2.5"
               stroke-linejoin="round"${recent ? "" : ' stroke-dasharray="4 2.5"'}/>
-            <text x="20" y="28" text-anchor="middle" font-family="JetBrains Mono,monospace"
+            <text x="20" y="28" text-anchor="middle" font-family="Inter,sans-serif"
               font-size="9.5" font-weight="800" fill="#0b0e14">${ppm}</text></svg>`;
         const inner = `<div class="mk-wrap"><div class="co2-marker${recent ? "" : " stale"}">${svg}</div><div class="mini-label">${d.device}</div></div>`;
         const icon = L.divIcon({ className: "", html: inner, iconSize: [60, 52], iconAnchor: [30, 32] });
@@ -913,7 +913,7 @@ async function refreshDots() {
                         <span style="width:20px;height:20px;border-radius:6px;background:${person.color};display:grid;place-items:center;font-size:10px;font-weight:800;color:#0b0e14">${person.initial}</span>
                         <b style="font-size:12.5px">${person.name}</b>
                       </div>
-                      <div style="font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;color:${pm25Color(pt.pm2_5)}">${pt.pm2_5?.toFixed(1) ?? "--"} <span style="font-size:10px;color:#9aa4b8">µg/m³</span></div>
+                      <div style="font-size:20px;font-weight:700;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;color:${pm25Color(pt.pm2_5)}">${pt.pm2_5?.toFixed(1) ?? "--"} <span style="font-size:10px;color:#9aa4b8">µg/m³</span></div>
                       <div style="font-size:11px;color:${pm25Color(pt.pm2_5)};font-weight:600">${pm25Label(pt.pm2_5)}</div>
                       <div style="font-size:10.5px;color:#9aa4b8;margin-top:4px">${pt.recorded_at ? new Date(pt.recorded_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) : ""}</div>
                     </div>`)

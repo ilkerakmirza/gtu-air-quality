@@ -101,7 +101,7 @@ const WHO = (() => {
         </div>`;
     }
 
-    function chip(ok, txt) { return `<div class="wh-status ${ok ? "ok" : "bad"}">${ok ? "✅" : "⚠️"} ${txt}</div>`; }
+    function chip(ok, txt) { return `<div class="wh-status ${ok ? "ok" : "bad"}">${ico(ok ? "circle-check" : "triangle-alert")} ${txt}</div>`; }
 
     function heroHtml(now24, s) {
         const g = G.pm2_5;
@@ -323,7 +323,7 @@ const WHO = (() => {
         </tbody></table>
         <p>24 saatlik değer yılda 3–4 günden fazla aşılmamalıdır. Kılavuz değere hemen ulaşılamayan yerler için kademeli
         <b>ara hedefler</b> (AH-1…AH-4) tanımlanmıştır: PM₂.₅ günlük 75 → 50 → 37,5 → 25, yıllık 35 → 25 → 15 → 10 µg/m³.</p>
-        <p class="who-note">ℹ️ Değerler kampüs çatısındaki PurpleAir sensörünün ham (düzeltilmemiş) ölçümleridir; bu tür optik sensörler
+        <p class="who-note">Değerler kampüs çatısındaki PurpleAir sensörünün ham (düzeltilmemiş) ölçümleridir; bu tür optik sensörler
         nemli havada PM₂.₅'i olduğundan yüksek gösterebilir. Ölçümler kesintilidir: günlük değer, o gün ölçülen saatlerin ortalamasıdır ve
         günün tamamını temsil etmeyebilir. Yıllık kılavuzla karşılaştırma tam bir yıllık veri ister; dönem ortalamaları gösterge niteliğindedir.</p>
     </div>`;
@@ -352,7 +352,7 @@ const WHO = (() => {
         const last = all[all.length - 1].k;
         const ageDays = Math.floor((Date.now() - new Date(last + "T12:00:00")) / 86400e3);
         if (ageDays < 2) return "";
-        return `<div class="who-banner">🔌 PurpleAir sensöründen <b>${longDay(last)}</b>'dan beri veri gelmiyor.
+        return `<div class="who-banner">${ico("plug")}PurpleAir sensöründen <b>${longDay(last)}</b>'dan beri veri gelmiyor.
             Aşağıdaki değerlendirme o tarihe kadarki ölçümlere dayanıyor.</div>`;
     }
 

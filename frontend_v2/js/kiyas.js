@@ -53,9 +53,9 @@ const Kiyas = (() => {
     function verdict(s) {
         if (!s) return null;
         const a = Math.abs(s.pct).toFixed(0);
-        if (s.pct <= -5) return { cls: "ok", icon: "🌿", txt: `Kampüs, Tuzla'dan ortalama %${a} daha temiz` };
-        if (s.pct >= 5) return { cls: "bad", icon: "🏭", txt: `Kampüs, Tuzla'dan ortalama %${a} daha kirli` };
-        return { cls: "", icon: "≈", txt: "Kampüs ve Tuzla benzer seviyede" };
+        if (s.pct <= -5) return { cls: "ok", icon: ico("trending-down"), txt: `Kampüs, Tuzla'dan ortalama %${a} daha temiz` };
+        if (s.pct >= 5) return { cls: "bad", icon: ico("trending-up"), txt: `Kampüs, Tuzla'dan ortalama %${a} daha kirli` };
+        return { cls: "", icon: ico("equal"), txt: "Kampüs ve Tuzla benzer seviyede" };
     }
 
     function daily(pairs) {

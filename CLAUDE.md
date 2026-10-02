@@ -48,6 +48,10 @@ Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök diz
   "Hakkında · Yöntem · Gizlilik" panelini güncelle.
 - **Bileşen tutarlılığı:** mevcut bileşenleri yeniden kullan (panel/`news-dock`, `oz-card`, `wt` kutucukları, `pd-chip`,
   `oz-line`, `who-legend`, `who-cap`). Yeni renk ekleme; grafik renklerini dataviz doğrulayıcısından geçir.
+- **Görsel dil:** GTÜ lacivertine dayalı koyu yüzeyler (`:root` belirteçleri), tek vurgu rengi (`--accent`), degrade/parlama yok.
+  Panel ve bölüm başlıkları serif (`var(--serif)`, Source Serif 4), metin ve rakamlar Inter (`var(--num)`, tabular rakamlar).
+  Arayüz ikonları emoji değil, `js/icons.js` (Lucide, ISC) çizgi ikonlarıdır: HTML'de `<svg class="i"><use href="#i-ad"></use></svg>`,
+  JS'te `ico("ad")`; yeni ikon gerekirse `ICONS` listesine Lucide'dan ekle. Harita üzerindeki bina etiketi simgeleri (🎓, 🔬…) bilinçli olarak emojidir.
 - Kısa süreli saha ölçümleri WHO 24 saatlik değeriyle karşılaştırılmaz (kampüs saha ortalamasıyla karşılaştırılır).
 
 ## İş bitince
@@ -92,8 +96,8 @@ Renkli (zengin) duyuru — `renk` ya da `bolumler` varsa renkli başlık alanıy
 - Telefon düzeni `index.html` içindeki `@media (max-width: 760px)` bloğunda; masaüstü düzenini bozmamaya dikkat et.
 
 ## Proje yapısı
-- `frontend_v2/` — yayındaki arayüz (`index.html`, `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `js/shell.js`, `js/who.js` (WHO durumu sekmesi), `js/ozet.js` (Özet: günlük ve aylık özet, açılış ekranı), `js/kiyas.js` (kampüs–Tuzla aynı saat karşılaştırması), `data/campus.geojson`, `data/duyurular.json`, `data/tuzla_saatlik.json` (Tuzla saatlik geçmişi))
-- `frontend_v2/vendor/` — yerel Leaflet, Leaflet.heat, Chart.js ve yazı tipleri (lisanslar `vendor/LICENSES/`)
+- `frontend_v2/` — yayındaki arayüz (`index.html`, `js/icons.js` (ikon seti), `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `js/shell.js`, `js/who.js` (WHO durumu sekmesi), `js/ozet.js` (Özet: günlük ve aylık özet, açılış ekranı), `js/kiyas.js` (kampüs–Tuzla aynı saat karşılaştırması), `data/campus.geojson`, `data/duyurular.json`, `data/tuzla_saatlik.json` (Tuzla saatlik geçmişi))
+- `frontend_v2/vendor/` — yerel Leaflet, Leaflet.heat, Chart.js ve yazı tipleri (Inter, Source Serif 4) (lisanslar `vendor/LICENSES/`)
 - `scripts/` — `ekip_kasasi.js` (ekip görünümü ad kasası), `tuzla_gecmis.py` (İBB'den Tuzla PM₁₀ geçmişi, her yerden çalışır), `csb_gecmis.py` (ÇŞB'den Tuzla PM₂.₅ geçmişi, yalnızca Türkiye'den)
 - `frontend/` — önceki harita arayüzü (`map.html`)
 - `backend/` — Python sunucu ve veri toplayıcılar (PurpleAir, Atmotube, Tuya CO2, ÇSB, İBB); arayüzün kullandığı API: https://gtu-air-quality.onrender.com (`frontend_v2/js/api.js`)
