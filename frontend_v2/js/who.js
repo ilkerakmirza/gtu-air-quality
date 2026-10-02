@@ -281,33 +281,38 @@ const WHO = (() => {
     }
 
     // Bina bazında: saha ölçümlerinin bina ortalamaları ve WHO günlük değeri
+    // Binalar: saha ölçümleri kısa süreli (yürüyüş) olduğundan WHO'nun 24 saatlik değeriyle karşılaştırılmaz;
+    // her bina aynı dönemdeki tüm saha ölçümlerinin ortalamasıyla (kampüs saha ortalaması) karşılaştırılır.
     function buildingsHtml() {
-        const head = `<div class="nsec-title">Bina bazında · saha ölçümleri (Atmotube)</div>`;
+        const head = `<div class="nsec-title">Binalar · saha ölçümleri · kampüs ortalamasına göre</div>`;
         if (field == null) return head + `<div class="who-cap">Saha ölçümleri yükleniyor…</div>`;
-        const list = typeof Campus !== "undefined" ? Campus.buildingStats(field.filter(pointInPeriod)) : null;
+        const pts = field.filter(pointInPeriod);
+        const list = typeof Campus !== "undefined" ? Campus.buildingStats(pts) : null;
         if (list == null) return head + `<div class="who-cap">Kampüs haritası yükleniyor…</div>`;
         if (!list.length) return head + `<div class="who-cap">${periodLabel()} döneminde bina içine düşen saha ölçümü yok.</div>`;
-        const g = G.pm2_5;
+        const ref = mean(pts.map(p => +p.pm2_5));
         list.sort((a, b) => b.avg - a.avg);
-        const over = list.filter(b => b.avg > g.day).length;
-        const max = Math.max(g.day * 1.6, list[0].avg) * 1.05;
+        const over = list.filter(b => b.avg > ref).length;
+        const max = Math.max(ref * 1.6, list[0].avg) * 1.05;
         const pct = v => (v / max * 100).toFixed(1);
+        const diff = b => { const d = (b.avg - ref) / ref * 100; return Math.abs(d) < 5 ? "≈" : `${d > 0 ? "+" : "−"}%${Math.abs(d).toFixed(0)}`; };
         const rowHtml = b => `
             <button type="button" class="wb-row${b.few ? " few" : ""}" data-gk="${b.gk.replace(/"/g, "&quot;")}" title="Haritada göster">
-              <span class="wb-name">${b.icon} ${b.name}<small>${b.n.toLocaleString("tr-TR")} ölçüm${b.few ? " · az ölçüm" : ""} · ${b.region}</small></span>
-              <span class="wb-bar"><i style="width:${pct(b.avg)}%;background:${b.avg > g.day ? BAD : BAR}"></i><em style="left:${pct(g.day)}%"></em></span>
-              <span class="wb-val ${b.avg > g.day ? "bad" : ""}">${f1(b.avg)}${b.avg > g.day ? " ⚠" : ""}</span>
+              <span class="wb-name">${b.icon} ${b.name}<small>${b.n.toLocaleString("tr-TR")} ölçüm · ${b.durText} · ${b.dur.days} gün${b.few ? " · az ölçüm" : ""}</small></span>
+              <span class="wb-bar"><i style="width:${pct(b.avg)}%;background:${b.avg > ref ? BAD : BAR}"></i><em style="left:${pct(ref)}%"></em></span>
+              <span class="wb-val ${b.avg > ref ? "bad" : ""}">${f1(b.avg)}<small>${diff(b)}</small></span>
             </button>`;
         const TOP = 10;
         const rowsHtml = list.slice(0, TOP).map(rowHtml).join("") + (list.length > TOP
             ? `<details class="wb-more"><summary>Tüm binaları göster (${list.length})</summary>${list.slice(TOP).map(rowHtml).join("")}</details>` : "");
         return head + `<div class="wh-sub" style="margin:0 0 8px">${periodLabel()}: ölçüm yapılan <b>${list.length}</b> binadan
-              <b>${over}</b> tanesinde ortalama PM₂.₅, WHO günlük değeri olan ${g.day} µg/m³'ün üzerinde.</div>
+              <b>${over}</b> tanesinde ortalama PM₂.₅, kampüs saha ortalamasının (<b>${f1(ref)}</b> µg/m³) üstünde.</div>
             <div class="wb-list">${rowsHtml}</div>
-            <div class="who-legend"><span><i style="background:${BAR}"></i>WHO altında</span><span><i style="background:${BAD}"></i>WHO üstünde</span>
-              <span><i class="tick"></i>WHO ${g.day}</span><span>Soluk: 30'dan az ölçüm</span></div>
-            <div class="who-cap">Saha ölçümleri yürürken alınan kısa süreli değerlerdir; WHO değeri ise 24 saatlik ortalama içindir.
-              Bu karşılaştırma binaların birbirine göre durumunu gösterir, gösterge niteliğindedir. Binaya dokununca haritada açılır.</div>`;
+            <div class="who-legend"><span><i style="background:${BAR}"></i>Kampüs ortalamasının altında</span><span><i style="background:${BAD}"></i>Üstünde</span>
+              <span><i class="tick"></i>Kampüs saha ortalaması</span><span>Soluk: 30'dan az ölçüm</span></div>
+            <div class="who-cap">Saha ölçümleri yürürken alınan kısa süreli değerlerdir; WHO kılavuz değeri ise 24 saatlik ortalama için
+              tanımlandığından binalar WHO ile değil, aynı dönemdeki tüm saha ölçümlerinin ortalamasıyla karşılaştırılır. Süre, binada
+              ölçüm yapılan toplam süredir. Binaya dokununca haritada açılır.</div>`;
     }
 
     const INFO = `<div class="who-info">
@@ -371,7 +376,7 @@ const WHO = (() => {
             el.addEventListener("click", () => { period = el.dataset.p; render(); }));
         $("who-body").querySelectorAll(".wb-row").forEach(el => el.addEventListener("click", () => {
             document.body.classList.remove("who-open");         // masaüstünde panel haritayı kapatmasın
-            Campus.focusByKey(el.dataset.gk);                    // telefonda harita sekmesine kendiliğinden geçer
+            Campus.focusByKey(el.dataset.gk, field.filter(pointInPeriod));   // kart listedeki dönemin verisiyle açılır
         }));
         drawChart(days);
         fillKiyas();

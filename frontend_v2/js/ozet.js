@@ -1,5 +1,5 @@
 // Özet sekmesi — kampüsteki herkes için (öğrenci, akademik ve idari personel) sade bir bakış:
-//   Günlük özet: şu anki hava, ne yapmalı, WHO'ya göre bugün, sensörlerin durumu
+//   Günlük özet: şu anki hava, ne yapmalı, WHO kılavuz değerlerine göre bugün, sensörlerin durumu
 //   Aylık özet: ay ortalaması, WHO aşım günleri, en temiz / en kirli binalar, önceki aya göre değişim
 // Bağımlılıklar: api.js, colorscale.js, who.js (ortak veri), campus.js, app.js (getTuzla, trTime, timeAgo)
 
@@ -18,16 +18,16 @@ const Ozet = (() => {
 
     // Sade dille ne yapmalı (PM₂.₅ kategorilerine göre; hassas gruplar: astım, kalp-akciğer hastalığı, yaşlılar, gebeler)
     const ADVICE = {
-        "İyi": { icon: "😊", all: "Hava temiz. Açık havada ders arası, yürüyüş ve spor için uygun.",
-                 sens: "Hassas gruplar için de sorun yok." },
-        "Orta": { icon: "🙂", all: "Çoğu kişi için sorun yok; açık hava etkinliklerine devam edebilirsiniz.",
-                  sens: "Astımı ya da kalp-akciğer rahatsızlığı olanlar uzun ve yoğun dış etkinliği kısaltabilir." },
-        "Hassas gruplar için sağlıksız": { icon: "😐", all: "Uzun süreli yoğun dış etkinliği azaltın; ara verin.",
-                  sens: "Hassas gruplar dışarıda yoğun efordan kaçınsın, belirti olursa kapalı alana geçsin." },
-        "Sağlıksız": { icon: "😷", all: "Dış etkinlikleri kısaltın; sporu mümkünse kapalı alanda yapın. Pencereleri kapalı tutun.",
-                  sens: "Hassas gruplar dışarıda kalmasın; dışarı çıkmak gerekirse FFP2 maske kullanılabilir." },
-        "Tehlikeli": { icon: "🚫", all: "Dışarıda bulunmaktan kaçının; kapalı alanda kalın, pencereleri kapatın.",
-                  sens: "Hassas gruplar kesinlikle dışarı çıkmasın; şikâyet olursa sağlık birimine başvurun." },
+        "İyi": { icon: "😊", all: "Açık havada yürüyüş ve spor için uygun.",
+                 sens: "Hava kalitesi iyi; hassas gruplar normal açık hava etkinliklerine devam edebilir." },
+        "Orta": { icon: "🙂", all: "Hava kalitesi kabul edilebilir düzeyde.",
+                  sens: "Hassas gruplar uzun süreli ve yoğun açık hava etkinliklerini sınırlamayı düşünebilir." },
+        "Hassas gruplar için sağlıksız": { icon: "😐", all: "Uzun süreli ve yoğun açık hava etkinliklerinin azaltılması önerilir.",
+                  sens: "Hassas grupların yoğun açık hava etkinliklerinden kaçınması, belirti görülürse kapalı alana geçmesi önerilir." },
+        "Sağlıksız": { icon: "😷", all: "Açık hava etkinliklerinin kısaltılması, sporun mümkünse kapalı alanda yapılması önerilir.",
+                  sens: "Hassas grupların açık havada uzun süre kalmaması önerilir." },
+        "Tehlikeli": { icon: "🚫", all: "Açık havada bulunmaktan kaçınılması ve pencerelerin kapalı tutulması önerilir.",
+                  sens: "Hassas grupların dışarı çıkmaması, şikâyet olursa sağlık birimine başvurması önerilir." },
     };
 
     // ── Günlük özet ──────────────────────────────────────────────────
@@ -190,7 +190,7 @@ const Ozet = (() => {
                 html += `<div class="who-cap" style="margin-top:10px">Bu ay bina karşılaştırması için yeterli saha ölçümü yok.</div>`;
             }
         }
-        html += `<button type="button" class="ic-btn oz-more" id="oz-to-who">🩺 ${monthName(month)} için ayrıntılı WHO analizi</button>`;
+        html += `<button type="button" class="ic-btn oz-more" id="oz-to-who">🩺 ${monthName(month)}: WHO kılavuz değerleriyle karşılaştırmalı değerlendirme</button>`;
         return html;
     }
 
@@ -202,7 +202,8 @@ const Ozet = (() => {
         }));
         body.querySelectorAll(".oz-bld").forEach(b => b.addEventListener("click", () => {
             document.body.classList.remove("ozet-open");
-            Campus.focusByKey(b.dataset.gk);
+            const pts = (field || []).filter(p => { const t = new Date(p.recorded_at); return !isNaN(t) && dayKey.format(t).startsWith(month); });
+            Campus.focusByKey(b.dataset.gk, pts);   // kart o ayın saha ölçümleriyle açılır
         }));
         const toWho = $("oz-to-who");
         if (toWho) toWho.addEventListener("click", () => { WHO.setPeriod(month); Shell.openPanel("who"); });

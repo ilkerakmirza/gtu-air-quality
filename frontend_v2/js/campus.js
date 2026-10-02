@@ -24,7 +24,7 @@ const Campus = (() => {
     const UNIT = {
         bolum:     { icon: "🎓", label: "Bölüm / Fakülte" },
         arastirma: { icon: "🔬", label: "Araştırma / Lab" },
-        sosyal:    { icon: "☕", label: "Sosyal / Yemek / Yurt" },
+        sosyal:    { icon: "☕", label: "Sosyal tesis" },
         spor:      { icon: "⚽", label: "Spor / Açık alan" },
         ozel:      { icon: "🏛️", label: "İdari / Hizmet" },
         giris:     { icon: "🚪", label: "Giriş" },
@@ -233,10 +233,11 @@ const Campus = (() => {
     }
 
     // ── seçili binayı vurgula ────────────────────────────────────────
-    function openBuilding(e, latlng) {
+    // view/pts: kartı seçili saha ölçümleri yerine verilen noktalarla (ör. WHO/Özet listesinin dönemi) göstermek için
+    function openBuilding(e, latlng, view = e, pts = lastPoints) {
         const name = e.feature.properties.name || "İsimsiz bina";
         const popup = L.popup(popupOpts()).setLatLng(latlng || e.leafletLayer.getBounds().getCenter())
-            .setContent(popupHtml(e, name));
+            .setContent(popupHtml(view, name, pts));
         popup.openOn(map);            // önce eski kart kapanır (ve onun vurgusu kalkar)
         selPopup = popup;
         selectedGk = e.gk;
@@ -250,11 +251,11 @@ const Campus = (() => {
         features.forEach(applyStyle);
         cullLabels();
     }
-    function focusBuilding(e) {
+    function focusBuilding(e, view, pts) {
         map.fitBounds(e.leafletLayer.getBounds(), { maxZoom: 18, ...(isPhone()
             ? { paddingTopLeft: [20, 120], paddingBottomRight: [20, 140] }
             : { paddingTopLeft: [380, 120], paddingBottomRight: [380, 80] }) });
-        map.once("moveend", () => openBuilding(e));
+        map.once("moveend", () => openBuilding(e, null, view, pts));
     }
 
     // ── bina arama ───────────────────────────────────────────────────
@@ -447,16 +448,36 @@ const Campus = (() => {
             `<div><span>${k === "Zemin" ? "Zemin" : k + ". kat"}</span>${list.join(" · ")}</div>`).join("")}</div>`;
     }
 
-    function popupHtml(e, name) {
+    // Ölçüm süresi, seçili saha ölçümlerinin genel ortalamasına göre konum ve son ölçüm günü.
+    // Saha ölçümleri kısa süreli olduğundan WHO'nun 24 saatlik değeriyle değil, kendi içinde karşılaştırılır.
+    function contextHtml(e, s, pts) {
+        const lines = [];
+        if (e.dur) lines.push(`⏱ Binada toplam ${fmtDur(e.dur.min)} ölçüm · ${e.dur.days} farklı gün`);
+        const all = pts.filter(p => p.pm2_5 != null).map(p => p.pm2_5);
+        if (all.length >= 30) {
+            const ref = all.reduce((a, b) => a + b, 0) / all.length, pct = (s.avg - ref) / ref * 100;
+            lines.push(Math.abs(pct) < 5 ? `≈ Kampüs saha ortalamasıyla benzer (${ref.toFixed(1)})`
+                : `${pct > 0 ? "▲" : "▼"} Kampüs saha ortalamasından (${ref.toFixed(1)}) %${Math.abs(pct).toFixed(0)} ${pct > 0 ? "yüksek" : "düşük"}`);
+        }
+        if (e.visit) {
+            const v = e.visit, pct = (v.avg - v.prevAvg) / v.prevAvg * 100;
+            const dl = new Date(v.day + "T12:00:00").toLocaleDateString("tr-TR", { day: "numeric", month: "long" });
+            lines.push(`📅 Son ölçüm (${dl}): ${v.avg.toFixed(1)} — binanın önceki ${v.prevDays} gündeki ortalamasından (${v.prevAvg.toFixed(1)}) `
+                + (Math.abs(pct) < 5 ? "farksız" : `%${Math.abs(pct).toFixed(0)} ${pct > 0 ? "yüksek" : "düşük"}`));
+        }
+        return lines.length ? `<div class="bp-ctx">${lines.map(l => `<div>${l}</div>`).join("")}</div>` : "";
+    }
+
+    function popupHtml(e, name, pts = lastPoints) {
         const region = unitLine(e);
         const s = e.stats;
         let body;
         if (!s) {
-            body = `<div class="bp-empty">${lastPoints.length
+            body = `<div class="bp-empty">${pts.length
                 ? `Seçili ölçümlerden bu binaya düşen ${e.rawN ? e.rawN + " (yetersiz)" : "yok"}.`
                 : "Bina bazlı PM₂.₅ için sağ panelden saha ölçümü seçin."}</div>`;
         } else {
-            const who = Object.entries(s.byPerson).sort((a, b) => b[1].n - a[1].n)
+            const who = Object.entries(s.byPerson || {}).filter(([p]) => p !== "—").sort((a, b) => b[1].n - a[1].n)
                 .map(([p, v]) => `<span class="bp-chip">${p} · ${v.n} · ${(v.sum / v.n).toFixed(1)}</span>`).join("");
             body = `
               <div class="bp-grid">
@@ -464,7 +485,8 @@ const Campus = (() => {
                 <div><span>Medyan</span><b style="color:${pm25Color(s.med)}">${s.med.toFixed(1)}</b></div>
                 <div><span>Maks.</span><b style="color:${pm25Color(s.max)}">${s.max.toFixed(1)}</b></div>
               </div>
-              <div class="bp-cat" style="color:${pm25Color(s.avg)}">Genel · ${pm25Label(s.avg)} · ${s.n.toLocaleString("tr-TR")} ölçümün ortalaması (µg/m³)</div>
+              <div class="bp-cat">Genel ortalama · ${s.n.toLocaleString("tr-TR")} ölçüm (µg/m³, kısa süreli saha ölçümü)</div>
+              ${contextHtml(e, s, pts)}
               <div class="bp-who">${who}</div>${monthsHtml(e)}`;
         }
         return `<div class="bld-pop"><div class="bp-title">${UNIT[e.unit].icon} ${name}</div><div class="bp-sub">${region}</div>${roomsHtml(e)}${body}</div>`;
@@ -496,7 +518,7 @@ const Campus = (() => {
         buildings.forEach((b, i) => {
             const p = b.feature.properties;
             b.gk = p.name ? `${p.region}|${p.name}` : `#${i}`;
-            if (!groups.has(b.gk)) groups.set(b.gk, { vals: [], by: {}, m: {}, members: [] });
+            if (!groups.has(b.gk)) groups.set(b.gk, { vals: [], by: {}, m: {}, d: {}, ts: [], members: [] });
             groups.get(b.gk).members.push(b);
         });
         for (const p of points) {
@@ -509,9 +531,31 @@ const Campus = (() => {
             (g.by[who] ||= { n: 0, sum: 0 }); g.by[who].n++; g.by[who].sum += p.pm2_5;
             const ym = monthOf(p);
             if (ym) (g.m[ym] ||= []).push(p.pm2_5);
+            const t = p.recorded_at ? new Date(p.recorded_at) : null;
+            if (t && !isNaN(t)) { g.ts.push(+t); (g.d[dayFmt.format(t)] ||= []).push(p.pm2_5); }
         }
         return groups;
     }
+
+    // Binada geçen ölçüm süresi: ardışık ölçümler arası ≤5 dk boşluklar toplanır (yürüyüşte binada kalınan süre)
+    const dayFmt = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit" });
+    function durationOf(g) {
+        const ts = [...g.ts].sort((a, b) => a - b);
+        let ms = 0;
+        for (let i = 1; i < ts.length; i++) { const gap = ts[i] - ts[i - 1]; if (gap <= 5 * 60e3) ms += gap; }
+        return { min: Math.round(ms / 60e3), days: Object.keys(g.d).length };
+    }
+    // Son ölçüm günü ile binanın o güne kadarki (önceki günler) ortalaması
+    function lastVisitOf(g) {
+        const days = Object.keys(g.d).sort();
+        if (days.length < 2) return null;
+        const last = days[days.length - 1];
+        const prev = days.slice(0, -1).flatMap(k => g.d[k]);
+        if (g.d[last].length < MIN_PTS || prev.length < MIN_PTS) return null;
+        const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
+        return { day: last, avg: avg(g.d[last]), prevAvg: avg(prev), prevDays: days.length - 1 };
+    }
+    const fmtDur = m => m < 1 ? "1 dk'dan kısa" : m < 60 ? `~${m} dk` : `~${Math.floor(m / 60)} sa ${m % 60} dk`;
 
     // Haritayı değiştirmeden bina istatistikleri (WHO sekmesi için): en az MIN_PTS ölçümü olan binalar
     function buildingStats(points) {
@@ -521,13 +565,28 @@ const Campus = (() => {
             if (g.vals.length < MIN_PTS) continue;
             const e = g.members[0], p = e.feature.properties;
             out.push({ gk, name: p.name || "İsimsiz bina", icon: UNIT[e.unit].icon, unit: UNIT[e.unit].label,
-                       region: REGION_LABEL[p.region] || "", ...statsOf(g.vals, g.by), few: g.vals.length < FEW });
+                       region: REGION_LABEL[p.region] || "", ...statsOf(g.vals, g.by), few: g.vals.length < FEW,
+                       dur: durationOf(g), durText: fmtDur(durationOf(g).min) });
         }
         return out;
     }
-    function focusByKey(gk) {
+    // pts verilirse kart o noktalardan hesaplanır (Saha sekmesinde seçim yapılmamış olsa da dolu gelir)
+    function focusByKey(gk, pts) {
         const e = features.find(f => f.cat === "bina" && f.gk === gk);
-        if (e) focusBuilding(e);
+        if (!e) return;
+        if (!pts) { focusBuilding(e); return; }
+        const g = groupPoints(pts).get(gk);
+        focusBuilding(e, g ? { ...e, ...groupSummary(g) } : e, pts);
+    }
+
+    function groupSummary(g) {
+        let stats = null, monthly = [];
+        if (g.vals.length >= MIN_PTS) {
+            stats = statsOf(g.vals, g.by);
+            monthly = Object.entries(g.m).filter(([, v]) => v.length >= MIN_PTS)
+                .map(([ym, v]) => ({ ym, ...statsOf(v) })).sort((x, y) => x.ym.localeCompare(y.ym));
+        }
+        return { stats, monthly, rawN: g.vals.length, dur: stats ? durationOf(g) : null, visit: stats ? lastVisitOf(g) : null };
     }
 
     function colorByPoints(points) {
@@ -536,14 +595,9 @@ const Campus = (() => {
         const groups = groupPoints(lastPoints);
         const mset = new Set();
         for (const g of groups.values()) {
-            let stats = null, monthly = [];
-            if (g.vals.length >= MIN_PTS) {
-                stats = statsOf(g.vals, g.by);
-                monthly = Object.entries(g.m).filter(([, v]) => v.length >= MIN_PTS)
-                    .map(([ym, v]) => ({ ym, ...statsOf(v) })).sort((x, y) => x.ym.localeCompare(y.ym));
-                monthly.forEach(m => mset.add(m.ym));
-            }
-            for (const b of g.members) { b.stats = stats; b.monthly = monthly; b.rawN = g.vals.length; }
+            const sum = groupSummary(g);
+            sum.monthly.forEach(m => mset.add(m.ym));
+            for (const b of g.members) Object.assign(b, sum);
         }
         months = [...mset].sort();
         if (period !== "all" && !months.includes(period)) period = "all";
