@@ -32,11 +32,15 @@ def session():
 def fetch(s, token, a, z):
     payload = {
         "__RequestVerificationToken": token, "StationType": "1", "StationIds": csb.STATION_ID,
-        "Parameters": "PM25,PM10", "DataPeriods": "8",   # 8 = saatlik
+        "Parameters": ["PM25", "PM10"], "DataPeriods": "8",   # 8 = saatlik; virgüllü "PM25,PM10" boş döner
+
         "StartDateTime": a.strftime("%d.%m.%Y") + " 00:00", "EndDateTime": z.strftime("%d.%m.%Y") + " 23:00",
     }
     r = s.post(csb.DATA, data=payload, timeout=90)
-    return ((r.json().get("Object") or {}).get("Data")) or []
+    j = r.json()
+    if not j.get("Result"):
+        raise RuntimeError(f"ÇŞB isteği reddetti ({a} → {z}): {(j.get('FeedBack') or {}).get('message')}")
+    return ((j.get("Object") or {}).get("Data")) or []
 
 
 def main():
@@ -51,7 +55,7 @@ def main():
         z = min(d + dt.timedelta(days=9), end)
         for r in fetch(s, token, d, z):
             t = str(r.get("ReadTime") or "").replace(" ", "T")[:16]   # Türkiye saati
-            if not t:
+            if not t or (r.get("PM25") is None and r.get("PM10") is None):   # henüz ölçülmemiş saatler
                 continue
             row = rows.setdefault(t, {"t": t, "pm2_5": None, "pm10": None})
             if r.get("PM25") is not None:
@@ -63,7 +67,7 @@ def main():
         time.sleep(1)
     doc["veri"] = sorted(rows.values(), key=lambda r: r["t"])
     doc["kaynak"] = "PM2.5: ÇŞB (sim.csb.gov.tr) · PM10: İBB Açık Veri / ÇŞB"
-    doc["guncelleme"] = dt.datetime.utcnow().isoformat(timespec="minutes") + "Z"
+    doc["guncelleme"] = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(doc, f, ensure_ascii=False, separators=(",", ":"))
     n = sum(r["pm2_5"] is not None for r in doc["veri"])
