@@ -6,7 +6,7 @@
 const Ozet = (() => {
     const PA_FRESH_MIN = 120;
     let month = null, busy = false, loadedAt = 0;
-    let hist = [], field = null, now = {};
+    let hist = [], field = null, now = {}, kiyas = null;
 
     const $ = id => document.getElementById(id);
     const f1 = v => v.toLocaleString("tr-TR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -119,6 +119,16 @@ const Ozet = (() => {
         };
     }
 
+    // Bu ay kampüs ile Tuzla aynı saatlerde
+    function regionLine() {
+        if (!kiyas || !kiyas.regionHours) return "";
+        const s = Kiyas.summary(kiyas.pairs.filter(x => x.ym === month));
+        const v = Kiyas.verdict(s);
+        if (!v) return "";
+        return `<div class="oz-region">${v.icon} Aynı saatlerde ${v.txt.charAt(0).toLowerCase() + v.txt.slice(1)}
+            <small>(kampüs ${f1(s.c)} · Tuzla ${f1(s.r)} · ${s.n} saat)</small></div>`;
+    }
+
     function monthlyHtml() {
         const days = WHO.dailyMeans(hist, "pm2_5");
         const months = monthsAvailable(days);
@@ -147,7 +157,7 @@ const Ozet = (() => {
             html += `<div class="oz-card">
                 <div class="wh-k">Kampüs ortalaması · PM₂.₅ · PurpleAir</div>
                 <div class="oz-val"><b style="color:${pm25Color(s.mean)}">${f1(s.mean)}</b><span>µg/m³ · ${pm25Label(s.mean)}</span></div>
-                ${trend}
+                ${trend}${regionLine()}
                 <div class="oz-tiles">
                   <div class="${s.exceed ? "bad" : "ok"}"><span>WHO günlük değeri (${g.day}) aşılan gün</span><b>${s.exceed} / ${s.usable.length}</b></div>
                   <div class="${ok ? "ok" : "bad"}"><span>WHO yıllık değerine (${g.year}) göre</span><b>${f1(s.mean / g.year)} kat</b></div>
@@ -208,6 +218,7 @@ const Ozet = (() => {
             render();
             loadedAt = Date.now();
             if (field == null) WHO.fieldPoints().then(f => { field = f; render(); }).catch(() => { field = []; render(); });
+            if (kiyas == null && typeof Kiyas !== "undefined") Kiyas.data().then(k => { kiyas = k; render(); }).catch(() => {});
         } finally { busy = false; }
     }
 

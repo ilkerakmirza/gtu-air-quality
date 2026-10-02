@@ -19,6 +19,11 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
 - **Tuzla resmî ÇŞB toplayıcısı Haziran 2026'dan beri çalışmıyor** (yerel bilgisayardaki zamanlanmış görev);
   şimdilik İBB canlı verisi kullanılıyor.
 - **CO₂ sensörlerinden 21 Temmuz 2026'dan beri veri yok** (Tuya).
+- **Tuzla PM₂.₅ geçmişi (kampüs–bölge karşılaştırması için):** İBB açık verisi Tuzla'nın PM₂.₅ geçmişini vermiyor,
+  ÇŞB sitesi yalnızca Türkiye'den erişilebiliyor. **Masaüstü oturumunda** (kullanıcının Türkiye'deki bilgisayarı) çalıştır:
+  `pip install requests && python scripts/csb_gecmis.py 2026-04-01`, sonra `frontend_v2/data/tuzla_saatlik.json`'u commit'leyip
+  `main`'e push et. Karşılaştırma ekranları (WHO sekmesi, Özet aylık, Canlı "Kampüs vs Bölge") kendiliğinden dolar.
+  Kullanıcı yeni PurpleAir verisi ekleyince aynı komutu güncel tarih aralığıyla tekrar çalıştır.
 - **Adsız 20 bina:** ekip numaralı haritadan eşleştirince `campus.geojson`'a adları işle.
 
 ## Gizlilik kuralı
@@ -71,7 +76,8 @@ Renkli (zengin) duyuru — `renk` ya da `bolumler` varsa renkli başlık alanıy
 - Telefon düzeni `index.html` içindeki `@media (max-width: 760px)` bloğunda; masaüstü düzenini bozmamaya dikkat et.
 
 ## Proje yapısı
-- `frontend_v2/` — yayındaki arayüz (`index.html`, `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `js/shell.js`, `js/who.js` (WHO durumu sekmesi), `js/ozet.js` (Özet: günlük ve aylık özet, açılış ekranı), `data/campus.geojson`, `data/duyurular.json`)
+- `frontend_v2/` — yayındaki arayüz (`index.html`, `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `js/shell.js`, `js/who.js` (WHO durumu sekmesi), `js/ozet.js` (Özet: günlük ve aylık özet, açılış ekranı), `js/kiyas.js` (kampüs–Tuzla aynı saat karşılaştırması), `data/campus.geojson`, `data/duyurular.json`, `data/tuzla_saatlik.json` (Tuzla saatlik geçmişi))
+- `scripts/` — `tuzla_gecmis.py` (İBB'den Tuzla PM₁₀ geçmişi, her yerden çalışır), `csb_gecmis.py` (ÇŞB'den Tuzla PM₂.₅ geçmişi, yalnızca Türkiye'den)
 - `frontend/` — önceki harita arayüzü (`map.html`)
 - `backend/` — Python sunucu ve veri toplayıcılar (PurpleAir, Atmotube, Tuya CO2, ÇSB, İBB); arayüzün kullandığı API: https://gtu-air-quality.onrender.com (`frontend_v2/js/api.js`)
 - Yerelde önizleme: `python -m http.server 8765 --directory frontend_v2` → http://localhost:8765

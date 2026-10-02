@@ -16,7 +16,7 @@ const WHO = (() => {
     };
     const FULL_H = 18, MIN_H = 6, HISTORY_FROM = "2026-01-01T00:00:00Z";
     const BAD = "#f4615e", BAR = "#6c8cff", THIN = "#5d6678";
-    let chart = null, loadedAt = 0, busy = false;
+    let chart = null, kchart = null, loadedAt = 0, busy = false;
     let rows = [], period = null;
     let field = null;          // saha ölçüm noktaları (tüm oturumlar), bina karşılaştırması için
 
@@ -222,6 +222,64 @@ const WHO = (() => {
             <div class="who-cap">Gri değerler ${MIN_H} saatten az ölçüme dayanır, değerlendirmeye girmez.</div></details>`;
     }
 
+    // Kampüs ve bölge: aynı saatlerde kampüs PurpleAir ile Tuzla istasyonu (PM₂.₅)
+    async function fillKiyas() {
+        const box = $("who-kiyas");
+        if (!box || typeof Kiyas === "undefined") return;
+        const head = `<div class="nsec-title">Kampüs ve bölge · aynı saatler · PM₂.₅</div>`;
+        let d;
+        try { d = await Kiyas.data(); } catch (_) { box.innerHTML = head + `<div class="who-cap">Tuzla verisi yüklenemedi.</div>`; return; }
+        if (!$("who-kiyas")) return;
+        if (!d.regionHours) {
+            box.innerHTML = head + `<div class="who-cap">Tuzla istasyonunun PM₂.₅ geçmişi henüz yüklenmedi (resmî ÇŞB verisi yalnızca
+                Türkiye'den indirilebiliyor). Yüklendiğinde bu bölüm kendiliğinden dolacak.</div>`;
+            return;
+        }
+        const pairs = d.pairs.filter(x => inPeriod({ k: x.day }));
+        const s = Kiyas.summary(pairs);
+        if (!s) { box.innerHTML = head + `<div class="who-cap">${periodLabel()} döneminde kampüs ve Tuzla'nın aynı anda ölçtüğü saat yok.</div>`; return; }
+        const v = Kiyas.verdict(s);
+        const months = [...new Set(d.pairs.map(x => x.ym))].sort().reverse();
+        const mrow = ym => {
+            const m = Kiyas.summary(d.pairs.filter(x => x.ym === ym));
+            return `<tr><td>${monthName(ym)}</td><td>${m.n}</td><td>${f1(m.c)}</td><td>${f1(m.r)}</td>
+                <td class="${m.pct >= 5 ? "bad" : ""}">${m.pct > 0 ? "+" : "−"}%${Math.abs(m.pct).toFixed(0)}</td></tr>`;
+        };
+        box.innerHTML = head + `
+            <div class="oz-line ${v.cls}">${v.icon} ${v.txt} <small>(${s.n} ortak saat · kampüsün daha temiz olduğu saat oranı: %${(s.cleaner * 100).toFixed(0)})</small></div>
+            <div class="kx-pair">
+              <div><i style="background:${Kiyas.C_CAMPUS}"></i><span>Kampüs (PurpleAir)</span><b>${f1(s.c)}</b></div>
+              <div><i style="background:${Kiyas.C_REGION}"></i><span>Tuzla istasyonu</span><b>${f1(s.r)}</b></div>
+            </div>
+            <div class="who-chart-wrap"><canvas id="who-kiyas-chart" aria-label="Günlük ortalamalar: kampüs ve Tuzla"></canvas></div>
+            <div class="who-legend"><span><i style="background:${Kiyas.C_CAMPUS}"></i>Kampüs</span><span><i style="background:${Kiyas.C_REGION}"></i>Tuzla</span><span><i class="dash"></i>WHO günlük değer</span></div>
+            <table class="who-month" style="margin-top:10px"><thead><tr><th>Ay</th><th>Saat</th><th>Kampüs</th><th>Tuzla</th><th>Fark</th></tr></thead>
+              <tbody>${months.map(mrow).join("")}</tbody></table>
+            <div class="who-cap">Yalnızca iki tarafın da ölçüm yaptığı saatler karşılaştırılır (µg/m³). Tuzla ~6,4 km uzaktaki resmî istasyondur;
+              kampüs değeri düzeltilmemiş PurpleAir ölçümüdür.</div>`;
+        const days = Kiyas.daily(pairs);
+        if (kchart) kchart.destroy();
+        kchart = new Chart($("who-kiyas-chart"), {
+            type: "bar",
+            data: { labels: days.map(x => dayLabel(x.day)), datasets: [
+                { label: "Kampüs", data: days.map(x => +x.c.toFixed(1)), backgroundColor: Kiyas.C_CAMPUS, borderRadius: 4, maxBarThickness: 10 },
+                { label: "Tuzla", data: days.map(x => +x.r.toFixed(1)), backgroundColor: Kiyas.C_REGION, borderRadius: 4, maxBarThickness: 10 },
+            ] },
+            options: {
+                responsive: true, maintainAspectRatio: false, animation: false,
+                datasets: { bar: { categoryPercentage: 0.8, barPercentage: 0.9 } },
+                plugins: { legend: { display: false }, tooltip: { callbacks: {
+                    afterBody: it => `${days[it[0].dataIndex].n} ortak saat` } } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: "#9aa4b8", font: { size: 9.5 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 6 } },
+                    y: { min: 0, suggestedMax: G.pm2_5.day * 1.6, grid: { color: "rgba(255,255,255,0.06)" }, border: { display: false },
+                         ticks: { color: "#9aa4b8", font: { size: 10 }, maxTicksLimit: 5 } },
+                },
+            },
+            plugins: [guideLine],
+        });
+    }
+
     // Bina bazında: saha ölçümlerinin bina ortalamaları ve WHO günlük değeri
     function buildingsHtml() {
         const head = `<div class="nsec-title">Bina bazında · saha ölçümleri (Atmotube)</div>`;
@@ -308,7 +366,7 @@ const WHO = (() => {
                 <div class="who-legend"><span><i style="background:${BAR}"></i>WHO altında</span><span><i style="background:${BAD}"></i>WHO değerini aşan gün</span>
                 <span><i style="background:${THIN}88"></i>${MIN_H} saatten az ölçüm</span><span><i class="dash"></i>WHO günlük değer</span></div>`
                 : `<div class="news-empty" style="margin-top:12px">Bu dönemde ölçüm yok.</div>`)
-            + tilesHtml(s, s10) + buildingsHtml() + monthlyHtml(all, all10) + tableHtml(days, days10) + INFO;
+            + tilesHtml(s, s10) + `<div id="who-kiyas"></div>` + buildingsHtml() + monthlyHtml(all, all10) + tableHtml(days, days10) + INFO;
         $("who-body").querySelectorAll("[data-p]").forEach(el =>
             el.addEventListener("click", () => { period = el.dataset.p; render(); }));
         $("who-body").querySelectorAll(".wb-row").forEach(el => el.addEventListener("click", () => {
@@ -316,6 +374,7 @@ const WHO = (() => {
             Campus.focusByKey(el.dataset.gk);                    // telefonda harita sekmesine kendiliğinden geçer
         }));
         drawChart(days);
+        fillKiyas();
     }
 
     async function load(force) {
