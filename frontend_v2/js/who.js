@@ -28,10 +28,26 @@ const WHO = (() => {
     const f1 = v => v.toLocaleString("tr-TR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     const mean = a => a.reduce((s, x) => s + x, 0) / a.length;
 
+    // ── ortak veri (WHO ve Özet sekmeleri aynı istekleri paylaşır, 10 dk önbellek) ──
+    const cache = {};
+    function shared(name, fetcher) {
+        const c = cache[name];
+        if (c && Date.now() - c.at < 10 * 60e3) return c.p;
+        const p = fetcher();
+        cache[name] = { at: Date.now(), p };
+        p.catch(() => { delete cache[name]; });
+        return p;
+    }
+    const history = () => shared("hist", () =>
+        API.purpleairHistory(HISTORY_FROM, new Date().toISOString(), "hourly").then(r => r.data || []));
+    const fieldPoints = () => shared("field", () =>
+        API.mapTracks().then(r => (r.tracks || []).flatMap(t => t.points || []).filter(p => p.lat && p.lon && p.pm2_5 != null)));
+
     // ── veri hazırlığı ───────────────────────────────────────────────
-    function daysOf(key) {
+    // Saatlik kayıtları Türkiye gününe göre günlük ortalamaya çevir
+    function dailyMeans(src, key) {
         const by = new Map();
-        for (const r of rows) {
+        for (const r of src) {
             const t = new Date(r.recorded_at);
             if (r[key] == null || isNaN(t)) continue;      // bozuk kayıt sekmeyi düşürmesin
             const k = dayKey.format(t);
@@ -40,6 +56,7 @@ const WHO = (() => {
         return [...by.entries()].sort((a, b) => a[0].localeCompare(b[0]))
             .map(([k, vals]) => ({ k, n: vals.length, v: mean(vals) }));
     }
+    const daysOf = key => dailyMeans(rows, key);
 
     function pointInPeriod(p) {
         const t = new Date(p.recorded_at);
@@ -306,8 +323,7 @@ const WHO = (() => {
         busy = true;
         if (!loadedAt) $("who-body").innerHTML = `<div class="news-empty">Hesaplanıyor…</div>`;
         try {
-            const res = await API.purpleairHistory(HISTORY_FROM, new Date().toISOString(), "hourly");
-            rows = res.data || [];
+            rows = await history();
             render();
             loadedAt = Date.now();
             if (field == null) loadField();
@@ -317,12 +333,12 @@ const WHO = (() => {
     }
 
     async function loadField() {
-        try {
-            const res = await API.mapTracks();
-            field = (res.tracks || []).flatMap(t => t.points || []).filter(p => p.lat && p.lon && p.pm2_5 != null);
-        } catch (_) { field = []; }
+        try { field = await fieldPoints(); } catch (_) { field = []; }
         render();
     }
 
-    return { load };
+    // Özet sekmesinden belirli bir ayla açmak için
+    function setPeriod(p) { period = p; if (loadedAt) render(); }
+
+    return { load, setPeriod, history, fieldPoints, dailyMeans, G, MIN_H, FULL_H };
 })();

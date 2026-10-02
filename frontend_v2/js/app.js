@@ -5,11 +5,13 @@ const GTU_CENTER = [40.806155, 29.360985];
 const GTU_ZOOM = 17;
 const CAMPUS_BOUNDS = [[40.797, 29.348], [40.820, 29.378]];
 
-// Kişi grupları: oturum adı önekine göre renk + etiket
+// Kişi grupları: oturum adı önekine göre renk + etiket.
+// Gizlilik: uygulama herkese açık; ölçüm yapan kişilerin adları gösterilmez, yalnızca ekip etiketi.
+// (Harf sırası kişilerin adlarıyla eşleşmesin diye karışık.)
 const PEOPLE = [
-    { key: "Ayse",  name: "Ayşe",  color: "#34d27b", initial: "A" },
-    { key: "Ilker", name: "İlker", color: "#6c8cff", initial: "İ" },
-    { key: "Serra", name: "Serra", color: "#f5b840", initial: "S" },
+    { key: "Ayse",  name: "Saha ekibi B", color: "#34d27b", initial: "B" },
+    { key: "Ilker", name: "Saha ekibi A", color: "#6c8cff", initial: "A" },
+    { key: "Serra", name: "Saha ekibi C", color: "#f5b840", initial: "C" },
     // Canlı Atmotube cihazları (saha ölçümleri panelinde cihaz-gün bazlı)
     { key: "ATP-1", name: "ATP-1", color: "#e06c9f", initial: "1" },
     { key: "ATP-2", name: "ATP-2", color: "#5ec6c2", initial: "2" },
@@ -685,7 +687,11 @@ function personOf(sessionName) {
 
 function dateLabelOf(s) {
     // start_time'dan gün etiketi üret
-    if (!s.start_time) return s.session_name;
+    if (!s.start_time) {
+        // ham oturum adı kişi adı içerir; yalnızca içindeki tarihi kullan
+        const m = /\d{4}-\d{2}-\d{2}/.exec(s.session_name || "");
+        return m ? new Date(m[0] + "T12:00:00").toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" }) : "Tarih bilinmiyor";
+    }
     const d = new Date(s.start_time.replace(" ", "T"));
     return d.toLocaleDateString("tr-TR", { timeZone: "Europe/Istanbul", day: "numeric", month: "long", year: "numeric" });
 }
@@ -851,7 +857,7 @@ async function refreshDots() {
                     <div style="font-family:Inter;min-width:170px">
                       <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
                         <span style="width:20px;height:20px;border-radius:6px;background:${person.color};display:grid;place-items:center;font-size:10px;font-weight:800;color:#0b0e14">${person.initial}</span>
-                        <b style="font-size:12.5px">${track.session_name}</b>
+                        <b style="font-size:12.5px">${person.name}</b>
                       </div>
                       <div style="font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;color:${pm25Color(pt.pm2_5)}">${pt.pm2_5?.toFixed(1) ?? "--"} <span style="font-size:10px;color:#9aa4b8">µg/m³</span></div>
                       <div style="font-size:11px;color:${pm25Color(pt.pm2_5)};font-weight:600">${pm25Label(pt.pm2_5)}</div>

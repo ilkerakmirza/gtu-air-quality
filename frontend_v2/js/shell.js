@@ -27,7 +27,26 @@ const Shell = (() => {
         document.querySelectorAll("#tabbar [data-tab]").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
         if (tab === "news") markSeen();
         if (tab === "who" && typeof WHO !== "undefined") WHO.load();
+        if (tab === "ozet" && typeof Ozet !== "undefined") Ozet.load();
         updateMapCta(false);
+    }
+
+    // Masaüstünde sağdaki paneller (Özet / WHO / Duyurular) aynı yerde açılır; biri açılınca diğerleri kapanır.
+    // Telefonda aynı adlı sekmeye geçilir.
+    const PANELS = ["ozet", "who", "news"];
+    function openPanel(name, toggle) {
+        if (MOBILE.matches) { showTab(name); return; }
+        const cls = name + "-open", was = document.body.classList.contains(cls);
+        PANELS.forEach(n => document.body.classList.remove(n + "-open"));
+        if (toggle && was) return;
+        document.body.classList.add(cls);
+        if (name === "who") WHO.load();
+        if (name === "ozet") Ozet.load();
+        if (name === "news") { renderNews(); markSeen(); }
+    }
+    function closePanel(name) {
+        if (MOBILE.matches) showTab("map");
+        document.body.classList.remove(name + "-open");
     }
 
     // Panelden haritaya dönüş düğmesi: Saha sekmesinde seçilen gün sayısını gösterir
@@ -51,11 +70,16 @@ const Shell = (() => {
             if (ev.target.closest("#sel-all, #sel-none, .vs-btn")) setTimeout(() => updateMapCta(true), 0);
         });
 
-        // Panelden haritada bir yere gidildiğinde (cihaz satırı, bina sıralaması, ▶ oynat) haritaya geç.
-        // Panel açıkken harita kapalı olduğundan bu hareketler hep panelden tetiklenir.
+        // Panelden haritada bir yere gidildiğinde (cihaz satırı, bina, ▶ oynat) haritaya geç.
+        // Yalnızca panelde bir şeye dokunulduktan kısa süre sonra başlayan hareketler sayılır;
+        // açılıştaki "kampüsün tamamı" hareketi Özet sekmesini kapatmasın.
+        let sheetTapAt = 0;
+        document.addEventListener("click", ev => {
+            if (ev.target.closest(".sidebar, .sessions-dock, .news-dock")) sheetTapAt = Date.now();
+        }, true);
         if (typeof map !== "undefined" && map) {
             map.on("movestart", () => {
-                if (MOBILE.matches && document.body.dataset.tab !== "map") showTab("map");
+                if (MOBILE.matches && document.body.dataset.tab !== "map" && Date.now() - sheetTapAt < 8000) showTab("map");
             });
         }
     }
@@ -175,22 +199,13 @@ const Shell = (() => {
     }
 
     function initNews() {
-        $("who-btn").addEventListener("click", () => {
-            document.body.classList.remove("news-open");
-            if (document.body.classList.toggle("who-open")) WHO.load();
-        });
-        $("who-close").addEventListener("click", () => {
-            if (MOBILE.matches) showTab("map");
-            document.body.classList.remove("who-open");
-        });
-        $("news-btn").addEventListener("click", () => {
-            document.body.classList.remove("who-open");
-            document.body.classList.toggle("news-open");
-            if (newsVisible()) { renderNews(); markSeen(); }
-        });
+        $("ozet-btn").addEventListener("click", () => openPanel("ozet", true));
+        $("ozet-close").addEventListener("click", () => closePanel("ozet"));
+        $("who-btn").addEventListener("click", () => openPanel("who", true));
+        $("who-close").addEventListener("click", () => closePanel("who"));
+        $("news-btn").addEventListener("click", () => openPanel("news", true));
         $("news-close").addEventListener("click", () => {
-            if (MOBILE.matches) showTab("map");
-            document.body.classList.remove("news-open");
+            closePanel("news");
             renderNews();   // "YENİ" etiketlerini kaldır
         });
         loadNews();
@@ -255,7 +270,9 @@ const Shell = (() => {
         initTabs();
         initNews();
         initInstall();
+        // Açılışta herkesin ilk gördüğü: Özet (telefonda sekme, masaüstünde sağ panel)
+        openPanel("ozet");
     });
 
-    return { showTab };
+    return { showTab, openPanel };
 })();

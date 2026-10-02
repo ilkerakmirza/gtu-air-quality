@@ -817,7 +817,7 @@ body {
 
 /* ───────────────────────── Duyurular ───────────────────────── */
 .chip-btn { cursor: pointer; font-family: Inter, sans-serif; position: relative; }
-.chip-btn:hover, body.news-open #news-btn, body.who-open #who-btn { color: var(--text); border-color: var(--stroke-2); }
+.chip-btn:hover, body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn { color: var(--text); border-color: var(--stroke-2); }
 .badge {
   min-width: 18px; height: 18px; padding: 0 5px; border-radius: 99px;
   background: var(--red); color: #fff;
@@ -837,6 +837,57 @@ body {
 .news-item p { font-size: 12.5px; line-height: 1.55; color: #c9d0dd; }
 .news-item a { color: #a9b9ff; font-weight: 600; }
 .news-empty { font-size: 12px; color: var(--text-2); padding: 4px 0; }
+
+/* ───────────────────────── Özet ───────────────────────── */
+.oz-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 2px 0 9px; }
+.oz-head span { font-size: 15px; font-weight: 800; }
+.oz-head small { font-size: 11.5px; color: var(--text-2); }
+.oz-card { padding: 14px; border-radius: 14px; background: rgba(255,255,255,0.035); border: 1px solid var(--stroke-2); }
+.oz-now { border-color: color-mix(in srgb, var(--c) 45%, transparent);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--c) 16%, transparent), rgba(255,255,255,0.02) 60%); }
+.oz-now-top { display: flex; align-items: center; gap: 12px; }
+.oz-face { font-size: 34px; line-height: 1; }
+.oz-cat { font-size: 20px; font-weight: 800; color: var(--c); line-height: 1.15; }
+.oz-src { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+.oz-val { display: flex; align-items: baseline; gap: 7px; margin-top: 10px; flex-wrap: wrap; }
+.oz-val b { font: 800 40px/1 Inter, sans-serif; letter-spacing: -0.02em; }
+.oz-val span { font-size: 12px; color: var(--text-2); font-weight: 600; }
+.oz-note { margin-top: 9px; font-size: 11.5px; line-height: 1.5; color: #f7d58c; }
+.oz-adv { margin-top: 11px; display: grid; gap: 6px; font-size: 12.5px; line-height: 1.5; color: #d7dce6; }
+.oz-adv b { color: #fff; }
+.oz-line { margin-top: 9px; padding: 9px 11px; border-radius: 11px; font-size: 12.5px; line-height: 1.5;
+  background: rgba(255,255,255,0.035); border: 1px solid var(--stroke); }
+.oz-line.ok { border-color: rgba(52,210,123,0.35); } .oz-line.bad { border-color: rgba(244,97,94,0.4); }
+.oz-line small { color: var(--text-2); }
+.oz-sub { margin: 14px 0 7px; font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-2); }
+.oz-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.oz-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 99px; font-size: 11.5px; font-weight: 700;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--stroke-2); }
+.oz-chip i { width: 8px; height: 8px; border-radius: 50%; background: #5d6678; }
+.oz-chip.on i { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.oz-chip.off { color: var(--text-2); }
+.oz-chip small { font-weight: 500; color: var(--text-2); }
+.oz-month-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+.oz-month-nav b { font-size: 14px; text-transform: capitalize; }
+.oz-month-nav button { width: 34px; height: 30px; border-radius: 9px; border: 1px solid var(--stroke-2); background: rgba(255,255,255,0.04);
+  color: var(--text); font-size: 17px; cursor: pointer; }
+.oz-month-nav button:disabled { opacity: .3; cursor: default; }
+.oz-trend { margin-top: 6px; font-size: 12px; font-weight: 700; }
+.oz-trend.up { color: #ff9b98; } .oz-trend.down { color: #7fe3aa; }
+.oz-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 12px; }
+.oz-tiles > div { padding: 9px 10px; border-radius: 11px; background: rgba(255,255,255,0.035); border: 1px solid var(--stroke); }
+.oz-tiles span { display: block; font-size: 10.5px; color: var(--text-2); font-weight: 600; line-height: 1.35; }
+.oz-tiles b { display: block; font-size: 16px; font-weight: 800; margin-top: 3px; }
+.oz-tiles small { display: block; font-size: 11px; color: var(--text-2); }
+.oz-tiles .ok b { color: #7fe3aa; } .oz-tiles .bad b { color: #ff9b98; }
+.oz-bld-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.oz-bld { display: flex; justify-content: space-between; align-items: center; gap: 6px; width: 100%; padding: 7px 8px; margin-bottom: 4px;
+  border-radius: 9px; border: 1px solid var(--stroke); background: rgba(255,255,255,0.03); color: var(--text);
+  font: 600 11.5px Inter, sans-serif; text-align: left; cursor: pointer; }
+.oz-bld:hover { background: rgba(108,140,255,0.12); }
+.oz-bld span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.oz-bld b { flex-shrink: 0; font-size: 12.5px; }
+.oz-more { width: 100%; margin-top: 14px; }
 /* ───────────────────────── WHO durumu ───────────────────────── */
 .who-hero {
   padding: 14px 14px 12px; border-radius: 14px; margin-bottom: 4px;
@@ -1010,8 +1061,9 @@ body {
 .tabbar, .install-banner, .map-cta { display: none; }
 
 @media (min-width: 761px) {
-  body.who-open .who-dock,
-  body.news-open .news-dock:not(.who-dock) {
+  body.ozet-open #ozet-dock,
+  body.who-open #who-dock,
+  body.news-open #news-dock {
     display: flex; position: absolute; top: 70px; right: 14px;
     width: 360px; max-height: calc(100vh - 140px);
     animation: slideIn 0.35s cubic-bezier(0.22,1,0.36,1);
@@ -1072,8 +1124,9 @@ body {
   .sidebar-toggle { display: none !important; }
   body[data-tab="live"] .sidebar,
   body[data-tab="field"] .sessions-dock,
-  body[data-tab="news"] .news-dock:not(.who-dock),
-  body[data-tab="who"] .who-dock {
+  body[data-tab="news"] #news-dock,
+  body[data-tab="ozet"] #ozet-dock,
+  body[data-tab="who"] #who-dock {
     display: flex; position: fixed; z-index: 1100;
     top: var(--top-h); bottom: var(--tab-h); left: 0; right: 0;
     width: auto; max-height: none; transform: none;
@@ -1081,9 +1134,10 @@ body {
     background: rgba(11,14,20,0.9); backdrop-filter: blur(6px);
   }
   body[data-tab="field"] .sessions-dock .panel,
-  body[data-tab="news"] .news-dock .panel,
-  body[data-tab="who"] .who-dock .panel { height: 100%; }
-  body[data-tab="live"] .map-cta, body[data-tab="field"] .map-cta, body[data-tab="who"] .map-cta {
+  body[data-tab="news"] #news-dock .panel,
+  body[data-tab="ozet"] #ozet-dock .panel,
+  body[data-tab="who"] #who-dock .panel { height: 100%; }
+  body[data-tab="live"] .map-cta, body[data-tab="field"] .map-cta, body[data-tab="who"] .map-cta, body[data-tab="ozet"] .map-cta {
     display: flex; align-items: center; gap: 8px;
     position: fixed; z-index: 1150; left: 50%; transform: translateX(-50%);
     bottom: calc(var(--tab-h) + 12px); white-space: nowrap;
@@ -1094,7 +1148,7 @@ body {
   }
   .map-cta.bump { animation: ctaBump .45s ease; }
   @keyframes ctaBump { 40% { transform: translateX(-50%) scale(1.08); } }
-  body[data-tab="live"] .sidebar, body[data-tab="field"] .sessions-dock .panel-body, body[data-tab="who"] #who-body { padding-bottom: 76px; }
+  body[data-tab="live"] .sidebar, body[data-tab="field"] .sessions-dock .panel-body, body[data-tab="who"] #who-body, body[data-tab="ozet"] #ozet-body { padding-bottom: 76px; }
   body:not([data-tab="map"]) .player-dock,
   body:not([data-tab="map"]) .chart-drawer { display: none; }
 
@@ -1163,6 +1217,7 @@ body {
   </div>
   <div class="chip" id="chip-readings">📊 <b>—</b>&nbsp;ölçüm</div>
   <div class="chip" id="chip-sessions">🗂 <b>—</b>&nbsp;oturum</div>
+  <button class="chip chip-btn" id="ozet-btn" type="button">☀️ Özet</button>
   <button class="chip chip-btn" id="who-btn" type="button">🩺 WHO</button>
   <button class="chip chip-btn" id="news-btn" type="button">📢 Duyurular<span class="badge" id="news-badge" hidden></span></button>
 </div>
@@ -1329,6 +1384,17 @@ body {
 </aside>
 
 <!-- WHO durumu (masaüstünde sağ panel, telefonda "WHO" sekmesi) -->
+<!-- Özet (masaüstünde sağ panel, telefonda ilk sekme): günlük ve aylık özet -->
+<aside class="news-dock ozet-dock" id="ozet-dock">
+  <div class="panel panel-scroll" style="height:100%">
+    <div class="panel-head">
+      <span class="ico">☀️</span> Kampüste hava
+      <span class="right"><button class="pbtn sq" id="ozet-close" type="button" title="Kapat">✕</button></span>
+    </div>
+    <div class="panel-body" id="ozet-body"><div class="news-empty">Yükleniyor…</div></div>
+  </div>
+</aside>
+
 <aside class="news-dock who-dock" id="who-dock">
   <div class="panel panel-scroll" style="height:100%">
     <div class="panel-head">
@@ -1351,11 +1417,12 @@ body {
 
 <!-- Telefon: alt sekme çubuğu -->
 <nav class="tabbar" id="tabbar" aria-label="Bölümler">
+  <button type="button" data-tab="ozet"><span class="tb-ico">☀️</span>Özet</button>
   <button type="button" data-tab="map" class="on"><span class="tb-ico">🗺️</span>Harita</button>
   <button type="button" data-tab="live"><span class="tb-ico">📡</span>Canlı</button>
   <button type="button" data-tab="field"><span class="tb-ico">👥</span>Saha</button>
   <button type="button" data-tab="who"><span class="tb-ico">🩺</span>WHO</button>
-  <button type="button" data-tab="news"><span class="tb-ico">📢</span>Duyurular<span class="badge" id="tab-news-badge" hidden></span></button>
+  <button type="button" data-tab="news"><span class="tb-ico">📢</span>Duyuru<span class="badge" id="tab-news-badge" hidden></span></button>
 </nav>
 
 <!-- Player dock -->
@@ -1402,11 +1469,12 @@ body {
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=24"></script>
-<script src="js/api.js?v=24"></script>
-<script src="js/campus.js?v=26"></script>
-<script src="js/app.js?v=24"></script>
-<script src="js/who.js?v=26"></script>
-<script src="js/shell.js?v=24"></script>
+<script src="js/colorscale.js?v=27"></script>
+<script src="js/api.js?v=27"></script>
+<script src="js/campus.js?v=27"></script>
+<script src="js/app.js?v=27"></script>
+<script src="js/who.js?v=27"></script>
+<script src="js/ozet.js?v=27"></script>
+<script src="js/shell.js?v=27"></script>
 </body>
 </html>

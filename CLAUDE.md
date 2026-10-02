@@ -20,6 +20,12 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
   şimdilik İBB canlı verisi kullanılıyor.
 - **CO₂ sensörlerinden 21 Temmuz 2026'dan beri veri yok** (Tuya).
 - **Adsız 20 bina:** ekip numaralı haritadan eşleştirince `campus.geojson`'a adları işle.
+- **Gizlilik (sunucu tarafı):** arayüz kişi adlarını göstermiyor ama API (`/api/sessions`, `/api/map/tracks`)
+  oturum adlarını hâlâ kişi adlarıyla döndürüyor. Tam gizlilik için sunucuda anonimleştirilmeli.
+
+## Gizlilik kuralı
+Uygulama herkese açık. Saha ölçümü yapan kişilerin adları arayüzde **hiçbir yerde** gösterilmez;
+`app.js` içindeki `PEOPLE` listesi "Saha ekibi A/B/C" etiketlerini kullanır. Ham `session_name` ekrana yazılmaz.
 
 ## İş bitince
 1. Değişiklikleri açıklayıcı bir mesajla commit'le.
@@ -63,7 +69,7 @@ Renkli (zengin) duyuru — `renk` ya da `bolumler` varsa renkli başlık alanıy
 - Telefon düzeni `index.html` içindeki `@media (max-width: 760px)` bloğunda; masaüstü düzenini bozmamaya dikkat et.
 
 ## Proje yapısı
-- `frontend_v2/` — yayındaki arayüz (`index.html`, `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `js/shell.js`, `js/who.js` (WHO durumu sekmesi), `data/campus.geojson`, `data/duyurular.json`)
+- `frontend_v2/` — yayındaki arayüz (`index.html`, `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `js/shell.js`, `js/who.js` (WHO durumu sekmesi), `js/ozet.js` (Özet: günlük ve aylık özet, açılış ekranı), `data/campus.geojson`, `data/duyurular.json`)
 - `frontend/` — önceki harita arayüzü (`map.html`)
 - `backend/` — Python sunucu ve veri toplayıcılar (PurpleAir, Atmotube, Tuya CO2, ÇSB, İBB); arayüzün kullandığı API: https://gtu-air-quality.onrender.com (`frontend_v2/js/api.js`)
 - Yerelde önizleme: `python -m http.server 8765 --directory frontend_v2` → http://localhost:8765
