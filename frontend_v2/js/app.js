@@ -9,9 +9,9 @@ const CAMPUS_BOUNDS = [[40.797, 29.348], [40.820, 29.378]];
 // Gizlilik: uygulama herkese açık; ölçüm yapan kişilerin adları gösterilmez, yalnızca ekip etiketi.
 // (Harf sırası kişilerin adlarıyla eşleşmesin diye karışık.)
 const PEOPLE = [
-    { key: "Ayse",  name: "Saha ekibi B", color: "#34d27b", initial: "B", realName: "Ayşe",  realInitial: "A" },
-    { key: "Ilker", name: "Saha ekibi A", color: "#6c8cff", initial: "A", realName: "İlker", realInitial: "İ" },
-    { key: "Serra", name: "Saha ekibi C", color: "#f5b840", initial: "C", realName: "Serra", realInitial: "S" },
+    { key: "Ayse",  name: "Saha ekibi B", color: "#34d27b", initial: "B" },
+    { key: "Ilker", name: "Saha ekibi A", color: "#6c8cff", initial: "A" },
+    { key: "Serra", name: "Saha ekibi C", color: "#f5b840", initial: "C" },
     // Canlı Atmotube cihazları (saha ölçümleri panelinde cihaz-gün bazlı)
     { key: "ATP-1", name: "ATP-1", color: "#e06c9f", initial: "1" },
     { key: "ATP-2", name: "ATP-2", color: "#5ec6c2", initial: "2" },
@@ -20,16 +20,22 @@ const PEOPLE = [
     { key: "ATP-5", name: "ATP-5", color: "#7ed957", initial: "5" },
 ];
 
-// Ekip görünümü: ekip kodunu giren cihazda gerçek adlar görünür (tarayıcıda hatırlanır).
-// Hafif bir kapıdır, güvenlik değildir: adlar sunucuda zaten duruyor. Kodun kendisi değil SHA-256 özeti saklanır.
-const TEAM_KEY = "gtu.team";
-const TEAM_CODE_SHA256 = "f2751e80283906503b0b11aa383c516bf3dcf2d3a5ecd5890c8f2515acf7640a";
-const TEAM_MODE = (() => { try { return localStorage.getItem(TEAM_KEY) === TEAM_CODE_SHA256; } catch (_) { return false; } })();
-if (TEAM_MODE) PEOPLE.forEach(p => { if (p.realName) { p.name = p.realName; p.initial = p.realInitial; } });
+// Ekip görünümü (KVKK): gerçek adlar kaynak kodda düz metin olarak YOK; ekip koduyla şifreli (PBKDF2-SHA256 → AES-GCM).
+// Kodu giren cihazda çözülen adlar yalnızca o tarayıcıda saklanır. Yeni kod/ad için: scripts/ekip_kasasi.js
+const TEAM_KEY = "gtu.team.names";
+const TEAM_VAULT = {"salt":"F1PB00CrzufPr2P1Aa51Pg==","iv":"rEhgWg/laLWDQJC3","ct":"NmFTMIiyOZIFxiYEGm4DEhHZzZrgd0E5J0GdOhBsSOHs22++NpGB2GJ8W8PizO3hGHm3cPqsJIwmwiEMPYiFYP31WjJHbG/SJaywEYHGJvPdjOqI"};
+const TEAM_NAMES = (() => { try { return JSON.parse(localStorage.getItem(TEAM_KEY) || "null"); } catch (_) { return null; } })();
+const TEAM_MODE = !!TEAM_NAMES;
+if (TEAM_MODE) PEOPLE.forEach(p => { const n = TEAM_NAMES[p.key]; if (n) { p.name = n[0]; p.initial = n[1]; } });
+try { localStorage.removeItem("gtu.team"); } catch (_) {}   // eski sürümün anahtarı
 
-async function sha256(text) {
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+async function openTeamVault(code) {
+    const b = s => Uint8Array.from(atob(s), ch => ch.charCodeAt(0));
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(code), "PBKDF2", false, ["deriveKey"]);
+    const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b(TEAM_VAULT.salt), iterations: 210000, hash: "SHA-256" },
+        base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+    const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b(TEAM_VAULT.iv) }, key, b(TEAM_VAULT.ct));
+    return JSON.parse(new TextDecoder().decode(plain));      // kod yanlışsa AES-GCM doğrulaması hata verir
 }
 
 function initTeamMode() {
@@ -44,9 +50,9 @@ function initTeamMode() {
         }
         const code = prompt("Ekip kodu (ölçüm yapanların adlarını gösterir):");
         if (!code) return;
-        const h = await sha256(code.trim());
-        if (h !== TEAM_CODE_SHA256) { alert("Kod hatalı."); return; }
-        try { localStorage.setItem(TEAM_KEY, h); } catch (_) {}
+        let names;
+        try { names = await openTeamVault(code.trim()); } catch (_) { alert("Kod hatalı."); return; }
+        try { localStorage.setItem(TEAM_KEY, JSON.stringify(names)); } catch (_) {}
         location.reload();
     });
 }

@@ -33,7 +33,7 @@ const Shell = (() => {
 
     // Masaüstünde sağdaki paneller (Özet / WHO / Duyurular) aynı yerde açılır; biri açılınca diğerleri kapanır.
     // Telefonda aynı adlı sekmeye geçilir.
-    const PANELS = ["ozet", "who", "news"];
+    const PANELS = ["ozet", "who", "news", "info"];
     function openPanel(name, toggle) {
         if (MOBILE.matches) { showTab(name); return; }
         const cls = name + "-open", was = document.body.classList.contains(cls);
@@ -204,6 +204,13 @@ const Shell = (() => {
         $("who-btn").addEventListener("click", () => openPanel("who", true));
         $("who-close").addEventListener("click", () => closePanel("who"));
         $("news-btn").addEventListener("click", () => openPanel("news", true));
+        $("info-btn").addEventListener("click", () => openPanel("info", true));
+        $("info-close").addEventListener("click", () => closePanel("info"));
+        // İçindekiler bağlantıları paneli kaydırsın (sayfa adresini değiştirmeden)
+        document.querySelectorAll(".info-toc a").forEach(a => a.addEventListener("click", ev => {
+            ev.preventDefault();
+            document.querySelector(a.getAttribute("href"))?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }));
         $("news-close").addEventListener("click", () => {
             closePanel("news");
             renderNews();   // "YENİ" etiketlerini kaldır

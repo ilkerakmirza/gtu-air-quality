@@ -26,13 +26,29 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
   Kullanıcı yeni PurpleAir verisi ekleyince aynı komutu güncel tarih aralığıyla tekrar çalıştır.
 - **Adsız 20 bina:** ekip numaralı haritadan eşleştirince `campus.geojson`'a adları işle.
 
-## Gizlilik kuralı
-Uygulama herkese açık. Saha ölçümü yapan kişilerin adları varsayılan olarak arayüzde **hiçbir yerde** gösterilmez;
-`app.js` içindeki `PEOPLE` listesi "Saha ekibi A/B/C" etiketlerini kullanır. Ham `session_name` ekrana yazılmaz.
-- Adlar sunucuda/veritabanında **olduğu gibi kalır** (kullanıcının tercihi; sunucuda anonimleştirme yapma).
-- **Ekip görünümü:** Saha panelinin altındaki "🔒 Ekip görünümü" bağlantısı ekip kodunu sorar; doğruysa o cihazda
-  gerçek adlar (`realName`) görünür. Kodun yalnızca SHA-256 özeti `TEAM_CODE_SHA256` olarak saklanır. Kullanıcı kodu
-  değiştirmek isterse yeni kodun özetini (`printf 'kod' | sha256sum`) buraya yaz. Bu hafif bir kapıdır, güvenlik değildir.
+## Gizlilik ve KVKK (her değişiklikte kontrol et)
+Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök dizin dahil) bir bağlantıyla indirilebilir.
+- **Kişisel veri repoya girmez:** ad-soyad, e-posta, telefon, öğrenci/TC no, fotoğraf, imzalı form, başvuru/kabul belgeleri.
+  Böyle bir dosya görürsen kullanıcıya bildir; silmeden önce onay al.
+- Saha ölçümü yapan kişilerin adları arayüzde **varsayılan olarak hiçbir yerde** gösterilmez; `app.js` → `PEOPLE` listesi
+  "Saha ekibi A/B/C" etiketlerini kullanır. Ham `session_name` ekrana yazılmaz.
+- Adlar sunucuda/veritabanında olduğu gibi kalır (kullanıcının tercihi; sunucuda anonimleştirme yapma).
+- **Ekip görünümü:** Saha panelinin altındaki "🔒 Ekip görünümü" bağlantısı ekip kodunu sorar. Gerçek adlar kaynak kodda
+  düz metin olarak **yoktur**; `TEAM_VAULT` içinde ekip koduyla şifrelidir (PBKDF2 → AES-GCM). Kod ya da ad değişirse:
+  `node scripts/ekip_kasasi.js "<kod>" '<ad JSON>'` çıktısını `TEAM_VAULT`'a yaz. Kaynak koda asla düz metin ad yazma.
+- **Üçüncü taraflar:** Yazı tipleri ve kütüphaneler `frontend_v2/vendor/` altından yerel yüklenir (Google Fonts / CDN yok).
+  Yeni bir dış servis ekleme; zorunluysa "Hakkında · Yöntem · Gizlilik" panelindeki KVKK bölümünü güncelle.
+- Analitik, çerez, izleme aracı ekleme. Tarayıcıda yalnızca tercihler (localStorage) tutulur.
+
+## Arayüz ilkeleri (benzer uygulamalarla karşılaştırarak, akademik üslupla)
+- Arayüz değişikliğinden önce benzer uygulamalardaki karşılığına bak: IQAir AirVisual, PurpleAir haritası,
+  Sensor.Community, İBB Hava Kalitesi, ÇŞB SİM. Yaygın ve anlaşılır kalıbı seç; gösterişten çok netlik.
+- **Akademik üslup:** birimler her zaman yazılı (µg/m³, ppm); veri kaynağı ve ölçüm zamanı görünür; sınırlılıklar
+  saklanmaz; tavsiye dili ölçülü ("önerilir", "düşünebilir"), kesin sağlık hükmü yok. Yöntemde değişiklik olursa
+  "Hakkında · Yöntem · Gizlilik" panelini güncelle.
+- **Bileşen tutarlılığı:** mevcut bileşenleri yeniden kullan (panel/`news-dock`, `oz-card`, `wt` kutucukları, `pd-chip`,
+  `oz-line`, `who-legend`, `who-cap`). Yeni renk ekleme; grafik renklerini dataviz doğrulayıcısından geçir.
+- Kısa süreli saha ölçümleri WHO 24 saatlik değeriyle karşılaştırılmaz (kampüs saha ortalamasıyla karşılaştırılır).
 
 ## İş bitince
 1. Değişiklikleri açıklayıcı bir mesajla commit'le.
@@ -77,7 +93,8 @@ Renkli (zengin) duyuru — `renk` ya da `bolumler` varsa renkli başlık alanıy
 
 ## Proje yapısı
 - `frontend_v2/` — yayındaki arayüz (`index.html`, `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `js/shell.js`, `js/who.js` (WHO durumu sekmesi), `js/ozet.js` (Özet: günlük ve aylık özet, açılış ekranı), `js/kiyas.js` (kampüs–Tuzla aynı saat karşılaştırması), `data/campus.geojson`, `data/duyurular.json`, `data/tuzla_saatlik.json` (Tuzla saatlik geçmişi))
-- `scripts/` — `tuzla_gecmis.py` (İBB'den Tuzla PM₁₀ geçmişi, her yerden çalışır), `csb_gecmis.py` (ÇŞB'den Tuzla PM₂.₅ geçmişi, yalnızca Türkiye'den)
+- `frontend_v2/vendor/` — yerel Leaflet, Leaflet.heat, Chart.js ve yazı tipleri (lisanslar `vendor/LICENSES/`)
+- `scripts/` — `ekip_kasasi.js` (ekip görünümü ad kasası), `tuzla_gecmis.py` (İBB'den Tuzla PM₁₀ geçmişi, her yerden çalışır), `csb_gecmis.py` (ÇŞB'den Tuzla PM₂.₅ geçmişi, yalnızca Türkiye'den)
 - `frontend/` — önceki harita arayüzü (`map.html`)
 - `backend/` — Python sunucu ve veri toplayıcılar (PurpleAir, Atmotube, Tuya CO2, ÇSB, İBB); arayüzün kullandığı API: https://gtu-air-quality.onrender.com (`frontend_v2/js/api.js`)
 - Yerelde önizleme: `python -m http.server 8765 --directory frontend_v2` → http://localhost:8765

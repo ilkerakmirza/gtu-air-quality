@@ -8,7 +8,9 @@ const SHELL = [
     "js/colorscale.js", "js/api.js", "js/campus.js", "js/app.js", "js/who.js", "js/kiyas.js", "js/ozet.js", "js/shell.js",
     "data/campus.geojson", "data/duyurular.json", "data/tuzla_saatlik.json",
     "icons/icon.svg", "icons/icon-192.png",
+    "vendor/leaflet/leaflet.js", "vendor/leaflet/leaflet.css", "vendor/leaflet-heat.js", "vendor/chart.umd.min.js", "vendor/fonts/fonts.css",
 ];
+// Kütüphaneler ve yazı tipleri artık yerel (vendor/); eski sürümlerden kalan CDN istekleri için önbellek kuralı duruyor
 const CDN = /^(unpkg\.com|cdn\.jsdelivr\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)$/;
 
 self.addEventListener("install", e => {

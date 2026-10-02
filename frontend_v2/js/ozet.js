@@ -196,7 +196,13 @@ const Ozet = (() => {
 
     function render() {
         const body = $("ozet-body");
-        body.innerHTML = dailyHtml() + monthlyHtml();
+        body.innerHTML = dailyHtml() + monthlyHtml() + `<div class="oz-foot">
+            <button type="button" data-info="inf-yon">Yöntem</button><button type="button" data-info="inf-kay">Veri kaynakları</button>
+            <button type="button" data-info="inf-kvkk">Gizlilik (KVKK)</button><button type="button" data-info="inf-hak">Hakkında</button></div>`;
+        body.querySelectorAll("[data-info]").forEach(b => b.addEventListener("click", () => {
+            Shell.openPanel("info");
+            setTimeout(() => document.getElementById(b.dataset.info)?.scrollIntoView({ block: "start" }), 60);
+        }));
         body.querySelectorAll(".oz-month-nav [data-m]").forEach(b => b.addEventListener("click", () => {
             if (b.dataset.m) { month = b.dataset.m; render(); }
         }));

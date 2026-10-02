@@ -15,14 +15,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="GTÜ AirLab">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<!-- Kütüphaneler ve yazı tipleri yerel (vendor/): ziyaretçi IP adresi CDN/Google'a gitmez (KVKK) -->
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="vendor/leaflet-heat.js"></script>
+<script src="vendor/chart.umd.min.js"></script>
 
 <style>
 :root {
@@ -817,7 +815,7 @@ body {
 
 /* ───────────────────────── Duyurular ───────────────────────── */
 .chip-btn { cursor: pointer; font-family: Inter, sans-serif; position: relative; }
-.chip-btn:hover, body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn { color: var(--text); border-color: var(--stroke-2); }
+.chip-btn:hover, body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body.info-open #info-btn { color: var(--text); border-color: var(--stroke-2); }
 .badge {
   min-width: 18px; height: 18px; padding: 0 5px; border-radius: 99px;
   background: var(--red); color: #fff;
@@ -895,6 +893,28 @@ body {
 .oz-bld span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .oz-bld b { flex-shrink: 0; font-size: 12.5px; }
 .oz-more { width: 100%; margin-top: 14px; }
+
+/* ───────────────────────── Hakkında · Yöntem · KVKK ───────────────────────── */
+.info-btn { padding: 7px 11px; font-size: 14px; }
+.info-body { font-size: 12.5px; line-height: 1.6; color: #d7dce6; }
+.info-body h4 { margin: 18px 0 6px; font-size: 13.5px; font-weight: 800; color: #fff; scroll-margin-top: 10px; }
+.info-body h4:first-of-type { margin-top: 10px; }
+.info-body p { margin-top: 4px; }
+.info-body ul { margin: 4px 0 0 17px; display: grid; gap: 6px; }
+.info-body b { color: #fff; }
+.info-toc { display: flex; flex-wrap: wrap; gap: 6px; }
+.info-toc a { padding: 4px 10px; border-radius: 99px; border: 1px solid var(--stroke-2); color: var(--text-2);
+  font-size: 11.5px; font-weight: 600; text-decoration: none; }
+.info-toc a:hover { color: var(--text); border-color: rgba(108,140,255,0.5); }
+.info-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-top: 4px; }
+.info-table th, .info-table td { text-align: left; padding: 6px; border-bottom: 1px solid var(--stroke); vertical-align: top; }
+.info-table th { font-size: 10.5px; color: var(--text-2); }
+.info-table td:first-child { font-weight: 700; color: #fff; white-space: nowrap; }
+.info-cite { margin-top: 10px; padding: 9px 11px; border-radius: 10px; background: rgba(255,255,255,0.04);
+  border: 1px solid var(--stroke); font-size: 11.5px; word-break: break-word; }
+.oz-foot { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--stroke); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.oz-foot button { border: none; background: none; padding: 2px 0; color: var(--text-2); font: 600 11.5px Inter, sans-serif; cursor: pointer; }
+.oz-foot button:hover { color: var(--text); }
 /* ───────────────────────── WHO durumu ───────────────────────── */
 .who-hero {
   padding: 14px 14px 12px; border-radius: 14px; margin-bottom: 4px;
@@ -1075,6 +1095,7 @@ body {
 
 @media (min-width: 761px) {
   body.ozet-open #ozet-dock,
+  body.info-open #info-dock,
   body.who-open #who-dock,
   body.news-open #news-dock {
     display: flex; position: absolute; top: 70px; right: 14px;
@@ -1139,6 +1160,7 @@ body {
   body[data-tab="field"] .sessions-dock,
   body[data-tab="news"] #news-dock,
   body[data-tab="ozet"] #ozet-dock,
+  body[data-tab="info"] #info-dock,
   body[data-tab="who"] #who-dock {
     display: flex; position: fixed; z-index: 1100;
     top: var(--top-h); bottom: var(--tab-h); left: 0; right: 0;
@@ -1149,6 +1171,7 @@ body {
   body[data-tab="field"] .sessions-dock .panel,
   body[data-tab="news"] #news-dock .panel,
   body[data-tab="ozet"] #ozet-dock .panel,
+  body[data-tab="info"] #info-dock .panel,
   body[data-tab="who"] #who-dock .panel { height: 100%; }
   body[data-tab="live"] .map-cta, body[data-tab="field"] .map-cta, body[data-tab="who"] .map-cta, body[data-tab="ozet"] .map-cta {
     display: flex; align-items: center; gap: 8px;
@@ -1232,6 +1255,7 @@ body {
   <div class="chip" id="chip-sessions">🗂 <b>—</b>&nbsp;oturum</div>
   <button class="chip chip-btn" id="ozet-btn" type="button">☀️ Özet</button>
   <button class="chip chip-btn" id="who-btn" type="button">🩺 WHO</button>
+  <button class="chip chip-btn info-btn" id="info-btn" type="button" title="Hakkında · Yöntem · Gizlilik (KVKK)" aria-label="Hakkında, yöntem ve gizlilik">ⓘ</button>
   <button class="chip chip-btn" id="news-btn" type="button">📢 Duyurular<span class="badge" id="news-badge" hidden></span></button>
 </div>
 
@@ -1419,6 +1443,83 @@ body {
   </div>
 </aside>
 
+<!-- Hakkında · Yöntem · Gizlilik (KVKK) -->
+<aside class="news-dock info-dock" id="info-dock">
+  <div class="panel panel-scroll" style="height:100%">
+    <div class="panel-head">
+      <span class="ico">ⓘ</span> Hakkında · Yöntem · Gizlilik
+      <span class="right"><button class="pbtn sq" id="info-close" type="button" title="Kapat">✕</button></span>
+    </div>
+    <div class="panel-body info-body" id="info-body">
+      <nav class="info-toc"><a href="#inf-hak">Hakkında</a><a href="#inf-ag">Ölçüm ağı</a><a href="#inf-yon">Yöntem</a>
+        <a href="#inf-sin">Sınırlılıklar</a><a href="#inf-kay">Kaynaklar</a><a href="#inf-kvkk">Gizlilik (KVKK)</a></nav>
+
+      <h4 id="inf-hak">Hakkında</h4>
+      <p><b>GTÜ AirLab</b>, Gebze Teknik Üniversitesi kampüsünde partikül madde (PM₂.₅, PM₁₀) ve iç mekân CO₂ düzeylerini
+        ölçmek, haritalamak ve yorumlamak amacıyla yürütülen araştırmanın veri platformudur. Sabit sensörler, taşınabilir
+        sensörlerle yapılan saha ölçümleri ve resmî bölge istasyonu verileri tek bir arayüzde birleştirilir.</p>
+
+      <h4 id="inf-ag">Ölçüm ağı</h4>
+      <table class="info-table"><thead><tr><th>Kaynak</th><th>Tür</th><th>Ölçülen</th></tr></thead><tbody>
+        <tr><td>PurpleAir PA-II</td><td>Sabit, dış ortam (SUMER çatısı)</td><td>PM₁, PM₂.₅, PM₁₀, sıcaklık, nem</td></tr>
+        <tr><td>Atmotube Pro</td><td>Taşınabilir, saha ölçümleri</td><td>PM₁, PM₂.₅, PM₁₀, VOC</td></tr>
+        <tr><td>CO₂ sensörleri</td><td>Sabit, iç mekân</td><td>CO₂</td></tr>
+        <tr><td>Tuzla istasyonu</td><td>Resmî referans (ÇŞB / İBB), ~6,4 km</td><td>PM₂.₅, PM₁₀ (saatlik)</td></tr>
+      </tbody></table>
+
+      <h4 id="inf-yon">Yöntem</h4>
+      <ul>
+        <li><b>Zaman ortalamaları:</b> Ölçümler saatlik ortalamaya, saatlik değerler Türkiye saatine göre günlük ortalamaya
+          çevrilir. En az 18 saat ölçümü olan gün <i>tam gün</i>, en az 6 saat olan gün <i>gösterge gün</i> kabul edilir;
+          daha az ölçümlü günler değerlendirmeye alınmaz.</li>
+        <li><b>WHO karşılaştırması:</b> WHO Küresel Hava Kalitesi Kılavuzu (2021) değerleri kullanılır: PM₂.₅ için 24 saatlik
+          15 µg/m³ ve yıllık 5 µg/m³; PM₁₀ için 45 ve 15 µg/m³; ara hedefler (AH-1…AH-4).</li>
+        <li><b>Hava kalitesi sınıfları:</b> PM₂.₅'e göre İyi (≤15), Orta (≤25), Hassas gruplar için sağlıksız (≤35), Sağlıksız (≤55),
+          Tehlikeli (&gt;55 µg/m³). Alt sınırlar WHO kılavuz değeri ve 4. ara hedefle, üst sınırlar ABD EPA hava kalitesi indeksi
+          kesim noktalarıyla uyumludur.</li>
+        <li><b>Bina değerleri:</b> Saha ölçümlerinin GPS noktaları bina poligonlarıyla eşleştirilir; en az 3 ölçümü olan binalar
+          gösterilir. Bu ölçümler kısa süreli olduğundan WHO'nun 24 saatlik değeriyle değil, aynı dönemdeki tüm saha ölçümlerinin
+          ortalamasıyla karşılaştırılır.</li>
+        <li><b>Kampüs–bölge karşılaştırması:</b> Yalnızca kampüs sensörü ile Tuzla istasyonunun aynı saatte ölçüm yaptığı saatler
+          karşılaştırılır.</li>
+      </ul>
+
+      <h4 id="inf-sin">Sınırlılıklar</h4>
+      <ul>
+        <li>Kampüs değerleri düşük maliyetli optik sensörlerin <b>ham (düzeltilmemiş)</b> ölçümleridir; yüksek nemde PM₂.₅
+          olduğundan yüksek okunabilir, PM₁₀ ise olduğundan düşük okunabilir.</li>
+        <li>Ölçümler kesintilidir; günlük değerler o gün ölçülen saatlerin ortalamasıdır ve günün tamamını temsil etmeyebilir.</li>
+        <li>Saha ölçümleri birkaç dakikalık yürüyüş verisidir; uzun süreli maruziyeti temsil etmez.</li>
+        <li>Platformdaki değerlendirmeler bilgilendirme amaçlıdır; tıbbi tavsiye yerine geçmez.</li>
+      </ul>
+
+      <h4 id="inf-kay">Veri kaynakları ve lisanslar</h4>
+      <ul>
+        <li>Bölge verisi: T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı Sürekli İzleme Merkezi; İBB Açık Veri Portalı.</li>
+        <li>Harita altlıkları: © Esri, Maxar; © CARTO; © OpenStreetMap katkıcıları (ODbL).</li>
+        <li>Yazılım: Leaflet (BSD-2), Leaflet.heat, Chart.js (MIT); yazı tipleri Inter ve JetBrains Mono (SIL OFL 1.1).</li>
+      </ul>
+      <p class="info-cite"><b>Atıf önerisi:</b> GTÜ AirLab (2026). <i>GTÜ AirLab — Kampüs Hava Kalitesi İzleme Platformu.</i>
+        Gebze Teknik Üniversitesi. https://ilkerakmirza.github.io/gtu-air-quality/frontend_v2/</p>
+
+      <h4 id="inf-kvkk">Gizlilik ve kişisel verilerin korunması (KVKK)</h4>
+      <ul>
+        <li><b>Kullanıcı verisi toplanmaz.</b> Uygulamada üyelik, form, çerez, reklam ya da analitik/izleme aracı yoktur.</li>
+        <li>Tarayıcınızda yalnızca kullanım tercihleri (okunan duyurular, seçili görünüm, katlanan paneller) saklanır; bu bilgiler
+          cihazınızdan gönderilmez ve tarayıcı verilerini silerek kaldırılabilir.</li>
+        <li><b>Saha ölçümleri:</b> Ölçümü yapan ekip üyelerinin kimlikleri gösterilmez ("Saha ekibi A/B/C"). Konum verileri yalnızca
+          ölçüm noktası olarak ve araştırma amacıyla gösterilir.</li>
+        <li><b>Üçüncü taraf bağlantıları:</b> Harita altlıkları için tarayıcınız Esri ve CARTO sunucularına bağlanır; bu sağlayıcılar
+          teknik olarak IP adresinizi görebilir. Ölçüm verileri proje sunucusundan (yurt dışında barındırılan bulut hizmeti) ve
+          İBB hava kalitesi servisinden alınır. Yazı tipleri ve yazılım kütüphaneleri uygulamanın kendi sunucusundan yüklenir.</li>
+        <li>6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamındaki talepleriniz için Gebze Teknik Üniversitesi'nin KVKK başvuru
+          kanallarını kullanabilirsiniz.</li>
+      </ul>
+      <p class="who-cap">Son güncelleme: 2 Ekim 2026</p>
+    </div>
+  </div>
+</aside>
+
 <!-- Telefon: kurulum önerisi (bir kez, kapatılabilir) -->
 <div class="install-banner" id="install-banner" hidden>
   <span>📲 Platformu telefonuna uygulama olarak kur</span>
@@ -1486,10 +1587,10 @@ body {
 <script src="js/colorscale.js?v=27"></script>
 <script src="js/api.js?v=27"></script>
 <script src="js/campus.js?v=30"></script>
-<script src="js/app.js?v=29"></script>
+<script src="js/app.js?v=31"></script>
 <script src="js/who.js?v=30"></script>
 <script src="js/kiyas.js?v=29"></script>
-<script src="js/ozet.js?v=30"></script>
-<script src="js/shell.js?v=27"></script>
+<script src="js/ozet.js?v=31"></script>
+<script src="js/shell.js?v=31"></script>
 </body>
 </html>
