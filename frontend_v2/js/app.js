@@ -9,9 +9,9 @@ const CAMPUS_BOUNDS = [[40.797, 29.348], [40.820, 29.378]];
 // Gizlilik: uygulama herkese açık; ölçüm yapan kişilerin adları gösterilmez, yalnızca ekip etiketi.
 // (Harf sırası kişilerin adlarıyla eşleşmesin diye karışık.)
 const PEOPLE = [
-    { key: "Ayse",  name: "Saha ekibi B", color: "#34d27b", initial: "B" },
-    { key: "Ilker", name: "Saha ekibi A", color: "#6c8cff", initial: "A" },
-    { key: "Serra", name: "Saha ekibi C", color: "#f5b840", initial: "C" },
+    { key: "Ayse",  name: "Saha ekibi B", color: "#34d27b", initial: "B", realName: "Ayşe",  realInitial: "A" },
+    { key: "Ilker", name: "Saha ekibi A", color: "#6c8cff", initial: "A", realName: "İlker", realInitial: "İ" },
+    { key: "Serra", name: "Saha ekibi C", color: "#f5b840", initial: "C", realName: "Serra", realInitial: "S" },
     // Canlı Atmotube cihazları (saha ölçümleri panelinde cihaz-gün bazlı)
     { key: "ATP-1", name: "ATP-1", color: "#e06c9f", initial: "1" },
     { key: "ATP-2", name: "ATP-2", color: "#5ec6c2", initial: "2" },
@@ -19,6 +19,37 @@ const PEOPLE = [
     { key: "ATP-4", name: "ATP-4", color: "#ff9f45", initial: "4" },
     { key: "ATP-5", name: "ATP-5", color: "#7ed957", initial: "5" },
 ];
+
+// Ekip görünümü: ekip kodunu giren cihazda gerçek adlar görünür (tarayıcıda hatırlanır).
+// Hafif bir kapıdır, güvenlik değildir: adlar sunucuda zaten duruyor. Kodun kendisi değil SHA-256 özeti saklanır.
+const TEAM_KEY = "gtu.team";
+const TEAM_CODE_SHA256 = "f2751e80283906503b0b11aa383c516bf3dcf2d3a5ecd5890c8f2515acf7640a";
+const TEAM_MODE = (() => { try { return localStorage.getItem(TEAM_KEY) === TEAM_CODE_SHA256; } catch (_) { return false; } })();
+if (TEAM_MODE) PEOPLE.forEach(p => { if (p.realName) { p.name = p.realName; p.initial = p.realInitial; } });
+
+async function sha256(text) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function initTeamMode() {
+    const btn = document.getElementById("team-btn");
+    if (!btn) return;
+    btn.textContent = TEAM_MODE ? "🔓 Ekip görünümü açık · kapat" : "🔒 Ekip görünümü";
+    btn.addEventListener("click", async () => {
+        if (TEAM_MODE) {
+            try { localStorage.removeItem(TEAM_KEY); } catch (_) {}
+            location.reload();
+            return;
+        }
+        const code = prompt("Ekip kodu (ölçüm yapanların adlarını gösterir):");
+        if (!code) return;
+        const h = await sha256(code.trim());
+        if (h !== TEAM_CODE_SHA256) { alert("Kod hatalı."); return; }
+        try { localStorage.setItem(TEAM_KEY, h); } catch (_) {}
+        location.reload();
+    });
+}
 
 let map, heatLayer, dotsLayer, trailLayer, paMarker, campusOverlay;
 let allSessions = [];
@@ -35,6 +66,7 @@ let paLive = true;
 document.addEventListener("DOMContentLoaded", async () => {
     initMap();
     initSidebar();
+    initTeamMode();
     initPlayerUI();
     initChartDrawer();
 

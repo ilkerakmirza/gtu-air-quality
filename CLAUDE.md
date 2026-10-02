@@ -20,12 +20,14 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
   şimdilik İBB canlı verisi kullanılıyor.
 - **CO₂ sensörlerinden 21 Temmuz 2026'dan beri veri yok** (Tuya).
 - **Adsız 20 bina:** ekip numaralı haritadan eşleştirince `campus.geojson`'a adları işle.
-- **Gizlilik (sunucu tarafı):** arayüz kişi adlarını göstermiyor ama API (`/api/sessions`, `/api/map/tracks`)
-  oturum adlarını hâlâ kişi adlarıyla döndürüyor. Tam gizlilik için sunucuda anonimleştirilmeli.
 
 ## Gizlilik kuralı
-Uygulama herkese açık. Saha ölçümü yapan kişilerin adları arayüzde **hiçbir yerde** gösterilmez;
+Uygulama herkese açık. Saha ölçümü yapan kişilerin adları varsayılan olarak arayüzde **hiçbir yerde** gösterilmez;
 `app.js` içindeki `PEOPLE` listesi "Saha ekibi A/B/C" etiketlerini kullanır. Ham `session_name` ekrana yazılmaz.
+- Adlar sunucuda/veritabanında **olduğu gibi kalır** (kullanıcının tercihi; sunucuda anonimleştirme yapma).
+- **Ekip görünümü:** Saha panelinin altındaki "🔒 Ekip görünümü" bağlantısı ekip kodunu sorar; doğruysa o cihazda
+  gerçek adlar (`realName`) görünür. Kodun yalnızca SHA-256 özeti `TEAM_CODE_SHA256` olarak saklanır. Kullanıcı kodu
+  değiştirmek isterse yeni kodun özetini (`printf 'kod' | sha256sum`) buraya yaz. Bu hafif bir kapıdır, güvenlik değildir.
 
 ## İş bitince
 1. Değişiklikleri açıklayıcı bir mesajla commit'le.
