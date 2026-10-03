@@ -39,12 +39,13 @@ const Shell = (() => {
         if (tab === "news") markSeen();
         if (tab === "who" && typeof WHO !== "undefined") WHO.load();
         if (tab === "ozet" && typeof Ozet !== "undefined") Ozet.load();
+        if (tab === "exp" && typeof Maruziyet !== "undefined") Maruziyet.load();
         updateMapCta(false);
     }
 
     // Masaüstünde sağdaki paneller (Özet / WHO / Duyurular) aynı yerde açılır; biri açılınca diğerleri kapanır.
     // Telefonda aynı adlı sekmeye geçilir.
-    const PANELS = ["ozet", "who", "news", "info"];
+    const PANELS = ["ozet", "who", "news", "info", "exp"];
     function openPanel(name, toggle) {
         if (MOBILE.matches) { showTab(name); return; }
         const cls = name + "-open", was = document.body.classList.contains(cls);
@@ -53,6 +54,7 @@ const Shell = (() => {
         document.body.classList.add(cls);
         if (name === "who") WHO.load();
         if (name === "ozet") Ozet.load();
+        if (name === "exp") Maruziyet.load();
         if (name === "news") { renderNews(); markSeen(); }
     }
     function closePanel(name) {
@@ -173,12 +175,58 @@ const Shell = (() => {
         return title + (b.metin ? `<p>${rich(b.metin)}</p>` : "");
     }
 
+    // ── Otomatik durum duyuruları ──────────────────────────────────
+    // Sensör kesintisi ya da yüksek PM₂.₅ olduğunda Duyurular'a kendiliğinden bir kart düşer; sorun bitince kalkar.
+    // Kimlik olayın başlangıç tarihine bağlıdır: aynı kesinti okununca bir daha "yeni" sayılmaz.
+    const dkey = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit" });
+    const trDate = d => d.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Istanbul" });
+    const parseT = s => { const t = typeof trTime === "function" ? trTime(s) : new Date(s); return t && !isNaN(t) ? t : null; };
+    const hoursSince = t => (Date.now() - t) / 3600e3;
+
+    async function statusNotices() {
+        if (typeof API === "undefined") return [];
+        const [pa, tz, co2] = await Promise.all([
+            API.purpleairLatest().then(r => r.data).catch(() => null),
+            (typeof getTuzla === "function" ? getTuzla() : Promise.resolve(null)).catch(() => null),
+            API.co2Live().then(r => r.data || []).catch(() => []),
+        ]);
+        const out = [];
+        const outage = (key, name, t, extra) => out.push({
+            id: `durum-${key}-${dkey.format(t)}`, tarih: dkey.format(t), etiket: "Sensör durumu", oto: true,
+            baslik: `${name} ${trDate(t)} tarihinden beri veri göndermiyor`,
+            metin: `Son ölçüm: ${trDate(t)}. ${extra} Bu not, sensör yeniden veri göndermeye başladığında kendiliğinden kalkar.`,
+        });
+        const paT = pa && parseT(pa.recorded_at);
+        const paFresh = paT && hoursSince(paT) <= 2;
+        if (paT && !paFresh) outage("purpleair", "Kampüs PurpleAir sensörü", paT,
+            "Bu sürede Özet ekranında en yakın resmî istasyonun (Tuzla) değeri gösterilir; kampüs geçmişi son ölçüme kadar kullanılabilir.");
+        const tzT = tz && parseT(tz.recorded_at);
+        const tzFresh = tzT && !tz.stale && hoursSince(tzT) <= 6;
+        if (tzT && !tzFresh) outage("tuzla", "Tuzla hava kalitesi istasyonu", tzT, "Kampüs–bölge karşılaştırması bu sürede güncellenmez.");
+        const co2T = co2.map(d => d.reading && parseT(d.reading.recorded_at)).filter(Boolean).sort((a, b) => b - a)[0];
+        if (co2T && hoursSince(co2T) > 24) outage("co2", "İç mekân CO₂ sensörleri", co2T, "İç mekân CO₂ değerleri bu sürede gösterilemez.");
+
+        // Hava kalitesi uyarısı: güncel değer "Hassas gruplar için sağlıksız" (> 25 µg/m³) ya da üstündeyse
+        const src = paFresh && pa.pm2_5 != null ? { v: +pa.pm2_5, where: "kampüs sensörü (PurpleAir)", t: paT }
+                  : tzFresh && tz.pm2_5 != null ? { v: +tz.pm2_5, where: "Tuzla istasyonu", t: tzT } : null;
+        if (src && src.v > 25 && typeof pm25Label === "function") {
+            const cat = pm25Label(src.v);
+            out.push({ id: `uyari-${dkey.format(new Date())}-${cat}`, tarih: dkey.format(new Date()), etiket: "Hava kalitesi", oto: true, uyari: true,
+                baslik: `Hava kalitesi: ${cat}`,
+                metin: `${src.where} son ölçümü **${src.v.toFixed(1).replace(".", ",")} µg/m³** PM₂.₅ ` +
+                       `(${src.t.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Istanbul" })}). ` +
+                       `Hassas grupların (astım, kalp-akciğer hastalığı, yaşlılar, gebeler) uzun süreli ve yoğun açık hava etkinliklerini azaltması önerilir. ` +
+                       `Ayrıntılar Özet ekranındadır. Değer düşünce bu not kendiliğinden kalkar.` });
+        }
+        return out;
+    }
+
     function newsHtml(n, isNew) {
         const meta = `${n.etiket ? `<span class="news-tag">${esc(n.etiket)}</span>` : ""}
-            <time>${fmtDate(n.tarih)}</time>${isNew ? `<span class="news-new">YENİ</span>` : ""}`;
+            <time>${fmtDate(n.tarih)}</time>${n.oto ? `<span class="news-auto">otomatik</span>` : ""}${isNew ? `<span class="news-new">YENİ</span>` : ""}`;
         const link = n.link ? `<a class="news-link" href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.link_metni || "Bağlantıyı aç")} →</a>` : "";
         if (!n.renk && !n.bolumler) {
-            return `<article class="news-item">
+            return `<article class="news-item${n.oto ? " auto" : ""}${n.uyari ? " warn" : ""}">
               <div class="news-meta">${meta}</div>
               <h3>${esc(n.baslik)}</h3>
               ${n.metin ? `<p>${rich(n.metin)}</p>` : ""}${link}
@@ -209,12 +257,14 @@ const Shell = (() => {
 
     async function loadNews() {
         try {
-            const res = await fetch(NEWS_URL, { cache: "no-cache" });
+            const [res, auto] = await Promise.all([fetch(NEWS_URL, { cache: "no-cache" }), statusNotices().catch(() => [])]);
             if (!res.ok) throw new Error(res.status);
             const data = await res.json();
-            news = (Array.isArray(data) ? data : [])
+            // Otomatik durum notları sabit duyurunun altında, tarihe göre sıralanır
+            news = (Array.isArray(data) ? data : []).concat(auto)
                 .filter(n => n && n.id && n.baslik)
-                .sort((a, b) => (b.sabit ? 1 : 0) - (a.sabit ? 1 : 0) || String(b.tarih).localeCompare(String(a.tarih)));
+                // sıra: hava kalitesi uyarısı, sabit duyurular, sonra tarihe göre (yeniden eskiye)
+                .sort((a, b) => (b.uyari ? 2 : b.sabit ? 1 : 0) - (a.uyari ? 2 : a.sabit ? 1 : 0) || String(b.tarih).localeCompare(String(a.tarih)));
         } catch (e) {
             console.warn("[duyurular]", e);
             if (!news.length) $("news-list").innerHTML = `<div class="news-empty">Duyurular yüklenemedi.</div>`;
@@ -237,6 +287,7 @@ const Shell = (() => {
         $("news-btn").addEventListener("click", () => openPanel("news", true));
         $("info-btn").addEventListener("click", () => openPanel("info", true));
         $("info-close").addEventListener("click", () => closePanel("info"));
+        $("exp-close").addEventListener("click", () => closePanel("exp"));
         // İçindekiler bağlantıları paneli kaydırsın (sayfa adresini değiştirmeden)
         document.querySelectorAll(".info-toc a").forEach(a => a.addEventListener("click", ev => {
             ev.preventDefault();

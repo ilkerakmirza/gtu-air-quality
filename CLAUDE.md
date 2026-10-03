@@ -56,6 +56,10 @@ Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök diz
   Özet, Harita, Sağlık (WHO), Duyuru. Teknik içerik (sensör panelleri, saha ölçümleri, oynatma, karşılaştırma grafiği)
   yalnızca **Araştırma**'dadır: masaüstünde üst çubuktaki düğme (`body.research`, tercih `gtu.view.research`),
   telefonda "Araştırma" sekmesi ve içindeki Sensörler / Saha ölçümleri geçişi. Yeni teknik özellikleri Araştırma'ya koy.
+- **Otomatik durum duyuruları** (`shell.js` → `statusNotices`): sensör kesintisi (PurpleAir > 2 sa, Tuzla > 6 sa, CO₂ > 24 sa) ve
+  PM₂.₅ > 25 µg/m³ olduğunda Duyurular'a kendiliğinden kart düşer, sorun bitince kalkar; elle duyuru eklemeye gerek yok.
+- **Kişisel maruziyet** (`maruziyet.js`): C = P(saat) × R(bina) × F(ortam), solunum hızları US EPA (2011). Varsayımlar panelde
+  yazılıdır; girilen bilgiler cihazdan çıkmaz (yalnızca "Bu cihazda hatırla" ile localStorage).
 - Kısa süreli saha ölçümleri WHO 24 saatlik değeriyle karşılaştırılmaz (kampüs saha ortalamasıyla karşılaştırılır).
 
 ## İş bitince
@@ -100,7 +104,7 @@ Renkli (zengin) duyuru — `renk` ya da `bolumler` varsa renkli başlık alanıy
 - Telefon düzeni `index.html` içindeki `@media (max-width: 760px)` bloğunda; masaüstü düzenini bozmamaya dikkat et.
 
 ## Proje yapısı
-- `frontend_v2/` — yayındaki arayüz (`index.html`, `js/icons.js` (ikon seti), `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `js/shell.js`, `js/who.js` (WHO durumu sekmesi), `js/ozet.js` (Özet: günlük ve aylık özet, açılış ekranı), `js/kiyas.js` (kampüs–Tuzla aynı saat karşılaştırması), `data/campus.geojson`, `data/duyurular.json`, `data/tuzla_saatlik.json` (Tuzla saatlik geçmişi))
+- `frontend_v2/` — yayındaki arayüz (`index.html`, `js/icons.js` (ikon seti), `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `js/shell.js`, `js/who.js` (WHO durumu sekmesi), `js/ozet.js` (Özet: günlük ve aylık özet, açılış ekranı), `js/kiyas.js` (kampüs–Tuzla aynı saat karşılaştırması), `js/maruziyet.js` (kişisel maruziyet hesabı, taslak), `data/campus.geojson`, `data/duyurular.json`, `data/tuzla_saatlik.json` (Tuzla saatlik geçmişi))
 - `frontend_v2/vendor/` — yerel Leaflet, Leaflet.heat, Chart.js ve yazı tipleri (Inter, Source Serif 4) (lisanslar `vendor/LICENSES/`)
 - `scripts/` — `ekip_kasasi.js` (ekip görünümü ad kasası), `tuzla_gecmis.py` (İBB'den Tuzla PM₁₀ geçmişi, her yerden çalışır), `csb_gecmis.py` (ÇŞB'den Tuzla PM₂.₅ geçmişi, yalnızca Türkiye'den)
 - `frontend/` — önceki harita arayüzü (`map.html`)

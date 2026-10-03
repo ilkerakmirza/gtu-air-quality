@@ -108,7 +108,8 @@ const Ozet = (() => {
             ${chip(tzFresh, "Tuzla istasyonu", tz && tz.recorded_at ? (tzFresh ? "güncel" : "son veri " + ago(tz.recorded_at)) : "veri yok")}
             ${chip(atpOn > 0, "Atmotube", `${atpOn}/${(now.atp || []).length} çevrimiçi`)}
             ${chip(co2On > 0, "CO₂ (iç mekân)", (now.co2 || []).length ? `${co2On}/${now.co2.length} çevrimiçi` : "tanımlı değil")}
-        </div>`;
+        </div>
+        <button type="button" class="ic-btn oz-more oz-exp" id="oz-to-exp">${ico("calculator")} Kampüste geçirdiğim süreye göre maruziyetimi hesapla</button>`;
         return html;
     }
 
@@ -224,6 +225,7 @@ const Ozet = (() => {
             const pts = (field || []).filter(p => { const t = new Date(p.recorded_at); return !isNaN(t) && dayKey.format(t).startsWith(month); });
             Campus.focusByKey(b.dataset.gk, pts);   // kart o ayın saha ölçümleriyle açılır
         }));
+        $("oz-to-exp")?.addEventListener("click", () => Shell.openPanel("exp"));
         const toWho = $("oz-to-who");
         if (toWho) toWho.addEventListener("click", () => { WHO.setPeriod(month); Shell.openPanel("who"); });
     }
