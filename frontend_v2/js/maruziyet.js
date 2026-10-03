@@ -9,17 +9,22 @@
 
 const Maruziyet = (() => {
     const STORE = "gtu.exp.rows";
-    // İç/dış oranı: binalarda iç kaynak yokken PM₂.₅ için I/O ≈ 0,3–0,9 (Chen ve Zhao, 2011)
+    // F = dış kaynaklı PM₂.₅'in içeri geçen payı (sızma faktörü), iç kaynaklar hariç:
+    //   doğal havalandırmalı binalar ort. ≈ 0,55 (Chen ve Zhao, 2011); konutlarda dış kaynak payı %29–75 (Salamalikis ve ark., 2025);
+    //   pencereler açıkken / yazın daha yüksek (Hänninen ve ark., 2011); mekanik havalandırma + filtre ile üniversite binalarında
+    //   I/O ≈ 0,12–0,28 (Afroz ve ark., 2025)
     const ENV = {
         out:    { ad: "Açık hava", f: 1.0 },
-        closed: { ad: "İç · kapalı", f: 0.5 },
         vent:   { ad: "İç · açık pencere", f: 0.8 },
+        closed: { ad: "İç · kapalı pencere", f: 0.5 },
+        mech:   { ad: "İç · mekanik havalandırma", f: 0.25 },
     };
-    // Solunum hızı (m³/saat), yetişkin, yaklaşık: US EPA Exposure Factors Handbook (2011), Bölüm 6
+    // Solunum hızı (m³/saat): US EPA Exposure Factors Handbook (2011), Bölüm 6, Tablo 6-2, 21–31 yaş ortalaması
+    // (m³/dk × 60: oturma/pasif 4,2E-03; hafif 1,2E-02; orta 2,6E-02; yoğun 5,0E-02)
     const ACT = {
-        sit:   { ad: "Oturma (ders, ofis)", ir: 0.3 },
-        light: { ad: "Hafif (ayakta, lab)", ir: 0.7 },
-        walk:  { ad: "Tempolu yürüme", ir: 1.6 },
+        sit:   { ad: "Oturma (ders, ofis)", ir: 0.25 },
+        light: { ad: "Hafif (ayakta, lab)", ir: 0.72 },
+        walk:  { ad: "Tempolu yürüme", ir: 1.56 },
         sport: { ad: "Spor", ir: 3.0 },
     };
     const DEFAULT = [
@@ -123,7 +128,7 @@ const Maruziyet = (() => {
         const share = x => k.dose ? x.dose / k.dose * 100 : 0;
         const best = [...model.P.keys()].filter(h => h >= 7 && h <= 21).reduce((a, h) => model.P[h] < model.P[a] ? h : a, 7);
         // Öneri yalnızca açık hava etkinliğinin saatleri en düşük saatten belirgin (%10+) yüksekse
-        const outdoorActive = ok.find(x => rows[x.i].env === "out" && ACT[rows[x.i].act].ir >= 1.6 && x.p > model.P[best] * 1.1);
+        const outdoorActive = ok.find(x => rows[x.i].env === "out" && ACT[rows[x.i].act].ir >= 1.5 && x.p > model.P[best] * 1.1);
         return errs + `<div class="oz-card oz-now" style="--c:${c}">
               <div class="wh-k">Kampüste ${f1(k.H)} saat · zaman ağırlıklı ortalama maruziyet (PM₂.₅)</div>
               <div class="oz-val"><b>${f1(k.twa)}</b><span>µg/m³</span></div>
@@ -146,16 +151,27 @@ const Maruziyet = (() => {
               <p><b>P (saatlik profil):</b> Kampüs PurpleAir sensörünün ${prof} ile hesaplanan saatlik ortalamaları (ham, düzeltilmemiş değerler).</p>
               <p><b>R (bina):</b> Binanın saha ölçüm ortalamasının tüm saha ölçümleri ortalamasına oranı; kısa süreli ölçümlere dayandığı için
                 0,5–2 aralığıyla sınırlanmıştır. Saha ölçümü olmayan yerler için kampüs geneli (R = 1) kullanılır.</p>
-              <p><b>F (ortam):</b> Açık hava 1,0; iç mekân, pencereler kapalı 0,5; iç mekân, pencere ya da havalandırma açık 0,8. Binalarda iç kaynak yokken
-                PM₂.₅ iç/dış oranı yaklaşık 0,3–0,9 aralığındadır (Chen ve Zhao, 2011). Yemek pişirme, sigara, yazıcı gibi iç kaynaklar dahil değildir.</p>
-              <p><b>Solunum hızı (yetişkin, yaklaşık):</b> oturma (ders, ofis, kütüphane) 0,3; hafif (ayakta, laboratuvar, yavaş yürüme) 0,7;
-                tempolu yürüme 1,6; spor 3,0 m³/saat
-                (US EPA Exposure Factors Handbook, 2011, Bölüm 6).</p>
+              <p><b>F (ortam):</b> Dışarıdan gelen PM₂.₅'in iç mekâna geçen payı: açık hava 1,0; açık pencere 0,8; kapalı pencere 0,5;
+                mekanik havalandırma (filtreli) 0,25. Doğal havalandırmalı binalarda ortalama sızma faktörü yaklaşık 0,55'tir (Chen ve Zhao, 2011);
+                güncel düşük maliyetli sensör çalışmalarında dış kaynak payı %29–75 bulunmuştur (Salamalikis ve ark., 2025). Sızma pencereler
+                açıkken ve yaz aylarında artar (Hänninen ve ark., 2011); filtreli mekanik havalandırmalı üniversite binalarında iç/dış oranı
+                0,12–0,28'dir (Afroz ve ark., 2025). İç kaynaklar (kalabalık sınıflarda tozun yeniden havalanması, yemek pişirme, yazıcı) dahil
+                değildir; bu nedenle sınıflarda gerçek değer daha yüksek olabilir (Branco ve ark., 2024).</p>
+              <p><b>Solunum hızı:</b> oturma 0,25; hafif 0,72; tempolu yürüme 1,56; spor 3,0 m³/saat. US EPA Exposure Factors Handbook,
+                Bölüm 6, Tablo 6-2, 21–31 yaş ortalaması (bölüm 2011'den beri güncel; 2025'te erişilebilir sürümle yeniden yayımlandı).</p>
               <p><b>Sınırlılıklar:</b> Sonuç bir senaryo tahminidir, kişisel ölçüm değildir; tıbbi değerlendirme yerine geçmez. Birkaç saatlik
                 ortalama, WHO'nun 24 saatlik kılavuz değeriyle doğrudan karşılaştırılamaz.</p>
-              <p class="who-note">Kaynaklar: Chen, C., Zhao, B. (2011). Review of relationship between indoor and outdoor particles: I/O ratio,
-                infiltration factor and penetration factor. <i>Atmospheric Environment</i>, 45(2), 275–288. · U.S. EPA (2011).
-                <i>Exposure Factors Handbook: 2011 Edition</i>, EPA/600/R-090/052F.</p>
+              <p class="who-note">Kaynaklar: Afroz, R. ve ark. (2025). Impact of wildfire smoke PM2.5 on indoor air quality of public buildings
+                on a university campus. <i>ACS ES&amp;T Air</i>, 2, 625–636. doi:10.1021/acsestair.4c00342 ·
+                Branco, P. ve ark. (2024). A review of relevant parameters for assessing indoor air quality in educational facilities.
+                <i>Environmental Research</i>, 261, 119713. doi:10.1016/j.envres.2024.119713 ·
+                Chen, C., Zhao, B. (2011). Review of relationship between indoor and outdoor particles: I/O ratio, infiltration factor and
+                penetration factor. <i>Atmospheric Environment</i>, 45, 275–288. doi:10.1016/j.atmosenv.2010.09.048 ·
+                Hänninen, O. ve ark. (2011). Seasonal patterns of outdoor PM infiltration into indoor environments. <i>Air Quality, Atmosphere
+                &amp; Health</i>, 4, 221–233. doi:10.1007/s11869-010-0076-5 ·
+                Salamalikis, V. ve ark. (2025). Citizen-operated low-cost sensors for estimating outdoor particulate matter infiltration.
+                <i>Air Quality, Atmosphere &amp; Health</i>, 18, 2609–2624. doi:10.1007/s11869-025-01787-4 ·
+                U.S. EPA (2011). <i>Exposure Factors Handbook: 2011 Edition</i>, Bölüm 6. EPA/600/R-09/052F.</p>
             </div></details>`;
     }
 
