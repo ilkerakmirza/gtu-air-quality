@@ -5,6 +5,7 @@
 //   F(ortam): iç/dış ortam oranı (iç mekân kaynakları dahil değil)
 //   Solunan miktar = C × solunum hızı × süre
 // Girilen bilgiler cihazdan çıkmaz; yalnızca kişi "bu cihazda hatırla" derse tarayıcıda saklanır.
+// Yöntem, kabuller ve kaynakların tam kaydı: docs/maruziyet_yontemi.md — buradaki bir değer değişirse o belgeyi de güncelle.
 // Bağımlılıklar: who.js (WHO.history, WHO.fieldPoints), campus.js (Campus.buildingStats), colorscale.js, icons.js
 
 const Maruziyet = (() => {
