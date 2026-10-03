@@ -244,10 +244,15 @@ function updatePAPanel(d) {
 function updatePAMarker(d) {
     if (!d) return;
     const latlng = [d.lat || GTU_CENTER[0], d.lon || GTU_CENTER[1]];
-    const html = `<b>🟣 PurpleAir PA-II</b><br>SUMER Lab — GTÜ Çatı<br>PM₂.₅: <b style="color:${pm25Color(d.pm2_5)}">${d.pm2_5?.toFixed(1) ?? "--"}</b> µg/m³`;
+    // Canlı modda sensör uzun süredir veri göndermiyorsa etiket eski değeri güncelmiş gibi göstermesin
+    const stale = paLive && d.recorded_at && (Date.now() - new Date(d.recorded_at).getTime()) / 60000 > PA_STALE_MIN;
+    const col = stale ? "#69758c" : pm25Color(d.pm2_5);
+    const when = stale ? `<br><small style="color:#f3d48f">Çevrimdışı · son veri ${new Date(d.recorded_at).toLocaleDateString("tr-TR",
+        { day: "numeric", month: "long", timeZone: "Europe/Istanbul" })}</small>` : "";
+    const html = `<b>PurpleAir PA-II</b><br>SUMER Lab — GTÜ Çatı<br>PM₂.₅: <b style="color:${col}">${d.pm2_5?.toFixed(1) ?? "--"}</b> µg/m³${when}`;
     const icon = L.divIcon({
         className: "",
-        html: `<div class="pulse-marker" style="--marker-color:${pm25Color(d.pm2_5)}"></div>`,
+        html: `<div class="pulse-marker${stale ? " stale" : ""}" style="--marker-color:${col}"></div>`,
         iconSize: [20, 20], iconAnchor: [10, 10],
     });
     if (!paMarker) {

@@ -52,6 +52,10 @@ Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök diz
   Panel ve bölüm başlıkları serif (`var(--serif)`, Source Serif 4), metin ve rakamlar Inter (`var(--num)`, tabular rakamlar).
   Arayüz ikonları emoji değil, `js/icons.js` (Lucide, ISC) çizgi ikonlarıdır: HTML'de `<svg class="i"><use href="#i-ad"></use></svg>`,
   JS'te `ico("ad")`; yeni ikon gerekirse `ICONS` listesine Lucide'dan ekle. Harita üzerindeki bina etiketi simgeleri (🎓, 🔬…) bilinçli olarak emojidir.
+- **Basit / Araştırma görünümü:** Varsayılan görünüm herkes içindir (öğrenci, akademik ve idari personel):
+  Özet, Harita, Sağlık (WHO), Duyuru. Teknik içerik (sensör panelleri, saha ölçümleri, oynatma, karşılaştırma grafiği)
+  yalnızca **Araştırma**'dadır: masaüstünde üst çubuktaki düğme (`body.research`, tercih `gtu.view.research`),
+  telefonda "Araştırma" sekmesi ve içindeki Sensörler / Saha ölçümleri geçişi. Yeni teknik özellikleri Araştırma'ya koy.
 - Kısa süreli saha ölçümleri WHO 24 saatlik değeriyle karşılaştırılmaz (kampüs saha ortalamasıyla karşılaştırılır).
 
 ## İş bitince

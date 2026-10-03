@@ -5,6 +5,8 @@ const Shell = (() => {
     const MOBILE = window.matchMedia("(max-width: 760px)");
     const SEEN_KEY = "gtu.news.seen";
     const BANNER_KEY = "gtu.install.dismissed";
+    const RESEARCH_KEY = "gtu.view.research";   // masaüstü: Araştırma katmanları açık mı
+    const SUB_KEY = "gtu.view.researchSub";     // telefon: Araştırma'da son açılan bölüm (live | field)
     const NEWS_URL = "data/duyurular.json";
 
     let news = [];
@@ -22,9 +24,18 @@ const Shell = (() => {
     }
 
     // ── Sekmeler (yalnızca telefon düzeninde görünür) ──────────────
+    // Araştırma sekmesi iki bölümden oluşur: Sensörler (live) ve Saha ölçümleri (field)
+    const RESEARCH_TABS = ["live", "field"];
     function showTab(tab) {
+        if (tab === "research") tab = lsGet(SUB_KEY, "live");
+        if (RESEARCH_TABS.includes(tab)) lsSet(SUB_KEY, tab);
         document.body.dataset.tab = tab;
-        document.querySelectorAll("#tabbar [data-tab]").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+        const tabBtn = RESEARCH_TABS.includes(tab) ? "research" : tab;
+        document.querySelectorAll("#tabbar [data-tab]").forEach(b => b.classList.toggle("on", b.dataset.tab === tabBtn));
+        document.querySelectorAll("#research-switch [data-sub]").forEach(b => {
+            const on = b.dataset.sub === tab;
+            b.classList.toggle("on", on); b.setAttribute("aria-selected", on);
+        });
         if (tab === "news") markSeen();
         if (tab === "who" && typeof WHO !== "undefined") WHO.load();
         if (tab === "ozet" && typeof Ozet !== "undefined") Ozet.load();
@@ -63,6 +74,8 @@ const Shell = (() => {
     function initTabs() {
         document.querySelectorAll("#tabbar [data-tab]").forEach(b =>
             b.addEventListener("click", () => showTab(b.dataset.tab)));
+        document.querySelectorAll("#research-switch [data-sub]").forEach(b =>
+            b.addEventListener("click", () => showTab(b.dataset.sub)));
         $("map-cta").addEventListener("click", () => showTab("map"));
         // seçim değişince düğme metni güncellensin ve dikkat çeksin
         document.addEventListener("change", ev => { if (ev.target.closest(".s-cb, .person-cb")) updateMapCta(true); });
@@ -82,6 +95,24 @@ const Shell = (() => {
                 if (MOBILE.matches && document.body.dataset.tab !== "map" && Date.now() - sheetTapAt < 8000) showTab("map");
             });
         }
+    }
+
+    // ── Basit / Araştırma görünümü (masaüstü) ─────────────────────
+    // Varsayılan basit görünüm herkes içindir: harita, Özet, Sağlık, Duyurular.
+    // Araştırma; sensör panellerini, saha ölçümlerini ve karşılaştırma grafiğini açar. Tercih cihazda saklanır.
+    function setResearch(on) {
+        document.body.classList.toggle("research", on);
+        $("research-btn").setAttribute("aria-pressed", on);
+        lsSet(RESEARCH_KEY, on);
+    }
+    function initResearch() {
+        setResearch(lsGet(RESEARCH_KEY, false));
+        $("research-btn").addEventListener("click", () => {
+            const on = !document.body.classList.contains("research");
+            setResearch(on);
+            // Araştırma açılınca sağdaki okuma panelleri kapansın; saha paneli görünsün
+            if (on) PANELS.forEach(n => document.body.classList.remove(n + "-open"));
+        });
     }
 
     // ── Duyurular ──────────────────────────────────────────────────
@@ -275,6 +306,7 @@ const Shell = (() => {
 
     document.addEventListener("DOMContentLoaded", () => {
         initTabs();
+        initResearch();
         initNews();
         initInstall();
         // Açılışta herkesin ilk gördüğü: Özet (telefonda sekme, masaüstünde sağ panel)

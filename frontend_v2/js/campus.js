@@ -475,7 +475,7 @@ const Campus = (() => {
         if (!s) {
             body = `<div class="bp-empty">${pts.length
                 ? `Seçili ölçümlerden bu binaya düşen ${e.rawN ? e.rawN + " (yetersiz)" : "yok"}.`
-                : "Bina bazlı PM₂.₅ için sağ panelden saha ölçümü seçin."}</div>`;
+                : "Bina bazlı PM₂.₅ için Araştırma › Saha ölçümleri bölümünden ölçüm günü seçin."}</div>`;
         } else {
             const who = Object.entries(s.byPerson || {}).filter(([p]) => p !== "—").sort((a, b) => b[1].n - a[1].n)
                 .map(([p, v]) => `<span class="bp-chip">${p} · ${v.n} · ${(v.sum / v.n).toFixed(1)}</span>`).join("");
@@ -615,7 +615,7 @@ const Campus = (() => {
         const note = document.getElementById("campus-note");
         if (note) note.textContent = !lastPoints.length
             ? "Sağ panelden ölçüm seçince binalar ortalama PM₂.₅ ile boyanır"
-            : !choropleth ? "Bina ortalamaları için sağ panelde 🏢 görünümünü seçin"
+            : !choropleth ? "Bina ortalamaları için Saha ölçümleri panelinde «Bina ortalamaları» görünümünü seçin"
             : shown ? `${periodLabel()}: ${shown} bina boyandı (≥${MIN_PTS} ölçüm)` : "Bu dönemde bina içine düşen ölçüm yok";
     }
 

@@ -268,11 +268,11 @@ body {
 .view-bar { padding: 10px 14px 4px; border-bottom: 1px solid var(--stroke); flex-shrink: 0; }
 .view-seg { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; padding: 3px;
   border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid var(--stroke); }
-.vs-btn { padding: 7px 6px; border: none; border-radius: 7px; background: transparent; cursor: pointer;
+.vs-btn, .rs-btn { padding: 7px 6px; border: none; border-radius: 7px; background: transparent; cursor: pointer;
   color: var(--text-2); font: 600 11.5px Inter, sans-serif; transition: background .15s, color .15s; }
-.vs-btn:hover { color: var(--text); }
-.vs-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-.vs-btn.on { background: var(--accent-soft); color: #fff; box-shadow: inset 0 0 0 1px rgba(91,141,239,0.45); }
+.vs-btn:hover, .rs-btn:hover { color: var(--text); }
+.vs-btn, .rs-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.vs-btn.on, .rs-btn.on { background: var(--accent-soft); color: #fff; box-shadow: inset 0 0 0 1px rgba(91,141,239,0.45); }
 .avg-tools { margin-top: 9px; }
 .avg-tools[hidden] { display: none; }
 .pd-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 9px; }
@@ -732,6 +732,7 @@ body {
   box-shadow: 0 0 0 0 var(--marker-color);
   animation: pulse 2.2s infinite;
 }
+.pulse-marker.stale { animation: none; opacity: .75; }
 @keyframes pulse {
   0%   { box-shadow: 0 0 0 0 rgba(176,122,255,0.55); }
   70%  { box-shadow: 0 0 0 16px rgba(176,122,255,0); }
@@ -1121,7 +1122,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 .oz-more { display: flex; align-items: center; justify-content: center; gap: 7px; }
 
 /* Telefon öğeleri — masaüstünde gizli */
-.tabbar, .install-banner, .map-cta { display: none; }
+.tabbar, .install-banner, .map-cta, .research-switch { display: none; }
 
 @media (min-width: 761px) {
   body.ozet-open #ozet-dock,
@@ -1133,6 +1134,11 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
     animation: slideIn 0.35s cubic-bezier(0.22,1,0.36,1);
   }
   body.ozet-open .legend, body.info-open .legend, body.who-open .legend, body.news-open .legend { display: none; }
+  /* Basit görünüm (varsayılan): sensör panelleri, saha paneli, grafik çekmecesi ve sayaçlar yalnızca Araştırma'da */
+  body:not(.research) .sidebar, body:not(.research) .sidebar-toggle, body:not(.research) .sessions-dock,
+  body:not(.research) .chart-drawer, body:not(.research) .player-dock, body:not(.research) #chip-readings,
+  body:not(.research) #chip-sessions { display: none !important; }
+  body.research #research-btn { color: #fff; background: var(--accent-soft); border-color: rgba(91,141,239,0.5); }
   .sessions-dock { max-height: calc(100vh - 70px - 200px); }
 }
 
@@ -1202,6 +1208,14 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
     padding: 10px 10px 12px; overflow-y: auto;
     background: rgba(10,16,29,0.94); backdrop-filter: blur(6px);
   }
+  .research-switch { --rs-h: 52px; }
+  body[data-tab="live"] .research-switch, body[data-tab="field"] .research-switch {
+    display: block; position: fixed; z-index: 1110; top: var(--top-h); left: 0; right: 0;
+    padding: 8px 10px 4px; background: rgba(10,16,29,0.94);
+  }
+  body[data-tab="live"] .sidebar, body[data-tab="field"] .sessions-dock { top: calc(var(--top-h) + 52px); padding-top: 4px; }
+  .research-switch .view-seg { background: var(--glass); }
+  .rs-btn { padding: 9px 6px; font-size: 13px; }
   body[data-tab="field"] .sessions-dock .panel,
   body[data-tab="news"] #news-dock .panel,
   body[data-tab="ozet"] #ozet-dock .panel,
@@ -1221,6 +1235,8 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
   body[data-tab="live"] .sidebar, body[data-tab="field"] .sessions-dock .team-foot, body[data-tab="who"] #who-body, body[data-tab="ozet"] #ozet-body { padding-bottom: 76px; }
   body:not([data-tab="map"]) .player-dock,
   body:not([data-tab="map"]) .chart-drawer { display: none; }
+  /* Sensör karşılaştırma grafiği yalnızca bir saha günü oynatılırken (Araştırma akışı) */
+  body:not(:has(.player-dock.visible)) .chart-drawer { display: none; }
 
   .leaflet-bottom.leaflet-right { bottom: calc(var(--tab-h) + 52px); }
   .leaflet-control-attribution { display: none; }
@@ -1249,7 +1265,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 </style>
 </head>
 <body data-tab="map">
-<script src="js/icons.js?v=1"></script>
+<script src="js/icons.js?v=2"></script>
 
 <div class="boot" id="boot">
   <div class="boot-inner">
@@ -1288,8 +1304,9 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
   </div>
   <div class="chip" id="chip-readings"><svg class="i"><use href="#i-chart-column"></use></svg> <b>—</b>&nbsp;ölçüm</div>
   <div class="chip" id="chip-sessions"><svg class="i"><use href="#i-footprints"></use></svg> <b>—</b>&nbsp;oturum</div>
+  <button class="chip chip-btn" id="research-btn" type="button" aria-pressed="false" title="Sensör panelleri, saha ölçümleri ve karşılaştırma grafikleri"><svg class="i"><use href="#i-microscope"></use></svg> Araştırma</button>
   <button class="chip chip-btn" id="ozet-btn" type="button"><svg class="i"><use href="#i-gauge"></use></svg> Özet</button>
-  <button class="chip chip-btn" id="who-btn" type="button"><svg class="i"><use href="#i-shield-check"></use></svg> WHO</button>
+  <button class="chip chip-btn" id="who-btn" type="button" title="WHO kılavuz değerlerine göre değerlendirme"><svg class="i"><use href="#i-shield-check"></use></svg> Sağlık</button>
   <button class="chip chip-btn info-btn" id="info-btn" type="button" title="Hakkında · Yöntem · Gizlilik (KVKK)" aria-label="Hakkında, yöntem ve gizlilik"><svg class="i"><use href="#i-info"></use></svg></button>
   <button class="chip chip-btn" id="news-btn" type="button"><svg class="i"><use href="#i-megaphone"></use></svg> Duyurular<span class="badge" id="news-badge" hidden></span></button>
 </div>
@@ -1456,7 +1473,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
   </div>
 </aside>
 
-<!-- WHO durumu (masaüstünde sağ panel, telefonda "WHO" sekmesi) -->
+<!-- WHO durumu (masaüstünde sağ panel, telefonda "Sağlık" sekmesi) -->
 <!-- Özet (masaüstünde sağ panel, telefonda ilk sekme): günlük ve aylık özet -->
 <aside class="news-dock ozet-dock" id="ozet-dock">
   <div class="panel panel-scroll" style="height:100%">
@@ -1493,6 +1510,8 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
       <p><b>GTÜ AirLab</b>, Gebze Teknik Üniversitesi kampüsünde partikül madde (PM₂.₅, PM₁₀) ve iç mekân CO₂ düzeylerini
         ölçmek, haritalamak ve yorumlamak amacıyla yürütülen araştırmanın veri platformudur. Sabit sensörler, taşınabilir
         sensörlerle yapılan saha ölçümleri ve resmî bölge istasyonu verileri tek bir arayüzde birleştirilir.</p>
+      <p>Varsayılan görünüm kampüsteki herkes için sadeleştirilmiştir (Özet, Harita, Sağlık, Duyurular). Sensörlerin ham
+        panelleri, saha ölçümleri ve karşılaştırma grafikleri <b>Araştırma</b> bölümündedir.</p>
 
       <h4 id="inf-ag">Ölçüm ağı</h4>
       <table class="info-table"><thead><tr><th>Kaynak</th><th>Tür</th><th>Ölçülen</th></tr></thead><tbody>
@@ -1569,11 +1588,18 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 <nav class="tabbar" id="tabbar" aria-label="Bölümler">
   <button type="button" data-tab="ozet"><span class="tb-ico"><svg class="i"><use href="#i-gauge"></use></svg></span>Özet</button>
   <button type="button" data-tab="map" class="on"><span class="tb-ico"><svg class="i"><use href="#i-map"></use></svg></span>Harita</button>
-  <button type="button" data-tab="live"><span class="tb-ico"><svg class="i"><use href="#i-radio-tower"></use></svg></span>Canlı</button>
-  <button type="button" data-tab="field"><span class="tb-ico"><svg class="i"><use href="#i-footprints"></use></svg></span>Saha</button>
-  <button type="button" data-tab="who"><span class="tb-ico"><svg class="i"><use href="#i-shield-check"></use></svg></span>WHO</button>
+  <button type="button" data-tab="who"><span class="tb-ico"><svg class="i"><use href="#i-shield-check"></use></svg></span>Sağlık</button>
   <button type="button" data-tab="news"><span class="tb-ico"><svg class="i"><use href="#i-megaphone"></use></svg></span>Duyuru<span class="badge" id="tab-news-badge" hidden></span></button>
+  <button type="button" data-tab="research"><span class="tb-ico"><svg class="i"><use href="#i-microscope"></use></svg></span>Araştırma</button>
 </nav>
+
+<!-- Telefon: Araştırma sekmesinde Sensörler / Saha ölçümleri geçişi -->
+<div class="research-switch" id="research-switch">
+  <div class="view-seg" role="tablist" aria-label="Araştırma bölümleri">
+    <button type="button" class="rs-btn" data-sub="live" role="tab"><svg class="i"><use href="#i-radio-tower"></use></svg> Sensörler</button>
+    <button type="button" class="rs-btn" data-sub="field" role="tab"><svg class="i"><use href="#i-footprints"></use></svg> Saha ölçümleri</button>
+  </div>
+</div>
 
 <!-- Player dock -->
 <div class="player-dock" id="player-dock">
@@ -1619,13 +1645,13 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=40"></script>
-<script src="js/api.js?v=40"></script>
-<script src="js/campus.js?v=40"></script>
-<script src="js/app.js?v=40"></script>
-<script src="js/who.js?v=40"></script>
-<script src="js/kiyas.js?v=40"></script>
-<script src="js/ozet.js?v=40"></script>
-<script src="js/shell.js?v=40"></script>
+<script src="js/colorscale.js?v=41"></script>
+<script src="js/api.js?v=41"></script>
+<script src="js/campus.js?v=41"></script>
+<script src="js/app.js?v=41"></script>
+<script src="js/who.js?v=41"></script>
+<script src="js/kiyas.js?v=41"></script>
+<script src="js/ozet.js?v=41"></script>
+<script src="js/shell.js?v=41"></script>
 </body>
 </html>
