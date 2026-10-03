@@ -24,11 +24,10 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
   `pip install requests && python scripts/csb_gecmis.py 2026-04-01`, sonra `frontend_v2/data/tuzla_saatlik.json`'u commit'leyip
   `main`'e push et. Karşılaştırma ekranları (WHO sekmesi, Özet aylık, Canlı "Kampüs vs Bölge") kendiliğinden dolar.
   Kullanıcı yeni PurpleAir verisi ekleyince aynı komutu güncel tarih aralığıyla tekrar çalıştır.
-- **KVKK, git geçmişi:** Kişisel veri içeren belgeler (2209 kabul, BAP/1002 formları, ekip fotoğrafları) 3 Ekim 2026'da repodan
-  kaldırıldı ama eski commit'lerde duruyor. Tamamen silmek geçmişi yeniden yazmayı (force push) ya da geçmişsiz yeni repoya
-  taşımayı (gtuairlab organizasyonuna geçişte) gerektirir; geri alınamaz, yalnızca kullanıcının açık onayıyla.
-- **KVKK, karar bekleyen:** `link/index.html` (ekip sayfası: fotoğraflar, adlar, e-postalar), `proje_animasyon.html` (BAP haritası, adlar),
-  `backend/seed.sql` (oturum adları + GPS). Kullanıcıya soruldu; onaysız silme.
+- **KVKK, git geçmişi:** Kişisel veri içeren belgeler (2209 kabul, BAP/1002 formları, ekip fotoğrafları, `link/` ekip sayfası)
+  3 Ekim 2026'da repodan kaldırıldı ama eski commit'lerde duruyor. Kullanıcının kararı: **gtuairlab organizasyonuna geçişte
+  geçmişsiz yeni repo** kurulacak, eski kişisel repo sonra silinip yerine yönlendirme konacak (silme adımı ayrıca onayla).
+- **KVKK, kullanıcı tutmaya karar verdi:** `proje_animasyon.html`, `backend/seed.sql`, `create_demo_ilker_serra.py` (3 Ekim 2026).
 - **Adsız 20 bina:** ekip numaralı haritadan eşleştirince `campus.geojson`'a adları işle.
 
 ## Gizlilik ve KVKK (her değişiklikte kontrol et)
