@@ -19,3 +19,13 @@ atmotube_deneme_harita/
 *.log
 .DS_Store
 Thumbs.db
+
+# KVKK: kişisel veri içeren belgeler (başvuru/kabul formları, fotoğraflar) herkese açık repoya eklenmez
+*.pdf
+*.doc
+*.docx
+photos_b64.json
+unpacked_*/
+bap_text.txt
+docx_text.txt
+extracted.txt
