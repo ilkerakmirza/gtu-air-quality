@@ -43,6 +43,10 @@ Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök diz
 - **Üçüncü taraflar:** Yazı tipleri ve kütüphaneler `frontend_v2/vendor/` altından yerel yüklenir (Google Fonts / CDN yok).
   Yeni bir dış servis ekleme; zorunluysa "Hakkında · Yöntem · Gizlilik" panelindeki KVKK bölümünü güncelle.
 - Analitik, çerez, izleme aracı ekleme. Tarayıcıda yalnızca tercihler (localStorage) tutulur.
+- **API anahtarları ve parolalar repoya asla girmez** (PurpleAir, Atmotube, Tuya, veritabanı, admin token): yalnızca sunucu ortam
+  değişkenlerinde (Render → Environment). Tarayıcı koduna anahtar gömülmez. `.claude/settings.local.json` izin listesine komutla
+  birlikte anahtar girebilir; commit'ten önce kontrol et. 4 Ekim 2026'da bu dosyada ve eski ekip sayfasında PurpleAir okuma anahtarı
+  (76E9… ile başlayan) bulundu; anahtar git geçmişinde kaldığı için PurpleAir'de iptal edilip yenisi oluşturulmalı.
 
 ## Arayüz ilkeleri (benzer uygulamalarla karşılaştırarak, akademik üslupla)
 - Arayüz değişikliğinden önce benzer uygulamalardaki karşılığına bak: IQAir AirVisual, PurpleAir haritası,

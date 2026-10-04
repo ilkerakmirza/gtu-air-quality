@@ -9,7 +9,7 @@
       "Bash(dir \"C:\\\\Users\\\\İlker\\\\Desktop\\\\BAP Proje Claude\" /b)",
       "WebFetch(domain:ute.gtu.edu.tr)",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\İlker\\\\Desktop\\\\BAP Proje Claude\" -Recurse -Force | Select-Object FullName, @{Name=\"Type\";Expression={if\\($_.PSIsContainer\\){\"DIR\"}else{\"FILE\"}}} | Sort-Object FullName)",
-      "Bash(curl -s \"https://api.purpleair.com/v1/sensors/229263?fields=pm2.5_atm,pm10.0_atm,temperature,humidity,last_seen\" -H \"X-API-Key: 76E9E9FC-4F79-11F1-B596-4201AC1DC123\")",
+      "Bash(curl -s \"https://api.purpleair.com/v1/sensors/229263?fields=pm2.5_atm,pm10.0_atm,temperature,humidity,last_seen\" -H \"X-API-Key: <PURPLEAIR_READ_KEY>\")",
       "Bash(taskkill /F /IM python.exe)",
       "Bash(python app.py)",
       "Bash(curl -s http://localhost:5000/api/purpleair/latest)",
