@@ -78,9 +78,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("legend").innerHTML = buildLegend() + buildCO2Legend();
 
-    // İlk yükleme: backend uyanana kadar dene
-    await wakeBackend();
+    // İlk yükleme: açılış ekranı en fazla 6 sn bekler. Ücretsiz sunucu uykudaysa uygulama yine açılır
+    // (Özet, Tuzla verisini İBB'den doğrudan da alabilir); sunucu uyanınca veriler yüklenir ve Özet tazelenir.
+    const woke = wakeBackend();
+    const early = await Promise.race([woke.then(() => true), new Promise(r => setTimeout(() => r(false), 6000))]);
     document.getElementById("boot").classList.add("gone");
+    if (!early) { await woke; if (typeof Ozet !== "undefined") Ozet.load(true); }
 
     loadPurpleAir();
     loadSessions();
