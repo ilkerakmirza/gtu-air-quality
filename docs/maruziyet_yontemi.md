@@ -4,6 +4,7 @@
 **Kod:** `frontend_v2/js/maruziyet.js` (arayüzde Özet → "AirLab asistanı: kampüste ne kadar PM₂.₅ soludum?")
 **Belge sürümü:** 1.1 · 4 Ekim 2026
 **Durum:** Taslak model. Sonuçlar senaryo tahminidir, kişisel ölçüm değildir.
+**Uygulamanın diğer hesapları ve kaynakları:** [`hesaplama_ve_kaynaklar.md`](hesaplama_ve_kaynaklar.md)
 
 Bu belge, hesabın hangi verilerle, hangi kabullerle ve hangi adımlarla yapıldığını ileride denetlenebilmesi için kayda geçirir.
 Koddaki bir değer değişirse bu belge de aynı commit'te güncellenmelidir (bkz. §11).

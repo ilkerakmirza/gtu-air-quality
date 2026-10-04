@@ -56,14 +56,14 @@ function pm25Intensity(v, maxVal = 75) {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// CO₂ renk skalası (ppm) — WHO/sağlık temelli havalandırma eşikleri
+// CO₂ renk skalası (ppm) — havalandırma göstergesi eşikleri (yaygın uygulama; kaynakları docs/hesaplama_ve_kaynaklar.md §8)
 // Dış ortam ~420 ppm. WHO COVID havalandırma rehberi <800 ppm hedefler;
 // dünyada en yaygın iç mekân sınırı 1000 ppm. 1000+ bilişsel düşüş,
 // 1500+ uyuşukluk/baş ağrısı, 5000 ppm 8 saatlik mesleki maruziyet sınırı (OSHA).
 // ─────────────────────────────────────────────────────────────────
 const CO2_SCALE = [
     { max:  600,     color: "#00cc00", label: "<600 — mükemmel (dış ortam ~420)" },
-    { max:  800,     color: "#99ee00", label: "600–800 — iyi (WHO hedefi)"       },
+    { max:  800,     color: "#99ee00", label: "600–800 — iyi"                     },
     { max: 1000,     color: "#ffff00", label: "800–1000 — yeterli havalandırma"  },
     { max: 1500,     color: "#ffaa00", label: "1000–1500 — zayıf (iyileştir)"    },
     { max: 2000,     color: "#ff6600", label: "1500–2000 — kötü (uyuşukluk)"     },
@@ -95,7 +95,7 @@ function buildCO2Legend() {
     ].map(([c, t], i) =>
         `<span style="background:${c};color:${i >= 5 ? "#fff" : "#0b0e14"}">${t}</span>`).join("");
     return `
-      <div class="legend-title" style="margin-top:9px">CO₂ <span style="text-transform:none">(ppm)</span> — WHO/sağlık eşikleri</div>
+      <div class="legend-title" style="margin-top:9px">CO₂ (ppm) — havalandırma göstergesi</div>
       <div class="legend-co2">${chips}</div>`;
 }
 
