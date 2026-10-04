@@ -28,6 +28,11 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
   3 Ekim 2026'da repodan kaldırıldı ama eski commit'lerde duruyor. Kullanıcının kararı: **gtuairlab organizasyonuna geçişte
   geçmişsiz yeni repo** kurulacak, eski kişisel repo sonra silinip yerine yönlendirme konacak (silme adımı ayrıca onayla).
 - **KVKK, kullanıcı tutmaya karar verdi:** `proje_animasyon.html`, `backend/seed.sql`, `create_demo_ilker_serra.py` (3 Ekim 2026).
+- **Sunucu güvenliği (kullanıcı "sonra" dedi, 4 Ekim 2026; hatırlat):**
+  1. `/api/upload` (CSV yükleme) korumasız: adresi bilen herkes veritabanına veri yükleyebilir. Öneri: `_admin_required()` eklemek;
+     önce ekipte elle CSV yükleyen var mı sor (eski arayüzdeki form kapandı, yükleme için yeni yol gerekebilir).
+  2. `ADMIN_TOKEN` varsayılanı `"changeme"` (`backend/config.py`): Render → Environment'ta uzun, rastgele bir değerle tanımlı mı,
+     kullanıcı kontrol etmeli (değeri isteme).
 - **Adsız 20 bina:** ekip numaralı haritadan eşleştirince `campus.geojson`'a adları işle.
 
 ## Gizlilik ve KVKK (her değişiklikte kontrol et)
@@ -125,6 +130,7 @@ Renkli (zengin) duyuru — `renk` ya da `bolumler` varsa renkli başlık alanıy
 - `frontend_v2/` — yayındaki arayüz (`index.html`, `js/icons.js` (ikon seti), `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `js/shell.js`, `js/who.js` (WHO durumu sekmesi), `js/ozet.js` (Özet: günlük ve aylık özet, açılış ekranı), `js/kiyas.js` (kampüs–Tuzla aynı saat karşılaştırması), `js/maruziyet.js` (kişisel maruziyet hesabı, taslak), `data/campus.geojson`, `data/duyurular.json`, `data/tuzla_saatlik.json` (Tuzla saatlik geçmişi))
 - `frontend_v2/vendor/` — yerel Leaflet, Leaflet.heat, Chart.js ve yazı tipleri (Inter, Source Serif 4) (lisanslar `vendor/LICENSES/`)
 - `docs/` — yöntem belgeleri: `hesaplama_ve_kaynaklar.md` (tüm sınıflandırma, eşik, hesap ve kaynakların kaydı + kontrol listesi), `maruziyet_yontemi.md` (kişisel maruziyet hesabı)
+- `.github/workflows/sunucu-uyanik.yml` — Render ücretsiz sunucusunu uyanık tutmak için 10 dakikada bir `/health` isteği (uyurken veri toplama durur). Render ücretsiz planı ayda 750 saat; tek servis 7/24 açık kalabilir.
 - `scripts/` — `ekip_kasasi.js` (ekip görünümü ad kasası), `tuzla_gecmis.py` (İBB'den Tuzla PM₁₀ geçmişi, her yerden çalışır), `csb_gecmis.py` (ÇŞB'den Tuzla PM₂.₅ geçmişi, yalnızca Türkiye'den)
 - `frontend/` — önceki harita arayüzü; **emekliye ayrıldı** (4 Ekim 2026): `map.html` ve kök `index.html` yeni arayüze (`frontend_v2/`) yönlendirir. Eski arayüz gerçek adları gösteriyor, CDN kullanıyor ve korumasız yükleme formu içeriyordu; geri getirme.
 - `backend/` — Python sunucu ve veri toplayıcılar (PurpleAir, Atmotube, Tuya CO2, ÇSB, İBB); arayüzün kullandığı API: https://gtu-air-quality.onrender.com (`frontend_v2/js/api.js`)

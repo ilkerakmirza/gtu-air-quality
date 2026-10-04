@@ -1,0 +1,29 @@
+# Render'ın ücretsiz planı 15 dakika istek gelmezse sunucuyu uyutur; uyurken veri toplama görevleri
+# (PurpleAir, İBB, Atmotube, CO₂) da durur. Bu görev 10 dakikada bir /health ucuna istek atarak sunucuyu uyanık tutar.
+# Not: GitHub zamanlanmış görevleri birkaç dakika gecikebilir; repoda 60 gün hiç etkinlik olmazsa GitHub görevi
+# duraklatır (Actions sekmesinden yeniden etkinleştirilir). Elle çalıştırmak için: Actions → Sunucuyu uyanık tut → Run workflow.
+name: Sunucuyu uyanık tut
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sunucu-uyanik
+  cancel-in-progress: true
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: /health
+        run: |
+          # Uykudan uyanış ~50 sn sürebilir: 90 sn bekle, gerekirse 3 kez dene
+          for i in 1 2 3; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 90 https://gtu-air-quality.onrender.com/health || true)
+            echo "deneme $i: HTTP $code"
+            [ "$code" = "200" ] && exit 0
+            sleep 15
+          done
+          echo "::warning::Sunucu yanıt vermedi (Render çökmüş ya da bakımda olabilir)"
