@@ -60,9 +60,15 @@ Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök diz
   Özet, Harita, Sağlık (WHO), Duyuru. Teknik içerik (sensör panelleri, saha ölçümleri, oynatma, karşılaştırma grafiği)
   yalnızca **Araştırma**'dadır: masaüstünde üst çubuktaki düğme (`body.research`, tercih `gtu.view.research`),
   telefonda "Araştırma" sekmesi ve içindeki Sensörler / Saha ölçümleri geçişi. Yeni teknik özellikleri Araştırma'ya koy.
+- **HKİ (Ulusal Hava Kalitesi İndeksi):** Herkesin gördüğü tek sınıflandırma budur (`colorscale.js` → `hki()`, `HKI_PM25`;
+  `pm25Label` HKİ sınıf adını döndürür). PM₂.₅ kesim noktaları İBB'nin yayımladığı ulusal tablodan: 12,0 / 35,4 / 55,4 / 150,4 / 250,4.
+  Sınıflar: İyi, Orta, Hassas, Sağlıksız, Kötü, Tehlikeli; her birinin yüz simgesi var (laugh … angry). Özet kartı IQAir düzeninde:
+  büyük HKİ sayısı + yüz + sınıf, PM₂.₅ ikincil. WHO karşılaştırması ayrı kavram olarak Sağlık sekmesinde kalır.
+  Sınır değerler (WHO 2021, Türkiye, AB 2030) Hakkında panelinde "Sınır değerler ve HKİ" bölümünde.
 - **Otomatik durum duyuruları** (`shell.js` → `statusNotices`): sensör kesintisi (PurpleAir > 2 sa, Tuzla > 6 sa, CO₂ > 24 sa) ve
-  PM₂.₅ > 25 µg/m³ olduğunda Duyurular'a kendiliğinden kart düşer, sorun bitince kalkar; elle duyuru eklemeye gerek yok.
-- **Kişisel maruziyet** (`maruziyet.js`): C = P(saat) × R(bina) × F(ortam), solunum hızları US EPA (2011). Varsayımlar panelde
+  HKİ > 100 (Hassas ve üstü) olduğunda Duyurular'a kendiliğinden kart düşer, sorun bitince kalkar; elle duyuru eklemeye gerek yok.
+- **Kişisel maruziyet** (`maruziyet.js`): varsayılan girdi yolu kural tabanlı **asistan** (sohbet; yapay zekâ/dış servis yok; yüzü HKİ'ye
+  göre değişir), ikinci yol tablo. C = P(saat) × R(bina) × F(ortam), solunum hızları US EPA (2011). Varsayımlar panelde
   yazılıdır; girilen bilgiler cihazdan çıkmaz (yalnızca "Bu cihazda hatırla" ile localStorage).
   Yöntem belgesi: `docs/maruziyet_yontemi.md`. `ENV`/`ACT` değerleri ya da hesap değişirse belgeyi aynı commit'te güncelle.
 - Kısa süreli saha ölçümleri WHO 24 saatlik değeriyle karşılaştırılmaz (kampüs saha ortalamasıyla karşılaştırılır).

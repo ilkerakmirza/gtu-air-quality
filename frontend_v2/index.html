@@ -723,6 +723,10 @@ body {
 }
 .legend-ticks span { position: absolute; transform: translateX(-50%); }
 .legend-cats { display: flex; justify-content: space-between; font-size: 9.5px; font-weight: 700; margin-top: 8px; }
+.legend-hki { position: relative; height: 18px; margin-top: 6px; }
+.legend-hki span { position: absolute; top: 0; padding-top: 3px; border-top: 2px solid; font-size: 9.5px; font-weight: 700;
+  text-align: center; white-space: nowrap; overflow: hidden; }
+.legend-note { margin: 3px 0 2px; font-size: 9.5px; color: var(--text-3); }
 
 /* Map markers */
 .pulse-marker {
@@ -862,6 +866,19 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
   background: color-mix(in srgb, var(--c) 7%, rgba(255,255,255,0.02)); }
 .oz-now::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--c); }
 .oz-now-top { display: flex; align-items: center; gap: 12px; }
+/* HKİ: renkli yüz, büyük indeks, sınıf adı (IQAir düzeni) */
+.oz-face { flex-shrink: 0; width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center;
+  color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); border: 1.5px solid color-mix(in srgb, var(--c) 45%, transparent); }
+.oz-face .i { width: 32px; height: 32px; stroke-width: 1.7; }
+.oz-hki { display: flex; flex-direction: column; line-height: 1; }
+.oz-hki b { font: 600 44px/1 var(--serif); color: var(--text); font-variant-numeric: tabular-nums; }
+.oz-hki span { margin-top: 3px; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; color: var(--text-2); }
+.oz-now-top .oz-cat { margin-left: auto; font-size: 14px; padding: 5px 12px; }
+.oz-val2 { margin-top: 11px; font-size: 13px; color: var(--text-2); }
+.oz-val2 b { font-size: 17px; color: var(--text); font-variant-numeric: tabular-nums; }
+.oz-val2 span { font-size: 11.5px; }
+.oz-link { border: none; background: none; padding: 0; color: #a9c0ff; font: 600 10.5px Inter, sans-serif; cursor: pointer; text-decoration: underline; }
+.oz-now .who-cap { margin-top: 10px; }
 .oz-face { font-size: 34px; line-height: 1; }
 .oz-cat { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 12.5px; font-weight: 700; line-height: 1.3;
   color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); }
@@ -872,11 +889,11 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 .oz-src .i { color: var(--text-3); }
 /* Sınıf ölçeği (İyi … Tehlikeli) ve değerin konumu */
 .oz-scale { position: relative; margin: 14px 0 4px; padding-bottom: 14px; }
-.oz-scale-bar { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; height: 6px; }
+.oz-scale-bar { position: relative; display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; height: 6px; }
 .oz-scale-bar i { border-radius: 2px; opacity: .85; }
 .oz-scale-bar em { position: absolute; top: -5px; width: 4px; height: 16px; margin-left: -2px; border-radius: 2px;
   background: #fff; box-shadow: 0 0 0 2px var(--bg); }
-.oz-scale-lab { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-top: 6px;
+.oz-scale-lab { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; margin-top: 6px;
   font-size: 9.5px; font-weight: 600; color: var(--text-2); text-align: center; }
 .oz-scale-tick { position: absolute; left: 0; right: 0; bottom: 0; height: 12px; }
 .oz-scale-tick span { position: absolute; transform: translateX(-50%); font-size: 9px; color: var(--text-3); font-variant-numeric: tabular-nums; }
@@ -959,6 +976,34 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 .mx-bar em { display: block; height: 100%; border-radius: 99px; }
 .mx-bar b { text-align: right; font-variant-numeric: tabular-nums; }
 .mx-method { margin-top: 12px; }
+.mx-mode { margin-bottom: 12px; }
+.mx-mode .pd-chip, .cb-opts .pd-chip { display: inline-flex; align-items: center; gap: 6px; }
+/* Sohbet asistanı */
+.cb { display: grid; gap: 9px; }
+.cb-msg { display: flex; align-items: flex-end; gap: 8px; }
+.cb-msg.me { justify-content: flex-end; }
+.cb-av { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: var(--c);
+  background: color-mix(in srgb, var(--c) 16%, transparent); border: 1.5px solid color-mix(in srgb, var(--c) 45%, transparent); }
+.cb-av .i { width: 19px; height: 19px; }
+.cb-bub { max-width: 86%; padding: 9px 12px; border-radius: 14px; font-size: 12.8px; line-height: 1.55; color: #dde3ee;
+  background: rgba(255,255,255,0.045); border: 1px solid var(--stroke); border-bottom-left-radius: 4px; }
+.cb-msg.bot .cb-bub:has(.cb-chart) { flex: 1; max-width: none; }
+.cb-msg.me .cb-bub { color: #fff; background: var(--accent-soft); border-color: rgba(91,141,239,0.4); border-radius: 14px; border-bottom-right-radius: 4px; }
+.cb-bub b { color: #fff; }
+.cb-ask { margin: 4px 0 6px 38px; }
+.cb-opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.cb-opts:has(.cb-choice) { display: grid; grid-template-columns: 1fr 1fr; }
+.cb-choice { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: var(--r-md); cursor: pointer; text-align: left;
+  border: 1px solid var(--stroke-2); background: rgba(255,255,255,0.03); color: var(--text); font: 600 12px Inter, sans-serif; }
+.cb-choice .i { color: var(--text-2); font-size: 16px; }
+.cb-choice:hover { border-color: rgba(91,141,239,0.55); background: var(--accent-soft); }
+.cb-row { display: flex; gap: 6px; margin-top: 7px; }
+.cb-row input, .cb-row select { flex: 1; min-width: 0; height: 34px; padding: 0 8px; border-radius: var(--r-sm); border: 1px solid var(--stroke-2);
+  background: var(--bg-2); color: var(--text); font: 500 12.5px Inter, sans-serif; color-scheme: dark; }
+.cb-row .sc-btn { flex: 0 0 auto; padding: 7px 14px; }
+.pd-chip.alt { border-style: dashed; }
+.cb-chart { position: relative; height: 140px; margin: 2px 0 4px; }
+.cb-tips { margin: 6px 0 0 16px; display: grid; gap: 5px; }
 .oz-exp { margin-top: 12px; }
 
 /* ───────────────────────── Hakkında · Yöntem · KVKK ───────────────────────── */
@@ -977,6 +1022,9 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 .info-table th, .info-table td { text-align: left; padding: 6px; border-bottom: 1px solid var(--stroke); vertical-align: top; }
 .info-table th { font-size: 10.5px; color: var(--text-2); }
 .info-table td:first-child { font-weight: 700; color: #fff; white-space: nowrap; }
+.info-table td small { color: var(--text-2); font-weight: 500; }
+.hki-table td:first-child { font-variant-numeric: tabular-nums; }
+.hki-table i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 7px; vertical-align: -1px; }
 .info-cite { margin-top: 10px; padding: 9px 11px; border-radius: 10px; background: rgba(255,255,255,0.04);
   border: 1px solid var(--stroke); font-size: 11.5px; word-break: break-word; }
 .oz-foot { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--stroke); display: flex; flex-wrap: wrap; gap: 4px 14px; }
@@ -1308,7 +1356,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 </style>
 </head>
 <body data-tab="map">
-<script src="js/icons.js?v=3"></script>
+<script src="js/icons.js?v=4"></script>
 
 <div class="boot" id="boot">
   <div class="boot-inner">
@@ -1542,7 +1590,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 <aside class="news-dock exp-dock" id="exp-dock">
   <div class="panel panel-scroll" style="height:100%">
     <div class="panel-head">
-      <span class="ico"><svg class="i"><use href="#i-calculator"></use></svg></span> Kişisel maruziyet (taslak)
+      <span class="ico"><svg class="i"><use href="#i-message-circle"></use></svg></span> Maruziyet asistanı (taslak)
       <span class="right"><button class="pbtn sq" id="exp-close" type="button" title="Kapat" aria-label="Kapat"><svg class="i"><use href="#i-x"></use></svg></button></span>
     </div>
     <div class="panel-body" id="exp-body"><div class="news-empty">Yükleniyor…</div></div>
@@ -1557,7 +1605,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
       <span class="right"><button class="pbtn sq" id="info-close" type="button" title="Kapat" aria-label="Kapat"><svg class="i"><use href="#i-x"></use></svg></button></span>
     </div>
     <div class="panel-body info-body" id="info-body">
-      <nav class="info-toc"><a href="#inf-hak">Hakkında</a><a href="#inf-ag">Ölçüm ağı</a><a href="#inf-yon">Yöntem</a>
+      <nav class="info-toc"><a href="#inf-hak">Hakkında</a><a href="#inf-ag">Ölçüm ağı</a><a href="#inf-yon">Yöntem</a><a href="#inf-sinir">Sınır değerler</a>
         <a href="#inf-sin">Sınırlılıklar</a><a href="#inf-kay">Kaynaklar</a><a href="#inf-kvkk">Gizlilik (KVKK)</a></nav>
 
       <h4 id="inf-hak">Hakkında</h4>
@@ -1582,9 +1630,10 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
           daha az ölçümlü günler değerlendirmeye alınmaz.</li>
         <li><b>WHO karşılaştırması:</b> WHO Küresel Hava Kalitesi Kılavuzu (2021) değerleri kullanılır: PM₂.₅ için 24 saatlik
           15 µg/m³ ve yıllık 5 µg/m³; PM₁₀ için 45 ve 15 µg/m³; ara hedefler (AH-1…AH-4).</li>
-        <li><b>Hava kalitesi sınıfları:</b> PM₂.₅'e göre İyi (≤15), Orta (≤25), Hassas gruplar için sağlıksız (≤35), Sağlıksız (≤55),
-          Tehlikeli (&gt;55 µg/m³). Alt sınırlar WHO kılavuz değeri ve 4. ara hedefle, üst sınırlar ABD EPA hava kalitesi indeksi
-          kesim noktalarıyla uyumludur.</li>
+        <li><b>Hava kalitesi sınıfları:</b> Ulusal Hava Kalitesi İndeksi (HKİ) kullanılır: ÇŞB'nin ABD EPA indeksinden uyarladığı
+          altı sınıf (İyi, Orta, Hassas, Sağlıksız, Kötü, Tehlikeli). PM₂.₅ derişimi, sınıfın kesim noktaları arasında doğrusal
+          olarak 0–500 indeks değerine çevrilir. Resmî HKİ 24 saatlik ortalamalar için tanımlıdır; özet ekranındaki değer son
+          ölçüme göre <i>gösterge</i> niteliğindedir. Kesim noktaları aşağıda "Sınır değerler ve HKİ" bölümündedir.</li>
         <li><b>Bina değerleri:</b> Saha ölçümlerinin GPS noktaları bina poligonlarıyla eşleştirilir; en az 3 ölçümü olan binalar
           gösterilir. Bu ölçümler kısa süreli olduğundan WHO'nun 24 saatlik değeriyle değil, aynı dönemdeki tüm saha ölçümlerinin
           ortalamasıyla karşılaştırılır.</li>
@@ -1594,6 +1643,28 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
         <li><b>Kampüs–bölge karşılaştırması:</b> Yalnızca kampüs sensörü ile Tuzla istasyonunun aynı saatte ölçüm yaptığı saatler
           karşılaştırılır.</li>
       </ul>
+
+      <h4 id="inf-sinir">Sınır değerler ve HKİ</h4>
+      <p><b>Ulusal Hava Kalitesi İndeksi (HKİ), PM₂.₅</b> (24 saatlik ortalama, µg/m³):</p>
+      <table class="info-table hki-table"><thead><tr><th>HKİ</th><th>Sınıf</th><th>PM₂.₅</th></tr></thead><tbody>
+        <tr><td><i style="background:#00cc00"></i>0–50</td><td>İyi</td><td>0–12,0</td></tr>
+        <tr><td><i style="background:#ffcc00"></i>51–100</td><td>Orta</td><td>12,1–35,4</td></tr>
+        <tr><td><i style="background:#ff8800"></i>101–150</td><td>Hassas</td><td>35,5–55,4</td></tr>
+        <tr><td><i style="background:#ff0000"></i>151–200</td><td>Sağlıksız</td><td>55,5–150,4</td></tr>
+        <tr><td><i style="background:#bb44bb"></i>201–300</td><td>Kötü</td><td>150,5–250,4</td></tr>
+        <tr><td><i style="background:#7e0023"></i>301–500</td><td>Tehlikeli</td><td>250,5–500,4</td></tr>
+      </tbody></table>
+      <p class="who-cap">Kaynak: Ulusal HKİ tablosu (ÇŞB'nin EPA indeksinden uyarlaması), İBB Çevre Koruma ve Kontrol Dairesi yayımı.
+        HKİ resmî olarak PM₁₀, CO, SO₂, NO₂ ve O₃ için hesaplanır; kampüs sensörü PM₂.₅ ölçtüğü için tablonun PM₂.₅ sütunu kullanılır.</p>
+      <p><b>Sınır ve kılavuz değerler</b> (µg/m³):</p>
+      <table class="info-table"><thead><tr><th></th><th>PM₂.₅ yıllık</th><th>PM₂.₅ 24 sa</th><th>PM₁₀ yıllık</th><th>PM₁₀ 24 sa</th></tr></thead><tbody>
+        <tr><td>WHO kılavuzu (2021)</td><td>5</td><td>15</td><td>15</td><td>45</td></tr>
+        <tr><td>Türkiye, yürürlükte</td><td>—</td><td>—</td><td>40</td><td>50 <small>(yılda en çok 35 aşım)</small></td></tr>
+        <tr><td>AB, 2030'dan itibaren</td><td>10</td><td>25 <small>(18 aşım)</small></td><td>20</td><td>45 <small>(18 aşım)</small></td></tr>
+      </tbody></table>
+      <p class="who-cap">WHO değerleri sağlık temelli kılavuz değerlerdir, yasal sınır değildir. Türkiye: Hava Kalitesi Değerlendirme ve Yönetimi
+        Yönetmeliği; geçiş dönemi 2019'da tamamlanmıştır, PM₂.₅ için yürürlükte bir sınır değer yoktur. AB: 2024/2881 sayılı Direktif, Ek I.
+        Platformda kampüs ölçümleri WHO günlük değeriyle (15 µg/m³) karşılaştırılır; kısa süreli saha ölçümleri bu karşılaştırmaya alınmaz.</p>
 
       <h4 id="inf-sin">Sınırlılıklar</h4>
       <ul>
@@ -1619,7 +1690,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
         <li><b>Kullanıcı verisi toplanmaz.</b> Uygulamada üyelik, form, çerez, reklam ya da analitik/izleme aracı yoktur.</li>
         <li>Tarayıcınızda yalnızca kullanım tercihleri (okunan duyurular, seçili görünüm, katlanan paneller) saklanır; bu bilgiler
           cihazınızdan gönderilmez ve tarayıcı verilerini silerek kaldırılabilir.</li>
-        <li><b>Kişisel maruziyet hesabı:</b> Girdiğiniz saat, yer ve etkinlik bilgileri yalnızca cihazınızda hesaplanır, sunucuya
+        <li><b>Maruziyet asistanı ve hesabı:</b> Asistana ya da tabloya girdiğiniz saat, yer ve etkinlik bilgileri yalnızca cihazınızda hesaplanır, sunucuya
           gönderilmez. "Bu cihazda hatırla" işaretlenmezse sayfa kapanınca silinir.</li>
         <li><b>Saha ölçümleri:</b> Ölçümü yapan ekip üyelerinin kimlikleri gösterilmez ("Saha ekibi A/B/C"). Konum verileri yalnızca
           ölçüm noktası olarak ve araştırma amacıyla gösterilir.</li>
@@ -1629,7 +1700,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
         <li>6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamındaki talepleriniz için Gebze Teknik Üniversitesi'nin KVKK başvuru
           kanallarını kullanabilirsiniz.</li>
       </ul>
-      <p class="who-cap">Son güncelleme: 2 Ekim 2026</p>
+      <p class="who-cap">Son güncelleme: 4 Ekim 2026</p>
     </div>
   </div>
 </aside>
@@ -1705,14 +1776,14 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=41"></script>
+<script src="js/colorscale.js?v=50"></script>
 <script src="js/api.js?v=41"></script>
 <script src="js/campus.js?v=41"></script>
 <script src="js/app.js?v=41"></script>
 <script src="js/who.js?v=41"></script>
 <script src="js/kiyas.js?v=41"></script>
-<script src="js/ozet.js?v=42"></script>
-<script src="js/maruziyet.js?v=2"></script>
-<script src="js/shell.js?v=42"></script>
+<script src="js/ozet.js?v=50"></script>
+<script src="js/maruziyet.js?v=3"></script>
+<script src="js/shell.js?v=50"></script>
 </body>
 </html>

@@ -1,8 +1,8 @@
 # Kişisel maruziyet hesabı (taslak) — yöntem ve kabuller
 
 **Proje:** GTÜ AirLab, kampüs hava kalitesi platformu
-**Kod:** `frontend_v2/js/maruziyet.js` (arayüzde Özet → "Kampüste geçirdiğim süreye göre maruziyetimi hesapla")
-**Belge sürümü:** 1.0 · 3 Ekim 2026
+**Kod:** `frontend_v2/js/maruziyet.js` (arayüzde Özet → "AirLab asistanı: kampüste ne kadar PM₂.₅ soludum?")
+**Belge sürümü:** 1.1 · 4 Ekim 2026
 **Durum:** Taslak model. Sonuçlar senaryo tahminidir, kişisel ölçüm değildir.
 
 Bu belge, hesabın hangi verilerle, hangi kabullerle ve hangi adımlarla yapıldığını ileride denetlenebilmesi için kayda geçirir.
@@ -29,6 +29,31 @@ Her satır kampüste geçirilen bir zaman dilimidir:
 | Yer | "Kampüs geneli" ya da saha ölçümü olan bir bina | Binalar `Campus.buildingStats` listesinden gelir (en az 3 ölçüm) |
 | Ortam | Açık hava · İç, açık pencere · İç, kapalı pencere · İç, mekanik havalandırma | Ortam katsayısı F'yi belirler (§4.3) |
 | Etkinlik | Oturma (ders, ofis) · Hafif (ayakta, laboratuvar) · Tempolu yürüme · Spor | Solunum hızını belirler (§4.4) |
+
+### 2.1 Girdi yolları: asistan ve tablo
+
+Aynı girdiler iki yoldan verilebilir; ikisi de aynı satırları (`rows`) ve aynı hesabı kullanır:
+
+* **Asistan (varsayılan):** Kural tabanlı, adım adım sohbet. Sorular sırasıyla: kampüse geliş saati → etkinlik
+  (ders/ofis, laboratuvar, yemekhane, açık havada yürüyüş, açık havada oturma, spor) → bina (ya da kampüs geneli) →
+  iç mekânsa havalandırma (kapalı pencere, açık pencere, mekanik; "bilmiyorum" = kapalı pencere) → süre → başka etkinlik?
+  Her etkinlik bir satıra dönüşür. Sonuçta özet cümle, etkinliklere göre solunan miktar grafiği ve öneriler gösterilir.
+  Asistan **yapay zekâ ya da dış servis kullanmaz**; tüm yanıtlar bu belgedeki kurallardan üretilir.
+* **Tablo:** Satırları doğrudan düzenleme; "Bu cihazda hatırla" seçeneği buradadır.
+
+Asistanda etkinlik seçimi → model eşlemesi:
+
+| Asistan seçeneği | Ortam (F) | Etkinlik (IR) |
+|---|---|---|
+| Ders / ofis | sorulur (iç mekân) | Oturma |
+| Laboratuvar | sorulur (iç mekân) | Hafif |
+| Yemekhane / kantin | sorulur (iç mekân) | Hafif |
+| Açık havada yürüyüş | Açık hava | Tempolu yürüme |
+| Açık havada oturma | Açık hava | Oturma |
+| Spor (açık hava) | Açık hava | Spor |
+
+Asistanın yüz simgesi o anki Ulusal Hava Kalitesi İndeksi (HKİ) sınıfını gösterir (İyi → gülen yüz … Tehlikeli → kızgın yüz);
+hesaba etkisi yoktur.
 
 ## 3. Veri kaynakları
 
@@ -148,6 +173,9 @@ Bir satır şu üç koşulu sağlıyorsa saat kaydırma önerisi gösterilir:
 
 Öneri metni ölçülüdür ("… almak maruziyeti azaltabilir") ve ilgili satırı adıyla anar.
 
+Asistan ek olarak şu durumlarda not düşer: iç mekân satırının binası için R ≥ 1,2 ise "iç mekânın dış havanın daha temiz
+olduğu saatlerde havalandırılması düşünülebilir"; o anki HKİ > 100 (Hassas ve üstü) ise hassas gruplara ölçülü uyarı.
+
 ## 8. Sınırlılıklar
 
 1. **Senaryo tahmini:** Sonuç kişisel ölçüm değildir; tıbbi değerlendirme yerine geçmez.
@@ -186,7 +214,8 @@ işaretlemezse sayfa kapanınca silinir.
 | P ve R (§4.1, §4.3) | `buildModel()` |
 | P̄ (§4.2) | `pOver()` |
 | C, D, TWA (§4) | `compute()` |
-| Öneri kuralı (§7) | `resultHtml()` → `best`, `outdoorActive` |
+| Öneri kuralı (§7) | `resultHtml()` → `best`, `outdoorActive`; asistanda `result()` |
+| Asistan akışı (§2.1) | `CHOICES`, `VENT`, `DUR`, `ask()`, `answer()`, `result()`, `drawChart()` |
 | Yöntem metni (arayüzde) | `methodHtml()` |
 
 ## 12. Kaynakça
@@ -214,4 +243,5 @@ Künyeler Crossref kayıtlarından, EPA değerleri bölümün PDF'inden (Tablo 6
 
 | Sürüm | Tarih | Değişiklik |
 |---|---|---|
+| 1.1 | 4 Ekim 2026 | Kural tabanlı asistan (sohbet) eklendi; hesap değişmedi. Asistan eşlemesi ve ek notlar (§2.1, §7). |
 | 1.0 | 3 Ekim 2026 | İlk sürüm. IR değerleri EPA Tablo 6-2'ye göre kesinleştirildi (0,25 / 0,72 / 1,56 / 3,0); "mekanik havalandırma" (F = 0,25) eklendi; güncel I/O kaynakları eklendi. |

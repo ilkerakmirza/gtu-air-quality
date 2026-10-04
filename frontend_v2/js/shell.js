@@ -206,13 +206,14 @@ const Shell = (() => {
         const co2T = co2.map(d => d.reading && parseT(d.reading.recorded_at)).filter(Boolean).sort((a, b) => b - a)[0];
         if (co2T && hoursSince(co2T) > 24) outage("co2", "İç mekân CO₂ sensörleri", co2T, "İç mekân CO₂ değerleri bu sürede gösterilemez.");
 
-        // Hava kalitesi uyarısı: güncel değer "Hassas gruplar için sağlıksız" (> 25 µg/m³) ya da üstündeyse
+        // Hava kalitesi uyarısı: güncel değer HKİ "Hassas" (> 100, PM₂.₅ ≥ 35,5 µg/m³) ya da üstündeyse
         const src = paFresh && pa.pm2_5 != null ? { v: +pa.pm2_5, where: "kampüs sensörü (PurpleAir)", t: paT }
                   : tzFresh && tz.pm2_5 != null ? { v: +tz.pm2_5, where: "Tuzla istasyonu", t: tzT } : null;
-        if (src && src.v > 25 && typeof pm25Label === "function") {
-            const cat = pm25Label(src.v);
+        const h = src && typeof hki === "function" ? hki(src.v) : null;
+        if (h && h.i > 100) {
+            const cat = h.ad;
             out.push({ id: `uyari-${dkey.format(new Date())}-${cat}`, tarih: dkey.format(new Date()), etiket: "Hava kalitesi", oto: true, uyari: true,
-                baslik: `Hava kalitesi: ${cat}`,
+                baslik: `Hava kalitesi: ${cat} (HKİ ${h.i})`,
                 metin: `${src.where} son ölçümü **${src.v.toFixed(1).replace(".", ",")} µg/m³** PM₂.₅ ` +
                        `(${src.t.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Istanbul" })}). ` +
                        `Hassas grupların (astım, kalp-akciğer hastalığı, yaşlılar, gebeler) uzun süreli ve yoğun açık hava etkinliklerini azaltması önerilir. ` +

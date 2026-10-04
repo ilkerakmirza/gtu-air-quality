@@ -16,32 +16,33 @@ const Ozet = (() => {
     const dayLabel = k => new Date(k + "T12:00:00").toLocaleDateString("tr-TR", { day: "numeric", month: "long" });
     const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-    // Sade dille ne yapmalı (PM₂.₅ kategorilerine göre; hassas gruplar: astım, kalp-akciğer hastalığı, yaşlılar, gebeler)
+    // Sade dille ne yapmalı: HKİ sınıflarına göre (hassas gruplar: astım, kalp-akciğer hastalığı, yaşlılar, gebeler, çocuklar)
     const ADVICE = {
-        "İyi": { all: "Açık havada yürüyüş ve spor için uygun.",
-                 sens: "Hava kalitesi iyi; hassas gruplar normal açık hava etkinliklerine devam edebilir." },
-        "Orta": { all: "Hava kalitesi kabul edilebilir düzeyde.",
-                  sens: "Hassas gruplar uzun süreli ve yoğun açık hava etkinliklerini sınırlamayı düşünebilir." },
-        "Hassas gruplar için sağlıksız": { all: "Uzun süreli ve yoğun açık hava etkinliklerinin azaltılması önerilir.",
-                  sens: "Hassas grupların yoğun açık hava etkinliklerinden kaçınması, belirti görülürse kapalı alana geçmesi önerilir." },
-        "Sağlıksız": { all: "Açık hava etkinliklerinin kısaltılması, sporun mümkünse kapalı alanda yapılması önerilir.",
-                  sens: "Hassas grupların açık havada uzun süre kalmaması önerilir." },
+        "İyi":       { all: "Hava kalitesi iyi; açık hava etkinlikleri için uygun.",
+                       sens: "Hassas gruplar için de risk düşük." },
+        "Orta":      { all: "Hava kalitesi kabul edilebilir düzeyde.",
+                       sens: "Kirliliğe karşı çok hassas kişiler uzun süreli ve yoğun açık hava etkinliklerini sınırlamayı düşünebilir." },
+        "Hassas":    { all: "Genel nüfus için risk düşük.",
+                       sens: "Hassas grupların uzun süreli ve yoğun açık hava etkinliklerini azaltması önerilir." },
+        "Sağlıksız": { all: "Uzun süreli ve yoğun açık hava etkinliklerinin azaltılması önerilir.",
+                       sens: "Hassas grupların açık hava etkinliklerinden kaçınması önerilir." },
+        "Kötü":      { all: "Açık hava etkinliklerinin kısaltılması, mümkünse kapalı alanda kalınması önerilir.",
+                       sens: "Hassas grupların dışarıda bulunmaması önerilir." },
         "Tehlikeli": { all: "Açık havada bulunmaktan kaçınılması ve pencerelerin kapalı tutulması önerilir.",
-                  sens: "Hassas grupların dışarı çıkmaması, şikâyet olursa sağlık birimine başvurması önerilir." },
+                       sens: "Hassas grupların iç mekânda kalması, şikâyet olursa sağlık birimine başvurması önerilir." },
     };
 
-    // Sınıf ölçeği: beş sınıf eşit genişlikte; değer kendi sınıfının içinde doğrusal konumlanır
-    const BANDS = [[0, 15, "İyi"], [15, 25, "Orta"], [25, 35, "Hassas"], [35, 55, "Sağlıksız"], [55, 75, "Tehlikeli"]];
-    function scaleHtml(v) {
-        const i = Math.max(0, BANDS.findIndex(([lo, hi]) => v <= hi)), [lo, hi] = BANDS[i < 0 ? 4 : i];
-        const pos = Math.min(99, ((i < 0 ? 4 : i) + Math.min(1, (v - lo) / (hi - lo))) * 20);
-        return `<div class="oz-scale" role="img" aria-label="Sınıf ölçeği: ${pm25Label(v)}">
-            <div class="oz-scale-bar">${BANDS.map(([a, b]) => `<i style="background:${pm25Color((a + b) / 2)}"></i>`).join("")}
+    // HKİ ölçeği: altı sınıf eşit genişlikte; değer kendi sınıfının içinde indeksine göre konumlanır
+    function scaleHtml(h) {
+        const pos = Math.min(99.5, (h.k + (h.i - h.ilo) / (h.ihi - h.ilo)) * 100 / HKI_PM25.length);
+        return `<div class="oz-scale" role="img" aria-label="HKİ ölçeği: ${h.i}, ${h.ad}">
+            <div class="oz-scale-bar">${HKI_PM25.map(b => `<i style="background:${b.renk}"></i>`).join("")}
               <em style="left:${pos.toFixed(1)}%"></em></div>
-            <div class="oz-scale-lab">${BANDS.map(([, , n]) => `<span>${n}</span>`).join("")}</div>
-            <div class="oz-scale-tick">${BANDS.slice(0, 4).map(([, b], k) => `<span style="left:${(k + 1) * 20}%">${b}</span>`).join("")}</div>
+            <div class="oz-scale-lab">${HKI_PM25.map(b => `<span>${b.ad}</span>`).join("")}</div>
+            <div class="oz-scale-tick">${HKI_PM25.slice(0, 5).map((b, k) => `<span style="left:${((k + 1) * 100 / HKI_PM25.length).toFixed(2)}%">${b.ihi}</span>`).join("")}</div>
           </div>`;
     }
+    let current = null;   // sohbet asistanı ve diğer modüller için son kullanılan değer
 
     // ── Günlük özet ──────────────────────────────────────────────────
     async function fetchNow() {
@@ -73,15 +74,21 @@ const Ozet = (() => {
             html += `<div class="oz-card"><div class="wh-empty">Şu an güncel ölçüm yok: kampüs sensörü ve bölge istasyonu veri göndermiyor.
                 Sensör durumlarını aşağıda görebilirsiniz.</div></div>`;
         } else {
-            const cat = pm25Label(src.v), a = ADVICE[cat] || ADVICE["Orta"];
-            const band = BANDS.find(([, hi]) => src.v <= hi) || BANDS[4], c = pm25Color((band[0] + band[1]) / 2);   // ölçekteki bant rengi
-            html += `<div class="oz-card oz-now" style="--c:${c}">
-                <div class="oz-cat">${cat}</div>
-                <div class="oz-val"><b>${f1(src.v)}</b><span>µg/m³ · PM₂.₅ (ince partikül)</span></div>
+            const h = hki(src.v), a = ADVICE[h.ad] || ADVICE["Orta"];
+            current = { ...src, h };
+            html += `<div class="oz-card oz-now" style="--c:${h.renk}">
+                <div class="oz-now-top">
+                  <span class="oz-face" aria-hidden="true">${ico(h.yuz)}</span>
+                  <div class="oz-hki"><b>${h.i}</b><span>HKİ</span></div>
+                  <div class="oz-cat">${h.ad}</div>
+                </div>
+                <div class="oz-val2">PM₂.₅ <b>${f1(src.v)}</b> µg/m³ <span>(ince partikül)</span></div>
                 <div class="oz-src">${ico("clock")} ${src.where} · ${ago(src.at)}</div>
-                ${scaleHtml(src.v)}
+                ${scaleHtml(h)}
                 ${src.note ? `<div class="oz-note">${ico("info")}<span>${src.note}</span></div>` : ""}
                 <div class="oz-adv"><div>${ico("users")}<span><b>Herkes için:</b> ${a.all}</span></div><div>${ico("heart-pulse")}<span><b>Hassas gruplar:</b> ${a.sens}</span></div></div>
+                <div class="who-cap">HKİ: Ulusal Hava Kalitesi İndeksi (ÇŞB). Resmî HKİ 24 saatlik ortalamaya göre hesaplanır; burada son ölçüme göre gösterge değerdir.
+                  <button type="button" class="oz-link" data-info="inf-sinir">Sınır değerler</button></div>
               </div>`;
         }
 
@@ -109,7 +116,7 @@ const Ozet = (() => {
             ${chip(atpOn > 0, "Atmotube", `${atpOn}/${(now.atp || []).length} çevrimiçi`)}
             ${chip(co2On > 0, "CO₂ (iç mekân)", (now.co2 || []).length ? `${co2On}/${now.co2.length} çevrimiçi` : "tanımlı değil")}
         </div>
-        <button type="button" class="ic-btn oz-more oz-exp" id="oz-to-exp">${ico("calculator")} Kampüste geçirdiğim süreye göre maruziyetimi hesapla</button>`;
+        <button type="button" class="ic-btn oz-more oz-exp" id="oz-to-exp">${ico("message-circle")} AirLab asistanı: kampüste ne kadar PM₂.₅ soludum?</button>`;
         return html;
     }
 
@@ -211,7 +218,7 @@ const Ozet = (() => {
     function render() {
         const body = $("ozet-body");
         body.innerHTML = dailyHtml() + monthlyHtml() + `<div class="oz-foot">
-            <button type="button" data-info="inf-yon">Yöntem</button><button type="button" data-info="inf-kay">Veri kaynakları</button>
+            <button type="button" data-info="inf-yon">Yöntem</button><button type="button" data-info="inf-sinir">Sınır değerler</button><button type="button" data-info="inf-kay">Veri kaynakları</button>
             <button type="button" data-info="inf-kvkk">Gizlilik (KVKK)</button><button type="button" data-info="inf-hak">Hakkında</button></div>`;
         body.querySelectorAll("[data-info]").forEach(b => b.addEventListener("click", () => {
             Shell.openPanel("info");
@@ -244,5 +251,5 @@ const Ozet = (() => {
         } finally { busy = false; }
     }
 
-    return { load };
+    return { load, current: () => current };
 })();

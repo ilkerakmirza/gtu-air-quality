@@ -26,13 +26,28 @@ function pm25Color(v) {
     return "#4a0015";
 }
 
+// Ulusal Hava Kalitesi İndeksi (HKİ), PM₂.₅: ÇŞB'nin EPA indeksinden uyarladığı ulusal tablo
+// (İBB Çevre Koruma ve Kontrol Dairesi yayımı). Kesim noktaları 24 saatlik ortalamalar için tanımlıdır.
+// I = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt   (C, 0,1 µg/m³'e kesilir)
+const HKI_PM25 = [
+    { ilo: 0,   ihi: 50,  clo: 0,     chi: 12.0,  ad: "İyi",       renk: "#00cc00", yuz: "laugh" },
+    { ilo: 51,  ihi: 100, clo: 12.1,  chi: 35.4,  ad: "Orta",      renk: "#ffcc00", yuz: "smile" },
+    { ilo: 101, ihi: 150, clo: 35.5,  chi: 55.4,  ad: "Hassas",    renk: "#ff8800", yuz: "meh" },
+    { ilo: 151, ihi: 200, clo: 55.5,  chi: 150.4, ad: "Sağlıksız", renk: "#ff0000", yuz: "frown" },
+    { ilo: 201, ihi: 300, clo: 150.5, chi: 250.4, ad: "Kötü",      renk: "#bb44bb", yuz: "annoyed" },
+    { ilo: 301, ihi: 500, clo: 250.5, chi: 500.4, ad: "Tehlikeli", renk: "#7e0023", yuz: "angry" },
+];
+function hki(v) {
+    if (v == null || isNaN(v)) return null;
+    const c = Math.max(0, Math.floor(+v * 10) / 10);
+    const k = HKI_PM25.findIndex(b => c <= b.chi), b = HKI_PM25[k < 0 ? HKI_PM25.length - 1 : k];
+    const i = k < 0 ? 500 : Math.round((b.ihi - b.ilo) / (b.chi - b.clo) * (c - b.clo) + b.ilo);
+    return { ...b, i, k: k < 0 ? HKI_PM25.length - 1 : k };
+}
+
 function pm25Label(v) {
-    if (v == null || isNaN(v)) return "Veri yok";
-    if (v <= 15)  return "İyi";
-    if (v <= 25)  return "Orta";
-    if (v <= 35)  return "Hassas gruplar için sağlıksız";
-    if (v <= 55)  return "Sağlıksız";
-    return "Tehlikeli";
+    const h = hki(v);
+    return h ? h.ad : "Veri yok";
 }
 
 function pm25Intensity(v, maxVal = 75) {
@@ -89,14 +104,12 @@ function buildLegend() {
     const ticks = [0,5,10,15,20,25,30,40,55,75].map(t =>
         `<span style="left:${Math.min(t/75*100,100).toFixed(1)}%">${t}</span>`).join("");
     return `
-      <div class="legend-title">PM₂.₅ <span style="text-transform:none">(µg/m³)</span> — her 2.5'te ton, her 5'te renk değişir</div>
+      <div class="legend-title">PM₂.₅ (µg/m³)</div>
       <div class="legend-bar">${cells}</div>
       <div class="legend-ticks">${ticks}</div>
-      <div class="legend-cats">
-        <span style="color:#00cc00">İyi</span>
-        <span style="color:#ffff00">Orta</span>
-        <span style="color:#ff8800">Hassas</span>
-        <span style="color:#ff0000">Sağlıksız</span>
-        <span style="color:#bb44bb">Tehlikeli</span>
-      </div>`;
+      <div class="legend-hki">${HKI_PM25.slice(0, 4).map(b => {
+          const x0 = b.clo / 75 * 100, x1 = Math.min(b.chi, 75) / 75 * 100;
+          return `<span style="left:${x0.toFixed(1)}%;width:${(x1 - x0).toFixed(1)}%;color:${b.renk};border-color:${b.renk}">${b.ad}</span>`;
+      }).join("")}</div>
+      <div class="legend-note">HKİ sınıfları (ulusal indeks, PM₂.₅)</div>`;
 }

@@ -35,6 +35,7 @@ const Maruziyet = (() => {
     ];
 
     let rows = null, remember = false, model = null, busy = false;
+    let mode = "chat", chat = null, chart = null;   // görünüm: "chat" (asistan) | "table" (tablo)
     const $ = id => document.getElementById(id);
     const f1 = v => v.toLocaleString("tr-TR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     const f0 = v => Math.round(v).toLocaleString("tr-TR");
@@ -176,9 +177,186 @@ const Maruziyet = (() => {
             </div></details>`;
     }
 
+    // ── Sohbet asistanı (kural tabanlı; yapay zekâ ya da dış servis yok) ──────────────
+    // Adımlar: saat → etkinlik → yer → (iç mekânsa) havalandırma → süre → başka? → sonuç.
+    // Her tamamlanan adım dizisi bir satıra (rows) dönüşür; sonuç tablo görünümüyle aynı hesaptan gelir.
+    const CHOICES = [
+        { k: "ders",  ico: "graduation-cap", ad: "Ders / ofis",            env: null,  act: "sit" },
+        { k: "lab",   ico: "flask-conical",  ad: "Laboratuvar",            env: null,  act: "light" },
+        { k: "yemek", ico: "coffee",         ad: "Yemekhane / kantin",     env: null,  act: "light" },
+        { k: "yurume",ico: "footprints",     ad: "Açık havada yürüyüş",    env: "out", act: "walk" },
+        { k: "otur",  ico: "trees",          ad: "Açık havada oturma",     env: "out", act: "sit" },
+        { k: "spor",  ico: "dumbbell",       ad: "Spor (açık hava)",       env: "out", act: "sport" },
+    ];
+    const VENT = [
+        { k: "closed", ad: "Pencereler kapalı" }, { k: "vent", ad: "Pencere açık" },
+        { k: "mech", ad: "Mekanik havalandırma" }, { k: "closed", ad: "Bilmiyorum", alt: true },
+    ];
+    const DUR = [30, 60, 90, 120, 180, 240];
+    const hm = m => `${String(Math.floor(m / 60) % 24).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
+    const durTxt = m => m < 60 ? `${m} dk` : m % 60 ? `${Math.floor(m / 60)},5 saat` : `${m / 60} saat`;
+
+    // Asistanın yüzü o anki hava kalitesine (HKİ) göre değişir
+    function face() {
+        const cur = typeof Ozet !== "undefined" && Ozet.current && Ozet.current();
+        return cur && cur.h ? { yuz: cur.h.yuz, renk: cur.h.renk, cur } : { yuz: "smile", renk: "var(--accent)", cur: null };
+    }
+    const avatar = () => { const f = face(); return `<span class="cb-av" style="--c:${f.renk}">${ico(f.yuz)}</span>`; };
+
+    function chatStart() {
+        const f = face();
+        chat = { step: "saat", draft: {}, log: [], t: null, labels: [] };
+        rows = [];
+        bot(`Merhaba! Ben <b>AirLab asistanı</b>. Bugün kampüste geçirdiğin zamana göre ne kadar PM₂.₅'e maruz kaldığını birlikte tahmin edelim.`
+            + (f.cur ? ` Şu an kampüste hava <b style="color:${f.renk}">${f.cur.h.ad}</b> (HKİ ${f.cur.h.i}).` : ""));
+        bot("Kampüse saat kaçta geldin?");
+    }
+    const bot = html => chat.log.push({ who: "bot", html });
+    const me = txt => chat.log.push({ who: "me", html: esc(txt) });
+
+    function ask() {   // o anki adımın seçenekleri
+        const d = chat.draft, opts = (list, f) => `<div class="cb-opts">${list.map(f).join("")}</div>`;
+        switch (chat.step) {
+            case "saat":
+                return opts([8, 9, 10, 11, 13], h => `<button type="button" class="pd-chip" data-a="saat" data-v="${h * 60}">${hm(h * 60)}</button>`)
+                    + `<div class="cb-row"><input type="time" step="900" id="cb-time" value="09:00" aria-label="Başka bir saat"><button type="button" class="sc-btn" data-a="saat-in">Bu saat</button></div>`;
+            case "etkinlik":
+                return opts(CHOICES, c => `<button type="button" class="cb-choice" data-a="etkinlik" data-v="${c.k}">${ico(c.ico)}<span>${c.ad}</span></button>`);
+            case "yer":
+                return `<div class="cb-row"><select id="cb-bld" aria-label="Bina"><option value="">Kampüs geneli / bilmiyorum</option>${model.B.map(b =>
+                        `<option value="${esc(b.gk)}">${esc(b.name)}${b.few ? " (az ölçüm)" : ""}</option>`).join("")}</select>
+                        <button type="button" class="sc-btn" data-a="yer">Seç</button></div>`;
+            case "hava":
+                return opts(VENT, v => `<button type="button" class="pd-chip${v.alt ? " alt" : ""}" data-a="hava" data-v="${v.k}">${v.ad}</button>`);
+            case "sure":
+                return opts(DUR, m => `<button type="button" class="pd-chip" data-a="sure" data-v="${m}">${durTxt(m)}</button>`);
+            case "devam":
+                return opts([["ekle", "Evet, ekleyeyim"], ["bitti", "Hayır, sonucu göster"]], ([k, t]) =>
+                    `<button type="button" class="pd-chip${k === "bitti" ? " on" : ""}" data-a="devam" data-v="${k}">${t}</button>`);
+            case "sonuc":
+                return opts([["yeni", "rotate-ccw", "Baştan başla"], ["tablo", "table-2", "Tabloda düzenle"]], ([k, i, t]) =>
+                    `<button type="button" class="pd-chip" data-a="son" data-v="${k}">${ico(i)} ${t}</button>`);
+        }
+        return "";
+    }
+
+    function answer(a, v, txt) {
+        const d = chat.draft;
+        if (a === "saat" || a === "saat-in") {
+            const m = a === "saat" ? +v : toMin($("cb-time").value);
+            if (m == null) return;
+            chat.t = m; me(hm(m));
+            bot(`Saat ${hm(m)}. O sırada ne yapıyordun?`);
+            chat.step = "etkinlik";
+        } else if (a === "etkinlik") {
+            const c = CHOICES.find(x => x.k === v); d.c = c; me(c.ad);
+            bot(c.env === "out" ? "Kampüsün neresindeydin? Bir binanın çevresindeysen onu seç." : "Hangi binadaydın?");
+            chat.step = "yer";
+        } else if (a === "yer") {
+            const gk = $("cb-bld").value, b = model.B.find(x => x.gk === gk); d.yer = gk; me(b ? b.name : "Kampüs geneli");
+            if (d.c.env === "out") { d.env = "out"; bot("Ne kadar sürdü?"); chat.step = "sure"; }
+            else { bot("İçerisi nasıl havalandırılıyordu?"); chat.step = "hava"; }
+        } else if (a === "hava") {
+            d.env = v; me(txt);
+            bot("Ne kadar sürdü?"); chat.step = "sure";
+        } else if (a === "sure") {
+            const m = +v, e = Math.min(chat.t + m, 23 * 60 + 45);
+            me(durTxt(m));
+            rows.push({ yer: d.yer || "", env: d.env, act: d.c.act, s: hm(chat.t), e: hm(e) });
+            chat.labels.push(d.c.ad);
+            chat.t = e; chat.draft = {};
+            bot(`Not aldım: <b>${rows[rows.length - 1].s}–${rows[rows.length - 1].e}</b> · ${d.c.ad.toLowerCase()}. Sonra başka bir şey yaptın mı?`);
+            chat.step = e >= 23 * 60 ? "sonuc-hazir" : "devam";
+            if (chat.step === "sonuc-hazir") { result(); return; }
+        } else if (a === "devam") {
+            if (v === "ekle") { me("Evet"); bot(`Saat ${hm(chat.t)} sonrasında ne yaptın?`); chat.step = "etkinlik"; }
+            else { me("Hayır, sonucu göster"); result(); return; }
+        } else if (a === "son") {
+            if (v === "yeni") { chatStart(); }
+            else { mode = "table"; }
+        }
+        save(); render();
+    }
+
+    function result() {
+        chat.step = "sonuc";
+        const k = compute(), ok = k.res.filter(x => !x.err);
+        if (!ok.length) { bot("Hesap için geçerli bir zaman dilimi bulamadım. Baştan başlayalım mı?"); save(); render(); return; }
+        const top = ok.reduce((a, b) => b.dose > a.dose ? b : a), share = x => k.dose ? x.dose / k.dose * 100 : 0;
+        const best = [...model.P.keys()].filter(h => h >= 7 && h <= 21).reduce((a, h) => model.P[h] < model.P[a] ? h : a, 7);
+        const act = ok.find(x => rows[x.i].env === "out" && ACT[rows[x.i].act].ir >= 1.5 && x.p > model.P[best] * 1.1);
+        const hiBld = ok.find(x => rows[x.i].env !== "out" && model.B.find(b => b.gk === rows[x.i].yer && b.r >= 1.2));
+        const lab = x => `${rows[x.i].s}–${rows[x.i].e}`;
+        bot(`Kampüste <b>${f1(k.H)} saat</b> geçirdin. Bu sürede ortalama maruziyetin yaklaşık <b>${f1(k.twa)} µg/m³</b>,
+            soluduğun PM₂.₅ miktarı yaklaşık <b>${f0(k.dose)} µg</b>. Aynı saatleri açık havada geçirseydin ortalama ${f1(k.outTwa)} µg/m³ olurdu.`);
+        bot(`<div class="cb-chart"><canvas id="cb-canvas" aria-label="Solunan PM₂.₅'in etkinliklere göre dağılımı"></canvas></div>
+             <div class="who-cap">Çubuk uzunluğu: solunan PM₂.₅ (µg) · renk: o dilimdeki tahmini derişim</div>`);
+        const tips = [`Solunan miktara en büyük katkı <b>${lab(top)}</b> dilimi (%${share(top).toFixed(0)}).`];
+        if (act) tips.push(`${lab(act)} arasındaki ${ACT[rows[act.i].act].ad.toLowerCase()} etkinliğini kampüs profilinin en düşük olduğu saatlere (yaklaşık ${String(best).padStart(2, "0")}:00) almak maruziyeti azaltabilir.`);
+        if (hiBld) tips.push(`${esc(hiBld.where)} çevresinde saha ölçümleri kampüs ortalamasının üzerinde; iç mekânın dış havanın daha temiz olduğu saatlerde havalandırılması düşünülebilir.`);
+        const f = face();
+        if (f.cur && f.cur.h.i > 100) tips.push(`Şu an hava kalitesi <b>${f.cur.h.ad}</b>; hassas grupların uzun süreli açık hava etkinliklerini azaltması önerilir.`);
+        tips.push(`Bu bir tahmindir; kişisel ölçüm ya da tıbbi değerlendirme yerine geçmez. Ayrıntılar tablo görünümündeki "Yöntem" bölümünde.`);
+        bot(`<b>Ne yapabilirsin?</b><ul class="cb-tips">${tips.map(t => `<li>${t}</li>`).join("")}</ul>`);
+        chat.res = ok.map(x => ({ label: [lab(x), chat.labels[x.i] || ACT[rows[x.i].act].ad], dose: x.dose, c: x.c }));   // iki satırlı etiket
+        save(); render();
+    }
+
+    function drawChart() {
+        if (chart) { chart.destroy(); chart = null; }
+        const cv = $("cb-canvas");
+        if (!cv || !chat.res || typeof Chart === "undefined") return;
+        const d = chat.res;
+        chart = new Chart(cv, {
+            type: "bar",
+            data: { labels: d.map(x => x.label), datasets: [{ data: d.map(x => +x.dose.toFixed(1)), backgroundColor: d.map(x => pm25Color(x.c)), borderRadius: 4, maxBarThickness: 22 }] },
+            options: {
+                indexAxis: "y", responsive: true, maintainAspectRatio: false, animation: false,
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.raw} µg · derişim ${f1(d[c.dataIndex].c)} µg/m³` } } },
+                scales: {
+                    x: { beginAtZero: true, title: { display: true, text: "Solunan PM₂.₅ (µg)", color: "#a2adc2" }, ticks: { color: "#a2adc2" }, grid: { color: "rgba(160,180,220,0.1)" } },
+                    y: { ticks: { color: "#e9edf5", font: { size: 11 } }, grid: { display: false } },
+                },
+            },
+        });
+        cv.parentElement.style.height = `${Math.max(100, d.length * 42 + 44)}px`;
+    }
+
+    function chatHtml() {
+        return `<div class="cb">
+            ${chat.log.map(m => m.who === "bot"
+                ? `<div class="cb-msg bot">${avatar()}<div class="cb-bub">${m.html}</div></div>`
+                : `<div class="cb-msg me"><div class="cb-bub">${m.html}</div></div>`).join("")}
+            <div class="cb-ask">${ask()}</div>
+          </div>`;
+    }
+
+    function bindChat() {
+        $("exp-body").querySelectorAll(".cb-ask [data-a]").forEach(b => b.addEventListener("click", () => answer(b.dataset.a, b.dataset.v, b.textContent.trim())));
+        drawChart();
+        const last = $("exp-body").querySelector(".cb-ask");
+        if (last) last.scrollIntoView({ block: "nearest" });
+    }
+
     function render() {
         const body = $("exp-body");
-        body.innerHTML = `<p class="mx-intro">Kampüste hangi saatlerde, nerede ve ne yaparak vakit geçirdiğinizi girin. Kampüs ölçümlerine göre
+        const tabs = `<div class="pd-chips mx-mode"><button type="button" class="pd-chip${mode === "chat" ? " on" : ""}" data-mode="chat">${ico("message-circle")} Asistan</button>
+            <button type="button" class="pd-chip${mode === "table" ? " on" : ""}" data-mode="table">${ico("table-2")} Tablo</button></div>`;
+        if (mode === "chat") {
+            if (!chat) chatStart();
+            body.innerHTML = tabs + chatHtml();
+            body.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => { mode = b.dataset.mode; render(); }));
+            bindChat();
+            return;
+        }
+        if (chart) { chart.destroy(); chart = null; }
+        if (!rows.length) rows = DEFAULT.map(r => ({ ...r }));
+        renderTable(tabs);
+    }
+
+    function renderTable(tabs) {
+        const body = $("exp-body");
+        body.innerHTML = tabs + `<p class="mx-intro">Kampüste hangi saatlerde, nerede ve ne yaparak vakit geçirdiğinizi girin. Kampüs ölçümlerine göre
               <b>taslak bir maruziyet tahmini</b> hesaplanır.</p>
             <div class="mx-rows">${rows.map(rowHtml).join("")}</div>
             <div class="mx-tools">
@@ -189,6 +367,7 @@ const Maruziyet = (() => {
               <small>Girdiğiniz bilgiler hiçbir yere gönderilmez; işaretlemezseniz sayfa kapanınca silinir.</small></label>
             <div id="mx-result">${resultHtml()}</div>
             ${methodHtml()}`;
+        body.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => { mode = b.dataset.mode; render(); }));
         bind();
     }
     function refreshResult() { $("mx-result").innerHTML = resultHtml(); save(); }
@@ -220,6 +399,7 @@ const Maruziyet = (() => {
             const stored = lsGet();
             remember = Array.isArray(stored) && stored.length > 0;
             rows = remember ? stored.filter(r => r && ENV[r.env] && ACT[r.act]) : DEFAULT.map(r => ({ ...r }));
+            if (remember) mode = "table";   // kaydedilmiş satırlar asistan tarafından silinmesin
         }
         if (model) { render(); return; }
         busy = true;
