@@ -229,7 +229,7 @@ function updatePAPanel(d) {
     const set = (id, v) => document.getElementById(id).textContent = v;
     if (!d) { set("pa-pm25", "--"); set("pa-cat", "Veri yok"); return; }
 
-    set("pa-pm25", d.pm2_5 != null ? d.pm2_5.toFixed(1) : "--");
+    set("pa-pm25", d.pm2_5 != null ? f1tr(d.pm2_5) : "--");
     document.getElementById("pa-pm25").style.color = pm25Color(d.pm2_5);
 
     const cat = document.getElementById("pa-cat");
@@ -238,8 +238,8 @@ function updatePAPanel(d) {
     cat.style.fontSize = "";
     document.getElementById("pa-pm25").style.opacity = "";
 
-    set("pa-pm10", d.pm10_0 != null ? d.pm10_0.toFixed(1) : "--");
-    set("pa-temp", d.temperature_c != null ? d.temperature_c.toFixed(1) + "°" : "--");
+    set("pa-pm10", d.pm10_0 != null ? f1tr(d.pm10_0) : "--");
+    set("pa-temp", d.temperature_c != null ? f1tr(d.temperature_c) + "°" : "--");
     set("pa-hum",  d.humidity_pct != null ? d.humidity_pct.toFixed(0) + "%" : "--");
     set("pa-time", d.recorded_at ? new Date(d.recorded_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) : "—");
 }
@@ -252,7 +252,7 @@ function updatePAMarker(d) {
     const col = stale ? "#69758c" : pm25Color(d.pm2_5);
     const when = stale ? `<br><small style="color:#f3d48f">Çevrimdışı · son veri ${new Date(d.recorded_at).toLocaleDateString("tr-TR",
         { day: "numeric", month: "long", timeZone: "Europe/Istanbul" })}</small>` : "";
-    const html = `<b>PurpleAir PA-II</b><br>SUMER Lab — GTÜ Çatı<br>PM₂.₅: <b style="color:${col}">${d.pm2_5?.toFixed(1) ?? "--"}</b> µg/m³${when}`;
+    const html = `<b>PurpleAir PA-II</b><br>SUMER Lab — GTÜ Çatı<br>PM₂.₅: <b style="color:${col}">${f1tr(d.pm2_5) ?? "--"}</b> µg/m³${when}`;
     const icon = L.divIcon({
         className: "",
         html: `<div class="pulse-marker${stale ? " stale" : ""}" style="--marker-color:${col}"></div>`,
@@ -325,9 +325,9 @@ async function loadComparison() {
 
         const paEl = document.getElementById("cmp-pa");
         const csbEl = document.getElementById("cmp-csb");
-        paEl.textContent  = paAvg != null ? paAvg.toFixed(1) : "--";
+        paEl.textContent  = paAvg != null ? f1tr(paAvg) : "--";
         paEl.style.color  = pm25Color(paAvg);
-        csbEl.textContent = csb != null ? csb.toFixed(1) : "--";
+        csbEl.textContent = csb != null ? f1tr(csb) : "--";
         csbEl.style.color = pm25Color(csb);
 
         const verdict = document.getElementById("cmp-verdict");
@@ -338,8 +338,8 @@ async function loadComparison() {
             if (hs) {
                 const v = Kiyas.verdict(hs);
                 const dl = d => new Date(d + "T12:00:00").toLocaleDateString("tr-TR", { day: "numeric", month: "short" });
-                paEl.textContent = hs.c.toFixed(1); paEl.style.color = pm25Color(hs.c);
-                csbEl.textContent = hs.r.toFixed(1); csbEl.style.color = pm25Color(hs.r);
+                paEl.textContent = f1tr(hs.c); paEl.style.color = pm25Color(hs.c);
+                csbEl.textContent = f1tr(hs.r); csbEl.style.color = pm25Color(hs.r);
                 verdict.innerHTML = `${v.icon} ${v.txt} <span style="font-weight:500;opacity:.85">· geçmiş ölçümler</span>`;
                 verdict.style.cssText = v.cls === "ok" ? "background:rgba(52,210,123,0.13);color:#34d27b;border:1px solid rgba(52,210,123,0.35)"
                     : v.cls === "bad" ? "background:rgba(244,97,94,0.13);color:#f4615e;border:1px solid rgba(244,97,94,0.35)"
@@ -362,7 +362,7 @@ async function loadComparison() {
             return;
         }
         const diff = paAvg - csb;
-        const abs = Math.abs(diff).toFixed(1);
+        const abs = f1tr(Math.abs(diff));
         if (diff < -0.5) {
             verdict.innerHTML = `${ico("trending-down")} Kampüs bölgeden <b>${abs} µg/m³ daha temiz</b>`;
             verdict.style.cssText = "background:rgba(52,210,123,0.13);color:#34d27b;border:1px solid rgba(52,210,123,0.35)";
@@ -447,7 +447,7 @@ async function loadCSB() {
         const when = trTime(d.recorded_at);
 
         const pmEl = document.getElementById("csb-pm25");
-        pmEl.innerHTML = `${d.pm2_5.toFixed(1)}<small> PM₂.₅ µg/m³</small>`;
+        pmEl.innerHTML = `${f1tr(d.pm2_5)}<small> PM₂.₅ µg/m³</small>`;
         pmEl.style.color = pm25Color(d.pm2_5);
 
         set("csb-name", `${d.station_name.replace(/ \((eski|canlı)\)$/, "")} · ${TUZLA_SOURCE[d.source] || "CSB ağı"}`);
@@ -468,7 +468,7 @@ async function loadCSB() {
         if (d.lat && d.lon) {
             // İBB Tuzla ile aynı noktada — üst üste binmesin diye hafif offset
             const c = pm25Color(d.pm2_5);
-            const html = `<b>🏛️ CSB — ${d.station_name}</b><br>Çevre Şehircilik Bak. ulusal ağ<br>PM₂.₅: <b style="color:${c}">${d.pm2_5.toFixed(1)}</b> µg/m³<br><small>${d.distance_km} km · ${d.recorded_at ? d.recorded_at.replace("T"," ") : ""}</small>`;
+            const html = `<b>Tuzla istasyonu</b> · ${d.station_name.replace(/ \((eski|canlı)\)$/, "")}<br>${TUZLA_SOURCE[d.source] || "Resmî istasyon"} · HKİ ${hki(d.pm2_5)?.i ?? "—"} (${pm25Label(d.pm2_5)})<br>PM₂.₅: <b style="color:${c}">${f1tr(d.pm2_5)}</b> µg/m³<br><small>${d.distance_km} km · ${d.recorded_at ? d.recorded_at.replace("T"," ") : ""}</small>`;
             const icon = L.divIcon({ className: "",
                 html: `<div class="ibb-marker" style="--marker-color:${c}">🏛️</div>`,
                 iconSize: [30, 30], iconAnchor: [15, 15] });
@@ -552,7 +552,7 @@ function renderAtmotubeDevices(devices) {
             <span class="atp-status ${statusCls}"></span>
             <span class="atp-name">${d.device}</span>
             <span class="atp-info">${info}</span>
-            <span class="atp-val" style="color:${pmColor}">${r && r.pm2_5 != null ? r.pm2_5.toFixed(1) : "--"}<small> µg/m³</small></span>
+            <span class="atp-val" style="color:${pmColor}">${r && r.pm2_5 != null ? f1tr(r.pm2_5) : "--"}<small> µg/m³</small></span>
           </div>`;
     }).join("");
 
@@ -598,7 +598,7 @@ function updateAtmotubeMarkers(devices) {
         const recent = ageMin < ATP_ONLINE_MIN;     // canlı mı
         const c = pm25Color(r.pm2_5);
         const durum = recent ? "canlı" : "son bilinen konum";
-        const html = `<b>📡 ${d.device}</b> — ${durum}<br>PM₂.₅: <b style="color:${c}">${r.pm2_5?.toFixed(1) ?? "--"}</b> µg/m³<br><small>${timeAgo(r.recorded_at)}</small>`;
+        const html = `<b>📡 ${d.device}</b> — ${durum}<br>PM₂.₅: <b style="color:${c}">${f1tr(r.pm2_5) ?? "--"}</b> µg/m³<br><small>${timeAgo(r.recorded_at)}</small>`;
         // Canlı: nabız atan; eski: soluk sabit kare. Altında cihaz adı etiketi.
         const dot = recent
             ? `<div class="pulse-marker" style="--marker-color:${c};border-radius:30%"></div>`
@@ -707,7 +707,7 @@ function updateCO2Markers(devices) {
         const c = co2Color(r.co2_ppm);
         // ATP'ye bağlıysa o işaretçiyle tam üst üste binmesin diye küçük kuzey offseti (~9 m)
         const lat = d.lat + (d.anchored_to ? 0.00008 : 0), lon = d.lon;
-        const t = r.temperature_c != null ? `${r.temperature_c.toFixed(1)}°C` : "--";
+        const t = r.temperature_c != null ? `${f1tr(r.temperature_c)}°C` : "--";
         const h = r.humidity_pct != null ? `${Math.round(r.humidity_pct)}%` : "--";
         const where = d.anchored_to
             ? `${d.anchored_to} ile birlikte${d.anchor_live === false ? " (son bilinen konum)" : ""}`
@@ -921,7 +921,7 @@ async function refreshDots() {
                         <span style="width:20px;height:20px;border-radius:6px;background:${person.color};display:grid;place-items:center;font-size:10px;font-weight:800;color:#0b0e14">${person.initial}</span>
                         <b style="font-size:12.5px">${person.name}</b>
                       </div>
-                      <div style="font-size:20px;font-weight:700;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;color:${pm25Color(pt.pm2_5)}">${pt.pm2_5?.toFixed(1) ?? "--"} <span style="font-size:10px;color:#9aa4b8">µg/m³</span></div>
+                      <div style="font-size:20px;font-weight:700;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;color:${pm25Color(pt.pm2_5)}">${f1tr(pt.pm2_5) ?? "--"} <span style="font-size:10px;color:#9aa4b8">µg/m³</span></div>
                       <div style="font-size:11px;color:${pm25Color(pt.pm2_5)};font-weight:600">${pm25Label(pt.pm2_5)}</div>
                       <div style="font-size:10.5px;color:#9aa4b8;margin-top:4px">${pt.recorded_at ? new Date(pt.recorded_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) : ""}</div>
                     </div>`)
@@ -944,9 +944,9 @@ function setStats(pts) {
     const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
     const max = Math.max(...vals);
     set("st-count", vals.length.toLocaleString("tr-TR"));
-    set("st-avg", avg.toFixed(1));
+    set("st-avg", f1tr(avg));
     document.getElementById("st-avg").style.color = pm25Color(avg);
-    set("st-max", max.toFixed(1));
+    set("st-max", f1tr(max));
     document.getElementById("st-max").style.color = pm25Color(max);
 }
 
@@ -1130,7 +1130,7 @@ function onStep(pt, idx, total) {
 
     const pmEl = document.getElementById("pl-pm");
     pmEl.style.color = pm25Color(pt.pm2_5);
-    pmEl.innerHTML = `${pt.pm2_5.toFixed(1)}<small>ATMOTUBE PM₂.₅ µg/m³</small>`;
+    pmEl.innerHTML = `${f1tr(pt.pm2_5)}<small>ATMOTUBE PM₂.₅ µg/m³</small>`;
 
     document.getElementById("pl-fill").style.width = `${(idx / (total - 1) * 100).toFixed(1)}%`;
 
@@ -1139,7 +1139,7 @@ function onStep(pt, idx, total) {
     const paEl = document.getElementById("pl-pa");
     const deltaEl = document.getElementById("pl-delta");
     if (pa) {
-        paEl.textContent = pa.pm2_5?.toFixed(1) ?? "--";
+        paEl.textContent = f1tr(pa.pm2_5) ?? "--";
         paEl.style.color = pm25Color(pa.pm2_5);
         updatePAPanel(pa);
         updatePAMarker({ ...pa, lat: GTU_CENTER[0], lon: GTU_CENTER[1] });
@@ -1213,7 +1213,7 @@ function loadCompareChart(atmoPts, paHist, person) {
     const badge = document.getElementById("adv-badge");
     if (pf.length) {
         const pm = pf.reduce((a,b)=>a+b,0)/pf.length;
-        const diff = Math.abs(am - pm).toFixed(1);
+        const diff = f1tr(Math.abs(am - pm));
         if (am > pm) {
             _avgBadge = { text: `Ort. fark: Taşınabilir +${diff} µg/m³`,
                           css: "background:rgba(52,210,123,0.13);color:#34d27b;border-color:rgba(52,210,123,0.3)" };
@@ -1267,7 +1267,7 @@ function loadCompareChart(atmoPts, paHist, person) {
                 tooltip: {
                     backgroundColor: "#181e2c", titleColor: "#e8ecf4", bodyColor: "#9aa4b8",
                     borderColor: "rgba(255,255,255,0.12)", borderWidth: 1,
-                    callbacks: { label: c => `${c.dataset.label}: ${c.parsed.y != null ? c.parsed.y.toFixed(1) + " µg/m³" : "—"}` },
+                    callbacks: { label: c => `${c.dataset.label}: ${c.parsed.y != null ? f1tr(c.parsed.y) + " µg/m³" : "—"}` },
                 },
             },
             scales: {
@@ -1302,7 +1302,7 @@ let _avgBadge = null;
 
 function showLiveDelta(d, deltaEl) {
     const sign = d >= 0 ? "+" : "−";
-    const abs = Math.abs(d).toFixed(1);
+    const abs = f1tr(Math.abs(d));
     const who = d >= 0 ? "Taşınabilir" : "Sabit";
     const color = d >= 0 ? "#34d27b" : "#b07aff";
 

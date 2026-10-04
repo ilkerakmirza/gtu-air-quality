@@ -20,6 +20,11 @@ const PM25_SCALE = [
     { max: Infinity, color: "#4a0015", label: ">75 µg/m³"  },
 ];
 
+// Ekranda gösterilen sayılar Türkçe biçimde: tek ondalık, virgül (12,3). Boş değerde null döner (?? "--" ile kullanılır).
+function f1tr(v) {
+    return v == null || isNaN(v) ? null : (+v).toLocaleString("tr-TR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+
 function pm25Color(v) {
     if (v == null || isNaN(v)) return "#8a93a6";
     for (const b of PM25_SCALE) if (v <= b.max) return b.color;

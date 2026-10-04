@@ -8,17 +8,42 @@
     "ikon": "📲",
     "baslik": "GTÜ AirLab artık telefonunuzda",
     "ozet": "Kampüsümüzün havasını artık her an, her yerden takip edebilirsiniz.",
-    "metin": "GTÜ AirLab, Gebze Teknik Üniversitesi kampüsündeki hava kalitesini **ölçmek, haritalamak ve yorumlamak** için geliştirdiğimiz ekip uygulamasıdır. Sabit istasyonlar, taşınabilir sensörler ve saha ölçümlerimizden gelen veriler tek ekranda buluşur. Böylece ekibin her üyesi projenin güncel durumunu aynı yerden izler.",
+    "metin": "GTÜ AirLab, Gebze Teknik Üniversitesi kampüsündeki hava kalitesini **ölçmek, haritalamak ve yorumlamak** için geliştirdiğimiz platformdur. Kampüs sensörü, saha ölçümleri ve resmî bölge istasyonunun verileri tek ekranda buluşur; öğrenciler, akademik ve idari personel kampüsün havasını aynı yerden takip eder.",
     "bolumler": [
       {
         "tur": "ozellikler",
         "baslik": "Uygulamada neler var?",
         "ogeler": [
-          { "ikon": "📡", "baslik": "Canlı ölçümler", "metin": "PurpleAir, Atmotube ve CO₂ sensörlerinin anlık değerleri" },
-          { "ikon": "🗺️", "baslik": "Kampüs haritası", "metin": "Bina bazında PM₂.₅ ortalamaları ve aylık karşılaştırmalar" },
-          { "ikon": "👥", "baslik": "Saha ölçümleri", "metin": "Ekibin ölçüm günlerini haritada gün gün izleyin ve yeniden oynatın" },
-          { "ikon": "⚖️", "baslik": "Kampüs ve bölge", "metin": "Kampüs ölçümlerini Bakanlığın Tuzla hava kalitesi istasyonuyla karşılaştırın" },
-          { "ikon": "📢", "baslik": "Ekip duyuruları", "metin": "Saha günleri, toplantılar ve proje gelişmeleri tek yerde" }
+          {
+            "ikon": "🙂",
+            "baslik": "Özet ve HKİ",
+            "metin": "Kampüsün havası Ulusal Hava Kalitesi İndeksi (HKİ) ile; herkes ve hassas gruplar için ölçülü öneriler"
+          },
+          {
+            "ikon": "🗺️",
+            "baslik": "Kampüs haritası",
+            "metin": "Binaları arayın; saha ölçümlerine göre bina ortalamalarını görün"
+          },
+          {
+            "ikon": "🩺",
+            "baslik": "Sağlık (WHO)",
+            "metin": "Ölçümlerin WHO kılavuz değerlerine göre günlük ve aylık değerlendirmesi"
+          },
+          {
+            "ikon": "💬",
+            "baslik": "AirLab asistanı",
+            "metin": "Kampüste geçirdiğiniz zamana göre ne kadar PM₂.₅ soluduğunuzu tahmin edin"
+          },
+          {
+            "ikon": "🔬",
+            "baslik": "Araştırma",
+            "metin": "Sensör panelleri, saha ölçümleri ve karşılaştırma grafikleri (ekip için)"
+          },
+          {
+            "ikon": "📢",
+            "baslik": "Duyurular",
+            "metin": "Ekip duyuruları; sensör kesintisi ve hava kalitesi uyarıları kendiliğinden gelir"
+          }
         ]
       },
       {

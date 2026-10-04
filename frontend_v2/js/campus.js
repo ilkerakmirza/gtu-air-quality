@@ -292,7 +292,7 @@ const Campus = (() => {
                 return `<button type="button" class="sr-row${i === active ? " on" : ""}" data-i="${i}">
                     <span class="sr-ico">${UNIT[e.unit].icon}</span>
                     <span class="sr-txt"><b>${e.full}</b><small>${UNIT[e.unit].label} · ${REGION_LABEL[e.feature.properties.region] || ""}</small></span>
-                    ${s ? `<span class="sr-pm" style="background:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</span>` : ""}</button>`;
+                    ${s ? `<span class="sr-pm" style="background:${pm25Color(s.avg)}">${f1tr(s.avg)}</span>` : ""}</button>`;
             }).join("") : `<div class="sr-empty">“${input.value.replace(/[<>&]/g, "")}” için bina bulunamadı</div>`;
             list.hidden = false;
         };
@@ -335,7 +335,7 @@ const Campus = (() => {
     function labelHtml(e) {
         const s = choropleth ? disp(e) : null;
         const near = map.getZoom() >= FULL_NAME_ZOOM;      // yakında tam ad ve ölçüm sayısı
-        const pm = s ? `<b class="bl-pm" style="background:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</b>`
+        const pm = s ? `<b class="bl-pm" style="background:${pm25Color(s.avg)}">${f1tr(s.avg)}</b>`
                      + (near ? `<span class="bl-n">n=${s.n.toLocaleString("tr-TR")}</span>` : "") : "";
         const name = near ? e.full : e.short;
         // değer simgenin hemen yanında: ad alt satıra kaysa da değerden kopmaz
@@ -412,7 +412,7 @@ const Campus = (() => {
         const s = disp(e);
         const head = `<b>${UNIT[e.unit].icon} ${name}</b><br><small>${unitLine(e)}</small>`;
         if (!s) return head;
-        return `${head}<br>${periodLabel()} ort. PM₂.₅: <b style="color:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</b> µg/m³ · ${s.n.toLocaleString("tr-TR")} ölçümün ortalaması`;
+        return `${head}<br>${periodLabel()} ort. PM₂.₅: <b style="color:${pm25Color(s.avg)}">${f1tr(s.avg)}</b> µg/m³ · ${s.n.toLocaleString("tr-TR")} ölçümün ortalaması`;
     }
 
     // Aylık kırılım: her ayın ortalaması, genelden farkı, en sorunlu ay
@@ -421,18 +421,18 @@ const Campus = (() => {
         if (!ms.length || !e.stats) return "";
         const top = Math.max(...ms.map(m => m.avg));
         const worst = ms.length > 1 ? ms.reduce((a, b) => b.avg > a.avg ? b : a) : null;
-        const sgn = d => { const r = Math.round(d * 10) / 10; return (r > 0 ? "+" : r < 0 ? "−" : "±") + Math.abs(r).toFixed(1); };
+        const sgn = d => { const r = Math.round(d * 10) / 10; return (r > 0 ? "+" : r < 0 ? "−" : "±") + f1tr(Math.abs(r)); };
         const rows = ms.map(m => {
             const d = m.avg - e.stats.avg;
             return `<div class="bpm-row${m === worst ? " worst" : ""}${m.ym === period ? " sel" : ""}">
                 <span class="bpm-m">${monthLabel(m.ym)}</span>
                 <span class="bpm-bar"><i style="width:${(m.avg / top * 100).toFixed(0)}%;background:${pm25Color(m.avg)}"></i></span>
-                <b style="color:${pm25Color(m.avg)}">${m.avg.toFixed(1)}</b>
+                <b style="color:${pm25Color(m.avg)}">${f1tr(m.avg)}</b>
                 <em>${ms.length > 1 ? sgn(d) : ""}</em>
                 <small class="${m.n < FEW ? "few" : ""}">${m.n.toLocaleString("tr-TR")}</small></div>`;
         }).join("");
         const foot = worst
-            ? `<div class="bpm-foot">⚠️ En sorunlu ay: <b>${monthLabel(worst.ym)}</b> — genel ortalamanın ${(worst.avg - e.stats.avg).toFixed(1)} µg/m³ üstünde`
+            ? `<div class="bpm-foot">⚠️ En sorunlu ay: <b>${monthLabel(worst.ym)}</b> — genel ortalamanın ${f1tr((worst.avg - e.stats.avg))} µg/m³ üstünde`
               + (worst.n < FEW ? `<div class="bpm-warn">Yalnızca ${worst.n} ölçüme dayanıyor; dikkatli yorumlayın.</div>` : "") + `</div>`
             : `<div class="bpm-foot">Ölçümler tek ayda (${monthLabel(ms[0].ym)})</div>`;
         return `<div class="bp-months"><div class="bpm-head"><span>Aylık ortalama</span><span>µg/m³ · genelden fark · ölçüm</span></div>${rows}${foot}</div>`;
@@ -456,13 +456,13 @@ const Campus = (() => {
         const all = pts.filter(p => p.pm2_5 != null).map(p => p.pm2_5);
         if (all.length >= 30) {
             const ref = all.reduce((a, b) => a + b, 0) / all.length, pct = (s.avg - ref) / ref * 100;
-            lines.push(Math.abs(pct) < 5 ? `≈ Kampüs saha ortalamasıyla benzer (${ref.toFixed(1)})`
-                : `${pct > 0 ? "▲" : "▼"} Kampüs saha ortalamasından (${ref.toFixed(1)}) %${Math.abs(pct).toFixed(0)} ${pct > 0 ? "yüksek" : "düşük"}`);
+            lines.push(Math.abs(pct) < 5 ? `≈ Kampüs saha ortalamasıyla benzer (${f1tr(ref)})`
+                : `${pct > 0 ? "▲" : "▼"} Kampüs saha ortalamasından (${f1tr(ref)}) %${Math.abs(pct).toFixed(0)} ${pct > 0 ? "yüksek" : "düşük"}`);
         }
         if (e.visit) {
             const v = e.visit, pct = (v.avg - v.prevAvg) / v.prevAvg * 100;
             const dl = new Date(v.day + "T12:00:00").toLocaleDateString("tr-TR", { day: "numeric", month: "long" });
-            lines.push(`📅 Son ölçüm (${dl}): ${v.avg.toFixed(1)} — binanın önceki ${v.prevDays} gündeki ortalamasından (${v.prevAvg.toFixed(1)}) `
+            lines.push(`📅 Son ölçüm (${dl}): ${f1tr(v.avg)} — binanın önceki ${v.prevDays} gündeki ortalamasından (${f1tr(v.prevAvg)}) `
                 + (Math.abs(pct) < 5 ? "farksız" : `%${Math.abs(pct).toFixed(0)} ${pct > 0 ? "yüksek" : "düşük"}`));
         }
         return lines.length ? `<div class="bp-ctx">${lines.map(l => `<div>${l}</div>`).join("")}</div>` : "";
@@ -478,12 +478,12 @@ const Campus = (() => {
                 : "Bina bazlı PM₂.₅ için Araştırma › Saha ölçümleri bölümünden ölçüm günü seçin."}</div>`;
         } else {
             const who = Object.entries(s.byPerson || {}).filter(([p]) => p !== "—").sort((a, b) => b[1].n - a[1].n)
-                .map(([p, v]) => `<span class="bp-chip">${p} · ${v.n} · ${(v.sum / v.n).toFixed(1)}</span>`).join("");
+                .map(([p, v]) => `<span class="bp-chip">${p} · ${v.n} · ${f1tr((v.sum / v.n))}</span>`).join("");
             body = `
               <div class="bp-grid">
-                <div><span>Ortalama</span><b style="color:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</b></div>
-                <div><span>Medyan</span><b style="color:${pm25Color(s.med)}">${s.med.toFixed(1)}</b></div>
-                <div><span>Maks.</span><b style="color:${pm25Color(s.max)}">${s.max.toFixed(1)}</b></div>
+                <div><span>Ortalama</span><b style="color:${pm25Color(s.avg)}">${f1tr(s.avg)}</b></div>
+                <div><span>Medyan</span><b style="color:${pm25Color(s.med)}">${f1tr(s.med)}</b></div>
+                <div><span>Maks.</span><b style="color:${pm25Color(s.max)}">${f1tr(s.max)}</b></div>
               </div>
               <div class="bp-cat">Genel ortalama · ${s.n.toLocaleString("tr-TR")} ölçüm (µg/m³, kısa süreli saha ölçümü)</div>
               ${contextHtml(e, s, pts)}
@@ -645,12 +645,12 @@ const Campus = (() => {
             const ms = e.monthly || [];
             const worst = period === "all" && ms.length > 1 ? ms.reduce((a, b) => b.avg > a.avg ? b : a) : null;
             const diff = period !== "all" && e.stats ? s.avg - e.stats.avg : null;
-            const sub = worst ? `en kötü ay: ${monthLabel(worst.ym, true)} ${worst.avg.toFixed(1)}${worst.n < FEW ? ` (${worst.n} ölçüm)` : ""}`
-                      : diff != null ? `genelden ${diff >= 0 ? "+" : "−"}${Math.abs(diff).toFixed(1)}` : "";
+            const sub = worst ? `en kötü ay: ${monthLabel(worst.ym, true)} ${f1tr(worst.avg)}${worst.n < FEW ? ` (${worst.n} ölçüm)` : ""}`
+                      : diff != null ? `genelden ${diff >= 0 ? "+" : "−"}${f1tr(Math.abs(diff))}` : "";
             return `<button class="rk-row" data-i="${features.indexOf(e)}">
                 <span class="rk-no">${i + 1}</span>
                 <span class="rk-name">${UNIT[e.unit].icon} ${name}<small>${s.n.toLocaleString("tr-TR")} ölçümün ortalaması${sub ? " · " + sub : ""}</small></span>
-                <b class="rk-val" style="background:${pm25Color(s.avg)}">${s.avg.toFixed(1)}</b></button>`;
+                <b class="rk-val" style="background:${pm25Color(s.avg)}">${f1tr(s.avg)}</b></button>`;
         }).join("");
         wrap.querySelectorAll(".rk-row").forEach(btn => btn.addEventListener("click", () => {
             const e = features[+btn.dataset.i], l = e.leafletLayer;
