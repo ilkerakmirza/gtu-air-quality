@@ -59,23 +59,23 @@ const CO2 = [{ device: 'CO2-1', location: 'İç mekân sensörü', lat: 40.8075,
 
 // ── Sahne sayfası ─────────────────────────────────────────────────────────
 const W = LONG ? 1280 : 540, H = LONG ? 720 : 960, DPR = LONG ? 1.5 : 2;
-const FRAME = LONG ? { x: 0, y: 92, w: 1280, h: 628 } : { x: 90, y: 196, w: 360, h: 720 };
+const FRAME = LONG ? { x: 0, y: 92, w: 1280, h: 628 } : { x: 0, y: 112, w: 540, h: 848 };
 const STAGE = `<!doctype html><html lang="tr"><head><meta charset="utf-8">
 <link rel="stylesheet" href="/vendor/fonts/fonts.css">
 <style>
 *{box-sizing:border-box;margin:0}
 html,body{width:${W}px;height:${H}px;overflow:hidden;background:#0a101d;color:#e8ecf4;font-family:Inter,system-ui,sans-serif}
-#cap{position:absolute;pointer-events:none;${LONG ? 'left:36px;right:300px;top:0;height:92px;display:flex;flex-direction:column;justify-content:center' : 'left:30px;right:30px;top:34px;height:150px'};transition:opacity .45s}
-#cap h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:${LONG ? 27 : 31}px;line-height:1.18;letter-spacing:-.005em}
-#cap p{margin-top:${LONG ? 4 : 10}px;font-size:${LONG ? 14.5 : 16.5}px;line-height:1.45;color:#aeb8cc}
+#cap{position:absolute;pointer-events:none;${LONG ? 'left:36px;right:300px;top:0;height:92px;display:flex;flex-direction:column;justify-content:center' : 'left:22px;right:128px;top:0;height:112px;display:flex;flex-direction:column;justify-content:center'};transition:opacity .45s}
+#cap h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:${LONG ? 27 : 24}px;line-height:1.18;letter-spacing:-.005em}
+#cap p{margin-top:${LONG ? 4 : 5}px;font-size:${LONG ? 14.5 : 13.5}px;line-height:1.45;color:#aeb8cc}
 #cap h2 b{color:#7ea2ff;font-weight:600}
 #app{position:absolute;left:${FRAME.x}px;top:${FRAME.y}px;width:${FRAME.w}px;height:${FRAME.h}px;border:0;background:#0a101d;
-  ${LONG ? 'border-top:1px solid rgba(160,180,220,.14)' : 'border-radius:30px;box-shadow:0 0 0 7px #182235,0 0 0 8px rgba(160,180,220,.18),0 24px 60px rgba(0,0,0,.5)'}}
-#brand{position:absolute;${LONG ? 'right:30px;top:0;height:92px' : 'left:0;right:0;bottom:8px;justify-content:center'};display:flex;align-items:center;gap:10px;font-size:12px;color:#8b96ab}
-#brand img{width:${LONG ? 34 : 22}px;height:${LONG ? 34 : 22}px;border-radius:8px}
-#brand b{font-family:"Source Serif 4",serif;font-size:${LONG ? 18 : 14}px;color:#e8ecf4;font-weight:600}
+  border-top:1px solid rgba(160,180,220,.14)}
+#brand{position:absolute;${LONG ? 'right:30px;top:0;height:92px' : 'right:18px;top:30px;height:70px;flex-direction:column;gap:4px'};display:flex;align-items:center;gap:10px;font-size:12px;color:#8b96ab}
+#brand img{width:${LONG ? 34 : 32}px;height:${LONG ? 34 : 32}px;border-radius:8px}
+#brand b{font-family:"Source Serif 4",serif;font-size:${LONG ? 18 : 13}px;color:#e8ecf4;font-weight:600}
 #brand b i{font-style:normal;color:#f5a623}
-#draft{position:absolute;${LONG ? 'left:36px;bottom:10px' : 'right:16px;top:8px'};z-index:20;font-size:10.5px;font-weight:600;letter-spacing:.04em;color:#f5b840;
+#draft{position:absolute;${LONG ? 'left:36px;bottom:10px' : 'right:14px;top:6px;font-size:9px'};z-index:20;font-size:10.5px;font-weight:600;letter-spacing:.04em;color:#f5b840;
   padding:3px 8px;border:1px solid rgba(245,184,64,.45);border-radius:99px;background:rgba(10,16,29,.85)}
 #sub{position:absolute;pointer-events:none;left:${LONG ? '445px' : '50%'};${LONG ? 'bottom:40px;max-width:820px;font-size:26px' : 'bottom:206px;max-width:470px;font-size:23px'};z-index:8;transform:translate(-50%,8px) scale(.97);
   width:max-content;text-align:center;font-weight:700;line-height:1.38;color:#fff;padding:${LONG ? '10px 22px' : '10px 16px'};border-radius:12px;
@@ -96,6 +96,14 @@ html,body{width:${W}px;height:${H}px;overflow:hidden;background:#0a101d;color:#e
 #card li:last-child{border-bottom:0}
 #card li b{color:#fff;font-weight:650}
 #card li span.n{flex-shrink:0;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;color:#a9c0ff;background:rgba(91,141,239,.16);border:1px solid rgba(91,141,239,.45)}
+#card .cmp{display:grid;gap:14px;width:100%;max-width:${LONG ? 980 : 470}px;grid-template-columns:${LONG ? '1fr 1fr' : '1fr'};text-align:left}
+#card .cmp section{padding:16px 18px;border:1px solid rgba(160,180,220,.16);border-radius:14px;background:#0f1726}
+#card .cmp h4{font-family:"Source Serif 4",serif;font-size:${LONG ? 23 : 21}px;font-weight:600;margin-bottom:2px}
+#card .cmp .dev{font-size:13.5px;color:#8fa7d8;margin-bottom:10px}
+#card .cmp dl{display:grid;grid-template-columns:82px 1fr;gap:6px 10px;font-size:${LONG ? 16 : 15}px;line-height:1.42;color:#d7dce6}
+#card .cmp dt{color:#8b96ab;font-weight:600}
+#card .note{margin-top:16px;max-width:${LONG ? 980 : 470}px;font-size:13.5px;line-height:1.5;color:#8b96ab;text-align:left}
+#card h2.t{font-family:"Source Serif 4",serif;font-weight:600;font-size:${LONG ? 34 : 29}px;line-height:1.22;max-width:${LONG ? 900 : 470}px}
 #card .qr{width:${LONG ? 190 : 210}px;height:${LONG ? 190 : 210}px;border-radius:14px;background:#fff;padding:10px;margin-top:26px}
 #card .small{margin-top:16px;font-size:14px;color:#8b96ab}
 </style></head><body>
@@ -175,7 +183,8 @@ window.card = html => { const c = document.getElementById('card'); if (html) { c
     document.body.appendChild(d); let k = 0; setInterval(() => { d.style.background = (k++ % 2) ? '#0a101d' : '#0b111e'; }, 33); });
 
   const wait = ms => page.waitForTimeout(ms);
-  const cap = (h, p) => page.evaluate(([h, p]) => window.cap(h, p), [h, p]);
+  // Yeni sahne başlığı gelince önceki altyazı da kalkar
+  const cap = (h, p) => page.evaluate(([h, p]) => { window.sub(null); window.cap(h, p); }, [h, p]);
   const card = html => page.evaluate(h => window.card(h), html);
   const sub = html => page.evaluate(h => window.sub(h), html);
   const click = async (sel, pause = 900) => { await F().click(sel); await wait(pause); };
@@ -202,88 +211,114 @@ window.card = html => { const c = document.getElementById('card'); if (html) { c
   const OUTRO = `${LOGO_IMG}<h1>GTÜ <i>Air</i>Lab</h1><div class="sub">Kampüs Hava Kalitesi Laboratuvarı<br>Gebze Teknik Üniversitesi</div>
     ${QR ? `<img class="qr" src="${QR}" alt="">` : ''}<div class="small">Tarayıcıda açın · telefonunuza uygulama olarak kurabilirsiniz</div>`;
 
+  const CMP = `<h3>Sabit ve taşınabilir sensörler</h3><div class="cmp">
+      <section><h4>Sabit sensör</h4><div class="dev">PurpleAir PA-II · SÜMER Laboratuvarı çatısı</div>
+        <dl><dt>Ölçüm</dt><dd>Sürekli; 2 dakikalık zaman çözünürlüğü</dd><dt>Amaç</dt><dd>Zamansal değişim; günlük ortalamaların WHO kılavuz değeriyle karşılaştırılması</dd></dl></section>
+      <section><h4>Taşınabilir sensörler</h4><div class="dev">Atmotube Pro (5 cihaz) · GPS konumlu</div>
+        <dl><dt>Ölçüm</dt><dd>Planlı saha yürüyüşleri; kısa süreli, konumlu</dd><dt>Amaç</dt><dd>Mekânsal değişkenlik; bina ve mikroortam karşılaştırması</dd></dl></section></div>
+    <div class="note">Her iki sensör türü de düşük maliyetli optik sensördür; değerler ham ölçümdür (nem düzeltmesi uygulanmamıştır).</div>`;
   if (!LONG) {
-    // ── Shorts (≈35 sn, 9:16) ──
-    await card(`${LOGO_IMG}<h1 style="font-size:40px">Kampüste soluduğun<br>hava şu an nasıl?</h1><div class="rule"></div><div class="sub">GTÜ AirLab · canlı ölçüm</div>`);
-    await wait(3600);
-    await cap('Şu an kampüste', 'Ulusal Hava Kalitesi İndeksi (HKİ) ve PM₂.₅ · ölçüm zamanı ve kaynağıyla');
+    // ── Kısa sürüm (≈55 sn, 9:16): harita ve sonuçlar önde, akademik dil ──
+    await click('#tabbar [data-tab=map]', 300);
+    await card(`${LOGO_IMG}<h2 class="t">Gebze Teknik Üniversitesi kampüsünde ince partikül madde (PM₂.₅) izleme</h2>
+      <div class="rule"></div><div class="sub" style="margin-top:0">Sabit ve taşınabilir sensörlerden oluşan kampüs ölçekli ölçüm ağı</div>`);
+    await wait(4300);
+    await card(CMP); await wait(9500);
+    // Ölçüm ağı
+    await cap('Ölçüm ağı', 'Sabit sensör ve taşınabilir cihazların konumları');
     await card(null); await wait(500);
-    await sub('Kampüs sensörü <mark>2 dakikada bir</mark> ölçüyor'); await wait(2000);
-    await sub('Yüz ve renk: <mark>hava kalitesi sınıfı</mark>'); await wait(1700);
-    await sub('Herkes ve hassas gruplar için <mark>öneriler</mark>');
-    await scroll('#ozet-body', 330, 2200); await wait(1600);
-    await cap('Kampüs haritası', 'Sensörler, saha ölçümleri ve binalar tek ekranda');
-    await F().evaluate(() => document.getElementById('ozet-body').scrollTop = 0);
-    await sub('Sensörler ve saha ölçümleri <mark>harita üzerinde</mark>');
-    await click('#tabbar [data-tab=map]', 1600);
-    await F().evaluate(() => { map.flyTo([40.8105, 29.3575], 16.25, { duration: 2.2 }); }); await wait(2000);
-    await sub('Sol alttaki <mark>yuvarlak düğmeye</mark> dokun'); await wait(1600);
-    await cap('Ne kadar PM₂.₅ soludun?', 'Kişisel maruziyet asistanı · bilgilerin cihazından çıkmaz');
-    await wait(700);
-    await click('#exp-fab', 1300);
-    await sub('Ne zaman, nerede, <mark>ne kadar</mark> kaldığını seç');
-    await chat(780);
-    await sub('Kampüste soluduğun <mark>PM₂.₅ miktarı</mark>'); await wait(400); await toChart(); await wait(2600);
-    await sub('…ve <mark>neler yapabileceğin</mark>'); await scroll('#exp-body', 330, 1500); await wait(2200);
-    await sub(null); await card(OUTRO); await wait(5200);
+    await F().evaluate(() => { map.flyTo([40.8100, 29.3578], 16.4, { duration: 2.4 }); });
+    await sub('Sabit sensör: PurpleAir PA-II, <mark>SÜMER çatısı</mark>'); await wait(3000);
+    await sub('Taşınabilir sensörler: <mark>GPS konumlu</mark> saha ölçümleri'); await wait(2800);
+    // Mekânsal sonuçlar
+    await cap('Mekânsal dağılım', 'Saha ölçümlerinden bina ölçekli PM₂.₅ ortalamaları (µg/m³)');
+    await sub(null);
+    await click('#tabbar [data-tab=research]', 700);
+    await click('#research-switch [data-sub=field]', 800);
+    await click('#sel-all', 700);
+    await click('.vs-btn[data-view=avg]', 1300);
+    await sub('Binalar <mark>kampüs saha ortalamasına</mark> göre sıralanır'); await wait(2600);
+    await click('#map-cta', 900);
+    await F().evaluate(() => { map.flyTo([40.8112, 29.3566], 16.3, { duration: 2.2 }); });
+    await sub('Bina ortalamaları <mark>haritada</mark>'); await wait(2800);
+    await sub('Kısa süreli ölçümler <mark>WHO 24 saatlik değeriyle karşılaştırılmaz</mark>'); await wait(3000);
+    // WHO karşılaştırması
+    await cap('WHO (2021) kılavuz değeriyle karşılaştırma', 'Sabit sensörün günlük PM₂.₅ ortalamaları');
+    await sub(null);
+    await click('#tabbar [data-tab=who]', 1200);
+    await sub('WHO 24 saatlik kılavuz değeri: <mark>15 µg/m³</mark>'); await wait(2800);
+    await scroll('#who-body', 190, 1300);
+    await sub('Kılavuz değeri aşan günler <mark>ayrı renkte</mark> gösterilir'); await wait(3000);
+    await scroll('#who-body', 120, 1200);
+    await sub('Yıllık kılavuz değer: <mark>5 µg/m³</mark>'); await wait(3000);
+    // Kişisel maruziyet
+    await cap('Kişisel maruziyet tahmini', 'Zaman, konum ve etkinlik bilgisinden solunan PM₂.₅ miktarı (µg)');
+    await sub(null);
+    await click('#tabbar [data-tab=map]', 700);
+    await click('#exp-fab', 1000);
+    await sub('Girilen bilgiler <mark>cihazdan çıkmaz</mark>');
+    await chat(430);
+    await wait(300); await toChart();
+    await sub('Solunan miktar = derişim × <mark>solunum hızı</mark> × süre'); await wait(3200);
+    await sub('Solunum hızları: <mark>US EPA (2011)</mark>'); await wait(2400);
+    await sub(null);
+    await card(`${LOGO_IMG}<h1>GTÜ <i>Air</i>Lab</h1><div class="sub">Kampüs Hava Kalitesi Laboratuvarı<br>Gebze Teknik Üniversitesi</div>
+      ${QR ? `<img class="qr" src="${QR}" alt="">` : ''}<div class="small">Yöntem, eşik değerler ve kaynaklar uygulamanın “Hakkında” bölümündedir.</div>`);
+    await wait(5500);
   } else {
     // ── Tanıtım (≈2,5 dk, 16:9) ──
     await card(`${LOGO_IMG}<h1>GTÜ <i>Air</i>Lab</h1><div class="sub">Kampüs Hava Kalitesi Laboratuvarı · Gebze Teknik Üniversitesi</div>
-      <div class="rule"></div><div class="sub" style="margin-top:0">Kampüste soluduğumuz havayı ölçüyor, herkesle açıkça paylaşıyoruz.</div>`);
+      <div class="rule"></div><div class="sub" style="margin-top:0">Kampüs ölçekli ince partikül madde (PM₂.₅) izleme ve açık veri paylaşımı</div>`);
     await wait(6500);
     await card(`<h3>Neden ölçüyoruz?</h3><ul>
       <li><span class="n">1</span><span><b>PM₂.₅</b>, çapı 2,5 mikrometreden küçük parçacıklardır; solunum yollarının derinlerine ulaşabilir.</span></li>
       <li><span class="n">2</span><span>Dünya Sağlık Örgütü (WHO, 2021) kılavuzu: <b>24 saatlik ortalama 15 µg/m³</b>, yıllık ortalama 5 µg/m³.</span></li>
-      <li><span class="n">3</span><span>Kampüsteki değeri bilmek; ders, çalışma ve açık hava etkinliklerini planlamaya yardımcı olabilir.</span></li></ul>`);
+      <li><span class="n">3</span><span>Amaç: kampüs içindeki <b>zamansal ve mekânsal değişkenliği</b> ölçmek ve sonuçları yöntemiyle birlikte paylaşmak.</span></li></ul>`);
     await wait(10500);
-    await card(`<h3>Ölçüm ağı</h3><ul>
-      <li><span class="n">1</span><span><b>PurpleAir PA-II</b> · SÜMER Laboratuvarı çatısı; PM₁, PM₂.₅, PM₁₀, sıcaklık ve nem, 2 dakikada bir</span></li>
-      <li><span class="n">2</span><span><b>Atmotube Pro (5 cihaz)</b> · taşınabilir, GPS'li saha ölçümleri; binaların karşılaştırılması</span></li>
-      <li><span class="n">3</span><span><b>CO₂ sensörleri</b> · iç mekânlarda havalandırma göstergesi</span></li>
-      <li><span class="n">4</span><span><b>Tuzla istasyonu</b> (İBB, ÇŞB) · kampüs ile bölgenin aynı saatte karşılaştırılması</span></li></ul>`);
+    await card(CMP);
     await wait(10000);
-    await cap('Özet: kampüste şu an', 'Ulusal Hava Kalitesi İndeksi (HKİ), sınıfı ve ölçülü öneriler · veri kaynağı ve ölçüm zamanı her zaman görünür');
+    await cap('Anlık durum', 'Ulusal Hava Kalitesi İndeksi (HKİ) ile sınıflandırma · veri kaynağı ve ölçüm zamanı belirtilir');
     await card(null); await wait(600);
-    await sub('Kampüs sensörünün son ölçümü, <mark>ulusal hava kalitesi indeksiyle</mark>'); await wait(3300);
-    await sub('Yüz ve renk sınıfı gösterir: <mark>İyi, Orta, Hassas…</mark>'); await wait(3200);
-    await sub('Herkes ve hassas gruplar için <mark>ölçülü öneriler</mark>');
+    await sub('Sabit hava kalitesi sensörünün son ölçümü, <mark>Ulusal Hava Kalitesi İndeksi</mark> ile'); await wait(3300);
+    await sub('Altı sınıf: <mark>İyi, Orta, Hassas, Sağlıksız, Kötü, Tehlikeli</mark>'); await wait(3200);
+    await sub('Genel nüfus ve hassas gruplar için <mark>öneriler</mark>');
     await scroll('#ozet-body', 520, 3500); await wait(2500);
-    await sub('Günlük ve aylık özet: <mark>WHO değerinin üstünde kaç gün?</mark>');
+    await sub('Aylık özet: <mark>kılavuz değeri aşan gün sayısı</mark>');
     await scroll('#ozet-body', 520, 3500); await wait(3000);
-    await cap('Kampüs haritası', 'Binalar, sabit sensörler ve taşınabilir cihazlar; bina adına göre arama');
-    await sub('Kuzey ve Güney kampüs, <mark>bina bina</mark>');
+    await cap('Ölçüm ağı', 'Sabit sensör ve taşınabilir cihazların konumları; bina adına göre arama');
+    await sub('Kuzey ve Güney kampüs, <mark>bina ölçeğinde</mark>');
     await click('#ozet-close', 900);
     await F().evaluate(() => { map.flyTo([40.8105, 29.3575], 16.6, { duration: 2.5 }); }); await wait(4200);
-    await sub('Sabit sensörler ve <mark>taşınabilir cihazlar</mark> aynı haritada');
+    await sub('Sabit sensör ve <mark>taşınabilir cihazlar</mark> aynı haritada');
     await F().evaluate(() => { map.flyTo([40.8114, 29.3563], 15.6, { duration: 2 }); }); await wait(3200);
-    await cap('Sağlık: WHO karşılaştırması', 'Günlük ortalamalar WHO 2021 kılavuz değeriyle karşılaştırılır; kısa süreli saha ölçümleri 24 saatlik değerle karşılaştırılmaz');
-    await sub('Her gün <mark>WHO 2021 kılavuz değeriyle</mark> karşılaştırılır');
+    await cap('WHO (2021) kılavuz değeriyle karşılaştırma', 'Sabit sensörün günlük ortalamaları · kısa süreli saha ölçümleri 24 saatlik değerle karşılaştırılmaz');
+    await sub('WHO 24 saatlik kılavuz değeri <mark>15 µg/m³</mark>, yıllık <mark>5 µg/m³</mark>');
     await click('#who-btn', 4500);
-    await sub('Hangi günler sınırın üstünde, <mark>bir bakışta</mark>');
+    await sub('Kılavuz değeri aşan günler <mark>ayrı renkte</mark> gösterilir');
     await scroll('#who-body', 600, 4000); await wait(3500);
-    await cap('Kişisel maruziyet asistanı', 'Kampüste geçirdiğiniz zamana göre solunan PM₂.₅ miktarının tahmini · girilen bilgiler cihazınızdan çıkmaz');
+    await cap('Kişisel maruziyet tahmini', 'Zaman, konum ve etkinlik bilgisinden solunan PM₂.₅ miktarı (µg) · girilen bilgiler cihazdan çıkmaz');
     await click('#who-close', 900);
-    await sub('Haritadaki <mark>yuvarlak düğme</mark> asistanı açar');
+    await sub('Haritadaki <mark>yuvarlak düğme</mark> maruziyet asistanını açar');
     await click('#exp-fab', 1800);
-    await sub('Saat, etkinlik, bina, havalandırma ve süre: <mark>birkaç dokunuş</mark>');
+    await sub('Girdiler: saat, etkinlik, bina, <mark>havalandırma</mark> ve süre');
     await chat(1150);
-    await sub('Sonuç: kampüste solunan <mark>tahmini PM₂.₅ miktarı</mark>');
+    await sub('Solunan miktar = derişim × <mark>solunum hızı (US EPA, 2011)</mark> × süre');
     await wait(600); await toChart(); await wait(4200);
-    await sub('…ve maruziyeti azaltmak için <mark>öneriler</mark>'); await scroll('#exp-body', 420, 2500); await wait(4000);
-    await cap('Yöntem ve sınır değerler açık', 'HKİ kesim noktaları; WHO, Türkiye ve AB sınır değerleri; sınırlılıklar ve kaynaklar Hakkında bölümünde');
+    await sub('Sonuçla birlikte <mark>varsayımlar ve sınırlılıklar</mark>'); await scroll('#exp-body', 420, 2500); await wait(4000);
+    await cap('Yöntem ve sınır değerler', 'HKİ kesim noktaları; WHO (2021), Türkiye ve AB (2030) değerleri; sınırlılıklar ve kaynaklar');
     await click('#exp-close', 700);
     await click('#info-btn', 1500);
-    await sub('Her eşik ve hesap <mark>kaynağıyla birlikte</mark> yazılı');
+    await sub('Her eşik ve hesap <mark>kaynağıyla birlikte</mark> belirtilir');
     await F().evaluate(() => document.getElementById('inf-sinir').scrollIntoView({ behavior: 'smooth', block: 'start' })); await wait(4500);
     await scroll('#info-body', 380, 3000); await wait(2500);
-    await cap('Araştırma görünümü', 'Sensör panelleri, saha ölçümleri ve karşılaştırma grafikleri · araştırmacılar için');
+    await cap('Araştırma görünümü', 'Sensör panelleri, saha ölçüm oturumları ve bina ortalamaları');
     await click('#info-close', 700);
-    await sub('Tek düğmeyle <mark>araştırmacı görünümü</mark>');
+    await sub('Teknik ayrıntılar <mark>Araştırma görünümünde</mark>');
     await click('#research-btn', 4500);
     await sub('Canlı sensörler ve <mark>saha ölçüm oturumları</mark>'); await wait(5000);
-    await cap('Duyurular', 'Sensör kesintisi ya da yüksek kirlilik durumunda kendiliğinden bilgilendirme');
+    await cap('Duyurular', 'Sensör kesintisi ve HKİ “Hassas” üzeri durumlarda otomatik bilgilendirme');
     await click('#research-btn', 800);
-    await sub('Sensör kesintisinde ya da kirlilik artınca <mark>otomatik duyuru</mark>');
+    await sub('Sensör kesintisi ve yüksek derişimde <mark>otomatik duyuru</mark>');
     await click('#news-btn', 6500);
     await sub(null);
     await card(`<h3>Gizlilik</h3><ul>

@@ -64,7 +64,7 @@ hesaba etkisi yoktur.
 | Saha ölçümleri (nokta) | Atmotube Pro yürüyüş ölçümleri; sunucu `/api/map/tracks` | `WHO.fieldPoints()` |
 | Bina eşleştirmesi | Saha noktalarının bina poligonlarıyla eşleştirilmesi (`data/campus.geojson`) | `Campus.buildingStats()` |
 
-Kampüs sensörü değerleri **ham (düzeltilmemiş)** PurpleAir `pm2.5_atm` değerleridir.
+Sabit hava kalitesi sensörünün değerleri **ham (düzeltilmemiş)** PurpleAir `pm2.5_atm` değerleridir.
 
 ## 4. Model
 

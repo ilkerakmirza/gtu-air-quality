@@ -122,7 +122,7 @@ const Maruziyet = (() => {
     }
 
     function resultHtml() {
-        if (model.overall == null) return `<div class="oz-card"><div class="wh-empty">Hesap için kampüs sensörü geçmişi yüklenemedi.</div></div>`;
+        if (model.overall == null) return `<div class="oz-card"><div class="wh-empty">Hesap için sabit hava kalitesi sensörü geçmişi yüklenemedi.</div></div>`;
         const k = compute(), ok = k.res.filter(x => !x.err);
         const errs = k.res.filter(x => x.err).map(x => `<div class="oz-line bad">${ico("triangle-alert")} ${x.i + 1}. satır: ${x.err}</div>`).join("");
         if (!ok.length) return errs || "";

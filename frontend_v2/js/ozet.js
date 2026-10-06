@@ -65,13 +65,13 @@ const Ozet = (() => {
         const paFresh = pa && pa.pm2_5 != null && ageMin(pa.recorded_at) <= PA_FRESH_MIN;
         const tzFresh = tz && tz.pm2_5 != null && !tz.stale;
         const src = paFresh ? { v: pa.pm2_5, where: "Kampüs · PurpleAir (SUMER çatısı)", at: pa.recorded_at }
-                  : tzFresh ? { v: tz.pm2_5, where: "Bölge · Tuzla istasyonu (6,4 km)", at: tz.recorded_at, note: "Kampüs sensörü şu an çevrimdışı; en yakın resmî istasyonun değeri gösteriliyor." }
+                  : tzFresh ? { v: tz.pm2_5, where: "Bölge · Tuzla istasyonu (6,4 km)", at: tz.recorded_at, note: "Sabit hava kalitesi sensörü şu an çevrimdışı; en yakın resmî istasyonun değeri gösteriliyor." }
                   : null;
         const today = new Date().toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long" });
         let html = `<div class="oz-head"><span>Günlük özet</span><small>Bugün · ${today}</small></div>`;
 
         if (!src) {
-            html += `<div class="oz-card"><div class="wh-empty">Şu an güncel ölçüm yok: kampüs sensörü ve bölge istasyonu veri göndermiyor.
+            html += `<div class="oz-card"><div class="wh-empty">Şu an güncel ölçüm yok: sabit hava kalitesi sensörü ve bölge istasyonu veri göndermiyor.
                 Sensör durumlarını aşağıda görebilirsiniz.</div></div>`;
         } else {
             const h = hki(src.v), a = ADVICE[h.ad] || ADVICE["Orta"];
@@ -189,7 +189,7 @@ const Ozet = (() => {
                 <div class="who-cap">${s.hours} saatlik ölçüm; ${s.usable.length} gün değerlendirmeye girdi (en az ${WHO.MIN_H} saat ölçülen günler).</div>
               </div>`;
         } else {
-            html += `<div class="oz-card"><div class="wh-empty">Bu ay kampüs sensöründen yeterli ölçüm yok${s.hours ? ` (${s.hours} saat)` : ""}.
+            html += `<div class="oz-card"><div class="wh-empty">Bu ay sabit hava kalitesi sensöründen yeterli ölçüm yok${s.hours ? ` (${s.hours} saat)` : ""}.
                 ${field && field.length ? "Aşağıda bu ayın saha ölçümlerine göre binalar var." : ""}</div></div>`;
         }
 

@@ -344,7 +344,7 @@ async function loadComparison() {
                 verdict.style.cssText = v.cls === "ok" ? "background:rgba(52,210,123,0.13);color:#34d27b;border:1px solid rgba(52,210,123,0.35)"
                     : v.cls === "bad" ? "background:rgba(244,97,94,0.13);color:#f4615e;border:1px solid rgba(244,97,94,0.35)"
                     : "background:rgba(245,184,64,0.13);color:#f5b840;border:1px solid rgba(245,184,64,0.35)";
-                set("cmp-note", `Kampüs sensörü çevrimdışı · ${dl(hs.first)} – ${dl(hs.last)} arası ${hs.n} ortak saatin PM₂.₅ ortalaması`);
+                set("cmp-note", `Sabit hava kalitesi sensörü çevrimdışı · ${dl(hs.first)} – ${dl(hs.last)} arası ${hs.n} ortak saatin PM₂.₅ ortalaması`);
                 return;
             }
             verdict.innerHTML = `${ico("plug")} PurpleAir çevrimdışı — son veri: ${trClock(paStaleAt)}`;

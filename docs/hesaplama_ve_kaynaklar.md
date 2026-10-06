@@ -58,7 +58,7 @@ I  = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt     → en
 
 **Kabuller ve sınırlılıklar:**
 * Resmî HKİ 24 saatlik ortalamaya göre hesaplanır; Özet'teki değer **son ölçüme göre gösterge** değerdir (kartta yazılı).
-* Resmî HKİ PM₁₀, CO, SO₂, NO₂ ve O₃ için hesaplanır; kampüs sensörü PM₂.₅ ölçtüğü için tablonun PM₂.₅ sütunu kullanılır.
+* Resmî HKİ PM₁₀, CO, SO₂, NO₂ ve O₃ için hesaplanır; sabit hava kalitesi sensörü PM₂.₅ ölçtüğü için tablonun PM₂.₅ sütunu kullanılır.
 * ÇŞB SİM'in yayımladığı ulusal tablo ile İBB'nin yayımladığı tablo **PM₁₀ için farklıdır**: ÇŞB sayfaları
   0–50 / 51–100 / 101–260 / 261–400 / 401–520 / >520 µg/m³ veriyor; İBB tablosu 0–54 / 55–154 / 155–254 / … (EPA ile aynı).
   Uygulama PM₁₀ için HKİ hesaplamadığından bu fark şu an sonucu etkilemiyor; PM₁₀ HKİ eklenecekse hangi tablonun

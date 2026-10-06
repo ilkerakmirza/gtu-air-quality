@@ -207,7 +207,7 @@ const Shell = (() => {
         if (co2T && hoursSince(co2T) > 24) outage("co2", "İç mekân CO₂ sensörleri", co2T, "İç mekân CO₂ değerleri bu sürede gösterilemez.");
 
         // Hava kalitesi uyarısı: güncel değer HKİ "Hassas" (> 100, PM₂.₅ ≥ 35,5 µg/m³) ya da üstündeyse
-        const src = paFresh && pa.pm2_5 != null ? { v: +pa.pm2_5, where: "kampüs sensörü (PurpleAir)", t: paT }
+        const src = paFresh && pa.pm2_5 != null ? { v: +pa.pm2_5, where: "sabit hava kalitesi sensörü (PurpleAir)", t: paT }
                   : tzFresh && tz.pm2_5 != null ? { v: +tz.pm2_5, where: "Tuzla istasyonu", t: tzT } : null;
         const h = src && typeof hki === "function" ? hki(src.v) : null;
         if (h && h.i > 100) {
