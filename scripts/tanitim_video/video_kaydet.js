@@ -228,9 +228,9 @@ window.card = html => { const c = document.getElementById('card'); if (html) { c
 
   const CMP = `<h3>Sabit ve taşınabilir sensörler</h3><div class="cmp">
       <section><h4>Sabit sensör</h4><div class="dev">PurpleAir PA-II · SÜMER Laboratuvarı çatısı</div>
-        <dl><dt>Ölçüm</dt><dd>Sürekli; 2 dakikalık zaman çözünürlüğü</dd><dt>Amaç</dt><dd>Zamansal değişim; günlük ortalamaların WHO kılavuz değeriyle karşılaştırılması</dd></dl></section>
+        <dl><dt>Ölçüm</dt><dd>Sürekli; 2 dakikalık zaman çözünürlüğü</dd><dt>Amaç</dt><dd>Kampüsün genel (dış ortam) hava kalitesi; zamansal değişim ve WHO kılavuz değeriyle karşılaştırma</dd></dl></section>
       <section><h4>Taşınabilir sensörler</h4><div class="dev">Atmotube Pro (5 cihaz) · GPS konumlu</div>
-        <dl><dt>Ölçüm</dt><dd>Planlı saha yürüyüşleri; kısa süreli, konumlu</dd><dt>Amaç</dt><dd>Mekânsal değişkenlik; bina ve mikroortam karşılaştırması</dd></dl></section></div>
+        <dl><dt>Ölçüm</dt><dd>Planlı saha yürüyüşleri; kısa süreli, konumlu</dd><dt>Amaç</dt><dd>Bina bazlı karakterizasyon; binalar arası farkların kampüs saha ortalamasına göre belirlenmesi</dd></dl></section></div>
     <div class="note">Her iki sensör türü de düşük maliyetli optik sensördür; değerler ham ölçümdür (nem düzeltmesi uygulanmamıştır).</div>`;
   if (!LONG) {
     // ── Kısa sürüm (≈60 sn, 9:16): açıklamalar üst bantta, uygulama görüntüsü kesintisiz ──
@@ -239,7 +239,7 @@ window.card = html => { const c = document.getElementById('card'); if (html) { c
     // Ana ekran (Özet)
     await cap('Anlık hava kalitesi');
     await card(null); await wait(400);
-    await sub('Sabit hava kalitesi sensörünün son ölçümü, <mark>Ulusal Hava Kalitesi İndeksi (HKİ)</mark> ile'); await wait(3600);
+    await sub('Sabit sensör: <mark>kampüsün genel hava kalitesi</mark>, Ulusal Hava Kalitesi İndeksi (HKİ) ile'); await wait(3600);
     await scroll('#ozet-body', 300, 1800);
     await sub('Genel nüfus ve hassas gruplar için <mark>öneriler</mark>; veri kaynağı ve ölçüm zamanı belirtilir'); await wait(2600);
     // Sensör türleri
@@ -251,10 +251,10 @@ window.card = html => { const c = document.getElementById('card'); if (html) { c
     await cap('Ölçüm ağı');
     await card(null); await wait(400);
     await F().evaluate(() => { map.flyTo([40.8100, 29.3578], 16.4, { duration: 2.4 }); });
-    await sub('Sabit sensör: PurpleAir PA-II, <mark>SÜMER Laboratuvarı çatısı</mark>'); await wait(3000);
-    await sub('Taşınabilir sensörler: <mark>GPS konumlu</mark> saha ölçümleri'); await wait(2800);
+    await sub('Sabit sensör (PurpleAir PA-II, SÜMER çatısı): <mark>kampüs genel hava kalitesi</mark>'); await wait(3200);
+    await sub('Taşınabilir sensörler (Atmotube Pro, GPS): <mark>bina bazlı karakterizasyon</mark>'); await wait(3000);
     // Mekânsal sonuçlar
-    await cap('Mekânsal dağılım');
+    await cap('Bina bazlı karakterizasyon');
     await click('#tabbar [data-tab=research]', 600);
     await click('#research-switch [data-sub=field]', 700);
     await sub('Saha ölçümlerinden <mark>bina ölçekli PM₂.₅ ortalamaları</mark> (µg/m³)');
@@ -268,7 +268,7 @@ window.card = html => { const c = document.getElementById('card'); if (html) { c
     // WHO karşılaştırması
     await cap('WHO (2021) kılavuz değeriyle karşılaştırma');
     await click('#tabbar [data-tab=who]', 900);
-    await sub('Sabit sensörün günlük ortalamaları · 24 saatlik kılavuz değer <mark>15 µg/m³</mark>'); await wait(3000);
+    await sub('Kampüs genel hava kalitesi (sabit sensör) · 24 saatlik kılavuz değer <mark>15 µg/m³</mark>'); await wait(3000);
     await scroll('#who-body', 190, 1300);
     await sub('Kılavuz değeri aşan günler <mark>ayrı renkte</mark> gösterilir'); await wait(3000);
     await scroll('#who-body', 120, 1200);

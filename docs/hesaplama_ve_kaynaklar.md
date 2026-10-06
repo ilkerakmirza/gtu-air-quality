@@ -15,8 +15,8 @@ ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
 
 | Veri | Kaynak | Not |
 |---|---|---|
-| Kampüs PM₂.₅, PM₁₀, sıcaklık, nem | PurpleAir PA-II (SUMER çatısı, sensör 229263); sunucu PurpleAir API'den 2 dakikada bir okur | **Ham (düzeltilmemiş)** `pm2.5_atm` değerleri. US EPA nem düzeltmesi uygulanmıyor. API erişimi 5 Ekim 2026'da geri geldi; sensör 2 Ekim 2026 16:59'dan (TR) beri PurpleAir'e veri göndermiyor. |
-| Saha ölçümleri | Atmotube Pro (yürüyüş ölçümleri, GPS'li) | Kısa süreli; WHO 24 saatlik değeriyle karşılaştırılmaz (§5). |
+| Kampüs PM₂.₅, PM₁₀, sıcaklık, nem | PurpleAir PA-II (SUMER çatısı, sensör 229263); sunucu PurpleAir API'den 2 dakikada bir okur | Kampüsün genel (dış ortam) hava kalitesini temsil eder. **Ham (düzeltilmemiş)** `pm2.5_atm` değerleri. US EPA nem düzeltmesi uygulanmıyor. API erişimi 5 Ekim 2026'da geri geldi; sensör 2 Ekim 2026 16:59'dan (TR) beri PurpleAir'e veri göndermiyor. |
+| Saha ölçümleri | Atmotube Pro (yürüyüş ölçümleri, GPS'li) | Amaç: bina bazlı karakterizasyon (§5). Kısa süreli; WHO 24 saatlik değeriyle karşılaştırılmaz (§5). |
 | İç mekân CO₂ | Tuya CO₂ sensörleri | 21 Temmuz 2026'dan beri veri yok. |
 | Bölge (Tuzla istasyonu, ~6,4 km) | İBB hava kalitesi servisi (canlı); ÇŞB SİM arşivi (yerel toplayıcı); geçmiş için `data/tuzla_saatlik.json` | PM₁₀ geçmişi İBB açık verisinden (`scripts/tuzla_gecmis.py`), PM₂.₅ geçmişi ÇŞB'den (`scripts/csb_gecmis.py`, yalnızca Türkiye'den çalışır). |
 
