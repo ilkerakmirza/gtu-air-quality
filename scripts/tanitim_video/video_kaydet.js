@@ -59,23 +59,26 @@ const CO2 = [{ device: 'CO2-1', location: 'İç mekân sensörü', lat: 40.8075,
 
 // ── Sahne sayfası ─────────────────────────────────────────────────────────
 const W = LONG ? 1280 : 540, H = LONG ? 720 : 960, DPR = LONG ? 1.5 : 2;
-const FRAME = LONG ? { x: 0, y: 92, w: 1280, h: 628 } : { x: 0, y: 112, w: 540, h: 848 };
+const FRAME = LONG ? { x: 0, y: 92, w: 1280, h: 628 } : { x: 0, y: 214, w: 540, h: 746 };
 const STAGE = `<!doctype html><html lang="tr"><head><meta charset="utf-8">
 <link rel="stylesheet" href="/vendor/fonts/fonts.css">
 <style>
 *{box-sizing:border-box;margin:0}
 html,body{width:${W}px;height:${H}px;overflow:hidden;background:#0a101d;color:#e8ecf4;font-family:Inter,system-ui,sans-serif}
-#cap{position:absolute;pointer-events:none;${LONG ? 'left:36px;right:300px;top:0;height:92px;display:flex;flex-direction:column;justify-content:center' : 'left:22px;right:128px;top:0;height:112px;display:flex;flex-direction:column;justify-content:center'};transition:opacity .45s}
-#cap h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:${LONG ? 27 : 24}px;line-height:1.18;letter-spacing:-.005em}
+#cap{position:absolute;pointer-events:none;${LONG ? 'left:36px;right:300px;top:0;height:92px;display:flex;flex-direction:column;justify-content:center' : 'left:22px;right:22px;top:58px;height:150px;display:block'};transition:opacity .45s}
+#cap h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:${LONG ? 27 : 23}px;line-height:1.2;letter-spacing:-.005em}
 #cap p{margin-top:${LONG ? 4 : 5}px;font-size:${LONG ? 14.5 : 13.5}px;line-height:1.45;color:#aeb8cc}
 #cap h2 b{color:#7ea2ff;font-weight:600}
-#app{position:absolute;left:${FRAME.x}px;top:${FRAME.y}px;width:${FRAME.w}px;height:${FRAME.h}px;border:0;background:#0a101d;
-  border-top:1px solid rgba(160,180,220,.14)}
-#brand{position:absolute;${LONG ? 'right:30px;top:0;height:92px' : 'right:18px;top:30px;height:70px;flex-direction:column;gap:4px'};display:flex;align-items:center;gap:10px;font-size:12px;color:#8b96ab}
-#brand img{width:${LONG ? 34 : 32}px;height:${LONG ? 34 : 32}px;border-radius:8px}
+#cap p:empty{display:none}
+#cap .ex{margin-top:11px;font-size:18.5px;line-height:1.45;font-weight:650;color:#fff;transition:opacity .3s}
+#cap .ex mark{background:#f5b840;color:#101521;padding:0 .22em;border-radius:5px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+#appwrap{position:absolute;left:${FRAME.x}px;top:${FRAME.y}px;width:${FRAME.w}px;height:${FRAME.h}px;overflow:hidden;border-top:1px solid rgba(160,180,220,.14)}
+#app{position:absolute;inset:0;width:100%;height:100%;border:0;background:#0a101d;transition:transform .85s cubic-bezier(.4,0,.2,1)}
+#brand{position:absolute;${LONG ? 'right:30px;top:0;height:92px' : 'left:22px;top:14px;height:30px'};display:flex;align-items:center;gap:10px;font-size:12px;color:#8b96ab}
+#brand img{width:${LONG ? 34 : 26}px;height:${LONG ? 34 : 26}px;border-radius:8px}
 #brand b{font-family:"Source Serif 4",serif;font-size:${LONG ? 18 : 13}px;color:#e8ecf4;font-weight:600}
 #brand b i{font-style:normal;color:#f5a623}
-#draft{position:absolute;${LONG ? 'left:36px;bottom:10px' : 'right:14px;top:6px;font-size:9px'};z-index:20;font-size:10.5px;font-weight:600;letter-spacing:.04em;color:#f5b840;
+#draft{position:absolute;${LONG ? 'left:36px;bottom:10px' : 'right:16px;top:19px;font-size:9.5px'};z-index:20;font-size:10.5px;font-weight:600;letter-spacing:.04em;color:#f5b840;
   padding:3px 8px;border:1px solid rgba(245,184,64,.45);border-radius:99px;background:rgba(10,16,29,.85)}
 #sub{position:absolute;pointer-events:none;left:${LONG ? '445px' : '50%'};${LONG ? 'bottom:40px;max-width:820px;font-size:26px' : 'bottom:206px;max-width:470px;font-size:23px'};z-index:8;transform:translate(-50%,8px) scale(.97);
   width:max-content;text-align:center;font-weight:700;line-height:1.38;color:#fff;padding:${LONG ? '10px 22px' : '10px 16px'};border-radius:12px;
@@ -107,17 +110,21 @@ html,body{width:${W}px;height:${H}px;overflow:hidden;background:#0a101d;color:#e
 #card .qr{width:${LONG ? 190 : 210}px;height:${LONG ? 190 : 210}px;border-radius:14px;background:#fff;padding:10px;margin-top:26px}
 #card .small{margin-top:16px;font-size:14px;color:#8b96ab}
 </style></head><body>
-<div id="cap"><h2></h2><p></p></div>
+<div id="cap"><h2></h2><p></p>${LONG ? '' : '<div class="ex"></div>'}</div>
 <div id="brand"><img src="${LOGO}" alt=""><span><b>GTÜ <i>Air</i>Lab</b>${LONG ? '<br>Kampüs Hava Kalitesi Laboratuvarı' : ''}</span></div>
 ${REAL ? '' : '<div id="draft">TASLAK · ÖRNEK VERİ</div>'}
-<iframe id="app" name="app"></iframe>
+<div id="appwrap"><iframe id="app" name="app"></iframe></div>
 <div id="sub"></div>
 <div id="card"></div>
 <script>
 window.cap = (h, p) => { const c = document.getElementById('cap'); c.style.opacity = 0;
   setTimeout(() => { c.querySelector('h2').innerHTML = h; c.querySelector('p').innerHTML = p || ''; c.style.opacity = 1; }, 380); };
-window.sub = html => { const e = document.getElementById('sub'); e.classList.remove('on');
-  if (html) setTimeout(() => { e.innerHTML = html; e.classList.add('on'); }, 230); };
+window.sub = ${LONG ? `html => { const e = document.getElementById('sub'); e.classList.remove('on');
+  if (html) setTimeout(() => { e.innerHTML = html; e.classList.add('on'); }, 230); }` : `html => { const e = document.querySelector('#cap .ex'); e.style.opacity = 0;
+  setTimeout(() => { e.innerHTML = html || ''; e.style.opacity = 1; }, 300); }`};
+// "Kamera": uygulama görüntüsünde bir noktaya yakınlaş / geri çekil
+window.zoomTo = (x, y, k) => { const a = document.getElementById('app');
+  if (k) { a.style.transformOrigin = x + 'px ' + y + 'px'; a.style.transform = 'scale(' + k + ')'; } else a.style.transform = ''; };
 window.card = html => { const c = document.getElementById('card'); if (html) { c.innerHTML = html; c.classList.add('on'); } else c.classList.remove('on'); };
 </script></body></html>`;
 
@@ -129,13 +136,14 @@ window.card = html => { const c = document.getElementById('card'); if (html) { c
     try { localStorage.setItem('gtu.install.dismissed', 'true'); localStorage.removeItem('gtu.view.research'); } catch (_) {}
     if (window.top === window) return;
     // Dokunma izi: tıklanan yerde kısa bir halka
-    addEventListener('pointerdown', e => {
+    window.__tap = (x, y) => {
       const d = document.createElement('div');
-      d.style.cssText = `position:fixed;left:${e.clientX - 22}px;top:${e.clientY - 22}px;width:44px;height:44px;border-radius:50%;z-index:99999;pointer-events:none;
+      d.style.cssText = `position:fixed;left:${x - 22}px;top:${y - 22}px;width:44px;height:44px;border-radius:50%;z-index:99999;pointer-events:none;
         border:3px solid rgba(255,255,255,.9);background:rgba(126,162,255,.28);transform:scale(.4);opacity:1;transition:transform .45s ease-out,opacity .55s ease-out`;
       document.body.appendChild(d); requestAnimationFrame(() => { d.style.transform = 'scale(1.25)'; d.style.opacity = '0'; });
       setTimeout(() => d.remove(), 700);
-    }, true);
+    };
+    addEventListener('pointerdown', e => { if (e.isTrusted) window.__tap(e.clientX, e.clientY); }, true);
   });
   if (!REAL) await ctx.route(/arcgisonline|cartocdn|ibb\.gov\.tr|openstreetmap/, r => r.abort());
   await ctx.route('http://localhost:8765/__stage.html', r => r.fulfill({ contentType: 'text/html; charset=utf-8', body: STAGE }));
@@ -188,6 +196,13 @@ window.card = html => { const c = document.getElementById('card'); if (html) { c
   const card = html => page.evaluate(h => window.card(h), html);
   const sub = html => page.evaluate(h => window.sub(h), html);
   const click = async (sel, pause = 900) => { await F().click(sel); await wait(pause); };
+  // Kamera öğeye yakınlaşır, dokunma izi görünür, öğe açılır, kamera geri çekilir
+  const focusTap = async (sel, k = 1.9, hold = 900) => {
+    const c = await F().evaluate(sel => { const r = document.querySelector(sel).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }, sel);
+    await page.evaluate(([x, y, k]) => window.zoomTo(x, y, k), [c.x, c.y, k]); await wait(hold);
+    await F().evaluate(([sel, x, y]) => { window.__tap(x, y); document.querySelector(sel).click(); }, [sel, c.x, c.y]); await wait(650);
+    await page.evaluate(() => window.zoomTo()); await wait(900);
+  };
   const scroll = async (sel, px, ms) => {
     const steps = Math.max(1, Math.round(ms / 40));
     for (let i = 0; i < steps; i++) { await F().evaluate(([s, d]) => { const e = document.querySelector(s); if (e) e.scrollTop += d; }, [sel, px / steps]); await wait(40); }
@@ -218,50 +233,56 @@ window.card = html => { const c = document.getElementById('card'); if (html) { c
         <dl><dt>Ölçüm</dt><dd>Planlı saha yürüyüşleri; kısa süreli, konumlu</dd><dt>Amaç</dt><dd>Mekânsal değişkenlik; bina ve mikroortam karşılaştırması</dd></dl></section></div>
     <div class="note">Her iki sensör türü de düşük maliyetli optik sensördür; değerler ham ölçümdür (nem düzeltmesi uygulanmamıştır).</div>`;
   if (!LONG) {
-    // ── Kısa sürüm (≈55 sn, 9:16): harita ve sonuçlar önde, akademik dil ──
+    // ── Kısa sürüm (≈60 sn, 9:16): açıklamalar üst bantta, uygulama görüntüsü kesintisiz ──
+    await card(`${LOGO_IMG}<h1>GTÜ <i>Air</i>Lab</h1><div class="sub">Kampüs Hava Kalitesi Laboratuvarı<br>Gebze Teknik Üniversitesi</div>`);
+    await wait(3200);
+    // Ana ekran (Özet)
+    await cap('Anlık hava kalitesi');
+    await card(null); await wait(400);
+    await sub('Sabit hava kalitesi sensörünün son ölçümü, <mark>Ulusal Hava Kalitesi İndeksi (HKİ)</mark> ile'); await wait(3600);
+    await scroll('#ozet-body', 300, 1800);
+    await sub('Genel nüfus ve hassas gruplar için <mark>öneriler</mark>; veri kaynağı ve ölçüm zamanı belirtilir'); await wait(2600);
+    // Sensör türleri
+    await card(CMP); await wait(1000);
+    await F().evaluate(() => document.getElementById('ozet-body').scrollTop = 0);
     await click('#tabbar [data-tab=map]', 300);
-    await card(`${LOGO_IMG}<h2 class="t">Gebze Teknik Üniversitesi kampüsünde ince partikül madde (PM₂.₅) izleme</h2>
-      <div class="rule"></div><div class="sub" style="margin-top:0">Sabit ve taşınabilir sensörlerden oluşan kampüs ölçekli ölçüm ağı</div>`);
-    await wait(4300);
-    await card(CMP); await wait(9500);
+    await wait(8300);
     // Ölçüm ağı
-    await cap('Ölçüm ağı', 'Sabit sensör ve taşınabilir cihazların konumları');
-    await card(null); await wait(500);
+    await cap('Ölçüm ağı');
+    await card(null); await wait(400);
     await F().evaluate(() => { map.flyTo([40.8100, 29.3578], 16.4, { duration: 2.4 }); });
-    await sub('Sabit sensör: PurpleAir PA-II, <mark>SÜMER çatısı</mark>'); await wait(3000);
+    await sub('Sabit sensör: PurpleAir PA-II, <mark>SÜMER Laboratuvarı çatısı</mark>'); await wait(3000);
     await sub('Taşınabilir sensörler: <mark>GPS konumlu</mark> saha ölçümleri'); await wait(2800);
     // Mekânsal sonuçlar
-    await cap('Mekânsal dağılım', 'Saha ölçümlerinden bina ölçekli PM₂.₅ ortalamaları (µg/m³)');
-    await sub(null);
-    await click('#tabbar [data-tab=research]', 700);
-    await click('#research-switch [data-sub=field]', 800);
-    await click('#sel-all', 700);
-    await click('.vs-btn[data-view=avg]', 1300);
-    await sub('Binalar <mark>kampüs saha ortalamasına</mark> göre sıralanır'); await wait(2600);
+    await cap('Mekânsal dağılım');
+    await click('#tabbar [data-tab=research]', 600);
+    await click('#research-switch [data-sub=field]', 700);
+    await sub('Saha ölçümlerinden <mark>bina ölçekli PM₂.₅ ortalamaları</mark> (µg/m³)');
+    await click('#sel-all', 500);
+    await focusTap('.vs-btn[data-view=avg]', 1.6, 800);
+    await sub('Binalar <mark>kampüs saha ortalamasına</mark> göre sıralanır'); await wait(2400);
     await click('#map-cta', 900);
     await F().evaluate(() => { map.flyTo([40.8112, 29.3566], 16.3, { duration: 2.2 }); });
-    await sub('Bina ortalamaları <mark>haritada</mark>'); await wait(2800);
+    await sub('Bina ortalamaları <mark>harita üzerinde</mark>'); await wait(2800);
     await sub('Kısa süreli ölçümler <mark>WHO 24 saatlik değeriyle karşılaştırılmaz</mark>'); await wait(3000);
     // WHO karşılaştırması
-    await cap('WHO (2021) kılavuz değeriyle karşılaştırma', 'Sabit sensörün günlük PM₂.₅ ortalamaları');
-    await sub(null);
-    await click('#tabbar [data-tab=who]', 1200);
-    await sub('WHO 24 saatlik kılavuz değeri: <mark>15 µg/m³</mark>'); await wait(2800);
+    await cap('WHO (2021) kılavuz değeriyle karşılaştırma');
+    await click('#tabbar [data-tab=who]', 900);
+    await sub('Sabit sensörün günlük ortalamaları · 24 saatlik kılavuz değer <mark>15 µg/m³</mark>'); await wait(3000);
     await scroll('#who-body', 190, 1300);
     await sub('Kılavuz değeri aşan günler <mark>ayrı renkte</mark> gösterilir'); await wait(3000);
     await scroll('#who-body', 120, 1200);
     await sub('Yıllık kılavuz değer: <mark>5 µg/m³</mark>'); await wait(3000);
     // Kişisel maruziyet
-    await cap('Kişisel maruziyet tahmini', 'Zaman, konum ve etkinlik bilgisinden solunan PM₂.₅ miktarı (µg)');
-    await sub(null);
+    await cap('Kişisel maruziyet tahmini');
     await click('#tabbar [data-tab=map]', 700);
-    await click('#exp-fab', 1000);
-    await sub('Girilen bilgiler <mark>cihazdan çıkmaz</mark>');
+    await sub('Kampüste geçirilen zamana göre <mark>solunan PM₂.₅ miktarı</mark>');
+    await focusTap('#exp-fab', 2.0, 1300);
+    await sub('Girdiler: saat, etkinlik, bina, havalandırma ve süre · <mark>bilgiler cihazdan çıkmaz</mark>');
     await chat(430);
     await wait(300); await toChart();
     await sub('Solunan miktar = derişim × <mark>solunum hızı</mark> × süre'); await wait(3200);
     await sub('Solunum hızları: <mark>US EPA (2011)</mark>'); await wait(2400);
-    await sub(null);
     await card(`${LOGO_IMG}<h1>GTÜ <i>Air</i>Lab</h1><div class="sub">Kampüs Hava Kalitesi Laboratuvarı<br>Gebze Teknik Üniversitesi</div>
       ${QR ? `<img class="qr" src="${QR}" alt="">` : ''}<div class="small">Yöntem, eşik değerler ve kaynaklar uygulamanın “Hakkında” bölümündedir.</div>`);
     await wait(5500);

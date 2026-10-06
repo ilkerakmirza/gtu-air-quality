@@ -5,7 +5,7 @@ altta vurgulu altyazılar ve telifsiz (tamamen sentezlenmiş) fon müziği eklen
 
 | Sürüm | Boyut | Süre | Platform |
 |---|---|---|---|
-| `short` | 1080×1920 (9:16) | ~40 sn | Instagram Reels, LinkedIn |
+| `short` | 1080×1920 (9:16) | ~75 sn | Instagram Reels, LinkedIn |
 | `long` | 1920×1080 (16:9) | ~2,5 dk | YouTube |
 
 ## Kayıt
