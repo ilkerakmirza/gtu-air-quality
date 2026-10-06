@@ -8,6 +8,11 @@ PURPLEAIR_SENSOR_ID = int(os.getenv("PURPLEAIR_SENSOR_ID", "229263"))
 PURPLEAIR_LAT = float(os.getenv("PURPLEAIR_LAT", "40.806155"))
 PURPLEAIR_LON = float(os.getenv("PURPLEAIR_LON", "29.360985"))
 
+# Kampüs sınırı (kampus.py): herkese açık uçlarda bu alanın dışındaki konumlar gösterilmez
+CAMPUS_LAT = float(os.getenv("CAMPUS_LAT", "40.8114"))
+CAMPUS_LON = float(os.getenv("CAMPUS_LON", "29.3563"))
+CAMPUS_RADIUS_KM = float(os.getenv("CAMPUS_RADIUS_KM", "2.0"))
+
 DATABASE_URL = os.getenv("DATABASE_URL", "")
 SQLITE_PATH = os.getenv("SQLITE_PATH", "campus_air.db")
 

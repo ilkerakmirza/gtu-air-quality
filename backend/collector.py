@@ -9,6 +9,7 @@ import db
 import ibb
 import csb
 import atmotube_cloud
+import kampus
 import tuya_co2
 
 # Türkiye sabit UTC+3 (2016'dan beri yaz saati yok)
@@ -140,11 +141,13 @@ def sync_atmotube_sessions():
     try:
         with db.get_conn() as conn:
             cur = conn.cursor()
-            cur.execute("""
+            # Cihaz kampüs dışına götürüldüğünde (ev, yol) o ölçümler saha oturumuna alınmaz
+            cur.execute(f"""
                 SELECT device, (recorded_at AT TIME ZONE 'Europe/Istanbul')::date AS d,
                        COUNT(*), MIN(recorded_at), MAX(recorded_at)
                 FROM measurements
                 WHERE source='atmotube' AND recorded_at > now() - interval '3 days'
+                  AND (lat IS NULL OR {kampus.sql_box()})
                 GROUP BY device, d ORDER BY device, d
             """)
             groups = cur.fetchall()
@@ -167,7 +170,7 @@ def sync_atmotube_sessions():
                         (name, 'portable', sn, cnt, mn, mx, f"{device} canlı saha ölçümü"))
                     sid = cur.fetchone()[0]
                 # Ölçümleri ekle (mükerrer atlanır)
-                cur.execute("""
+                cur.execute(f"""
                     INSERT INTO atmotube_readings
                         (session_id, recorded_at, voc_ppm, pm1_0, pm2_5, pm10_0,
                          temperature_c, humidity_pct, pressure_hpa, lat, lon)
@@ -176,6 +179,7 @@ def sync_atmotube_sessions():
                     FROM measurements
                     WHERE source='atmotube' AND device=%s
                       AND (recorded_at AT TIME ZONE 'Europe/Istanbul')::date = %s
+                      AND (lat IS NULL OR {kampus.sql_box()})
                     ON CONFLICT (session_id, recorded_at) DO NOTHING
                 """, (sid, device, d))
     except Exception as e:
@@ -191,6 +195,7 @@ def collect_fast():
 
 
 def collect_hourly():
-    """Saatte bir. (İBB kaldırıldı — CSB Tuzla ile aynı istasyon; CSB yerel
-    toplayıcı tarafından toplanır.)"""
-    return 0
+    """Saatte bir: Tuzla istasyonu (İBB açık verisi). ÇŞB yerel toplayıcısı Haziran 2026'dan
+    beri çalışmadığı için Tuzla arşivi İBB'den sürdürülür (aynı istasyon; ÇŞB gelirse
+    kaynak alanı farklı olduğundan çakışmaz)."""
+    return collect_ibb()

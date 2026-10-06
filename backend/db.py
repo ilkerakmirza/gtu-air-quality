@@ -7,6 +7,7 @@ import sqlite3
 import os
 from contextlib import contextmanager
 from config import DATABASE_URL, SQLITE_PATH
+import kampus
 
 _USE_POSTGRES = bool(DATABASE_URL)
 
@@ -346,7 +347,7 @@ def get_map_tracks(session_ids: list[int]):
            s.session_name, s.micro_environment
     FROM atmotube_readings r
     JOIN upload_sessions s ON s.id = r.session_id
-    WHERE r.session_id IN ({placeholders}) AND r.lat IS NOT NULL
+    WHERE r.session_id IN ({placeholders}) AND r.lat IS NOT NULL AND {kampus.sql_box("r.")}
     ORDER BY r.session_id, r.recorded_at
     """
     with get_conn() as conn:
@@ -360,7 +361,7 @@ def get_heatmap_data(pollutant: str = "pm2_5", start: str = None, end: str = Non
     if pollutant not in allowed:
         pollutant = "pm2_5"
 
-    conditions = ["lat IS NOT NULL"]
+    conditions = ["lat IS NOT NULL", kampus.sql_box()]
     params = {}
     if start:
         conditions.append("recorded_at >= :start" if not _USE_POSTGRES else "recorded_at >= %(start)s")

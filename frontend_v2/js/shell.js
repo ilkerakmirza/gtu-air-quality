@@ -289,6 +289,14 @@ const Shell = (() => {
         $("info-btn").addEventListener("click", () => openPanel("info", true));
         $("info-close").addEventListener("click", () => closePanel("info"));
         $("exp-close").addEventListener("click", () => closePanel("exp"));
+        // Haritanın sol altındaki yuvarlak kısayol → maruziyet asistanı; yüzü o anki HKİ sınıfını gösterir
+        $("exp-fab").addEventListener("click", () => openPanel("exp"));
+        document.addEventListener("airlab:hki", ev => {
+            const h = ev.detail && ev.detail.h;
+            if (!h) return;
+            $("exp-fab").style.setProperty("--c", h.renk);
+            $("exp-fab-face").innerHTML = ico(h.yuz);
+        });
         // İçindekiler bağlantıları paneli kaydırsın (sayfa adresini değiştirmeden)
         document.querySelectorAll(".info-toc a").forEach(a => a.addEventListener("click", ev => {
             ev.preventDefault();

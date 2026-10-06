@@ -1209,6 +1209,24 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 .ic-btn:hover { filter: brightness(1.1); }
 .oz-more { display: flex; align-items: center; justify-content: center; gap: 7px; }
 
+/* Maruziyet asistanı kısayolu: haritanın sol altında yuvarlak düğme (yüz = o anki HKİ sınıfı) */
+.exp-fab {
+  --c: var(--accent);
+  position: absolute; left: 14px; bottom: 14px; z-index: 900;
+  display: flex; align-items: center; gap: 10px; height: 56px; padding: 0 16px 0 0;
+  background: var(--glass); border: 1px solid var(--stroke); border-radius: 99px;
+  box-shadow: var(--shadow); backdrop-filter: blur(18px);
+  color: var(--text); font: 600 12px/1.25 var(--num); text-align: left; cursor: pointer;
+}
+.exp-fab:hover { border-color: color-mix(in srgb, var(--c) 55%, transparent); }
+.exp-fab-face {
+  width: 56px; height: 56px; margin: -1px 0 -1px -1px; flex-shrink: 0;
+  display: grid; place-items: center; border-radius: 50%; color: var(--c);
+  background: color-mix(in srgb, var(--c) 16%, var(--bg-2)); border: 2px solid color-mix(in srgb, var(--c) 60%, transparent);
+}
+.exp-fab-face .i { width: 28px; height: 28px; }
+body.research .exp-fab, body.exp-open .exp-fab { display: none; }
+
 /* Telefon öğeleri — masaüstünde gizli */
 .tabbar, .install-banner, .map-cta, .research-switch { display: none; }
 
@@ -1348,6 +1366,10 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
     font-size: 12.5px; font-weight: 600;
   }
   body:not([data-tab="map"]) .install-banner { display: none; }
+  .exp-fab { position: fixed; left: 12px; bottom: calc(var(--tab-h) + 12px); height: 52px; font-size: 11.5px; }
+  .exp-fab-face { width: 52px; height: 52px; }
+  body.research .exp-fab { display: flex; }
+  body:not([data-tab="map"]) .exp-fab, body:has(.player-dock.visible) .exp-fab { display: none; }
   body:has(.player-dock.visible) .install-banner { display: none; }
   .install-banner span { flex: 1; }
   .install-banner button { margin-top: 0; padding: 7px 11px; }
@@ -1642,6 +1664,8 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
           panelinde ayrıntılı verilmiştir.</li>
         <li><b>Kampüs–bölge karşılaştırması:</b> Yalnızca kampüs sensörü ile Tuzla istasyonunun aynı saatte ölçüm yaptığı saatler
           karşılaştırılır.</li>
+        <li><b>Veri denetimi:</b> Kampüs sensörü yeni ölçüm göndermediğinde son ölçüm tekrar kaydedilmez (yinelenen kayıt ortalamaları
+          etkilemesin). Saha ölçümlerinde kampüs merkezine 2 km'den uzak noktalar kampüs değerlendirmesine alınmaz.</li>
       </ul>
 
       <h4 id="inf-sinir">Sınır değerler ve HKİ</h4>
@@ -1693,7 +1717,8 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
         <li><b>Maruziyet asistanı ve hesabı:</b> Asistana ya da tabloya girdiğiniz saat, yer ve etkinlik bilgileri yalnızca cihazınızda hesaplanır, sunucuya
           gönderilmez. "Bu cihazda hatırla" işaretlenmezse sayfa kapanınca silinir.</li>
         <li><b>Saha ölçümleri:</b> Ölçümü yapan ekip üyelerinin kimlikleri gösterilmez ("Saha ekibi A/B/C"). Konum verileri yalnızca
-          ölçüm noktası olarak ve araştırma amacıyla gösterilir.</li>
+          ölçüm noktası olarak ve araştırma amacıyla gösterilir. Taşınabilir cihazlar kampüs dışına çıktığında (merkezden 2 km'den
+          uzak) o konumlar haritada, saha ölçümlerinde ve dışa aktarılan veride gösterilmez.</li>
         <li><b>Üçüncü taraf bağlantıları:</b> Harita altlıkları için tarayıcınız Esri ve CARTO sunucularına bağlanır; bu sağlayıcılar
           teknik olarak IP adresinizi görebilir. Ölçüm verileri proje sunucusundan (yurt dışında barındırılan bulut hizmeti) ve
           İBB hava kalitesi servisinden alınır. Yazı tipleri ve yazılım kütüphaneleri uygulamanın kendi sunucusundan yüklenir.</li>
@@ -1711,6 +1736,12 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
   <button type="button" id="install-banner-how">Nasıl?</button>
   <button type="button" id="install-banner-close" aria-label="Kapat">✕</button>
 </div>
+
+<!-- Maruziyet asistanı kısayolu (haritanın sol alt köşesi) -->
+<button class="exp-fab" id="exp-fab" type="button" title="AirLab asistanı: kampüste ne kadar PM₂.₅ soludum?">
+  <span class="exp-fab-face" id="exp-fab-face" aria-hidden="true"><svg class="i"><use href="#i-message-circle"></use></svg></span>
+  <span class="exp-fab-txt">Ne kadar PM₂.₅<br>soludum?</span>
+</button>
 
 <!-- Telefon: paneldeyken haritaya dönüş düğmesi -->
 <button class="map-cta" id="map-cta" type="button"><svg class="i"><use href="#i-map"></use></svg> <span id="map-cta-text">Haritaya dön</span></button>
@@ -1779,11 +1810,11 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 <script src="js/colorscale.js?v=52"></script>
 <script src="js/api.js?v=41"></script>
 <script src="js/campus.js?v=51"></script>
-<script src="js/app.js?v=51"></script>
+<script src="js/app.js?v=52"></script>
 <script src="js/who.js?v=41"></script>
 <script src="js/kiyas.js?v=41"></script>
-<script src="js/ozet.js?v=50"></script>
+<script src="js/ozet.js?v=51"></script>
 <script src="js/maruziyet.js?v=3"></script>
-<script src="js/shell.js?v=50"></script>
+<script src="js/shell.js?v=51"></script>
 </body>
 </html>

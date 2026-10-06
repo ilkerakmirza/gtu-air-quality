@@ -12,6 +12,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import config
 import db
 import purpleair
+import kampus
 import upload as uploader
 
 app = Flask(__name__)
@@ -128,7 +129,15 @@ import atmotube_cloud
 def atmotube_live():
     """5 Atmotube Pro cihazının bulut API'sindeki son ölçümleri (60 sn önbellekli)."""
     force = request.args.get("force") == "1"
-    return jsonify({"data": atmotube_cloud.get_live_devices(force=force)})
+    out = []
+    for d in atmotube_cloud.get_live_devices(force=force):
+        d = dict(d)
+        r = d.get("reading")
+        # Cihaz kampüs dışındaysa konum verilmez (ev/yol konumu olabilir — KVKK); ölçüm değerleri kalır
+        if r and r.get("lat") is not None and not kampus.near(r.get("lat"), r.get("lon")):
+            d["reading"] = {**r, "lat": None, "lon": None, "off_campus": True}
+        out.append(d)
+    return jsonify({"data": out})
 
 
 import ibb

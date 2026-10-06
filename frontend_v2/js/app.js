@@ -494,6 +494,10 @@ let atpMarkers = {};   // device adı → Leaflet marker
 let atpVisible = true; // Atmotube cihazları aç/kapa
 const ATP_ONLINE_MIN = 60;   // son X dk içinde veri = canlı (bulut gecikmesi için geniş)
 const ATP_SHOW_HOURS = 24;   // son X saat içinde GPS varsa haritada göster (eski=soluk)
+// Kampüs sınırı (backend/kampus.py ile aynı): dışındaki cihaz konumu haritada gösterilmez (ev/yol konumu olabilir — KVKK)
+const CAMPUS_C = [40.8114, 29.3563], CAMPUS_KM = 2;
+const offCampus = r => !!r && (r.off_campus ||
+    (r.lat != null && r.lon != null && Math.hypot((r.lat - CAMPUS_C[0]) * 111.32, (r.lon - CAMPUS_C[1]) * 84.3) > CAMPUS_KM));
 
 function timeAgo(iso) {
     const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
@@ -526,9 +530,6 @@ function renderAtmotubeDevices(devices) {
     const wrap = document.getElementById("atp-list");
     let onlineCount = 0;
 
-    // Kampüsten uzak mı? (kampüs merkezine > ~3 km)
-    const farFrom = (lat, lon) => Math.hypot((lat - GTU_CENTER[0]) * 111, (lon - GTU_CENTER[1]) * 84.3) > 3;
-
     wrap.innerHTML = devices.map(d => {
         const r = d.reading;
         const ageMin = r ? (Date.now() - new Date(r.recorded_at).getTime()) / 60000 : Infinity;
@@ -538,10 +539,10 @@ function renderAtmotubeDevices(devices) {
         // 3 kademe: yeşil=canlı, sarı=senkron eski (24 sa), gri=veri yok/çok eski
         const statusCls = online ? "on" : (recentish ? "warn" : "off");
         const pmColor = r ? pm25Color(r.pm2_5) : "#3a4254";
-        const hasGps = r && r.lat != null && r.lon != null;
-        const far = hasGps && farFrom(r.lat, r.lon);
-        const gpsTxt = !hasGps ? "GPS yok"
-            : far ? "uzakta"
+        const far = offCampus(r);
+        const hasGps = r && r.lat != null && r.lon != null && !far;
+        const gpsTxt = far ? "kampüs dışında"
+            : !hasGps ? "GPS yok"
             : online ? "GPS canlı" : "son konum";
         const info = r ? `${timeAgo(r.recorded_at)} · ${gpsTxt}` : "senkron bekliyor";
         const tip = r
@@ -590,9 +591,9 @@ function removeAtpMarker(dev) {
 function updateAtmotubeMarkers(devices) {
     for (const d of devices) {
         const r = d.reading;
-        const hasGps = r && r.lat != null && r.lon != null;
+        const hasGps = r && r.lat != null && r.lon != null && !offCampus(r);
         const ageMin = r ? (Date.now() - new Date(r.recorded_at).getTime()) / 60000 : Infinity;
-        // Toggle kapalıysa veya GPS yoksa veya 24 saatten eskiyse gösterme
+        // Toggle kapalıysa, GPS yoksa, cihaz kampüs dışındaysa veya 24 saatten eskiyse gösterme
         if (!atpVisible || !hasGps || ageMin > ATP_SHOW_HOURS * 60) { removeAtpMarker(d.device); continue; }
 
         const recent = ageMin < ATP_ONLINE_MIN;     // canlı mı

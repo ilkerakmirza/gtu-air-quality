@@ -76,6 +76,7 @@ const Ozet = (() => {
         } else {
             const h = hki(src.v), a = ADVICE[h.ad] || ADVICE["Orta"];
             current = { ...src, h };
+            document.dispatchEvent(new CustomEvent("airlab:hki", { detail: current }));
             html += `<div class="oz-card oz-now" style="--c:${h.renk}">
                 <div class="oz-now-top">
                   <span class="oz-face" aria-hidden="true">${ico(h.yuz)}</span>

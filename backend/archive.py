@@ -197,8 +197,15 @@ def iter_csv(source=None, start=None, end=None):
     con = _connect()
     cur = con.cursor()  # düz cursor (transaction pooler named cursor desteklemez)
     # recorded_at / ingested_at → Türkiye yerel saatine çevir
-    mid = ",".join(_COLS[3:])  # pm/sensor kolonları
-    q = (f"SELECT source, device, "
+    # Kampüs dışındaki konumlar boş bırakılır (ev/yol konumu olabilir — KVKK)
+    import kampus
+    box = kampus.sql_box()
+    mid = ",".join(f"CASE WHEN {box} THEN {c} END" if c in ("lat", "lon") else c
+                   for c in _COLS[3:])  # pm/sensor kolonları
+    # Saha ölçümlerinin cihaz adı kişi adı içerir; dışa aktarımda "saha-1, saha-2…" olarak verilir
+    dev = ("CASE WHEN source='saha' THEN 'saha-' || "
+           "DENSE_RANK() OVER (PARTITION BY source ORDER BY device) ELSE device END")
+    q = (f"SELECT source, {dev}, "
          f"to_char(recorded_at AT TIME ZONE 'Europe/Istanbul','YYYY-MM-DD HH24:MI:SS'), "
          f"{mid}, "
          f"to_char(ingested_at AT TIME ZONE 'Europe/Istanbul','YYYY-MM-DD HH24:MI:SS') "

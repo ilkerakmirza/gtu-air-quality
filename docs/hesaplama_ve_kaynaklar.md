@@ -2,7 +2,7 @@
 
 **Amaç:** Uygulamada gösterilen her sınıflandırmanın, eşiğin ve hesabın neye dayandığını tek yerde kayda geçirmek;
 ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
-**Belge sürümü:** 1.0 · 4 Ekim 2026
+**Belge sürümü:** 1.1 · 6 Ekim 2026
 **İlgili belge:** Kişisel maruziyet hesabının ayrıntılı yöntemi → [`maruziyet_yontemi.md`](maruziyet_yontemi.md)
 
 > Koddaki bir eşik ya da kaynak değişirse bu belge aynı commit'te güncellenmelidir. Her bölümün sonunda değerin kodda
@@ -15,13 +15,22 @@ ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
 
 | Veri | Kaynak | Not |
 |---|---|---|
-| Kampüs PM₂.₅, PM₁₀, sıcaklık, nem | PurpleAir PA-II (SUMER çatısı, sensör 229263); sunucu PurpleAir API'den okur | **Ham (düzeltilmemiş)** `pm2.5_atm` değerleri. US EPA nem düzeltmesi uygulanmıyor. 4 Ağustos 2026'dan beri veri yok (API kotası). |
+| Kampüs PM₂.₅, PM₁₀, sıcaklık, nem | PurpleAir PA-II (SUMER çatısı, sensör 229263); sunucu PurpleAir API'den 2 dakikada bir okur | **Ham (düzeltilmemiş)** `pm2.5_atm` değerleri. US EPA nem düzeltmesi uygulanmıyor. API erişimi 5 Ekim 2026'da geri geldi; sensör 2 Ekim 2026 16:59'dan (TR) beri PurpleAir'e veri göndermiyor. |
 | Saha ölçümleri | Atmotube Pro (yürüyüş ölçümleri, GPS'li) | Kısa süreli; WHO 24 saatlik değeriyle karşılaştırılmaz (§5). |
 | İç mekân CO₂ | Tuya CO₂ sensörleri | 21 Temmuz 2026'dan beri veri yok. |
 | Bölge (Tuzla istasyonu, ~6,4 km) | İBB hava kalitesi servisi (canlı); ÇŞB SİM arşivi (yerel toplayıcı); geçmiş için `data/tuzla_saatlik.json` | PM₁₀ geçmişi İBB açık verisinden (`scripts/tuzla_gecmis.py`), PM₂.₅ geçmişi ÇŞB'den (`scripts/csb_gecmis.py`, yalnızca Türkiye'den çalışır). |
 
 Saatlik değerler sunucuda `interval=hourly` ile ortalanır; uygulamadaki tüm gün ve saat gruplamaları **Türkiye saatine**
 (Europe/Istanbul) göredir.
+
+**Veri denetimi kuralları (6 Ekim 2026):**
+
+| Kural | Neden | Kodda |
+|---|---|---|
+| PurpleAir API'si aynı son ölçümü (aynı `last_seen`) döndürürse kayıt yapılmaz. | Sensör çevrimdışıyken her 2 dakikada aynı ölçüm tekrar yazılıyordu (6 Ekim 2026 itibarıyla 2005 yinelenen satır; değerler aynı, saatlik ortalamaya etkisi en çok 0,77, ortalama 0,08 µg/m³). | `backend/purpleair.py` → `poll()` |
+| Kampüs sınırı: merkez 40,8114 K, 29,3563 D; yarıçap 2 km. Dışındaki Atmotube konumları harita izlerine, ısı haritasına, saha oturumlarına ve canlı cihaz konumuna alınmaz; CSV dışa aktarımda konum boş bırakılır. | Cihazlar eve/yola götürüldüğünde kampüs dışı noktalar kaydediliyordu (39 nokta, 11–44 km); hem kişisel konum (KVKK) hem kampüs ortalamasını bozan veri. Merkez `campus.geojson` binalarının kapsadığı alanın ortası; en uzak bina ~1,06 km. Ham arşiv (`measurements`) değiştirilmez. | `backend/kampus.py`, `backend/config.py` (`CAMPUS_*`), `frontend_v2/js/app.js` (`offCampus`) |
+| CSV dışa aktarımda saha ölçümlerinin cihaz adı `saha-1, saha-2…` olarak verilir. | Saha cihaz adları kişi adı içeriyor. | `backend/archive.py` → `iter_csv()` |
+| Tuzla istasyonu saatlik arşivi İBB'den sürdürülür. | ÇŞB yerel toplayıcısı Haziran 2026'dan beri çalışmıyor; arşiv 16 Haziran'dan beri boştu. | `backend/collector.py` → `collect_hourly()` |
 
 ## 2. Ulusal Hava Kalitesi İndeksi (HKİ)
 
@@ -209,4 +218,5 @@ Afroz ve ark. (2025), Branco ve ark. (2024). Ayrıntılar, sayısal örnek ve ka
 
 | Sürüm | Tarih | Değişiklik |
 |---|---|---|
+| 1.1 | 6 Ekim 2026 | §1'e veri denetimi kuralları eklendi: yinelenen PurpleAir kaydı engeli, 2 km kampüs sınırı, CSV'de saha cihaz adlarının gizlenmesi, Tuzla arşivinin İBB'den sürdürülmesi. PurpleAir durumu güncellendi. |
 | 1.0 | 4 Ekim 2026 | İlk sürüm: HKİ, sınır değerler, WHO değerlendirmesi, bina ve bölge karşılaştırmaları, Özet kuralları, CO₂ ölçeği, harita ölçeği, otomatik duyurular. CO₂ etiketinden doğrulanmamış "WHO hedefi" ifadesi kaldırıldı. |

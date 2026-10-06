@@ -12,13 +12,20 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
    `git pull` başarısız olduysa veya `main`'e geçilemediyse bunu açıkça söyle; kullanıcı eski sürümle çalışmasın.
 
 ## Bekleyen işler (oturum başında kullanıcıya kısaca hatırlat, bitenleri buradan sil)
-- **PurpleAir verisi 4 Ağustos 2026'dan beri gelmiyor** (API kotası bitti). Çözüm: sensörün yerel ağdaki
-  `http://<sensör-IP>/json` adresinden 2 dakikada bir okuyup veritabanına yazan yerel toplayıcı betiği
-  (`csb_yerel_toplayici.py` gibi). Kullanıcıdan beklenen: sensörün yerel IP adresi ve sensörle aynı ağda
-  sürekli açık kalacak bir bilgisayar. PurpleAir haritasından veri çekmek kullanım koşullarına aykırı, önerme.
-- **Tuzla resmî ÇŞB toplayıcısı Haziran 2026'dan beri çalışmıyor** (yerel bilgisayardaki zamanlanmış görev);
-  şimdilik İBB canlı verisi kullanılıyor.
-- **CO₂ sensörlerinden 21 Temmuz 2026'dan beri veri yok** (Tuya).
+- **PurpleAir (kullanıcı 7 Ekim 2026'da çözecek; hatırlatma kuruldu):** API erişimi 5 Ekim 2026'da geri geldi, ama sensör
+  2 Ekim 2026 16:59'dan (TR) beri PurpleAir'e veri göndermiyor → SÜMER çatısında elektrik/Wi-Fi kontrolü. Kalıcı yedek: sensörün
+  yerel ağdaki `http://<sensör-IP>/json` adresinden 2 dakikada bir okuyan yerel toplayıcı (sensör IP'si + sürekli açık bilgisayar
+  gerekir). PurpleAir haritasından veri çekmek kullanım koşullarına aykırı, önerme.
+- **Tuzla resmî ÇŞB toplayıcısı Haziran 2026'dan beri çalışmıyor** (yerel bilgisayardaki zamanlanmış görev); Tuzla saatlik
+  arşivi 6 Ekim 2026'dan beri sunucuda İBB'den toplanıyor (`collector.collect_hourly`).
+- **CO₂ sensörlerinden 21 Temmuz 2026'dan beri veri yok:** Tuya IoT Platform'daki bulut geliştirme planının süresi dolmuş;
+  kullanıcı Tuya'da planı yenilemeli/uzatmalı.
+- **Veritabanı temizliği (kullanıcı onayı bekliyor, 6 Ekim 2026):** `purpleair_readings`'te 2005 yinelenen satır (aynı `recorded_at`)
+  silinip `recorded_at` üzerine tekil dizin; 39 kampüs dışı Atmotube satırı `atmotube_readings`'ten silinmesi; Supabase'de 4 tabloda
+  RLS kapalı (kritik uyarı) → `ALTER TABLE … ENABLE ROW LEVEL SECURITY` (sunucu `postgres` rolüyle bağlandığı için etkilenmez).
+  Onaysız uygulama.
+- **Uyanık tutma cron'u güvenilmez:** GitHub Actions zamanlanmış işi 3–8 saatte bir çalışıyor; alternatif (dış izleme servisi ya da
+  Supabase pg_cron) kullanıcıya sorulacak.
 - **Tuzla PM₂.₅ geçmişi (kampüs–bölge karşılaştırması için):** İBB açık verisi Tuzla'nın PM₂.₅ geçmişini vermiyor,
   ÇŞB sitesi yalnızca Türkiye'den erişilebiliyor. **Masaüstü oturumunda** (kullanıcının Türkiye'deki bilgisayarı) çalıştır:
   `pip install requests && python scripts/csb_gecmis.py 2026-04-01`, sonra `frontend_v2/data/tuzla_saatlik.json`'u commit'leyip
@@ -41,7 +48,9 @@ Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök diz
   Böyle bir dosya görürsen kullanıcıya bildir; silmeden önce onay al.
 - Saha ölçümü yapan kişilerin adları arayüzde **varsayılan olarak hiçbir yerde** gösterilmez; `app.js` → `PEOPLE` listesi
   "Saha ekibi A/B/C" etiketlerini kullanır. Ham `session_name` ekrana yazılmaz.
-- Adlar sunucuda/veritabanında olduğu gibi kalır (kullanıcının tercihi; sunucuda anonimleştirme yapma).
+- Adlar sunucuda/veritabanında olduğu gibi kalır (kullanıcının tercihi; sunucuda anonimleştirme yapma). Herkese açık
+  uçların çıktısında ise ad ve kampüs dışı konum yer almaz: CSV dışa aktarımda saha cihazları `saha-1…`, kampüs merkezine
+  2 km'den uzak konumlar (`backend/kampus.py`) harita, saha oturumu, canlı cihaz ve CSV'de gösterilmez.
 - **Ekip görünümü:** Saha panelinin altındaki "🔒 Ekip görünümü" bağlantısı ekip kodunu sorar. Gerçek adlar kaynak kodda
   düz metin olarak **yoktur**; `TEAM_VAULT` içinde ekip koduyla şifrelidir (PBKDF2 → AES-GCM). Kod ya da ad değişirse:
   `node scripts/ekip_kasasi.js "<kod>" '<ad JSON>'` çıktısını `TEAM_VAULT`'a yaz. Kaynak koda asla düz metin ad yazma.
