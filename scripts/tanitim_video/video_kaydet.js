@@ -21,6 +21,29 @@ const ROOT = path.resolve(__dirname, '../../frontend_v2');
 const QR_FILE = path.join(__dirname, 'qr.png');
 const QR = fs.existsSync(QR_FILE) ? 'data:image/png;base64,' + fs.readFileSync(QR_FILE).toString('base64') : null;
 const LOGO = 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'icons', 'icon-192.png')).toString('base64');
+// Sensör görselleri: foto/purpleair.(jpg|png) ve foto/atmotube.(jpg|png) varsa fotoğraf, yoksa şematik çizim kullanılır.
+// Fotoğraflarda kişi/yüz bulunmamalı (KVKK); ekibin kendi çektiği ya da kullanım izni olan görseller kullanılmalı.
+const photo = name => { for (const ext of ['jpg', 'jpeg', 'png']) { const f = path.join(__dirname, 'foto', `${name}.${ext}`);
+  if (fs.existsSync(f)) return `data:image/${ext === 'png' ? 'png' : 'jpeg'};base64,` + fs.readFileSync(f).toString('base64'); } return null; };
+const SVG_PA = `<svg viewBox="0 0 220 230" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="176" y="8" width="11" height="222" rx="3" fill="#56617a"/>
+  <rect x="150" y="98" width="30" height="13" rx="3" fill="#6d7891"/>
+  <path d="M100 186 C100 214 150 214 181 200" fill="none" stroke="#3b4559" stroke-width="5" stroke-linecap="round"/>
+  <rect x="48" y="62" width="104" height="98" rx="14" fill="#eef1f6" stroke="#b9c3d6" stroke-width="2"/>
+  <rect x="40" y="46" width="120" height="24" rx="12" fill="#f8fafc" stroke="#b9c3d6" stroke-width="2"/>
+  <rect x="56" y="158" width="88" height="20" rx="6" fill="#d3d9e4" stroke="#aab4c7" stroke-width="2"/>
+  <g stroke="#9aa5ba" stroke-width="2.5" stroke-linecap="round"><path d="M68 163v10M80 163v10M92 163v10M104 163v10M116 163v10M128 163v10"/></g>
+  <ellipse cx="100" cy="182" rx="34" ry="5" fill="#2a3242"/>
+  <text x="100" y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="700" fill="#7b5cc4">PurpleAir</text>
+  <text x="100" y="134" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#8b96ab">PA-II</text>
+  <circle cx="134" cy="80" r="3.5" fill="#34d27b"/></svg>`;
+const SVG_AT = `<svg viewBox="0 0 220 230" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="88" y="14" width="44" height="44" rx="22" fill="none" stroke="#8b96ab" stroke-width="7"/>
+  <rect x="58" y="44" width="104" height="166" rx="30" fill="#273142" stroke="#4d5b74" stroke-width="2.5"/>
+  <circle cx="110" cy="112" r="29" fill="#1a2231" stroke="#34d27b" stroke-width="5"/>
+  <circle cx="110" cy="112" r="12" fill="#2f3b50"/>
+  <text x="110" y="163" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#9aa6bd">atmotube</text>
+  <g stroke="#55637d" stroke-width="3" stroke-linecap="round"><path d="M88 182h44M92 192h36"/></g></svg>`;
 
 // ── Örnek veri (taslak; yayın sürümü gerçek veriyle kaydedilecek) ─────────────
 let seed = 11; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
@@ -88,6 +111,7 @@ html,body{width:${W}px;height:${H}px;overflow:hidden;background:#0a101d;color:#e
 #card{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
   padding:0 ${LONG ? 160 : 40}px;background:#0a101d;opacity:0;pointer-events:none;transition:opacity .6s}
 #card.on{opacity:1}
+#card .ci{display:flex;flex-direction:column;align-items:center;width:100%;transition:opacity .35s}
 #card .logo{width:${LONG ? 96 : 104}px;height:${LONG ? 96 : 104}px;border-radius:24px;margin-bottom:22px}
 #card h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:${LONG ? 54 : 46}px;line-height:1.12}
 #card h1 i{font-style:normal;color:#f5a623}
@@ -107,6 +131,18 @@ html,body{width:${W}px;height:${H}px;overflow:hidden;background:#0a101d;color:#e
 #card .cmp dt{color:#8b96ab;font-weight:600}
 #card .note{margin-top:16px;max-width:${LONG ? 980 : 470}px;font-size:13.5px;line-height:1.5;color:#8b96ab;text-align:left}
 #card h2.t{font-family:"Source Serif 4",serif;font-weight:600;font-size:${LONG ? 34 : 29}px;line-height:1.22;max-width:${LONG ? 900 : 470}px}
+#card .sens{display:flex;flex-direction:column;align-items:center;width:100%;max-width:470px}
+#card .kick{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8fa7d8;margin-bottom:6px}
+#card .sens h3{margin-bottom:16px}
+#card .pic{width:300px;height:300px;border-radius:20px;background:#0f1726;border:1px solid rgba(160,180,220,.16);display:grid;place-items:center;overflow:hidden;position:relative}
+#card .pic svg{width:250px;height:262px}
+#card .pic img{width:100%;height:100%;object-fit:cover}
+#card .pic svg,#card .pic img{animation:kb 7s ease-out both}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.08)}}
+#card .pic em{position:absolute;right:10px;bottom:8px;z-index:2;font-style:normal;font-size:11px;color:#8b96ab;background:#0f1726;padding:1px 6px;border-radius:5px}
+#card .sens dl{display:grid;grid-template-columns:76px 1fr;gap:7px 12px;margin-top:20px;text-align:left;font-size:16px;line-height:1.42;color:#d7dce6;width:100%}
+#card .sens dt{color:#8b96ab;font-weight:600}
+#card .sens dd b{color:#fff}
 #card .qr{width:${LONG ? 190 : 210}px;height:${LONG ? 190 : 210}px;border-radius:14px;background:#fff;padding:10px;margin-top:26px}
 #card .small{margin-top:16px;font-size:14px;color:#8b96ab}
 </style></head><body>
@@ -125,7 +161,11 @@ window.sub = ${LONG ? `html => { const e = document.getElementById('sub'); e.cla
 // "Kamera": uygulama görüntüsünde bir noktaya yakınlaş / geri çekil
 window.zoomTo = (x, y, k) => { const a = document.getElementById('app');
   if (k) { a.style.transformOrigin = x + 'px ' + y + 'px'; a.style.transform = 'scale(' + k + ')'; } else a.style.transform = ''; };
-window.card = html => { const c = document.getElementById('card'); if (html) { c.innerHTML = html; c.classList.add('on'); } else c.classList.remove('on'); };
+window.card = html => { const c = document.getElementById('card');
+  if (!html) { c.classList.remove('on'); return; }
+  const put = () => { c.innerHTML = '<div class="ci">' + html + '</div>'; c.classList.add('on'); };
+  const ci = c.querySelector('.ci');
+  if (c.classList.contains('on') && ci) { ci.style.opacity = 0; setTimeout(put, 380); } else put(); };
 </script></body></html>`;
 
 // ── Kayıt ─────────────────────────────────────────────────────────────────
@@ -226,6 +266,17 @@ window.card = html => { const c = document.getElementById('card'); if (html) { c
   const OUTRO = `${LOGO_IMG}<h1>GTÜ <i>Air</i>Lab</h1><div class="sub">Kampüs Hava Kalitesi Laboratuvarı<br>Gebze Teknik Üniversitesi</div>
     ${QR ? `<img class="qr" src="${QR}" alt="">` : ''}<div class="small">Tarayıcıda açın · telefonunuza uygulama olarak kurabilirsiniz</div>`;
 
+  const PA_IMG = photo('purpleair'), AT_IMG = photo('atmotube');
+  const pic = (img, svg) => `<div class="pic">${img ? `<img src="${img}" alt="">` : svg + '<em>şematik çizim</em>'}</div>`;
+  const SENS_PA = `<div class="sens"><div class="kick">Sabit sensör</div><h3>PurpleAir PA-II</h3>${pic(PA_IMG, SVG_PA)}
+    <dl><dt>Konum</dt><dd>SÜMER Laboratuvarı çatısı (dış ortam)</dd>
+      <dt>Ölçüm</dt><dd>PM₁, PM₂.₅, PM₁₀, sıcaklık, nem · 2 dakikada bir, sürekli</dd>
+      <dt>Amaç</dt><dd><b>Kampüsün genel hava kalitesi</b>; zamansal değişim ve WHO kılavuz değeriyle karşılaştırma</dd></dl></div>`;
+  const SENS_AT = `<div class="sens"><div class="kick">Taşınabilir sensörler</div><h3>Atmotube Pro (5 cihaz)</h3>${pic(AT_IMG, SVG_AT)}
+    <dl><dt>Konum</dt><dd>GPS konumlu; planlı saha yürüyüşleri</dd>
+      <dt>Ölçüm</dt><dd>PM₁, PM₂.₅, PM₁₀, VOC · kısa süreli, konumlu</dd>
+      <dt>Amaç</dt><dd><b>Bina bazlı karakterizasyon</b>; binalar arası farkların kampüs saha ortalamasına göre belirlenmesi</dd></dl>
+    <div class="note" style="margin-top:14px">Her iki sensör türü de düşük maliyetli optik sensördür; değerler ham ölçümdür (nem düzeltmesi uygulanmamıştır).</div></div>`;
   const CMP = `<h3>Sabit ve taşınabilir sensörler</h3><div class="cmp">
       <section><h4>Sabit sensör</h4><div class="dev">PurpleAir PA-II · SÜMER Laboratuvarı çatısı</div>
         <dl><dt>Ölçüm</dt><dd>Sürekli; 2 dakikalık zaman çözünürlüğü</dd><dt>Amaç</dt><dd>Kampüsün genel (dış ortam) hava kalitesi; zamansal değişim ve WHO kılavuz değeriyle karşılaştırma</dd></dl></section>
@@ -236,20 +287,19 @@ window.card = html => { const c = document.getElementById('card'); if (html) { c
     // ── Kısa sürüm (≈60 sn, 9:16): açıklamalar üst bantta, uygulama görüntüsü kesintisiz ──
     await card(`${LOGO_IMG}<h1>GTÜ <i>Air</i>Lab</h1><div class="sub">Kampüs Hava Kalitesi Laboratuvarı<br>Gebze Teknik Üniversitesi</div>`);
     await wait(3200);
-    // Ana ekran (Özet)
+    // Önce sensörler
+    await card(SENS_PA); await wait(6500);
+    await card(SENS_AT); await wait(7500);
+    // Arayüz: ana ekran (Özet)
     await cap('Anlık hava kalitesi');
     await card(null); await wait(400);
     await sub('Sabit sensör: <mark>kampüsün genel hava kalitesi</mark>, Ulusal Hava Kalitesi İndeksi (HKİ) ile'); await wait(3600);
     await scroll('#ozet-body', 300, 1800);
-    await sub('Genel nüfus ve hassas gruplar için <mark>öneriler</mark>; veri kaynağı ve ölçüm zamanı belirtilir'); await wait(2600);
-    // Sensör türleri
-    await card(CMP); await wait(1000);
-    await F().evaluate(() => document.getElementById('ozet-body').scrollTop = 0);
-    await click('#tabbar [data-tab=map]', 300);
-    await wait(8300);
+    await sub('Genel nüfus ve hassas gruplar için <mark>öneriler</mark>; veri kaynağı ve ölçüm zamanı belirtilir'); await wait(2800);
     // Ölçüm ağı
     await cap('Ölçüm ağı');
-    await card(null); await wait(400);
+    await F().evaluate(() => document.getElementById('ozet-body').scrollTop = 0);
+    await click('#tabbar [data-tab=map]', 500);
     await F().evaluate(() => { map.flyTo([40.8100, 29.3578], 16.4, { duration: 2.4 }); });
     await sub('Sabit sensör (PurpleAir PA-II, SÜMER çatısı): <mark>kampüs genel hava kalitesi</mark>'); await wait(3200);
     await sub('Taşınabilir sensörler (Atmotube Pro, GPS): <mark>bina bazlı karakterizasyon</mark>'); await wait(3000);

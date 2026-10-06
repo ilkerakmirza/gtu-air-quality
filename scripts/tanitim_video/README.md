@@ -5,7 +5,7 @@ altta vurgulu altyazılar ve telifsiz (tamamen sentezlenmiş) fon müziği eklen
 
 | Sürüm | Boyut | Süre | Platform |
 |---|---|---|---|
-| `short` | 1080×1920 (9:16) | ~75 sn | Instagram Reels, LinkedIn |
+| `short` | 1080×1920 (9:16) | ~80 sn | Instagram Reels, LinkedIn |
 | `long` | 1920×1080 (16:9) | ~2,5 dk | YouTube |
 
 ## Kayıt
@@ -17,6 +17,8 @@ node scripts/tanitim_video/video_kaydet.js short           # → scripts/tanitim
 node scripts/tanitim_video/video_kaydet.js long
 ```
 
+- **Sensör görselleri:** `foto/purpleair.jpg` ve `foto/atmotube.jpg` (ya da `.png`) konursa kartlarda fotoğraf, yoksa şematik çizim
+  gösterilir. Ekibin kendi çektiği (ya da kullanım izni olan) ve kişi/yüz içermeyen fotoğraflar kullanın.
 - Varsayılan olarak **örnek veri** kullanılır ve videoda "TASLAK · ÖRNEK VERİ" etiketi görünür.
 - Yayın sürümü için `GERCEK=1` ile canlı sunucu verisi kullanılır (etiket kalkar). Sensörlerin veri gönderdiği bir saatte kaydedin.
 - Gerekenler: Node.js + `playwright` (Chromium), `ffmpeg`; müzik için Python + `numpy`.
