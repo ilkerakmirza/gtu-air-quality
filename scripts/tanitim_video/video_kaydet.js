@@ -38,12 +38,12 @@ const SVG_PA = `<svg viewBox="0 0 220 230" xmlns="http://www.w3.org/2000/svg" ar
   <text x="100" y="134" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#8b96ab">PA-II</text>
   <circle cx="134" cy="80" r="3.5" fill="#34d27b"/></svg>`;
 const SVG_AT = `<svg viewBox="0 0 220 230" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <rect x="88" y="14" width="44" height="44" rx="22" fill="none" stroke="#8b96ab" stroke-width="7"/>
+  <rect x="88" y="14" width="44" height="44" rx="22" fill="none" stroke="#c3cad6" stroke-width="7"/>
   <rect x="58" y="44" width="104" height="166" rx="30" fill="#273142" stroke="#4d5b74" stroke-width="2.5"/>
   <circle cx="110" cy="112" r="29" fill="#1a2231" stroke="#34d27b" stroke-width="5"/>
   <circle cx="110" cy="112" r="12" fill="#2f3b50"/>
   <text x="110" y="163" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#9aa6bd">atmotube</text>
-  <g stroke="#55637d" stroke-width="3" stroke-linecap="round"><path d="M88 182h44M92 192h36"/></g></svg>`;
+  <g fill="#55637d"><circle cx="90" cy="186" r="3"/><circle cx="100" cy="186" r="3"/><circle cx="110" cy="186" r="3"/><circle cx="120" cy="186" r="3"/><circle cx="130" cy="186" r="3"/><circle cx="95" cy="196" r="3"/><circle cx="105" cy="196" r="3"/><circle cx="115" cy="196" r="3"/><circle cx="125" cy="196" r="3"/></g></svg>`;
 
 // ── Örnek veri (taslak; yayın sürümü gerçek veriyle kaydedilecek) ─────────────
 let seed = 11; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
@@ -62,7 +62,7 @@ for (let d = 75; d >= 0; d--) {
 }
 const fc = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'campus.geojson')));
 const FIELD = []; let s2 = 3; const r2 = () => (s2 = (s2 * 9301 + 49297) % 233280) / 233280;
-fc.features.filter(f => f.properties.cat === 'bina' && f.properties.name).forEach((f, i) => {
+fc.features.filter(f => f.properties.cat === 'bina' && f.properties.name && !/^(bina \d|küçük binalar)/i.test(f.properties.name.trim())).forEach((f, i) => {
   if (i % 3) return;
   const c = f.geometry.type === 'Polygon' ? f.geometry.coordinates[0] : f.geometry.coordinates[0][0];
   const lon = c.reduce((a, p) => a + p[0], 0) / c.length, lat = c.reduce((a, p) => a + p[1], 0) / c.length;
@@ -111,6 +111,7 @@ html,body{width:${W}px;height:${H}px;overflow:hidden;background:#0a101d;color:#e
 #card{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
   padding:0 ${LONG ? 160 : 40}px;background:#0a101d;opacity:0;pointer-events:none;transition:opacity .6s}
 #card.on{opacity:1}
+#cursor{position:absolute;left:0;top:0;z-index:9;pointer-events:none;opacity:0;transition:left 1.15s cubic-bezier(.45,0,.2,1),top 1.15s cubic-bezier(.45,0,.2,1),opacity .3s,transform .15s;transform-origin:3px 2px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
 #card .ci{display:flex;flex-direction:column;align-items:center;width:100%;transition:opacity .35s}
 #card .logo{width:${LONG ? 96 : 104}px;height:${LONG ? 96 : 104}px;border-radius:24px;margin-bottom:22px}
 #card h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:${LONG ? 54 : 46}px;line-height:1.12}
@@ -151,6 +152,7 @@ html,body{width:${W}px;height:${H}px;overflow:hidden;background:#0a101d;color:#e
 ${REAL ? '' : '<div id="draft">TASLAK · ÖRNEK VERİ</div>'}
 <div id="appwrap"><iframe id="app" name="app"></iframe></div>
 <div id="sub"></div>
+<div id="cursor"><svg viewBox="0 0 24 24" width="34" height="34"><path d="M3 2l7.5 19 2.6-7.6L21 10.8z" fill="#fff" stroke="#0a101d" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
 <div id="card"></div>
 <script>
 window.cap = (h, p) => { const c = document.getElementById('cap'); c.style.opacity = 0;
@@ -158,6 +160,11 @@ window.cap = (h, p) => { const c = document.getElementById('cap'); c.style.opaci
 window.sub = ${LONG ? `html => { const e = document.getElementById('sub'); e.classList.remove('on');
   if (html) setTimeout(() => { e.innerHTML = html; e.classList.add('on'); }, 230); }` : `html => { const e = document.querySelector('#cap .ex'); e.style.opacity = 0;
   setTimeout(() => { e.innerHTML = html || ''; e.style.opacity = 1; }, 300); }`};
+window.cursorAt = (x, y, show, instant) => { const c = document.getElementById('cursor');
+  if (instant) { c.style.transition = 'none'; c.style.left = (x - 3) + 'px'; c.style.top = (y - 2) + 'px'; c.offsetWidth; c.style.transition = ''; }
+  else { c.style.left = (x - 3) + 'px'; c.style.top = (y - 2) + 'px'; }
+  c.style.opacity = show ? 1 : 0; };
+window.cursorClick = () => { const c = document.getElementById('cursor'); c.style.transform = 'scale(.82)'; setTimeout(() => c.style.transform = '', 170); };
 // "Kamera": uygulama görüntüsünde bir noktaya yakınlaş / geri çekil
 window.zoomTo = (x, y, k) => { const a = document.getElementById('app');
   if (k) { a.style.transformOrigin = x + 'px ' + y + 'px'; a.style.transform = 'scale(' + k + ')'; } else a.style.transform = ''; };
@@ -245,6 +252,20 @@ window.card = html => { const c = document.getElementById('card');
       document.body.appendChild(d); setTimeout(() => d.remove(), ms + 1200); }, [sel, ms]);
     await wait(ms);
   };
+  // Fare imleci öğeye gider ve tıklar; ardından kamera öğenin içine yakınlaşır, öğe açılır, kamera geri çekilir
+  const cursorTap = async (sel, k = 1.9) => {
+    const c = await F().evaluate(sel => { const r = document.querySelector(sel).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }, sel);
+    const X = FRAME.x + c.x, Y = FRAME.y + c.y;
+    await page.evaluate(([x, y]) => window.cursorAt(x, y, true, true), [Math.min(W - 40, X + 170), Math.max(FRAME.y + 40, Y - 230)]);
+    await wait(250);
+    await page.evaluate(([x, y]) => window.cursorAt(x, y, true), [X, Y]); await wait(1350);
+    await page.evaluate(() => window.cursorClick());
+    await F().evaluate(([x, y]) => window.__tap(x, y), [c.x, c.y]); await wait(380);
+    await page.evaluate(([x, y, k, X, Y]) => { window.cursorAt(X, Y, false); window.zoomTo(x, y, k); }, [c.x, c.y, k, X, Y]);
+    await wait(750);
+    await F().evaluate(sel => document.querySelector(sel).click(), sel); await wait(800);
+    await page.evaluate(() => window.zoomTo()); await wait(900);
+  };
   // Kamera öğeye yakınlaşır, dokunma izi görünür, öğe açılır, kamera geri çekilir
   const focusTap = async (sel, k = 1.9, hold = 900) => {
     const c = await F().evaluate(sel => { const r = document.querySelector(sel).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }, sel);
@@ -281,7 +302,7 @@ window.card = html => { const c = document.getElementById('card');
     <dl><dt>Konum</dt><dd>SÜMER Laboratuvarı çatısı (dış ortam)</dd>
       <dt>Ölçüm</dt><dd>PM₁, PM₂.₅, PM₁₀, sıcaklık, nem · 2 dakikada bir, sürekli</dd>
       <dt>Amaç</dt><dd><b>Kampüsün genel hava kalitesi</b>; zamansal değişim ve WHO kılavuz değeriyle karşılaştırma</dd></dl></div>`;
-  const SENS_AT = `<div class="sens"><div class="kick">Taşınabilir sensörler</div><h3>Atmotube Pro (5 cihaz)</h3>${pic(AT_IMG, SVG_AT)}
+  const SENS_AT = `<div class="sens"><div class="kick">Taşınabilir sensörler</div><h3>Atmotube Pro</h3>${pic(AT_IMG, SVG_AT)}
     <dl><dt>Konum</dt><dd>GPS konumlu; planlı saha yürüyüşleri</dd>
       <dt>Ölçüm</dt><dd>PM₁, PM₂.₅, PM₁₀, VOC · kısa süreli, konumlu</dd>
       <dt>Amaç</dt><dd><b>Bina bazlı karakterizasyon</b>; binalar arası farkların kampüs saha ortalamasına göre belirlenmesi</dd></dl>
@@ -324,7 +345,7 @@ window.card = html => { const c = document.getElementById('card');
     await click('#research-switch [data-sub=field]', 700);
     await sub('Saha ölçümlerinden her bina için <mark>ortalama PM₂.₅ derişimi</mark> hesaplanır.');
     await click('#sel-all', 500);
-    await focusTap('.vs-btn[data-view=avg]', 1.6, 800);
+    await cursorTap('.vs-btn[data-view=avg]', 1.6);
     await sub('Binalar, <mark>kampüs saha ortalamasına</mark> göre sıralanır.'); await wait(2800);
     await click('#map-cta', 900);
     await F().evaluate(() => { map.flyTo([40.8112, 29.3566], 16.3, { duration: 2.2 }); });
@@ -339,8 +360,8 @@ window.card = html => { const c = document.getElementById('card');
     await cap('Kişisel maruziyet tahmini');
     await click('#tabbar [data-tab=map]', 700);
     await sub('Hesaplama, harita ekranındaki <mark>“Ne kadar PM₂.₅ soludum?”</mark> düğmesiyle başlatılır.');
-    await highlight('#exp-fab', 2600);
-    await focusTap('#exp-fab', 2.0, 1100);
+    await wait(1200);
+    await cursorTap('#exp-fab', 2.0);
     await sub('Saat, etkinlik, bina, havalandırma ve süre girilir; <mark>bilgiler cihazdan çıkmaz</mark>.');
     await chat(430);
     await wait(300); await toChart();
