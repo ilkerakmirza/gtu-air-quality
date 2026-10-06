@@ -236,6 +236,15 @@ window.card = html => { const c = document.getElementById('card');
   const card = html => page.evaluate(h => window.card(h), html);
   const sub = html => page.evaluate(h => window.sub(h), html);
   const click = async (sel, pause = 900) => { await F().click(sel); await wait(pause); };
+  // Öğenin çevresinde yanıp sönen vurgu halkası (nereye dokunulacağını gösterir)
+  const highlight = async (sel, ms) => {
+    await F().evaluate(([sel, ms]) => { const r = document.querySelector(sel).getBoundingClientRect(), d = document.createElement('div'), p = 7;
+      d.style.cssText = `position:fixed;left:${r.left - p}px;top:${r.top - p}px;width:${r.width + 2 * p}px;height:${r.height + 2 * p}px;border-radius:99px;
+        border:3px solid #f5b840;box-shadow:0 0 0 0 rgba(245,184,64,.55);z-index:99998;pointer-events:none`;
+      d.animate([{ boxShadow: '0 0 0 0 rgba(245,184,64,.55)' }, { boxShadow: '0 0 0 16px rgba(245,184,64,0)' }], { duration: 900, iterations: Infinity });
+      document.body.appendChild(d); setTimeout(() => d.remove(), ms + 1200); }, [sel, ms]);
+    await wait(ms);
+  };
   // Kamera öğeye yakınlaşır, dokunma izi görünür, öğe açılır, kamera geri çekilir
   const focusTap = async (sel, k = 1.9, hold = 900) => {
     const c = await F().evaluate(sel => { const r = document.querySelector(sel).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }, sel);
@@ -284,55 +293,59 @@ window.card = html => { const c = document.getElementById('card');
         <dl><dt>Ölçüm</dt><dd>Planlı saha yürüyüşleri; kısa süreli, konumlu</dd><dt>Amaç</dt><dd>Bina bazlı karakterizasyon; binalar arası farkların kampüs saha ortalamasına göre belirlenmesi</dd></dl></section></div>
     <div class="note">Her iki sensör türü de düşük maliyetli optik sensördür; değerler ham ölçümdür (nem düzeltmesi uygulanmamıştır).</div>`;
   if (!LONG) {
-    // ── Kısa sürüm (≈60 sn, 9:16): açıklamalar üst bantta, uygulama görüntüsü kesintisiz ──
+    // ── Kısa sürüm (≈80 sn, 9:16): açıklamalar üst bantta tam cümle, uygulama görüntüsü kesintisiz ──
     await card(`${LOGO_IMG}<h1>GTÜ <i>Air</i>Lab</h1><div class="sub">Kampüs Hava Kalitesi Laboratuvarı<br>Gebze Teknik Üniversitesi</div>`);
-    await wait(3200);
-    // Önce sensörler
-    await card(SENS_PA); await wait(6500);
-    await card(SENS_AT); await wait(7500);
+    await click('#tabbar [data-tab=map]', 300);
+    await F().evaluate(() => { map.setView([40.8105, 29.3575], 15.6, { animate: false }); });
+    await wait(2900);
+    // Sabit sensör: kart, ardından haritada SÜMER çatısı
+    await card(SENS_PA); await wait(6200);
+    await cap('Sabit sensör · SÜMER Laboratuvarı çatısı');
+    await card(null); await wait(500);
+    await F().evaluate(() => { map.flyTo([40.806155, 29.360985], 18.4, { duration: 3 }); });
+    await sub('PurpleAir PA-II, SÜMER Laboratuvarı’nın çatısında <mark>kampüsün genel hava kalitesini</mark> sürekli ölçer.'); await wait(5200);
+    // Taşınabilir sensörler: kart, ardından haritada cihazlar
+    await card(SENS_AT); await wait(500);
+    await F().evaluate(() => { map.setView([40.8105, 29.3575], 16.2, { animate: false }); });
+    await wait(6800);
+    await cap('Taşınabilir sensörler');
+    await card(null); await wait(400);
+    await sub('Atmotube Pro cihazları, GPS konumlu saha yürüyüşleriyle <mark>bina bazlı ölçüm</mark> yapar.'); await wait(4200);
     // Arayüz: ana ekran (Özet)
     await cap('Anlık hava kalitesi');
-    await card(null); await wait(400);
-    await sub('Sabit sensör: <mark>kampüsün genel hava kalitesi</mark>, Ulusal Hava Kalitesi İndeksi (HKİ) ile'); await wait(3600);
+    await click('#tabbar [data-tab=ozet]', 600);
+    await sub('Sabit sensörün son ölçümü, <mark>Ulusal Hava Kalitesi İndeksi (HKİ)</mark> ile sınıflandırılır.'); await wait(3800);
     await scroll('#ozet-body', 300, 1800);
-    await sub('Genel nüfus ve hassas gruplar için <mark>öneriler</mark>; veri kaynağı ve ölçüm zamanı belirtilir'); await wait(2800);
-    // Ölçüm ağı
-    await cap('Ölçüm ağı');
-    await F().evaluate(() => document.getElementById('ozet-body').scrollTop = 0);
-    await click('#tabbar [data-tab=map]', 500);
-    await F().evaluate(() => { map.flyTo([40.8100, 29.3578], 16.4, { duration: 2.4 }); });
-    await sub('Sabit sensör (PurpleAir PA-II, SÜMER çatısı): <mark>kampüs genel hava kalitesi</mark>'); await wait(3200);
-    await sub('Taşınabilir sensörler (Atmotube Pro, GPS): <mark>bina bazlı karakterizasyon</mark>'); await wait(3000);
-    // Mekânsal sonuçlar
+    await sub('Genel nüfus ve hassas gruplar için öneriler, <mark>veri kaynağı ve ölçüm zamanıyla</mark> birlikte verilir.'); await wait(3400);
+    // Bina bazlı karakterizasyon
     await cap('Bina bazlı karakterizasyon');
+    await F().evaluate(() => document.getElementById('ozet-body').scrollTop = 0);
     await click('#tabbar [data-tab=research]', 600);
     await click('#research-switch [data-sub=field]', 700);
-    await sub('Saha ölçümlerinden <mark>bina ölçekli PM₂.₅ ortalamaları</mark> (µg/m³)');
+    await sub('Saha ölçümlerinden her bina için <mark>ortalama PM₂.₅ derişimi</mark> hesaplanır.');
     await click('#sel-all', 500);
     await focusTap('.vs-btn[data-view=avg]', 1.6, 800);
-    await sub('Binalar <mark>kampüs saha ortalamasına</mark> göre sıralanır'); await wait(2400);
+    await sub('Binalar, <mark>kampüs saha ortalamasına</mark> göre sıralanır.'); await wait(2800);
     await click('#map-cta', 900);
     await F().evaluate(() => { map.flyTo([40.8112, 29.3566], 16.3, { duration: 2.2 }); });
-    await sub('Bina ortalamaları <mark>harita üzerinde</mark>'); await wait(2800);
-    await sub('Kısa süreli ölçümler <mark>WHO 24 saatlik değeriyle karşılaştırılmaz</mark>'); await wait(3000);
-    // WHO karşılaştırması
-    await cap('WHO (2021) kılavuz değeriyle karşılaştırma');
+    await sub('Bina ortalamaları harita üzerinde <mark>renklerle</mark> gösterilir.'); await wait(3600);
+    // WHO karşılaştırması (sade)
+    await cap('WHO kılavuz değeriyle karşılaştırma');
     await click('#tabbar [data-tab=who]', 900);
-    await sub('Kampüs genel hava kalitesi (sabit sensör) · 24 saatlik kılavuz değer <mark>15 µg/m³</mark>'); await wait(3000);
+    await sub('Ölçümler, Dünya Sağlık Örgütü’nün (WHO, 2021) <mark>kılavuz değeriyle</mark> karşılaştırılır.'); await wait(3400);
     await scroll('#who-body', 190, 1300);
-    await sub('Kılavuz değeri aşan günler <mark>ayrı renkte</mark> gösterilir'); await wait(3000);
-    await scroll('#who-body', 120, 1200);
-    await sub('Yıllık kılavuz değer: <mark>5 µg/m³</mark>'); await wait(3000);
-    // Kişisel maruziyet
+    await sub('Kılavuz değerin üzerindeki değerler <mark>problemli</mark> olarak işaretlenir.'); await wait(3800);
+    // Kişisel maruziyet: düğme vurgulanır, yakınlaşılır, açılır
     await cap('Kişisel maruziyet tahmini');
     await click('#tabbar [data-tab=map]', 700);
-    await sub('Kampüste geçirilen zamana göre <mark>solunan PM₂.₅ miktarı</mark>');
-    await focusTap('#exp-fab', 2.0, 1300);
-    await sub('Girdiler: saat, etkinlik, bina, havalandırma ve süre · <mark>bilgiler cihazdan çıkmaz</mark>');
+    await sub('Hesaplama, harita ekranındaki <mark>“Ne kadar PM₂.₅ soludum?”</mark> düğmesiyle başlatılır.');
+    await highlight('#exp-fab', 2600);
+    await focusTap('#exp-fab', 2.0, 1100);
+    await sub('Saat, etkinlik, bina, havalandırma ve süre girilir; <mark>bilgiler cihazdan çıkmaz</mark>.');
     await chat(430);
     await wait(300); await toChart();
-    await sub('Solunan miktar = derişim × <mark>solunum hızı</mark> × süre'); await wait(3200);
-    await sub('Solunum hızları: <mark>US EPA (2011)</mark>'); await wait(2400);
+    await sub('Solunan miktar; derişim, <mark>solunum hızı</mark> ve sürenin çarpımıyla tahmin edilir.'); await wait(3800);
+    await sub('Solunum hızları <mark>US EPA (2011)</mark> değerlerine dayanır.'); await wait(2800);
     await card(`${LOGO_IMG}<h1>GTÜ <i>Air</i>Lab</h1><div class="sub">Kampüs Hava Kalitesi Laboratuvarı<br>Gebze Teknik Üniversitesi</div>
       ${QR ? `<img class="qr" src="${QR}" alt="">` : ''}<div class="small">Yöntem, eşik değerler ve kaynaklar uygulamanın “Hakkında” bölümündedir.</div>`);
     await wait(5500);
