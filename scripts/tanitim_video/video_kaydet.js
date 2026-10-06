@@ -61,7 +61,9 @@ const ATP = [{ device: 'ATP-1', mac: 'a', reading: { pm2_5: 11.2, lat: 40.8098, 
 const CO2 = [{ device: 'CO2-1', location: 'İç mekân sensörü', lat: 40.8075, lon: 29.3605, reading: { co2_ppm: 742, temperature_c: 23.1, humidity_pct: 44, recorded_at: ago(5) } }];
 
 // ── Sahne sayfası ─────────────────────────────────────────────────────────
-const W = LONG ? 1280 : 540, H = LONG ? 720 : 960, DPR = LONG ? 1.5 : 2;
+const W = LONG ? 1280 : 540, H = LONG ? 720 : 960;
+// Çıkış: 1080×1920 / 1920×1080. HD=1 → ekran 1,5 kat yüksek çözünürlükte yakalanıp küçültülür (daha keskin), daha yüksek kalite kodlama
+const OUT_K = LONG ? 1.5 : 2, HD = process.env.HD === '1', DPR = HD ? OUT_K * 1.5 : OUT_K;
 const FRAME = LONG ? { x: 0, y: 92, w: 1280, h: 628 } : { x: 0, y: 214, w: 540, h: 746 };
 const STAGE = `<!doctype html><html lang="tr"><head><meta charset="utf-8">
 <link rel="stylesheet" href="/vendor/fonts/fonts.css">
@@ -199,9 +201,9 @@ window.card = html => { const c = document.getElementById('card');
   const F = () => page.frame({ name: 'app' });
 
   // ffmpeg: kareler sabit 30 fps'ye oturtulur
-  const OW = Math.round(W * DPR), OH = Math.round(H * DPR);
+  const OW = Math.round(W * OUT_K), OH = Math.round(H * OUT_K), CW = Math.round(W * DPR), CH = Math.round(H * DPR);
   const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-framerate', '30', '-i', '-',
-    '-vf', `scale=${OW}:${OH}:flags=lanczos,format=yuv420p`, '-c:v', 'libx264', '-preset', 'medium', '-crf', '19', '-movflags', '+faststart', OUT], { stdio: ['pipe', 'inherit', 'inherit'] });
+    '-vf', `scale=${OW}:${OH}:flags=lanczos,format=yuv420p`, '-c:v', 'libx264', '-preset', HD ? 'slow' : 'medium', '-crf', HD ? '15' : '19', '-profile:v', 'high', '-tune', 'animation', '-r', '30', '-movflags', '+faststart', OUT], { stdio: ['pipe', 'inherit', 'inherit'] });
   const cdp = await ctx.newCDPSession(page);
   let last = null, lastT = null, written = 0;
   const write = buf => new Promise(res => ff.stdin.write(buf) ? res() : ff.stdin.once('drain', res));
@@ -214,7 +216,7 @@ window.card = html => { const c = document.getElementById('card');
     });
   };
   cdp.on('Page.screencastFrame', f => { push(Buffer.from(f.data, 'base64'), f.metadata.timestamp); cdp.send('Page.screencastFrameAck', { sessionId: f.sessionId }).catch(() => {}); });
-  await cdp.send('Page.startScreencast', { format: 'jpeg', quality: 92, maxWidth: OW, maxHeight: OH, everyNthFrame: 1 });
+  await cdp.send('Page.startScreencast', { format: 'jpeg', quality: HD ? 96 : 92, maxWidth: CW, maxHeight: CH, everyNthFrame: 1 });
   // Yayın yalnızca ekran değişince kare yollar; sabit sahnelerde de zaman ilerlesin diye görünmez bir nokta yanıp söner
   await page.evaluate(() => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;left:0;top:0;width:1px;height:1px;z-index:99;background:#0a101d';
     document.body.appendChild(d); let k = 0; setInterval(() => { d.style.background = (k++ % 2) ? '#0a101d' : '#0b111e'; }, 33); });

@@ -17,6 +17,9 @@ node scripts/tanitim_video/video_kaydet.js short           # → scripts/tanitim
 node scripts/tanitim_video/video_kaydet.js long
 ```
 
+- **HD (yayın kalitesi):** `HD=1 node scripts/tanitim_video/video_kaydet.js short` → ekran 1,5 kat yüksek çözünürlükte yakalanıp
+  1080×1920'ye küçültülür (daha keskin yazı), H.264 High profil, CRF 15. Müzik birleştirmede ses için `-b:a 256k -ar 48000` önerilir.
+
 - **Sensör görselleri:** `foto/purpleair.jpg` ve `foto/atmotube.jpg` (ya da `.png`) konursa kartlarda fotoğraf gösterilir; yoksa kartlar yalnızca metindir
   Ekibin kendi çektiği (ya da kullanım izni olan) ve kişi/yüz içermeyen fotoğraflar kullanın.
 - Varsayılan olarak **örnek veri** kullanılır ve videoda "TASLAK · ÖRNEK VERİ" etiketi görünür.
