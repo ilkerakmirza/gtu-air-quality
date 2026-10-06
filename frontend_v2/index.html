@@ -515,7 +515,16 @@ body {
 .sr-pm { flex-shrink: 0; padding: 2px 6px; border-radius: 5px; color: #0b0e14; font: 700 11px var(--num); font-variant-numeric: tabular-nums; }
 .sr-empty { padding: 12px; font-size: 12px; color: var(--text-2); }
 @media (max-width: 1560px) and (min-width: 761px) { #chip-readings, #chip-sessions { display: none; } }
-@media (max-width: 1100px) and (min-width: 761px) { .brand small { display: none; } }
+/* Dizüstü genişliklerinde üst çubuk taşmasın: altlık düğmeleri yalnızca ikon (title korunur), aralıklar daralır */
+@media (max-width: 1380px) and (min-width: 761px) { .seg-btn .sb-txt { display: none; } }
+@media (max-width: 1100px) and (min-width: 761px) {
+  .brand small { display: none; }
+  .topbar { gap: 9px; padding: 0 12px; }
+  .search { margin-left: 6px; }
+  .topbar .search-box { width: 170px; }
+}
+@media (max-width: 1000px) and (min-width: 761px) { .topbar .chip-txt { display: none; } }
+@media (max-width: 860px) and (min-width: 761px) { .topbar .search-box { width: 124px; } }
 .topbar .chip, .seg-btn, .brand small { white-space: nowrap; }
 .brand { flex-shrink: 0; }
 .search-box { width: clamp(180px, 18vw, 270px); }
@@ -979,7 +988,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 .mx-mode { margin-bottom: 12px; }
 .mx-mode .pd-chip, .cb-opts .pd-chip { display: inline-flex; align-items: center; gap: 6px; }
 /* Sohbet asistanı */
-.cb { display: grid; gap: 9px; }
+.cb { display: grid; gap: 9px; grid-template-columns: minmax(0, 1fr); }
 .cb-msg { display: flex; align-items: flex-end; gap: 8px; }
 .cb-msg.me { justify-content: flex-end; }
 .cb-av { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: var(--c);
@@ -987,7 +996,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 .cb-av .i { width: 19px; height: 19px; }
 .cb-bub { max-width: 86%; padding: 9px 12px; border-radius: 14px; font-size: 12.8px; line-height: 1.55; color: #dde3ee;
   background: rgba(255,255,255,0.045); border: 1px solid var(--stroke); border-bottom-left-radius: 4px; }
-.cb-msg.bot .cb-bub:has(.cb-chart) { flex: 1; max-width: none; }
+.cb-msg.bot .cb-bub:has(.cb-chart) { flex: 1; min-width: 0; max-width: none; }
 .cb-msg.me .cb-bub { color: #fff; background: var(--accent-soft); border-color: rgba(91,141,239,0.4); border-radius: 14px; border-bottom-right-radius: 4px; }
 .cb-bub b { color: #fff; }
 .cb-ask { margin: 4px 0 6px 38px; }
@@ -1002,7 +1011,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
   background: var(--bg-2); color: var(--text); font: 500 12.5px Inter, sans-serif; color-scheme: dark; }
 .cb-row .sc-btn { flex: 0 0 auto; padding: 7px 14px; }
 .pd-chip.alt { border-style: dashed; }
-.cb-chart { position: relative; height: 140px; margin: 2px 0 4px; }
+.cb-chart { position: relative; height: 140px; margin: 2px 0 4px; min-width: 0; }
 .cb-tips { margin: 6px 0 0 16px; display: grid; gap: 5px; }
 .oz-exp { margin-top: 12px; }
 
@@ -1417,11 +1426,11 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
   </div>
   <div class="chip" id="chip-readings"><svg class="i"><use href="#i-chart-column"></use></svg> <b>—</b>&nbsp;ölçüm</div>
   <div class="chip" id="chip-sessions"><svg class="i"><use href="#i-footprints"></use></svg> <b>—</b>&nbsp;oturum</div>
-  <button class="chip chip-btn" id="research-btn" type="button" aria-pressed="false" title="Sensör panelleri, saha ölçümleri ve karşılaştırma grafikleri"><svg class="i"><use href="#i-microscope"></use></svg> Araştırma</button>
-  <button class="chip chip-btn" id="ozet-btn" type="button"><svg class="i"><use href="#i-gauge"></use></svg> Özet</button>
-  <button class="chip chip-btn" id="who-btn" type="button" title="WHO kılavuz değerlerine göre değerlendirme"><svg class="i"><use href="#i-shield-check"></use></svg> Sağlık</button>
+  <button class="chip chip-btn" id="research-btn" type="button" aria-pressed="false" title="Sensör panelleri, saha ölçümleri ve karşılaştırma grafikleri"><svg class="i"><use href="#i-microscope"></use></svg><span class="chip-txt"> Araştırma</span></button>
+  <button class="chip chip-btn" id="ozet-btn" type="button" title="Özet"><svg class="i"><use href="#i-gauge"></use></svg><span class="chip-txt"> Özet</span></button>
+  <button class="chip chip-btn" id="who-btn" type="button" title="WHO kılavuz değerlerine göre değerlendirme"><svg class="i"><use href="#i-shield-check"></use></svg><span class="chip-txt"> Sağlık</span></button>
   <button class="chip chip-btn info-btn" id="info-btn" type="button" title="Hakkında · Yöntem · Gizlilik (KVKK)" aria-label="Hakkında, yöntem ve gizlilik"><svg class="i"><use href="#i-info"></use></svg></button>
-  <button class="chip chip-btn" id="news-btn" type="button"><svg class="i"><use href="#i-megaphone"></use></svg> Duyurular<span class="badge" id="news-badge" hidden></span></button>
+  <button class="chip chip-btn" id="news-btn" type="button" title="Duyurular"><svg class="i"><use href="#i-megaphone"></use></svg><span class="chip-txt"> Duyurular</span><span class="badge" id="news-badge" hidden></span></button>
 </div>
 
 <!-- Sidebar -->

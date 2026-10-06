@@ -40,6 +40,8 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
      önce ekipte elle CSV yükleyen var mı sor (eski arayüzdeki form kapandı, yükleme için yeni yol gerekebilir).
   2. `ADMIN_TOKEN` varsayılanı `"changeme"` (`backend/config.py`): Render → Environment'ta uzun, rastgele bir değerle tanımlı mı,
      kullanıcı kontrol etmeli (değeri isteme).
+- **Tanıtım videoları (6 Ekim 2026 deneme sürümü hazır):** `scripts/tanitim_video/` (Shorts 9:16 → Instagram/LinkedIn, uzun 16:9 → YouTube).
+  Yayın sürümü PurpleAir veri göndermeye başlayınca `GERCEK=1` ile ve kalıcı adres (gtuairlab / airlab.gtu.edu.tr) karekodla yeniden kaydedilecek.
 - **Adsız 20 bina:** ekip numaralı haritadan eşleştirince `campus.geojson`'a adları işle.
 
 ## Gizlilik ve KVKK (her değişiklikte kontrol et)
@@ -140,7 +142,7 @@ Renkli (zengin) duyuru — `renk` ya da `bolumler` varsa renkli başlık alanıy
 - `frontend_v2/vendor/` — yerel Leaflet, Leaflet.heat, Chart.js ve yazı tipleri (Inter, Source Serif 4) (lisanslar `vendor/LICENSES/`)
 - `docs/` — yöntem belgeleri: `hesaplama_ve_kaynaklar.md` (tüm sınıflandırma, eşik, hesap ve kaynakların kaydı + kontrol listesi), `maruziyet_yontemi.md` (kişisel maruziyet hesabı)
 - `.github/workflows/sunucu-uyanik.yml` — Render ücretsiz sunucusunu uyanık tutmak için 10 dakikada bir `/health` isteği (uyurken veri toplama durur). Render ücretsiz planı ayda 750 saat; tek servis 7/24 açık kalabilir.
-- `scripts/` — `ekip_kasasi.js` (ekip görünümü ad kasası), `tuzla_gecmis.py` (İBB'den Tuzla PM₁₀ geçmişi, her yerden çalışır), `csb_gecmis.py` (ÇŞB'den Tuzla PM₂.₅ geçmişi, yalnızca Türkiye'den)
+- `scripts/` — `tanitim_video/` (tanıtım videosu kaydı ve fon müziği), `ekip_kasasi.js` (ekip görünümü ad kasası), `tuzla_gecmis.py` (İBB'den Tuzla PM₁₀ geçmişi, her yerden çalışır), `csb_gecmis.py` (ÇŞB'den Tuzla PM₂.₅ geçmişi, yalnızca Türkiye'den)
 - `frontend/` — önceki harita arayüzü; **emekliye ayrıldı** (4 Ekim 2026): `map.html` ve kök `index.html` yeni arayüze (`frontend_v2/`) yönlendirir. Eski arayüz gerçek adları gösteriyor, CDN kullanıyor ve korumasız yükleme formu içeriyordu; geri getirme.
 - `backend/` — Python sunucu ve veri toplayıcılar (PurpleAir, Atmotube, Tuya CO2, ÇSB, İBB); arayüzün kullandığı API: https://gtu-air-quality.onrender.com (`frontend_v2/js/api.js`)
 - Yerelde önizleme: `python -m http.server 8765 --directory frontend_v2` → http://localhost:8765
