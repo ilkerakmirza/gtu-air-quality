@@ -52,7 +52,9 @@ Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök diz
 - **API anahtarları ve parolalar repoya asla girmez** (PurpleAir, Atmotube, Tuya, veritabanı, admin token): yalnızca sunucu ortam
   değişkenlerinde (Render → Environment). Tarayıcı koduna anahtar gömülmez. `.claude/settings.local.json` izin listesine komutla
   birlikte anahtar girebilir; commit'ten önce kontrol et. 4 Ekim 2026'da bu dosyada ve eski ekip sayfasında PurpleAir okuma anahtarı
-  (76E9… ile başlayan) bulundu; anahtar git geçmişinde kaldığı için PurpleAir'de iptal edilip yenisi oluşturulmalı.
+  (76E9… ile başlayan) bulundu ve git geçmişinde duruyor. **Kullanıcının kararı (7 Ekim 2026): bu anahtar kullanılmaya devam edecek,
+  yenilenmeyecek; tekrar önerme.** Risk yalnızca başkasının puanları harcaması (veri zaten herkese açık); kullanıcı PurpleAir panelinden
+  puan kullanımını izler, beklenmedik artışta yeniler. gtuairlab'a geçmişsiz depoyla taşınınca anahtar herkese açık yerden kalkar.
 
 ## Arayüz ilkeleri (benzer uygulamalarla karşılaştırarak, akademik üslupla)
 - Arayüz değişikliğinden önce benzer uygulamalardaki karşılığına bak: IQAir AirVisual, PurpleAir haritası,
