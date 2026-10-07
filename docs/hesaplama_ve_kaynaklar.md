@@ -15,7 +15,7 @@ ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
 
 | Veri | Kaynak | Not |
 |---|---|---|
-| Kampüs PM₂.₅, PM₁₀, sıcaklık, nem | PurpleAir PA-II (SUMER çatısı, sensör 229263); sunucu PurpleAir API'den 2 dakikada bir okur | Kampüsün genel (dış ortam) hava kalitesini temsil eder. **Ham (düzeltilmemiş)** `pm2.5_atm` değerleri. US EPA nem düzeltmesi uygulanmıyor. API erişimi 5 Ekim 2026'da geri geldi; sensör 2 Ekim 2026 16:59'dan (TR) beri PurpleAir'e veri göndermiyor. |
+| Kampüs PM₂.₅, PM₁₀, sıcaklık, nem | PurpleAir PA-II (SUMER çatısı, sensör 229263); sunucu PurpleAir API'den 2 dakikada bir okur | Kampüsün genel (dış ortam) hava kalitesini temsil eder. **Ham (düzeltilmemiş)** `pm2.5_atm` değerleri. US EPA nem düzeltmesi uygulanmıyor. 2 Ekim 16:59 – 6 Ekim 16:53 (TR) arasında sensör çevrimdışıydı, veri yok; 7 Ekim 2026'dan beri PurpleAir veri erişim kotası yeterli. |
 | Saha ölçümleri | Atmotube Pro (yürüyüş ölçümleri, GPS'li) | Amaç: bina bazlı karakterizasyon (§5). Kısa süreli; WHO 24 saatlik değeriyle karşılaştırılmaz (§5). |
 | İç mekân CO₂ | Tuya CO₂ sensörleri | 21 Temmuz 2026'dan beri veri yok. |
 | Bölge (Tuzla istasyonu, ~6,4 km) | İBB hava kalitesi servisi (canlı); ÇŞB SİM arşivi (yerel toplayıcı); geçmiş için `data/tuzla_saatlik.json` | PM₁₀ geçmişi İBB açık verisinden (`scripts/tuzla_gecmis.py`), PM₂.₅ geçmişi ÇŞB'den (`scripts/csb_gecmis.py`, yalnızca Türkiye'den çalışır). |
@@ -31,6 +31,7 @@ Saatlik değerler sunucuda `interval=hourly` ile ortalanır; uygulamadaki tüm g
 | Kampüs sınırı: merkez 40,8114 K, 29,3563 D; yarıçap 2 km. Dışındaki Atmotube konumları harita izlerine, ısı haritasına, saha oturumlarına ve canlı cihaz konumuna alınmaz; CSV dışa aktarımda konum boş bırakılır. | Cihazlar eve/yola götürüldüğünde kampüs dışı noktalar kaydediliyordu (39 nokta, 11–44 km); hem kişisel konum (KVKK) hem kampüs ortalamasını bozan veri. Merkez `campus.geojson` binalarının kapsadığı alanın ortası; en uzak bina ~1,06 km. Ham arşiv (`measurements`) değiştirilmez. | `backend/kampus.py`, `backend/config.py` (`CAMPUS_*`), `frontend_v2/js/app.js` (`offCampus`) |
 | CSV dışa aktarımda saha ölçümlerinin cihaz adı `saha-1, saha-2…` olarak verilir. | Saha cihaz adları kişi adı içeriyor. | `backend/archive.py` → `iter_csv()` |
 | Tuzla istasyonu saatlik arşivi İBB'den sürdürülür. | ÇŞB yerel toplayıcısı Haziran 2026'dan beri çalışmıyor; arşiv 16 Haziran'dan beri boştu. | `backend/collector.py` → `collect_hourly()` |
+| Veritabanında `purpleair_readings.recorded_at` tekil; 7 Ekim 2026'da 2011 yinelenen satır (değerleri birebir aynı) ve `atmotube_readings`'ten 40 kampüs dışı nokta silindi. | Tek kayıt, tek ölçüm; kişisel konum tutulmaz. | Supabase (dizin `purpleair_readings_recorded_at_key`), `backend/db.py` (`ON CONFLICT DO NOTHING`) |
 
 ## 2. Ulusal Hava Kalitesi İndeksi (HKİ)
 

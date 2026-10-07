@@ -197,6 +197,7 @@ def save_purpleair_reading(data: dict):
     VALUES
         (%(recorded_at)s, %(pm1_0)s, %(pm2_5)s, %(pm2_5_a)s, %(pm2_5_b)s, %(pm10_0)s,
          %(temperature_c)s, %(humidity_pct)s, %(lat)s, %(lon)s)
+    ON CONFLICT (recorded_at) DO NOTHING
     """ if _USE_POSTGRES else """
     INSERT OR IGNORE INTO purpleair_readings
         (recorded_at, pm1_0, pm2_5, pm2_5_a, pm2_5_b, pm10_0, temperature_c, humidity_pct, lat, lon)

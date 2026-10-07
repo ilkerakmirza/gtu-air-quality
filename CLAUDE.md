@@ -12,20 +12,10 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
    `git pull` başarısız olduysa veya `main`'e geçilemediyse bunu açıkça söyle; kullanıcı eski sürümle çalışmasın.
 
 ## Bekleyen işler (oturum başında kullanıcıya kısaca hatırlat, bitenleri buradan sil)
-- **PurpleAir (kullanıcı 7 Ekim 2026'da çözecek; hatırlatma kuruldu):** API erişimi 5 Ekim 2026'da geri geldi, ama sensör
-  2 Ekim 2026 16:59'dan (TR) beri PurpleAir'e veri göndermiyor → SÜMER çatısında elektrik/Wi-Fi kontrolü. Kalıcı yedek: sensörün
-  yerel ağdaki `http://<sensör-IP>/json` adresinden 2 dakikada bir okuyan yerel toplayıcı (sensör IP'si + sürekli açık bilgisayar
-  gerekir). PurpleAir haritasından veri çekmek kullanım koşullarına aykırı, önerme.
 - **Tuzla resmî ÇŞB toplayıcısı Haziran 2026'dan beri çalışmıyor** (yerel bilgisayardaki zamanlanmış görev); Tuzla saatlik
   arşivi 6 Ekim 2026'dan beri sunucuda İBB'den toplanıyor (`collector.collect_hourly`).
 - **CO₂ sensörlerinden 21 Temmuz 2026'dan beri veri yok:** Tuya IoT Platform'daki bulut geliştirme planının süresi dolmuş;
   kullanıcı Tuya'da planı yenilemeli/uzatmalı.
-- **Veritabanı temizliği (kullanıcı onayı bekliyor, 6 Ekim 2026):** `purpleair_readings`'te 2005 yinelenen satır (aynı `recorded_at`)
-  silinip `recorded_at` üzerine tekil dizin; 39 kampüs dışı Atmotube satırı `atmotube_readings`'ten silinmesi; Supabase'de 4 tabloda
-  RLS kapalı (kritik uyarı) → `ALTER TABLE … ENABLE ROW LEVEL SECURITY` (sunucu `postgres` rolüyle bağlandığı için etkilenmez).
-  Onaysız uygulama.
-- **Uyanık tutma cron'u güvenilmez:** GitHub Actions zamanlanmış işi 3–8 saatte bir çalışıyor; alternatif (dış izleme servisi ya da
-  Supabase pg_cron) kullanıcıya sorulacak.
 - **Tuzla PM₂.₅ geçmişi (kampüs–bölge karşılaştırması için):** İBB açık verisi Tuzla'nın PM₂.₅ geçmişini vermiyor,
   ÇŞB sitesi yalnızca Türkiye'den erişilebiliyor. **Masaüstü oturumunda** (kullanıcının Türkiye'deki bilgisayarı) çalıştır:
   `pip install requests && python scripts/csb_gecmis.py 2026-04-01`, sonra `frontend_v2/data/tuzla_saatlik.json`'u commit'leyip
@@ -141,7 +131,11 @@ Renkli (zengin) duyuru — `renk` ya da `bolumler` varsa renkli başlık alanıy
 - `frontend_v2/` — yayındaki arayüz (`index.html`, `js/icons.js` (ikon seti), `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `js/shell.js`, `js/who.js` (WHO durumu sekmesi), `js/ozet.js` (Özet: günlük ve aylık özet, açılış ekranı), `js/kiyas.js` (kampüs–Tuzla aynı saat karşılaştırması), `js/maruziyet.js` (kişisel maruziyet hesabı, taslak), `data/campus.geojson`, `data/duyurular.json`, `data/tuzla_saatlik.json` (Tuzla saatlik geçmişi))
 - `frontend_v2/vendor/` — yerel Leaflet, Leaflet.heat, Chart.js ve yazı tipleri (Inter, Source Serif 4) (lisanslar `vendor/LICENSES/`)
 - `docs/` — yöntem belgeleri: `hesaplama_ve_kaynaklar.md` (tüm sınıflandırma, eşik, hesap ve kaynakların kaydı + kontrol listesi), `maruziyet_yontemi.md` (kişisel maruziyet hesabı)
-- `.github/workflows/sunucu-uyanik.yml` — Render ücretsiz sunucusunu uyanık tutmak için 10 dakikada bir `/health` isteği (uyurken veri toplama durur). Render ücretsiz planı ayda 750 saat; tek servis 7/24 açık kalabilir.
+- **Sunucuyu uyanık tutma:** Asıl yöntem Supabase `pg_cron` işi `render-uyanik-tut` (5 dakikada bir `net.http_get` ile `/health`, 7 Ekim 2026).
+  Yedek: `.github/workflows/sunucu-uyanik.yml` (GitHub zamanlaması 3–8 saatte bir çalışabiliyor). Render uyursa veri toplama durur.
+  Render ücretsiz planı ayda 750 saat; tek servis 7/24 açık kalabilir.
+- **Veritabanı (Supabase):** 4 tabloda RLS açık (7 Ekim 2026); sunucu `postgres` rolüyle bağlanır (RLS'yi atlar), anon/authenticated erişemez.
+  `purpleair_readings.recorded_at` tekil (kopya kayıt yazılmaz).
 - `scripts/` — `tanitim_video/` (tanıtım videosu kaydı ve fon müziği), `ekip_kasasi.js` (ekip görünümü ad kasası), `tuzla_gecmis.py` (İBB'den Tuzla PM₁₀ geçmişi, her yerden çalışır), `csb_gecmis.py` (ÇŞB'den Tuzla PM₂.₅ geçmişi, yalnızca Türkiye'den)
 - `frontend/` — önceki harita arayüzü; **emekliye ayrıldı** (4 Ekim 2026): `map.html` ve kök `index.html` yeni arayüze (`frontend_v2/`) yönlendirir. Eski arayüz gerçek adları gösteriyor, CDN kullanıyor ve korumasız yükleme formu içeriyordu; geri getirme.
 - `backend/` — Python sunucu ve veri toplayıcılar (PurpleAir, Atmotube, Tuya CO2, ÇSB, İBB); arayüzün kullandığı API: https://gtu-air-quality.onrender.com (`frontend_v2/js/api.js`)
