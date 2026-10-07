@@ -600,9 +600,9 @@ function updateAtmotubeMarkers(devices) {
         const c = pm25Color(r.pm2_5);
         const durum = recent ? "canlı" : "son bilinen konum";
         const html = `<b>📡 ${d.device}</b> — ${durum}<br>PM₂.₅: <b style="color:${c}">${f1tr(r.pm2_5) ?? "--"}</b> µg/m³<br><small>${timeAgo(r.recorded_at)}</small>`;
-        // Canlı: nabız atan; eski: soluk sabit kare. Altında cihaz adı etiketi.
+        // Canlı: yanıp sönen kare (kendi PM₂.₅ renginde); eski: soluk sabit kare. Altında cihaz adı etiketi.
         const dot = recent
-            ? `<div class="pulse-marker" style="--marker-color:${c};border-radius:30%"></div>`
+            ? `<div class="atp-live" style="--marker-color:${c}"></div>`
             : `<div style="width:18px;height:18px;border-radius:30%;background:${c};border:2px dashed #fff;opacity:0.55"></div>`;
         const inner = `<div class="mk-wrap">${dot}<div class="mini-label"${recent ? "" : ' style="opacity:.6"'}>${d.device}</div></div>`;
         const icon = L.divIcon({ className: "", html: inner, iconSize: [60, 40], iconAnchor: [30, 10] });
