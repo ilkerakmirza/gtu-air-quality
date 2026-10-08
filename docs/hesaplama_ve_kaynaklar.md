@@ -45,6 +45,7 @@ RH = PurpleAir nemi; nem eksikse %50):
 - Kalite kontrolü: A ve B kanalları hem ≥ 5 µg/m³ hem ≥ %70 ayrışırsa ölçüm hesaplara girmez.
 - Yerel tutarlılık: Tuzla istasyonuyla aynı 241 saatte ortalama fark ham +%43 → düzeltilmiş −%2 (kolokasyon değil).
 - Ham değer veritabanında ve Araştırma panelinde; düzeltme yalnızca gösterim/hesap katmanında (formül değişirse geçmiş yeniden hesaplanır).
+- Aynı temelde karşılaştırma: Tuzla (resmî ölçüm) ile düzeltilmiş PurpleAir; Atmotube (düzeltilmez) ile ham PurpleAir (sensör karşılaştırma grafiği).
 
 Formülün tamamı, çalışılmış örnekler, doğrulama, etki tabloları, sınırlılıklar ve kaynakların doğrulama durumu:
 [`purpleair_epa_duzeltmesi.md`](purpleair_epa_duzeltmesi.md). Kaynakların durumu **ikincil** (EPA ve yayıncı sitelerine bu

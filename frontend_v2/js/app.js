@@ -1233,9 +1233,10 @@ function loadCompareChart(atmoPts, paHist, person) {
     const labels = atmoPts.map(r =>
         new Date(r.recorded_at).toLocaleTimeString("tr-TR", { timeZone: "Europe/Istanbul", hour: "2-digit", minute: "2-digit" }));
     const atmoVals = atmoPts.map(r => r.pm2_5);
+    // İki sensör aynı temelde karşılaştırılsın: Atmotube'a düzeltme uygulanmadığı için PurpleAir'in de ham değeri kullanılır
     const paVals = atmoPts.map(r => {
         const pa = nearestPAIn(paHist, new Date(r.recorded_at).getTime());
-        return pa ? pa.pm2_5 : null;
+        return pa ? (pa.pm2_5_raw ?? pa.pm2_5) : null;
     });
 
     // Avantaj rozeti
@@ -1275,7 +1276,7 @@ function loadCompareChart(atmoPts, paHist, person) {
                 borderWidth: 2, pointRadius: 0, tension: 0, fill: false,
             },
             {
-                label: "PurpleAir PA-II (sabit, US EPA düzeltmeli)",
+                label: "PurpleAir PA-II (sabit, ham)",
                 data: paVals,
                 borderColor: DEVICE_COLOR.purpleair,
                 borderWidth: 2, pointRadius: 0, tension: 0, fill: false,

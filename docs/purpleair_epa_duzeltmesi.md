@@ -75,6 +75,9 @@ PurpleAir API (pm2.5_atm, A, B, nem)  →  sunucu (2 dk'da bir kayıt, ham)  →
   kaybolmadan yeniden hesaplanır.
 - Ham değer, Araştırma görünümündeki PurpleAir panelinde ("ham sensör değeri") ve haritadaki PurpleAir kutusunda görünür.
 - CSV dışa aktarımı ham değeri verir; düzeltilmiş değer bu belgedeki formülle hesaplanabilir.
+- **Aynı temelde karşılaştırma:** Kampüs–Tuzla karşılaştırmasında PurpleAir düzeltilmiş değeriyle girer (Tuzla resmî ölçümdür,
+  düzeltme gerekmez; düzeltme PurpleAir'i bu ölçeğe çeker). Araştırma'daki sensör karşılaştırma grafiğinde ise Atmotube
+  düzeltilmediği için PurpleAir'in de **ham** değeri kullanılır (ikisi de ham).
 - **Düzeltilmeyenler:** PM₁₀ (yerleşik bir düzeltme yok), Atmotube saha ölçümleri (farklı sensör), Tuzla istasyonu
   (resmî referans cihaz; düzeltmeye gerek yok).
 
