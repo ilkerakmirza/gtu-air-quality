@@ -222,7 +222,7 @@ def get_purpleair_history(start: str, end: str, interval: str = "raw"):
         if _USE_POSTGRES:
             sql = """
             SELECT date_trunc('hour', recorded_at) AS recorded_at,
-                   AVG(pm2_5) AS pm2_5, AVG(pm10_0) AS pm10_0,
+                   AVG(pm2_5) AS pm2_5, AVG(pm2_5_a) AS pm2_5_a, AVG(pm2_5_b) AS pm2_5_b, AVG(pm10_0) AS pm10_0,
                    AVG(temperature_c) AS temperature_c, AVG(humidity_pct) AS humidity_pct
             FROM purpleair_readings
             WHERE recorded_at BETWEEN %(start)s AND %(end)s
@@ -231,7 +231,7 @@ def get_purpleair_history(start: str, end: str, interval: str = "raw"):
         else:
             sql = """
             SELECT strftime('%Y-%m-%dT%H:00:00', recorded_at) AS recorded_at,
-                   AVG(pm2_5) AS pm2_5, AVG(pm10_0) AS pm10_0,
+                   AVG(pm2_5) AS pm2_5, AVG(pm2_5_a) AS pm2_5_a, AVG(pm2_5_b) AS pm2_5_b, AVG(pm10_0) AS pm10_0,
                    AVG(temperature_c) AS temperature_c, AVG(humidity_pct) AS humidity_pct
             FROM purpleair_readings
             WHERE recorded_at BETWEEN :start AND :end
@@ -241,7 +241,7 @@ def get_purpleair_history(start: str, end: str, interval: str = "raw"):
         if _USE_POSTGRES:
             sql = """
             SELECT date_trunc('day', recorded_at) AS recorded_at,
-                   AVG(pm2_5) AS pm2_5, AVG(pm10_0) AS pm10_0,
+                   AVG(pm2_5) AS pm2_5, AVG(pm2_5_a) AS pm2_5_a, AVG(pm2_5_b) AS pm2_5_b, AVG(pm10_0) AS pm10_0,
                    AVG(temperature_c) AS temperature_c, AVG(humidity_pct) AS humidity_pct
             FROM purpleair_readings
             WHERE recorded_at BETWEEN %(start)s AND %(end)s
@@ -250,7 +250,7 @@ def get_purpleair_history(start: str, end: str, interval: str = "raw"):
         else:
             sql = """
             SELECT strftime('%Y-%m-%dT00:00:00', recorded_at) AS recorded_at,
-                   AVG(pm2_5) AS pm2_5, AVG(pm10_0) AS pm10_0,
+                   AVG(pm2_5) AS pm2_5, AVG(pm2_5_a) AS pm2_5_a, AVG(pm2_5_b) AS pm2_5_b, AVG(pm10_0) AS pm10_0,
                    AVG(temperature_c) AS temperature_c, AVG(humidity_pct) AS humidity_pct
             FROM purpleair_readings
             WHERE recorded_at BETWEEN :start AND :end

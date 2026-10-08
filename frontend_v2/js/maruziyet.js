@@ -150,7 +150,7 @@ const Maruziyet = (() => {
             <div class="who-info">
               <p><b>Hesap:</b> Her satır için derişim C = P × R × F; ortalama maruziyet = Σ(C × süre) / Σ süre;
                 solunan miktar = Σ(C × solunum hızı × süre).</p>
-              <p><b>P (saatlik profil):</b> Kampüs PurpleAir sensörünün ${prof} ile hesaplanan saatlik ortalamaları (ham, düzeltilmemiş değerler).</p>
+              <p><b>P (saatlik profil):</b> Kampüs PurpleAir sensörünün ${prof} ile hesaplanan saatlik ortalamaları (US EPA düzeltmeli PM₂.₅; saha ölçümleri ve bina oranları Atmotube'un ham değerlerinden).</p>
               <p><b>R (bina):</b> Binanın saha ölçüm ortalamasının tüm saha ölçümleri ortalamasına oranı; kısa süreli ölçümlere dayandığı için
                 0,5–2 aralığıyla sınırlanmıştır. Saha ölçümü olmayan yerler için kampüs geneli (R = 1) kullanılır.</p>
               <p><b>F (ortam):</b> Dışarıdan gelen PM₂.₅'in iç mekâna geçen payı: açık hava 1,0; açık pencere 0,8; kapalı pencere 0,5;

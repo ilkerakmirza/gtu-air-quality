@@ -1,34 +1,58 @@
-// PM2.5 renk skalası — her 5 µg/m³'de yeni renk ailesi, her 2.5'te koyu/açık
-const PM25_SCALE = [
-    { max:  2.5, color: "#004d00", label: "0–2.5 µg/m³"   },
-    { max:  5,   color: "#00cc00", label: "2.5–5 µg/m³"   },
-    { max:  7.5, color: "#4a9900", label: "5–7.5 µg/m³"   },
-    { max: 10,   color: "#99ee00", label: "7.5–10 µg/m³"  },
-    { max: 12.5, color: "#b8b800", label: "10–12.5 µg/m³" },
-    { max: 15,   color: "#ffff00", label: "12.5–15 µg/m³" },
-    { max: 17.5, color: "#cc8800", label: "15–17.5 µg/m³" },
-    { max: 20,   color: "#ffcc00", label: "17.5–20 µg/m³" },
-    { max: 22.5, color: "#cc4400", label: "20–22.5 µg/m³" },
-    { max: 25,   color: "#ff8800", label: "22.5–25 µg/m³" },
-    { max: 27.5, color: "#bb1100", label: "25–27.5 µg/m³" },
-    { max: 30,   color: "#ff4400", label: "27.5–30 µg/m³" },
-    { max: 35,   color: "#990000", label: "30–35 µg/m³"   },
-    { max: 40,   color: "#ff0000", label: "35–40 µg/m³"   },
-    { max: 47.5, color: "#660066", label: "40–47.5 µg/m³" },
-    { max: 55,   color: "#bb44bb", label: "47.5–55 µg/m³" },
-    { max: 75,   color: "#7e0023", label: "55–75 µg/m³"   },
-    { max: Infinity, color: "#4a0015", label: ">75 µg/m³"  },
-];
-
 // Ekranda gösterilen sayılar Türkçe biçimde: tek ondalık, virgül (12,3). Boş değerde null döner (?? "--" ile kullanılır).
 function f1tr(v) {
     return v == null || isNaN(v) ? null : (+v).toLocaleString("tr-TR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 }
 
+// ─────────────────────────────────────────────────────────────────
+// PurpleAir PM₂.₅ düzeltmesi: US EPA genişletilmiş ABD geneli düzeltmesi (AirNow Yangın ve Duman Haritası'nın uyguladığı biçim).
+// Kaynaklar ve gerekçe: docs/purpleair_epa_duzeltmesi.md. Kısaca: optik sensör ham değeri referans cihazlara göre yaklaşık
+// %40 yüksek okur ve nemden etkilenir (Barkjohn vd. 2021). Girdi: x = PurpleAir cf_atm PM₂.₅ (A ve B kanal ortalaması, µg/m³),
+// rh = PurpleAir'in kendi nem ölçümü (%). Formül cf_1 verisiyle geliştirildi; EPA haritada cf_atm'ye uygular (iki değer
+// ~25–28 µg/m³'e kadar aynı, yüksek derişimde cf_atm ≈ 2/3 × cf_1; 0,786 = 0,524 × 1,5). Ara bölgelerde ağırlıklı geçiş vardır.
+// ─────────────────────────────────────────────────────────────────
+function epaPM25(x, rh) {
+    if (x == null || isNaN(x)) return null;
+    x = +x;
+    if (rh == null || isNaN(rh) || rh < 0 || rh > 100) rh = 50;   // EPA: nem eksik ya da 0–100 dışındaysa %50 alınır
+    let y;
+    if (x < 30)       y = 0.524 * x - 0.0862 * rh + 5.75;
+    else if (x < 50)  { const w = x / 20 - 1.5;  y = (0.786 * w + 0.524 * (1 - w)) * x - 0.0862 * rh + 5.75; }
+    else if (x < 210) y = 0.786 * x - 0.0862 * rh + 5.75;
+    else if (x < 260) { const w = x / 50 - 4.2;  y = (0.69 * w + 0.786 * (1 - w)) * x - 0.0862 * rh * (1 - w)
+                                                    + 2.966 * w + 5.75 * (1 - w) + 8.84e-4 * x * x * w; }
+    else              y = 2.966 + 0.69 * x + 8.84e-4 * x * x;
+    return Math.max(0, y);   // derişim negatif olamaz (çok temiz ve nemli havada formül 0'ın altına inebilir; uygulama kuralı)
+}
+
+// EPA kalite kontrolü: A ve B kanalları hem ≥ 5 µg/m³ hem ≥ %70 (göreli fark, iki kanalın ortalamasına göre) ayrışırsa ölçüm
+// geçersizdir. Dönüş: true = uyumlu, false = geçersiz, null = kanal verisi yok (değerlendirilemedi).
+function paChannelsAgree(a, b) {
+    if (a == null || b == null || isNaN(a) || isNaN(b)) return null;
+    const d = Math.abs(a - b), m = (+a + +b) / 2;
+    return !(d >= 5 && m > 0 && d / m >= 0.70);
+}
+
+// PurpleAir kaydını düzeltilmiş değere çevirir (api.js tek yerden çağırır). Ham değer pm2_5_raw'da kalır;
+// kanallar uyuşmuyorsa pm2_5 = null olur ve o kayıt hesaplara girmez.
+function paCorrect(r) {
+    if (!r || r._epa) return r;
+    const raw = r.pm2_5 != null && !isNaN(r.pm2_5) ? +r.pm2_5 : null;
+    const ok = paChannelsAgree(r.pm2_5_a, r.pm2_5_b);
+    r.pm2_5_raw = raw;
+    r.qa_ab = ok;
+    r.pm2_5 = raw == null || ok === false ? null : epaPM25(raw, r.humidity_pct);
+    r._epa = true;
+    return r;
+}
+
+// Cihaz (seri) renkleri: her grafikte aynı cihaz aynı renk. Üçü birlikte veri görselleştirme doğrulayıcısından geçti
+// (koyu zemin #0f1726, tüm ikililer: renk körlüğü ΔE ≥ 14,5, normal görüş ΔE ≥ 19,3, kontrast ≥ 3:1).
+const DEVICE_COLOR = { purpleair: "#6380f0", tuzla: "#bf8418", atmotube: "#2fa79a" };
+
+// PM₂.₅ rengi = HKİ sınıf rengi (uygulamanın her yerinde tek renk sistemi; sınıf adı ile renk hiç çelişmez)
 function pm25Color(v) {
-    if (v == null || isNaN(v)) return "#8a93a6";
-    for (const b of PM25_SCALE) if (v <= b.max) return b.color;
-    return "#4a0015";
+    const h = hki(v);
+    return h ? h.renk : "#8a93a6";
 }
 
 // Ulusal Hava Kalitesi İndeksi (HKİ), PM₂.₅: ÇŞB'nin EPA indeksinden uyarladığı ulusal tablo
@@ -104,17 +128,13 @@ function buildCO2Legend() {
       <div class="legend-co2">${chips}</div>`;
 }
 
+// Harita lejandı: tek ölçek = HKİ'nin 6 sınıfı (renk, ad, PM₂.₅ aralığı). Haritadaki her PM₂.₅ rengi bu tablodan gelir.
 function buildLegend() {
-    const cells = PM25_SCALE.slice(0, 17).map(b => `<span style="background:${b.color}"></span>`).join("");
-    const ticks = [0,5,10,15,20,25,30,40,55,75].map(t =>
-        `<span style="left:${Math.min(t/75*100,100).toFixed(1)}%">${t}</span>`).join("");
+    const rng = b => b.chi > 500 ? `${f1tr(b.clo)}+` : `${b.clo === 0 ? "0" : f1tr(b.clo)}–${f1tr(b.chi)}`;
+    const rows = HKI_PM25.map(b =>
+        `<span><i style="background:${b.renk}"></i><b>${b.ad}</b><em>${rng(b)}</em></span>`).join("");
     return `
-      <div class="legend-title">PM₂.₅ (µg/m³)</div>
-      <div class="legend-bar">${cells}</div>
-      <div class="legend-ticks">${ticks}</div>
-      <div class="legend-hki">${HKI_PM25.slice(0, 4).map(b => {
-          const x0 = b.clo / 75 * 100, x1 = Math.min(b.chi, 75) / 75 * 100;
-          return `<span style="left:${x0.toFixed(1)}%;width:${(x1 - x0).toFixed(1)}%;color:${b.renk};border-color:${b.renk}">${b.ad}</span>`;
-      }).join("")}</div>
-      <div class="legend-note">HKİ sınıfları (ulusal indeks, PM₂.₅)</div>`;
+      <div class="legend-title">PM₂.₅ (µg/m³) · HKİ sınıfları</div>
+      <div class="legend-hki6">${rows}</div>
+      <div class="legend-note">Ulusal Hava Kalitesi İndeksi (ÇŞB). PurpleAir değerleri US EPA düzeltmelidir.</div>`;
 }

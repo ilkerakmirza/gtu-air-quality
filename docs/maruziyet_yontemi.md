@@ -2,7 +2,7 @@
 
 **Proje:** GTÜ AirLab, kampüs hava kalitesi platformu
 **Kod:** `frontend_v2/js/maruziyet.js` (arayüzde Özet → "AirLab asistanı: kampüste ne kadar PM₂.₅ soludum?")
-**Belge sürümü:** 1.1 · 4 Ekim 2026
+**Belge sürümü:** 1.2 · 8 Ekim 2026
 **Durum:** Taslak model. Sonuçlar senaryo tahminidir, kişisel ölçüm değildir.
 **Uygulamanın diğer hesapları ve kaynakları:** [`hesaplama_ve_kaynaklar.md`](hesaplama_ve_kaynaklar.md)
 
@@ -64,7 +64,7 @@ hesaba etkisi yoktur.
 | Saha ölçümleri (nokta) | Atmotube Pro yürüyüş ölçümleri; sunucu `/api/map/tracks` | `WHO.fieldPoints()` |
 | Bina eşleştirmesi | Saha noktalarının bina poligonlarıyla eşleştirilmesi (`data/campus.geojson`) | `Campus.buildingStats()` |
 
-Sabit hava kalitesi sensörünün değerleri **ham (düzeltilmemiş)** PurpleAir `pm2.5_atm` değerleridir.
+Sabit hava kalitesi sensörünün PM₂.₅ değerleri **US EPA düzeltmeli** değerlerdir (8 Ekim 2026'dan beri; yöntem: [`purpleair_epa_duzeltmesi.md`](purpleair_epa_duzeltmesi.md)). R (bina) Atmotube'un ham değerlerinden bir **oran** olarak hesaplandığından, Atmotube'un mutlak sapması bu orana büyük ölçüde yansımaz.
 
 ## 4. Model
 
@@ -180,15 +180,15 @@ olduğu saatlerde havalandırılması düşünülebilir"; o anki HKİ > 100 (Has
 ## 8. Sınırlılıklar
 
 1. **Senaryo tahmini:** Sonuç kişisel ölçüm değildir; tıbbi değerlendirme yerine geçmez.
-2. **Ham sensör verisi:** PurpleAir değerleri düzeltilmemiştir; yüksek nemde PM₂.₅'i olduğundan yüksek okuyabilir.
-   (Planlanan: US EPA düzeltmesi, bkz. §10.)
+2. **Sensör düzeltmesi:** PurpleAir PM₂.₅ değerleri US EPA düzeltmesinden geçer; düzeltme ABD verisiyle geliştirilmiştir,
+   Türkiye'de yerinde doğrulanmamıştır ve toz olaylarında değeri düşük gösterebilir (ayrıntı: purpleair_epa_duzeltmesi.md §7).
 3. **Mevsimsellik yok:** P, tüm ölçüm dönemlerinin ortalamasıdır; mevsimsel ve günlük olaylar (inversiyon, toz taşınımı) ayrılmaz.
 4. **Bina oranı:** Kısa süreli saha ölçümlerine dayanır; az ölçümlü binalarda belirsizlik yüksektir.
 5. **İç kaynaklar dahil değil:** Sınıf, laboratuvar ve yemekhane gibi yerlerde gerçek değer daha yüksek olabilir.
 6. **Tek kişi profili:** Solunum hızları yetişkin ortalamasıdır; yaş, cinsiyet, beden ve sağlık durumu dikkate alınmaz.
 7. **WHO ile karşılaştırma yok:** Birkaç saatlik ortalama, WHO'nun 24 saatlik kılavuz değeriyle (15 µg/m³) doğrudan
    karşılaştırılamaz; bu nedenle arayüz böyle bir karşılaştırma yapmaz.
-8. **Veri kesintisi:** PurpleAir 4 Ağustos 2026'dan beri veri göndermiyor; profil o tarihe kadarki ölçümlerle kurulur.
+8. **Veri kesintisi:** PurpleAir verisinde kesintiler var (ör. 4 Ağustos – 6 Ekim 2026); profil ölçüm olan saatlerle kurulur.
 
 ## 9. Gizlilik (KVKK)
 
@@ -200,7 +200,7 @@ işaretlemezse sayfa kapanınca silinir.
 
 - [ ] **EPA Bölüm 6 güncellemesi:** EPA yeni solunum hızı değerleri yayımladı mı? (EPA bir sonraki sürümde metabolik
       yaklaşımla güncelleme yapmayı planladığını belirtiyor.)
-- [ ] **PurpleAir US EPA düzeltmesi** (nem düzeltmeli PM₂.₅) ile P'nin yeniden hesaplanması.
+- [x] **PurpleAir US EPA düzeltmesi** ile P'nin yeniden hesaplanması (8 Ekim 2026; hesap kodu değişmedi, P otomatik olarak düzeltilmiş saatlik değerlerden kurulur).
 - [ ] **Mevsimsel profil:** P'nin ay ya da mevsime göre ayrılması (ör. kış/yaz) ve F için mevsimsel değerler.
 - [ ] **Binaya özgü F:** GTÜ binalarının havalandırma türünün (doğal / mekanik, filtre sınıfı) envanteri.
 - [ ] **İç ortam ölçümü ile doğrulama:** Seçili sınıf ve ofislerde eş zamanlı iç/dış ölçümle F'nin kampüse özgü kalibrasyonu.
@@ -244,5 +244,6 @@ Künyeler Crossref kayıtlarından, EPA değerleri bölümün PDF'inden (Tablo 6
 
 | Sürüm | Tarih | Değişiklik |
 |---|---|---|
+| 1.2 | 8 Ekim 2026 | P (saatlik profil) US EPA düzeltmeli PurpleAir değerlerinden kurulur; sınırlılık 2 güncellendi. Model ve katsayılar değişmedi. |
 | 1.1 | 4 Ekim 2026 | Kural tabanlı asistan (sohbet) eklendi; hesap değişmedi. Asistan eşlemesi ve ek notlar (§2.1, §7). |
 | 1.0 | 3 Ekim 2026 | İlk sürüm. IR değerleri EPA Tablo 6-2'ye göre kesinleştirildi (0,25 / 0,72 / 1,56 / 3,0); "mekanik havalandırma" (F = 0,25) eklendi; güncel I/O kaynakları eklendi. |

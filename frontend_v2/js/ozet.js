@@ -65,7 +65,7 @@ const Ozet = (() => {
         const pa = now.pa, tz = now.tz;
         const paFresh = pa && pa.pm2_5 != null && ageMin(pa.recorded_at) <= PA_FRESH_MIN;
         const tzFresh = tz && tz.pm2_5 != null && !tz.stale;
-        const src = paFresh ? { v: pa.pm2_5, where: "Kampüs · PurpleAir (SUMER çatısı)", at: pa.recorded_at }
+        const src = paFresh ? { v: pa.pm2_5, where: "Kampüs · PurpleAir (SUMER çatısı) · US EPA düzeltmeli", at: pa.recorded_at }
                   : tzFresh ? { v: tz.pm2_5, where: "Bölge · Tuzla istasyonu (6,4 km)", at: tz.recorded_at, note: "Sabit hava kalitesi sensörü şu an çevrimdışı; en yakın resmî istasyonun değeri gösteriliyor." }
                   : null;
         const today = new Date().toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long" });

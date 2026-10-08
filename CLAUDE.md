@@ -33,6 +33,10 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
 - **Tanıtım videoları (6 Ekim 2026 deneme sürümü hazır):** `scripts/tanitim_video/` (Shorts 9:16 → Instagram/LinkedIn, uzun 16:9 → YouTube).
   Yayın sürümü PurpleAir veri göndermeye başlayınca `GERCEK=1` ile ve kalıcı adres (gtuairlab / airlab.gtu.edu.tr) karekodla yeniden kaydedilecek.
 - **Adsız 20 bina:** ekip numaralı haritadan eşleştirince `campus.geojson`'a adları işle.
+- **PurpleAir US EPA düzeltmesi (8 Ekim 2026'da uygulandı):** beş bölümlü denklem ve kanal kuralı birincil kaynaktan teyit edilmedi
+  (EPA/yayıncı sitelerine bulut ortamından erişilemedi; kaynaklar ikincil ve tutarlı). Masaüstü oturumunda EPA "Sensor Data Cleaning and
+  Correction" sunumu ve AirNow Soru-Cevap denklem tablosuyla karşılaştır (`docs/purpleair_epa_duzeltmesi.md` §9). Mümkünse PurpleAir'i
+  birkaç hafta resmî bir istasyon yanına koyup (kolokasyon) yerel doğrulama öner.
 
 ## Gizlilik ve KVKK (her değişiklikte kontrol et)
 Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök dizin dahil) bir bağlantıyla indirilebilir.
@@ -86,6 +90,12 @@ Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök diz
 - **Sayı biçimi:** Ekranda gösterilen ölçüm değerleri Türkçe biçimdedir (12,3): `colorscale.js` → `f1tr()`. `toFixed` yalnızca hesap/CSS içinde kullanılır.
 - **Kaynak kaydı:** Uygulamadaki her eşik, sınıflandırma ve hesap `docs/hesaplama_ve_kaynaklar.md`'de kaynağı ve doğrulama durumuyla
   kayıtlı. Bir eşik/kaynak değişirse ya da yeni hesap eklenirse belgeyi aynı commit'te güncelle; doğrulanmamış değeri "ikincil" diye işaretle.
+- **PurpleAir düzeltmesi:** Ekrandaki ve hesaplardaki kampüs PM₂.₅'i US EPA düzeltmelidir (`colorscale.js` → `epaPM25`, `paCorrect`;
+  tek uygulama noktası `api.js`). Ham değer `pm2_5_raw`'da ve veritabanında kalır. PM₁₀, Atmotube ve Tuzla düzeltilmez. Formül ya da kanal
+  kuralı değişirse `docs/purpleair_epa_duzeltmesi.md` ve `hesaplama_ve_kaynaklar.md` §1a aynı commit'te güncellenir.
+- **Renkler:** PM₂.₅ rengi her yerde HKİ sınıf rengidir (`pm25Color`; ayrı renk ölçeği ekleme). Cihaz/seri renkleri `DEVICE_COLOR`
+  (PurpleAir `#6380f0`, Tuzla `#bf8418`, Atmotube `#2fa79a`): aynı cihaz her grafikte aynı renk; yeni seri rengi doğrulayıcıdan geçir.
+  Günlük grafiklerde takvim ekseni (boş gün boş kalır).
 - Kısa süreli saha ölçümleri WHO 24 saatlik değeriyle karşılaştırılmaz (kampüs saha ortalamasıyla karşılaştırılır).
 - **Saha ölçümlerindeki ani yükselmeler ayıklanmaz** (kullanıcının kararı, 8 Ekim 2026): yakında sigara içilmesi gibi gerçek,
   kısa süreli maruziyet olabilir. Ortalamalardan çıkarma, "hatalı" diye işaretleme, Atmotube ölçümlerini silme; tekrar önerme.
@@ -134,7 +144,7 @@ Renkli (zengin) duyuru — `renk` ya da `bolumler` varsa renkli başlık alanıy
 ## Proje yapısı
 - `frontend_v2/` — yayındaki arayüz (`index.html`, `js/icons.js` (ikon seti), `js/app.js`, `js/api.js`, `js/campus.js`, `js/colorscale.js`, `js/shell.js`, `js/who.js` (WHO durumu sekmesi), `js/ozet.js` (Özet: günlük ve aylık özet, açılış ekranı), `js/kiyas.js` (kampüs–Tuzla aynı saat karşılaştırması), `js/maruziyet.js` (kişisel maruziyet hesabı, taslak), `data/campus.geojson`, `data/duyurular.json`, `data/tuzla_saatlik.json` (Tuzla saatlik geçmişi))
 - `frontend_v2/vendor/` — yerel Leaflet, Leaflet.heat, Chart.js ve yazı tipleri (Inter, Source Serif 4) (lisanslar `vendor/LICENSES/`)
-- `docs/` — yöntem belgeleri: `hesaplama_ve_kaynaklar.md` (tüm sınıflandırma, eşik, hesap ve kaynakların kaydı + kontrol listesi), `maruziyet_yontemi.md` (kişisel maruziyet hesabı)
+- `docs/` — yöntem belgeleri: `hesaplama_ve_kaynaklar.md` (tüm sınıflandırma, eşik, hesap ve kaynakların kaydı + kontrol listesi), `purpleair_epa_duzeltmesi.md` (PurpleAir US EPA düzeltmesi: formül, örnekler, doğrulama, kaynaklar), `maruziyet_yontemi.md` (kişisel maruziyet hesabı)
 - **Sunucuyu uyanık tutma:** Asıl yöntem Supabase `pg_cron` işi `render-uyanik-tut` (5 dakikada bir `net.http_get` ile `/health`, 7 Ekim 2026).
   Yedek: `.github/workflows/sunucu-uyanik.yml` (GitHub zamanlaması 3–8 saatte bir çalışabiliyor). Render uyursa veri toplama durur.
   Render ücretsiz planı ayda 750 saat; tek servis 7/24 açık kalabilir.

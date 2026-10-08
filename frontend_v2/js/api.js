@@ -11,9 +11,12 @@ async function apiFetch(path, options = {}) {
 }
 
 const API = {
-    purpleairLatest:  () => apiFetch("/api/purpleair/latest"),
+    // PurpleAir değerleri burada, tek yerden US EPA düzeltmesinden geçer (colorscale.js → paCorrect):
+    // pm2_5 = düzeltilmiş değer (kanallar uyuşmuyorsa null), pm2_5_raw = sensörün ham cf_atm değeri
+    purpleairLatest:  () => apiFetch("/api/purpleair/latest").then(r => { if (r && r.data) paCorrect(r.data); return r; }),
     purpleairHistory: (start, end, interval = "hourly") =>
-        apiFetch(`/api/purpleair/history?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}&interval=${interval}`),
+        apiFetch(`/api/purpleair/history?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}&interval=${interval}`)
+            .then(r => { (r && r.data || []).forEach(paCorrect); return r; }),
     sessions:         () => apiFetch("/api/sessions"),
     sessionReadings:  (id) => apiFetch(`/api/sessions/${id}/readings`),
     mapSummary:       () => apiFetch("/api/map/summary"),

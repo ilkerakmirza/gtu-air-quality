@@ -98,7 +98,7 @@ const WHO = (() => {
             <div class="wm-track" style="background:linear-gradient(90deg,${stops})"></div>
             <div class="wm-pin" style="left:${pct(v)}%"><span>${f1(v)}</span></div>
             <div class="wm-tick wm-who" style="left:${pct(guide)}%"><i></i><span>${label} ${guide}</span></div>
-            ${its.slice(0, 3).map(t => `<div class="wm-tick" style="left:${pct(t.v)}%"><i></i><span>${t.v}</span></div>`).join("")}
+            ${its.slice(0, 3).map(t => `<div class="wm-tick" style="left:${pct(t.v)}%"><i></i><span>${String(t.v).replace(".", ",")}</span></div>`).join("")}
         </div>`;
     }
 
@@ -108,7 +108,7 @@ const WHO = (() => {
         const g = G.pm2_5;
         if (now24 != null) {
             const passed = g.itDay.filter(t => now24 > t.v);
-            return `<div class="who-hero"><div class="wh-k">Son 24 saat ortalaması · ${g.name} · kampüs (PurpleAir)</div>
+            return `<div class="who-hero"><div class="wh-k">Son 24 saat ortalaması · ${g.name} · kampüs (PurpleAir, US EPA düzeltmeli)</div>
                 <div class="wh-v"><b>${f1(now24)}</b><span>µg/m³</span></div>
                 ${chip(now24 <= g.day, now24 <= g.day ? "WHO günlük kılavuz değerinin altında"
                     : `WHO günlük değerinin ${f1(now24 / g.day)} katı` + (passed.length ? ` · ${passed[passed.length - 1].k} de aşıldı` : ""))}
@@ -138,7 +138,7 @@ const WHO = (() => {
             ${tile("Dönem ortalaması (PM₂.₅)", s.mean != null ? f1(s.mean) : "—",
                    `yıllık kılavuz ${g.year} µg/m³` + (s.mean != null ? ` · ${f1(s.mean / g.year)} katı` : ""), s.mean != null ? s.mean <= g.year : null)}
             ${tile("Dönem ortalaması (PM₁₀)", s10.mean != null ? f1(s10.mean) : "—",
-                   `yıllık kılavuz ${g10.year} µg/m³` + (s10.mean != null ? ` · ${s10.exceed} günde günlük ${g10.day} aşıldı` : ""), s10.mean != null ? s10.mean <= g10.year : null)}
+                   `yıllık kılavuz ${g10.year} µg/m³` + (s10.mean != null ? ` · ${s10.exceed} günde günlük ${g10.day} aşıldı` : "") + " · ham sensör değeri", s10.mean != null ? s10.mean <= g10.year : null)}
             ${tile("Ölçüm kapsamı", `${s.hours} saat`, `${s.days.length} günde ölçüm var · ${s.usable.length} gün ≥${MIN_H} saat · ${s.full} gün tam (≥${FULL_H} saat)`, null)}
         </div>`;
     }
@@ -151,21 +151,43 @@ const WHO = (() => {
             ctx.save();
             ctx.strokeStyle = "#e8ecf4"; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
             ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke();
-            const txt = `WHO ${G.pm2_5.day}`;   // etiket çubukların üstünde okunsun diye koyu zeminli kutuda
+            // Etiket çizim alanının sağ dışında (layout.padding.right): hiçbir çubuğun üstüne binmez
             ctx.setLineDash([]); ctx.font = "700 10px Inter, sans-serif";
-            const w = ctx.measureText(txt).width + 10;
-            ctx.fillStyle = "#11151f"; ctx.fillRect(right - w, y - 17, w, 14);
-            ctx.fillStyle = "#e8ecf4"; ctx.textAlign = "right"; ctx.fillText(txt, right - 5, y - 6);
+            ctx.fillStyle = "#e8ecf4"; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+            ctx.fillText("WHO", right + 5, y - 6); ctx.fillText(String(G.pm2_5.day), right + 5, y + 6);
             ctx.restore();
         },
     };
+
+    // Takvim ekseni: dönemdeki her gün bir sütun; ölçüm olmayan gün boş kalır (veri kesintisi saklanmaz).
+    // k: gün alanının adı ("k" günlük ortalamalar, "day" kampüs–Tuzla eşleşmeleri)
+    function calendarDays(days, k = "k") {
+        if (!days.length) return [];
+        const today = dayKey.format(new Date());
+        let from = days[0][k], to = days[days.length - 1][k];
+        if (period === "last30") { from = dayKey.format(new Date(Date.now() - 29 * 864e5)); to = today; }
+        else if (/^\d{4}-\d{2}$/.test(period || "")) {
+            from = period + "-01";
+            const end = new Date(Date.UTC(+period.slice(0, 4), +period.slice(5, 7), 0)).toISOString().slice(0, 10);
+            to = end < today ? end : today;
+        }
+        const by = new Map(days.map(d => [d[k], d])), out = [];
+        for (let t = new Date(from + "T12:00:00Z"); ; t = new Date(t.getTime() + 864e5)) {
+            const key = t.toISOString().slice(0, 10);
+            if (key > to) break;
+            out.push(by.get(key) || { [k]: key, empty: true });
+        }
+        return out;
+    }
 
     function drawChart(days) {
         const canvas = $("who-chart");
         if (!canvas || typeof Chart === "undefined" || !days.length) return;
         const g = G.pm2_5;
-        const data = days.map(d => Math.round(d.v * 10) / 10);
-        const colors = days.map(d => d.n < MIN_H ? THIN : d.v > g.day ? BAD : BAR);
+        const measured = days;
+        days = calendarDays(measured);
+        const data = days.map(d => d.empty ? null : Math.round(d.v * 10) / 10);
+        const colors = days.map(d => d.empty ? THIN : d.n < MIN_H ? THIN : d.v > g.day ? BAD : BAR);
         if (chart) chart.destroy();
         chart = new Chart(canvas, {
             type: "bar",
@@ -173,7 +195,7 @@ const WHO = (() => {
                     datasets: [{ data, backgroundColor: colors.map((c, i) => days[i].n < MIN_H ? c + "88" : c),
                                  borderRadius: 4, borderSkipped: "bottom", maxBarThickness: 14, categoryPercentage: 0.82 }] },
             options: {
-                responsive: true, maintainAspectRatio: false, animation: false,
+                responsive: true, maintainAspectRatio: false, animation: false, layout: { padding: { right: 30 } },
                 plugins: {
                     legend: { display: false },
                     tooltip: { callbacks: {
@@ -186,7 +208,7 @@ const WHO = (() => {
                 },
                 scales: {
                     x: { grid: { display: false }, ticks: { color: "#9aa4b8", font: { size: 9.5 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 6 } },
-                    y: { min: 0, suggestedMax: Math.max(g.day * 1.6, ...data) * 1.1, grid: { color: "rgba(255,255,255,0.06)" },
+                    y: { min: 0, suggestedMax: Math.max(g.day * 1.6, ...data.filter(v => v != null)) * 1.1, grid: { color: "rgba(255,255,255,0.06)" },
                          border: { display: false }, ticks: { color: "#9aa4b8", font: { size: 10 }, maxTicksLimit: 5 } },
                 },
             },
@@ -260,20 +282,20 @@ const WHO = (() => {
             <table class="who-month" style="margin-top:10px"><thead><tr><th>Ay</th><th>Saat</th><th>Kampüs</th><th>Tuzla</th><th>Fark</th></tr></thead>
               <tbody>${months.map(mrow).join("")}</tbody></table>
             <div class="who-cap">Yalnızca iki tarafın da ölçüm yaptığı saatler karşılaştırılır (µg/m³). Tuzla ~6,4 km uzaktaki resmî istasyondur
-              (geçmiş ÇŞB'den; 6 Ekim 2026'dan beri aynı istasyonun İBB üzerinden yayımlanan saatlik değeri); kampüs değeri düzeltilmemiş PurpleAir ölçümüdür.</div>`;
-        const days = Kiyas.daily(pairs);
+              (geçmiş ÇŞB'den; 6 Ekim 2026'dan beri aynı istasyonun İBB üzerinden yayımlanan saatlik değeri); kampüs değeri US EPA düzeltmeli PurpleAir ölçümüdür (Hakkında › Yöntem). Boş günlerde iki tarafın ortak ölçümü yok.</div>`;
+        const days = calendarDays(Kiyas.daily(pairs), "day");
         if (kchart) kchart.destroy();
         kchart = new Chart($("who-kiyas-chart"), {
             type: "bar",
             data: { labels: days.map(x => dayLabel(x.day)), datasets: [
-                { label: "Kampüs", data: days.map(x => +x.c.toFixed(1)), backgroundColor: Kiyas.C_CAMPUS, borderRadius: 4, maxBarThickness: 10 },
-                { label: "Tuzla", data: days.map(x => +x.r.toFixed(1)), backgroundColor: Kiyas.C_REGION, borderRadius: 4, maxBarThickness: 10 },
+                { label: "Kampüs", data: days.map(x => x.empty ? null : +x.c.toFixed(1)), backgroundColor: Kiyas.C_CAMPUS, borderRadius: 4, maxBarThickness: 10 },
+                { label: "Tuzla", data: days.map(x => x.empty ? null : +x.r.toFixed(1)), backgroundColor: Kiyas.C_REGION, borderRadius: 4, maxBarThickness: 10 },
             ] },
             options: {
-                responsive: true, maintainAspectRatio: false, animation: false,
+                responsive: true, maintainAspectRatio: false, animation: false, layout: { padding: { right: 30 } },
                 datasets: { bar: { categoryPercentage: 0.8, barPercentage: 0.9 } },
                 plugins: { legend: { display: false }, tooltip: { callbacks: {
-                    afterBody: it => `${days[it[0].dataIndex].n} ortak saat` } } },
+                    afterBody: it => days[it[0].dataIndex].empty ? "" : `${days[it[0].dataIndex].n} ortak saat` } } },
                 scales: {
                     x: { grid: { display: false }, ticks: { color: "#9aa4b8", font: { size: 9.5 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 6 } },
                     y: { min: 0, suggestedMax: G.pm2_5.day * 1.6, grid: { color: "rgba(255,255,255,0.06)" }, border: { display: false },
@@ -327,8 +349,9 @@ const WHO = (() => {
         </tbody></table>
         <p>24 saatlik değer yılda 3–4 günden fazla aşılmamalıdır. Kılavuz değere hemen ulaşılamayan yerler için kademeli
         <b>ara hedefler</b> (AH-1…AH-4) tanımlanmıştır: PM₂.₅ günlük 75 → 50 → 37,5 → 25, yıllık 35 → 25 → 15 → 10 µg/m³.</p>
-        <p class="who-note">Değerler kampüs çatısındaki PurpleAir sensörünün ham (düzeltilmemiş) ölçümleridir; bu tür optik sensörler
-        nemli havada PM₂.₅'i olduğundan yüksek gösterebilir. Ölçümler kesintilidir: günlük değer, o gün ölçülen saatlerin ortalamasıdır ve
+        <p class="who-note">PM₂.₅ değerleri kampüs çatısındaki PurpleAir sensörünün <b>US EPA düzeltmesinden</b> geçmiş değerleridir
+        (optik sensörün ham değeri referans cihazlara göre yüksek okur ve nemden etkilenir; yöntem: Hakkında › Yöntem). PM₁₀ için
+        yerleşik bir düzeltme olmadığından PM₁₀ ham sensör değeridir. Ölçümler kesintilidir: günlük değer, o gün ölçülen saatlerin ortalamasıdır ve
         günün tamamını temsil etmeyebilir. Yıllık kılavuzla karşılaştırma tam bir yıllık veri ister; dönem ortalamaları gösterge niteliğindedir.</p>
     </div>`;
 
@@ -373,7 +396,7 @@ const WHO = (() => {
             + (days.length ? `<div class="nsec-title">${periodLabel()} · günlük PM₂.₅ ortalaması</div>
                 <div class="who-chart-wrap"><canvas id="who-chart" aria-label="Günlük PM2.5 ortalamaları ve WHO 15 µg/m³ çizgisi"></canvas></div>
                 <div class="who-legend"><span><i style="background:${BAR}"></i>WHO altında</span><span><i style="background:${BAD}"></i>WHO değerini aşan gün</span>
-                <span><i style="background:${THIN}88"></i>${MIN_H} saatten az ölçüm</span><span><i class="dash"></i>WHO günlük değer</span></div>`
+                <span><i style="background:${THIN}88"></i>${MIN_H} saatten az ölçüm</span><span><i class="dash"></i>WHO günlük değer</span><span>Boş gün: ölçüm yok</span></div>`
                 : `<div class="news-empty" style="margin-top:12px">Bu dönemde ölçüm yok.</div>`)
             + tilesHtml(s, s10) + `<div id="who-kiyas"></div>` + buildingsHtml() + monthlyHtml(all, all10) + tableHtml(days, days10) + INFO;
         $("who-body").querySelectorAll("[data-p]").forEach(el =>

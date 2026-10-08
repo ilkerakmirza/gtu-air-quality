@@ -226,7 +226,8 @@ body {
   letter-spacing: -0.03em;
 }
 .pa-hero .unit { font-size: 12px; color: var(--text-2); font-weight: 600; }
-.pa-cat { font-size: 12.5px; font-weight: 700; margin-bottom: 12px; }
+.pa-cat { font-size: 12.5px; font-weight: 700; margin-bottom: 3px; }
+.pa-raw { font-size: 10.5px; color: var(--text-3); margin-bottom: 11px; min-height: 13px; }
 
 .pa-grid {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
@@ -243,6 +244,7 @@ body {
 
 /* Stats strip */
 .stats-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stats-strip[hidden], .st-hint[hidden] { display: none; }
 .stat-card {
   background: rgba(255,255,255,0.035);
   border: 1px solid var(--stroke);
@@ -724,17 +726,14 @@ body {
   padding: 12px 15px;
 }
 .legend-title { font-size: 10.5px; font-weight: 650; letter-spacing: 0.02em; color: var(--text-2); margin-bottom: 9px; }
-.legend-bar { height: 11px; border-radius: 99px; overflow: hidden; display: flex; }
-.legend-bar span { flex: 1; }
-.legend-ticks {
-  position: relative; height: 14px; margin-top: 4px;
-  font-size: 9px; color: var(--text-2); font-family: var(--num); font-variant-numeric: tabular-nums;
-}
-.legend-ticks span { position: absolute; transform: translateX(-50%); }
-.legend-cats { display: flex; justify-content: space-between; font-size: 9.5px; font-weight: 700; margin-top: 8px; }
-.legend-hki { position: relative; height: 18px; margin-top: 6px; }
-.legend-hki span { position: absolute; top: 0; padding-top: 3px; border-top: 2px solid; font-size: 9.5px; font-weight: 700;
-  text-align: center; white-space: nowrap; overflow: hidden; }
+/* HKİ lejandı: 6 sınıf, her biri renk + ad + PM₂.₅ aralığı (tek ölçek) */
+.legend-hki6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px 10px; margin-bottom: 4px; }
+.legend-hki6 span { display: grid; grid-template-columns: 10px 1fr; column-gap: 6px; align-items: center; }
+.legend-hki6 i { width: 10px; height: 10px; border-radius: 3px; grid-row: span 2; align-self: start; margin-top: 2px; }
+.legend-hki6 b { font-size: 10.5px; font-weight: 650; color: var(--text); }
+.legend-hki6 em { grid-column: 2; font-style: normal; font-size: 9.5px; color: var(--text-2);
+  font-family: var(--num); font-variant-numeric: tabular-nums; }
+.st-hint { font-size: 12px; line-height: 1.45; color: var(--text-2); }
 .legend-note { margin: 3px 0 2px; font-size: 9.5px; color: var(--text-3); }
 
 /* Map markers */
@@ -765,15 +764,16 @@ body {
   70%  { box-shadow: 0 0 0 16px rgba(176,122,255,0); }
   100% { box-shadow: 0 0 0 0 rgba(176,122,255,0); }
 }
+/* PurpleAir kalıcı etiketi: tek satır (ad + değer), ayrıntı dokununca açılan kutuda; binaları örtmesin */
 .pa-label {
-  background: rgba(176,122,255,0.14) !important;
-  border: 1px solid rgba(176,122,255,0.45) !important;
-  border-radius: 9px !important;
+  background: var(--glass-2) !important;
+  border: 1px solid var(--stroke-2) !important;
+  border-radius: 8px !important;
   color: var(--text) !important;
   backdrop-filter: blur(10px);
-  font-family: Inter; font-size: 11px; font-weight: 600;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.4) !important;
-  padding: 6px 10px !important;
+  font-family: Inter; font-size: 11px; font-weight: 600; white-space: nowrap;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.35) !important;
+  padding: 3px 8px !important;
 }
 .pa-label::before { display: none !important; }
 
@@ -894,7 +894,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
   color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); border: 1.5px solid color-mix(in srgb, var(--c) 45%, transparent); }
 .oz-face .i { width: 32px; height: 32px; stroke-width: 1.7; }
 .oz-hki { display: flex; flex-direction: column; line-height: 1; }
-.oz-hki b { font: 600 44px/1 var(--serif); color: var(--text); font-variant-numeric: tabular-nums; }
+.oz-hki b { font: 650 42px/1 var(--num); letter-spacing: -0.02em; color: var(--text); }
 .oz-hki span { margin-top: 3px; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; color: var(--text-2); }
 .oz-now-top .oz-cat { margin-left: auto; font-size: 14px; padding: 5px 12px; }
 .oz-val2 { margin-top: 11px; font-size: 13px; color: var(--text-2); }
@@ -907,7 +907,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
   color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); }
 .oz-src { font-size: 11px; color: var(--text-2); margin-top: 6px; }
 .oz-val { display: flex; align-items: baseline; gap: 7px; margin-top: 10px; flex-wrap: wrap; }
-.oz-val b { font: 600 46px/1 var(--serif); letter-spacing: -0.01em; }
+.oz-val b { font: 650 42px/1 var(--num); letter-spacing: -0.02em; }
 .oz-val span { font-size: 12px; color: var(--text-2); font-weight: 600; }
 .oz-src .i { color: var(--text-3); }
 /* Sınıf ölçeği (İyi … Tehlikeli) ve değerin konumu */
@@ -951,7 +951,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 .kx-pair > div { padding: 9px 11px; border-radius: 11px; background: rgba(255,255,255,0.035); border: 1px solid var(--stroke); }
 .kx-pair i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
 .kx-pair span { font-size: 11px; color: var(--text-2); font-weight: 600; }
-.kx-pair b { display: block; margin-top: 3px; font: 600 24px var(--serif); }
+.kx-pair b { display: block; margin-top: 3px; font: 650 23px var(--num); letter-spacing: -0.01em; }
 .oz-trend.up { color: #ff9b98; } .oz-trend.down { color: #7fe3aa; }
 .oz-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 12px; }
 .oz-tiles > div { padding: 9px 10px; border-radius: 11px; background: rgba(255,255,255,0.035); border: 1px solid var(--stroke); }
@@ -1060,7 +1060,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 }
 .wh-k { font-size: 11px; font-weight: 700; color: var(--text-2); }
 .wh-v { display: flex; align-items: baseline; gap: 6px; margin-top: 4px; }
-.wh-v b { font: 600 50px/1 var(--serif); letter-spacing: -0.01em; }
+.wh-v b { font: 650 44px/1 var(--num); letter-spacing: -0.02em; }
 .wh-v span { font-size: 13px; color: var(--text-2); font-weight: 600; }
 .wh-status .i { margin-right: 2px; }
 .wh-status { display: inline-block; margin-top: 9px; padding: 5px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; }
@@ -1090,7 +1090,7 @@ body.news-open #news-btn, body.who-open #who-btn, body.ozet-open #ozet-btn, body
 .wt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
 .wt { padding: 10px 11px; border-radius: 12px; background: rgba(255,255,255,0.035); border: 1px solid var(--stroke-2); }
 .wt span { display: block; font-size: 10.5px; font-weight: 700; color: var(--text-2); }
-.wt b { display: block; font: 600 23px var(--serif); margin: 3px 0 2px; }
+.wt b { display: block; font: 650 22px var(--num); letter-spacing: -0.01em; margin: 3px 0 2px; }
 .wt small { display: block; font-size: 10.5px; line-height: 1.4; color: #b4bccb; }
 .wt.ok b { color: #7fe3aa; } .wt.bad b { color: #ff9b98; }
 .wt.ok b::after { content: " ✓"; font-size: 14px; } .wt.bad b::after { content: " ⚠"; font-size: 14px; }
@@ -1364,6 +1364,11 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
   }
   .map-cta.bump { animation: ctaBump .45s ease; }
   @keyframes ctaBump { 40% { transform: translateX(-50%) scale(1.08); } }
+  /* Saha sekmesi dışında yalnızca "Haritaya dön": içeriğin ortasını kapatmasın diye sağ altta küçük ikon düğme
+     (aynı iş alt sekmedeki "Harita" ile de yapılır); metin ekran okuyucu için görünmez biçimde kalır */
+  body:not([data-tab="field"]) .map-cta { left: auto; right: 14px; transform: none; padding: 13px; }
+  body:not([data-tab="field"]) .map-cta #map-cta-text {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   body[data-tab="live"] .sidebar, body[data-tab="field"] .sessions-dock .team-foot, body[data-tab="who"] #who-body, body[data-tab="ozet"] #ozet-body, body[data-tab="exp"] #exp-body { padding-bottom: 76px; }
   body:not([data-tab="map"]) .player-dock,
   body:not([data-tab="map"]) .chart-drawer { display: none; }
@@ -1462,6 +1467,7 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
         <span class="unit">PM₂.₅ µg/m³</span>
       </div>
       <div class="pa-cat" id="pa-cat">Bağlanıyor…</div>
+      <div class="pa-raw" id="pa-raw"></div>
       <div class="pa-grid">
         <div class="pa-cell"><div class="k">PM₁₀</div><div class="v" id="pa-pm10">--</div></div>
         <div class="pa-cell" title="Sensör gövdesinin içinden ölçülür; ortam sıcaklığından yüksek okunur (yaklaşık 4 °C)."><div class="k">Sıcaklık*</div><div class="v" id="pa-temp">--</div></div>
@@ -1539,7 +1545,8 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
   <section class="panel" data-key="stats">
     <div class="panel-head"><span class="ico"><svg class="i"><use href="#i-chart-column"></use></svg></span> Seçili veri özeti</div>
     <div class="panel-body">
-      <div class="stats-strip">
+      <div class="st-hint" id="st-hint">Saha ölçümleri listesinden bir ya da daha çok ölçüm günü işaretleyin; seçilen günlerin özeti burada görünür.</div>
+      <div class="stats-strip" id="st-strip" hidden>
         <div class="stat-card"><div class="k">Ölçüm</div><div class="v" id="st-count">—</div></div>
         <div class="stat-card"><div class="k">Ort. PM₂.₅</div><div class="v" id="st-avg">—</div></div>
         <div class="stat-card"><div class="k">Maks.</div><div class="v" id="st-max">—</div></div>
@@ -1662,7 +1669,7 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
 
       <h4 id="inf-ag">Ölçüm ağı</h4>
       <table class="info-table"><thead><tr><th>Kaynak</th><th>Tür</th><th>Ölçülen</th></tr></thead><tbody>
-        <tr><td>PurpleAir PA-II</td><td>Sabit, dış ortam (SUMER çatısı) · kampüsün genel hava kalitesi</td><td>PM₁, PM₂.₅, PM₁₀, sıcaklık, nem</td></tr>
+        <tr><td>PurpleAir PA-II</td><td>Sabit, dış ortam (SUMER çatısı) · kampüsün genel hava kalitesi</td><td>PM₂.₅ (US EPA düzeltmeli), PM₁, PM₁₀, sıcaklık, nem</td></tr>
         <tr><td>Atmotube Pro</td><td>Taşınabilir, GPS'li saha ölçümleri · bina bazlı karakterizasyon</td><td>PM₁, PM₂.₅, PM₁₀, VOC</td></tr>
         <tr><td>CO₂ sensörleri</td><td>Sabit, iç mekân</td><td>CO₂</td></tr>
         <tr><td>Tuzla istasyonu</td><td>Resmî referans (ÇŞB / İBB), ~6,4 km</td><td>PM₂.₅, PM₁₀ (saatlik)</td></tr>
@@ -1670,6 +1677,15 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
 
       <h4 id="inf-yon">Yöntem</h4>
       <ul>
+        <li><b>PurpleAir düzeltmesi (US EPA):</b> Optik sensörün ham PM₂.₅ değeri referans cihazlara göre yüksek okur ve nemden
+          etkilenir (ABD genelinde yaklaşık %40; Barkjohn vd., 2021). Kampüs PM₂.₅ değerleri, ABD Çevre Koruma Ajansı'nın
+          AirNow Yangın ve Duman Haritası'nda uyguladığı düzeltmeyle hesaplanır. Girdiler: iki lazer kanalının (A, B)
+          ortalaması (PA, µg/m³) ve sensörün nem ölçümü (RH, %). 30 µg/m³'ün altında
+          <b>PM₂.₅ = 0,524 × PA − 0,0862 × RH + 5,75</b>; daha yüksek değerlerde eğim 0,786'ya geçer, çok yüksek değerlerde
+          ikinci derece terim eklenir. A ve B kanalları hem 5 µg/m³'ten hem %70'ten fazla ayrışan ölçümler kullanılmaz; nem
+          eksikse %50 alınır. Örnek: ham 35,1 µg/m³ ve nem %34 → <b>23,6 µg/m³</b>. Ham değer Araştırma görünümündeki
+          PurpleAir panelinde görünür. PM₁₀ ve taşınabilir sensörler için yerleşik bir düzeltme yoktur.
+          <a href="https://github.com/ilkerakmirza/gtu-air-quality/blob/main/docs/purpleair_epa_duzeltmesi.md" target="_blank" rel="noopener">Formülün tamamı, örnekler ve doğrulama</a></li>
         <li><b>Zaman ortalamaları:</b> Ölçümler saatlik ortalamaya, saatlik değerler Türkiye saatine göre günlük ortalamaya
           çevrilir. En az 18 saat ölçümü olan gün <i>tam gün</i>, en az 6 saat olan gün <i>gösterge gün</i> kabul edilir;
           daha az ölçümlü günler değerlendirmeye alınmaz.</li>
@@ -1715,8 +1731,11 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
 
       <h4 id="inf-sin">Sınırlılıklar</h4>
       <ul>
-        <li>Kampüs değerleri düşük maliyetli optik sensörlerin <b>ham (düzeltilmemiş)</b> ölçümleridir; yüksek nemde PM₂.₅
-          olduğundan yüksek okunabilir, PM₁₀ ise olduğundan düşük okunabilir.</li>
+        <li>Kampüs PM₂.₅ değerleri US EPA düzeltmesinden geçer. Bu düzeltme ABD'de referans cihazlarla geliştirilmiştir;
+          sensörün Türkiye'de resmî bir cihazın yanına konarak (kolokasyon) yerinde doğrulanması henüz yapılmamıştır. Gösterge olarak:
+          6,4 km uzaktaki Tuzla istasyonuyla aynı saatlerde (241 saat) ham değerler ortalama %43 yüksekken düzeltilmiş değerler %2
+          düşüktür. Çöl tozu taşınımı olan günlerde optik sensörler PM₂.₅'i olduğundan düşük gösterebilir. PM₁₀ ve taşınabilir
+          sensör (Atmotube) değerleri düzeltilmeden gösterilir; PM₁₀ olduğundan düşük okunabilir.</li>
         <li>Ölçümler kesintilidir; günlük değerler o gün ölçülen saatlerin ortalamasıdır ve günün tamamını temsil etmeyebilir.</li>
         <li>Saha ölçümleri birkaç dakikalık yürüyüş verisidir; uzun süreli maruziyeti temsil etmez. Yürüyüş sırasındaki
           ani yükselmeler (ör. yakında sigara içilmesi) gerçek maruziyet olabileceği için ayıklanmaz, ortalamalara dahildir;
@@ -1730,6 +1749,10 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
       <h4 id="inf-kay">Veri kaynakları ve lisanslar</h4>
       <ul>
         <li>Bölge verisi: T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı Sürekli İzleme Merkezi; İBB Açık Veri Portalı.</li>
+        <li>PurpleAir düzeltmesi: Barkjohn, K. K., Gantt, B., Clements, A. L. (2021). <i>Atmos. Meas. Tech.</i>, 14, 4617–4637,
+          doi:10.5194/amt-14-4617-2021 · Barkjohn, K. K., Holder, A. L., Frederick, S. G., Clements, A. L. (2022). <i>Sensors</i>,
+          22(24), 9669, doi:10.3390/s22249669 · U.S. EPA, AirNow Fire and Smoke Map: Questions and Answers · Jaffe, D. A. ve ark.
+          (2023). <i>Atmos. Meas. Tech.</i>, 16, 1311, doi:10.5194/amt-16-1311-2023 (toz ve duman olaylarında değerlendirme).</li>
         <li>Harita altlıkları: © Esri, Maxar; © CARTO; © OpenStreetMap katkıcıları (ODbL).</li>
         <li>Yazılım: Leaflet (BSD-2), Leaflet.heat, Chart.js (MIT), Lucide ikonları (ISC); yazı tipleri Inter ve Source Serif 4 (SIL OFL 1.1).</li>
       </ul>
@@ -1834,14 +1857,14 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=54"></script>
-<script src="js/api.js?v=42"></script>
-<script src="js/campus.js?v=54"></script>
-<script src="js/app.js?v=58"></script>
-<script src="js/who.js?v=44"></script>
-<script src="js/kiyas.js?v=42"></script>
-<script src="js/ozet.js?v=54"></script>
-<script src="js/maruziyet.js?v=4"></script>
+<script src="js/colorscale.js?v=55"></script>
+<script src="js/api.js?v=43"></script>
+<script src="js/campus.js?v=55"></script>
+<script src="js/app.js?v=59"></script>
+<script src="js/who.js?v=46"></script>
+<script src="js/kiyas.js?v=43"></script>
+<script src="js/ozet.js?v=55"></script>
+<script src="js/maruziyet.js?v=5"></script>
 <script src="js/shell.js?v=52"></script>
 </body>
 </html>

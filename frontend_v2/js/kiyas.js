@@ -5,7 +5,7 @@
 // Bağımlılıklar: who.js (WHO.history)
 
 const Kiyas = (() => {
-    const C_CAMPUS = "#6380f0", C_REGION = "#bf8418";   // doğrulayıcıdan geçen iki seri rengi (koyu zemin)
+    const C_CAMPUS = DEVICE_COLOR.purpleair, C_REGION = DEVICE_COLOR.tuzla;   // cihaz renkleri: colorscale.js
     let p = null;
 
     const hourFmt = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit",

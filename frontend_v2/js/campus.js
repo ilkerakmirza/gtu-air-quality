@@ -190,6 +190,8 @@ const Campus = (() => {
         }
         map.on("zoomend", syncLabels);
         map.on("moveend", cullLabels);
+        // Cihaz işaretçisi eklenince (PurpleAir, ATP, CO₂) bölge yazısı çakışması yeniden değerlendirilsin
+        let addT; map.on("layeradd", () => { clearTimeout(addT); addT = setTimeout(cullLabels, 150); });
         syncLabels();
 
         ready = true;
@@ -363,7 +365,20 @@ const Campus = (() => {
     }
 
     // Çakışan etiketleri gizle: önce ölçümlü binalar, sonra adı tanımlayıcı olanlar, sonra büyük olanlar
+    // Kuzey/Güney Kampüs yazısı cihaz işaretçilerinin (PurpleAir, ATP, CO₂) ve PurpleAir etiketinin üstüne binmesin
+    function cullRegions() {
+        const marks = [...document.querySelectorAll(".pulse-marker, .mk-wrap, .leaflet-tooltip.pa-label")]
+            .map(el => el.getBoundingClientRect()).filter(r => r.width && r.height);
+        document.querySelectorAll(".leaflet-tooltip.region-label").forEach(el => {
+            el.style.visibility = "";
+            const r = el.getBoundingClientRect();
+            if (marks.some(p => r.left < p.right + 4 && r.right > p.left - 4 && r.top < p.bottom + 2 && r.bottom > p.top - 2))
+                el.style.visibility = "hidden";
+        });
+    }
+
     function cullLabels() {
+        cullRegions();
         if (!labelLayer || !map.hasLayer(labelLayer)) return;
         const z = map.getZoom();
         const rank = e => (selectedGk && e.gk === selectedGk ? -1 : disp(e) ? 0 : 10) + e.tier;
@@ -637,7 +652,7 @@ const Campus = (() => {
         const list = features.filter(e => e.cat === "bina" && disp(e) && !seen.has(e.gk) && seen.add(e.gk))
             .sort((a, b) => disp(b).avg - disp(a).avg);
         if (!list.length) {
-            wrap.innerHTML = `<div class="rk-empty">${lastPoints.length ? "Bu dönemde bina içine düşen ölçüm yok" : "Ölçüm seçilmedi"}</div>`;
+            wrap.innerHTML = `<div class="rk-empty">${lastPoints.length ? "Bu dönemde bina içine düşen ölçüm yok" : "Aşağıdaki listeden ölçüm günü seçin; binalar ortalama PM₂.₅'e göre sıralanır."}</div>`;
             return;
         }
         wrap.innerHTML = list.map((e, i) => {

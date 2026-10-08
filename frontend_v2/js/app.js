@@ -166,8 +166,9 @@ function initMap() {
 
     dotsLayer  = L.layerGroup().addTo(map);
     trailLayer = L.layerGroup().addTo(map);
+    // Isı haritası renkleri HKİ sınıflarına hizalı (yoğunluk = PM₂.₅ / 75): 12 → Orta, 35,4 → Hassas, 55,4 → Sağlıksız
     heatLayer  = L.heatLayer([], { radius: 26, blur: 16, maxZoom: 17, gradient: {
-        0.0: "#00cc00", 0.2: "#ffff00", 0.4: "#ff8800", 0.7: "#ff0000", 1.0: "#bb44bb",
+        0.0: "#00cc00", 0.16: "#ffcc00", 0.47: "#ff8800", 0.74: "#ff0000", 1.0: "#ff0000",
     }});
 }
 
@@ -229,14 +230,16 @@ function updatePAPanel(d) {
     const set = (id, v) => document.getElementById(id).textContent = v;
     if (!d) { set("pa-pm25", "--"); set("pa-cat", "Veri yok"); return; }
 
+    // Büyük değer US EPA düzeltmeli; ham sensör değeri ikincil satırda (api.js → paCorrect)
     set("pa-pm25", d.pm2_5 != null ? f1tr(d.pm2_5) : "--");
     document.getElementById("pa-pm25").style.color = pm25Color(d.pm2_5);
 
     const cat = document.getElementById("pa-cat");
-    cat.textContent = pm25Label(d.pm2_5);
-    cat.style.color = pm25Color(d.pm2_5);
+    cat.textContent = d.qa_ab === false ? "Kanal A/B uyuşmuyor: ölçüm geçersiz sayıldı" : pm25Label(d.pm2_5);
+    cat.style.color = d.qa_ab === false ? "#f5b840" : pm25Color(d.pm2_5);
     cat.style.fontSize = "";
     document.getElementById("pa-pm25").style.opacity = "";
+    set("pa-raw", d.pm2_5_raw != null ? `US EPA düzeltmeli · ham sensör değeri ${f1tr(d.pm2_5_raw)} µg/m³` : "");
 
     set("pa-pm10", d.pm10_0 != null ? f1tr(d.pm10_0) : "--");
     set("pa-temp", d.temperature_c != null ? f1tr(d.temperature_c) + "°" : "--");
@@ -252,7 +255,10 @@ function updatePAMarker(d) {
     const col = stale ? "#69758c" : pm25Color(d.pm2_5);
     const when = stale ? `<br><small style="color:#f3d48f">Çevrimdışı · son veri ${new Date(d.recorded_at).toLocaleDateString("tr-TR",
         { day: "numeric", month: "long", timeZone: "Europe/Istanbul" })}</small>` : "";
-    const html = `<b>PurpleAir PA-II</b><br>SUMER Lab — GTÜ Çatı<br>PM₂.₅: <b style="color:${col}">${f1tr(d.pm2_5) ?? "--"}</b> µg/m³${when}`;
+    // Kalıcı etiket tek satır (binaları örtmesin); ayrıntı dokununca açılan kutuda
+    const label = `PurpleAir <b style="color:${col}">${f1tr(d.pm2_5) ?? "--"}</b> µg/m³`;
+    const html = `<b>PurpleAir PA-II</b> · sabit hava kalitesi sensörü<br>SUMER Lab — GTÜ çatısı<br>PM₂.₅: <b style="color:${col}">${f1tr(d.pm2_5) ?? "--"}</b> µg/m³ · ${pm25Label(d.pm2_5)}
+        <br><small style="color:#9aa4b8">US EPA düzeltmeli${d.pm2_5_raw != null ? ` · ham ${f1tr(d.pm2_5_raw)} µg/m³` : ""}</small>${when}`;
     const icon = L.divIcon({
         className: "",
         html: `<div class="pulse-marker${stale ? " stale" : ""}" style="--marker-color:${col}"></div>`,
@@ -260,10 +266,12 @@ function updatePAMarker(d) {
     });
     if (!paMarker) {
         paMarker = L.marker(latlng, { icon, zIndexOffset: 500 }).addTo(map)
-            .bindTooltip(html, { permanent: true, direction: "top", offset: [0, -14], className: "pa-label" });
+            .bindTooltip(label, { permanent: true, direction: "top", offset: [0, -13], className: "pa-label" })
+            .bindPopup(html, { offset: [0, -8] });
     } else {
         paMarker.setIcon(icon);
-        paMarker.setTooltipContent(html);
+        paMarker.setTooltipContent(label);
+        paMarker.setPopupContent(html);
     }
 }
 
@@ -468,7 +476,7 @@ async function loadCSB() {
         pmEl.style.color = pm25Color(d.pm2_5);
 
         set("csb-name", `${d.station_name.replace(/ \((eski|canlı)\)$/, "")} · ${TUZLA_SOURCE[d.source] || "CSB ağı"}`);
-        set("csb-dist", d.distance_km != null ? d.distance_km + " km" : "--");
+        set("csb-dist", d.distance_km != null ? f1tr(d.distance_km) + " km" : "--");
 
         const badge = document.getElementById("csb-badge");
         const c = d.stale ? "#f4615e" : pm25Color(d.pm2_5);
@@ -485,7 +493,7 @@ async function loadCSB() {
         if (d.lat && d.lon) {
             // İBB Tuzla ile aynı noktada — üst üste binmesin diye hafif offset
             const c = pm25Color(d.pm2_5);
-            const html = `<b>Tuzla istasyonu</b> · ${d.station_name.replace(/ \((eski|canlı)\)$/, "")}<br>${TUZLA_SOURCE[d.source] || "Resmî istasyon"} · HKİ ${hki(d.pm2_5)?.i ?? "—"} (${pm25Label(d.pm2_5)})<br>PM₂.₅: <b style="color:${c}">${f1tr(d.pm2_5)}</b> µg/m³<br><small>${d.distance_km} km · ${d.recorded_at ? d.recorded_at.replace("T"," ") : ""}</small>`;
+            const html = `<b>Tuzla istasyonu</b> · ${d.station_name.replace(/ \((eski|canlı)\)$/, "")}<br>${TUZLA_SOURCE[d.source] || "Resmî istasyon"} · HKİ ${hki(d.pm2_5)?.i ?? "—"} (${pm25Label(d.pm2_5)})<br>PM₂.₅: <b style="color:${c}">${f1tr(d.pm2_5)}</b> µg/m³<br><small>${f1tr(d.distance_km) ?? "—"} km · ${d.recorded_at ? d.recorded_at.replace("T"," ") : ""}</small>`;
             const icon = L.divIcon({ className: "",
                 html: `<div class="ibb-marker" style="--marker-color:${c}">🏛️</div>`,
                 iconSize: [30, 30], iconAnchor: [15, 15] });
@@ -960,6 +968,9 @@ function setStats(pts) {
     if (per !== "all") pts = pts.filter(p => Campus.monthOf(p) === per);
     const vals = pts.map(p => p.pm2_5).filter(v => v != null);
     const set = (id, v) => document.getElementById(id).textContent = v;
+    // Seçim yoksa boş kartlar yerine ne yapılacağını söyleyen kısa yönlendirme
+    document.getElementById("st-hint").hidden = vals.length > 0;
+    document.getElementById("st-strip").hidden = !vals.length;
     if (!vals.length) { set("st-count","—"); set("st-avg","—"); set("st-max","—"); return; }
     const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
     const max = Math.max(...vals);
@@ -1236,10 +1247,10 @@ function loadCompareChart(atmoPts, paHist, person) {
         const diff = f1tr(Math.abs(am - pm));
         if (am > pm) {
             _avgBadge = { text: `Ort. fark: Taşınabilir +${diff} µg/m³`,
-                          css: "background:rgba(52,210,123,0.13);color:#34d27b;border-color:rgba(52,210,123,0.3)" };
+                          css: `background:${DEVICE_COLOR.atmotube}22;color:${DEVICE_COLOR.atmotube};border-color:${DEVICE_COLOR.atmotube}55` };
         } else {
             _avgBadge = { text: `Ort. fark: Sabit +${diff} µg/m³`,
-                          css: "background:rgba(176,122,255,0.13);color:#b07aff;border-color:rgba(176,122,255,0.3)" };
+                          css: `background:${DEVICE_COLOR.purpleair}22;color:${DEVICE_COLOR.purpleair};border-color:${DEVICE_COLOR.purpleair}55` };
         }
         badge.textContent = _avgBadge.text;
         badge.style.cssText = _avgBadge.css;
@@ -1257,23 +1268,22 @@ function loadCompareChart(atmoPts, paHist, person) {
         type: "line",
         data: { labels, datasets: [
             {
-                label: `Atmotube Pro — ${person.name}`,
+                // Cihaz renkleri her grafikte aynı (colorscale.js → DEVICE_COLOR); dolgu ve yumuşatma yok (tepe değerler olduğu gibi)
+                label: `Atmotube Pro — ${person.name} (ham)`,
                 data: atmoVals,
-                borderColor: person.color,
-                backgroundColor: person.color + "14",
-                borderWidth: 2, pointRadius: 0, tension: 0.35, fill: true,
+                borderColor: DEVICE_COLOR.atmotube,
+                borderWidth: 2, pointRadius: 0, tension: 0, fill: false,
             },
             {
-                label: "PurpleAir PA-II (Sabit)",
+                label: "PurpleAir PA-II (sabit, US EPA düzeltmeli)",
                 data: paVals,
-                borderColor: "#b07aff",
-                backgroundColor: "rgba(176,122,255,0.07)",
-                borderWidth: 2, pointRadius: 0, tension: 0.35, fill: true,
+                borderColor: DEVICE_COLOR.purpleair,
+                borderWidth: 2, pointRadius: 0, tension: 0, fill: false,
                 spanGaps: true,
             },
             {
-                // Referans: DSÖ 2021 PM₂.₅ 24 saatlik kılavuz değeri
-                label: "DSÖ 24 sa kılavuzu (15 µg/m³)",
+                // Referans: WHO 2021 PM₂.₅ 24 saatlik kılavuz değeri
+                label: "WHO 24 sa kılavuz değeri (15 µg/m³)",
                 data: atmoVals.map(() => 15),
                 borderColor: "rgba(232,236,244,0.45)",
                 borderWidth: 1.2, borderDash: [5, 5], pointRadius: 0, fill: false,
