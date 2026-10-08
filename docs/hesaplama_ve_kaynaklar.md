@@ -265,7 +265,7 @@ Afroz ve ark. (2025), Branco ve ark. (2024). Ayrıntılar, sayısal örnek ve ka
 
 ## 13. Kaynakça
 
-- Shittu, A. I. ve ark. (2025). Performance evaluation of Atmotube PRO sensors for air quality measurements in an urban location.
+- Shittu ve ark. (2025). Performance evaluation of Atmotube PRO sensors for air quality measurements in an urban location.
   *Atmospheric Measurement Techniques*, 18, 817–828. https://doi.org/10.5194/amt-18-817-2025
 - South Coast AQMD AQ-SPEC. Atmotube Pro saha ve laboratuvar değerlendirme raporları.
   https://www.aqmd.gov/docs/default-source/aq-spec/field-evaluations/atmotube-pro---field-evaluation.pdf
