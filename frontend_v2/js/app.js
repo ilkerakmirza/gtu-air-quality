@@ -908,7 +908,6 @@ async function refreshDots() {
         const allPts = [];
         for (const track of res.tracks || []) {
             const person = personOf(track.session_name);
-            markSpikes(track.points || []);
             for (const pt of (track.points || []).filter(p => p.lat && p.lon)) {
                 pt._person = person.name;   // bina popup'ında kişi kırılımı için
                 allPts.push(pt);
@@ -928,7 +927,6 @@ async function refreshDots() {
                       </div>
                       <div style="font-size:20px;font-weight:700;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;color:${pm25Color(pt.pm2_5)}">${f1tr(pt.pm2_5) ?? "--"} <span style="font-size:10px;color:#9aa4b8">µg/m³</span></div>
                       <div style="font-size:11px;color:${pm25Color(pt.pm2_5)};font-weight:600">${pm25Label(pt.pm2_5)}</div>
-                      ${pt.spike ? `<div style="font-size:10.5px;color:#f5b840;margin-top:4px;max-width:200px">Tek noktalık ani sıçrama: komşu ölçümlerin 5 katından fazla. Bina ortalamasına katılmadı.</div>` : ""}
                       <div style="font-size:10.5px;color:#9aa4b8;margin-top:4px">${pt.recorded_at ? new Date(pt.recorded_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) : ""}</div>
                     </div>`)
                   .addTo(dotsLayer);
@@ -944,7 +942,7 @@ async function refreshDots() {
 function setStats(pts) {
     const per = viewMode === "avg" ? Campus.getPeriod() : "all";
     if (per !== "all") pts = pts.filter(p => Campus.monthOf(p) === per);
-    const vals = pts.filter(p => !p.spike).map(p => p.pm2_5).filter(v => v != null);   // ani sıçramalar özet değerlere girmez
+    const vals = pts.map(p => p.pm2_5).filter(v => v != null);
     const set = (id, v) => document.getElementById(id).textContent = v;
     if (!vals.length) { set("st-count","—"); set("st-avg","—"); set("st-max","—"); return; }
     const avg = vals.reduce((a,b)=>a+b,0)/vals.length;

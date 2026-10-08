@@ -1718,8 +1718,9 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
         <li>Kampüs değerleri düşük maliyetli optik sensörlerin <b>ham (düzeltilmemiş)</b> ölçümleridir; yüksek nemde PM₂.₅
           olduğundan yüksek okunabilir, PM₁₀ ise olduğundan düşük okunabilir.</li>
         <li>Ölçümler kesintilidir; günlük değerler o gün ölçülen saatlerin ortalamasıdır ve günün tamamını temsil etmeyebilir.</li>
-        <li>Saha ölçümleri birkaç dakikalık yürüyüş verisidir; uzun süreli maruziyeti temsil etmez. Aynı yürüyüşte komşu ölçümlerin
-          5 katını aşan tek noktalık ani sıçramalar (ör. anlık sensör hatası) haritada gösterilir ama bina ve kampüs saha ortalamalarına katılmaz.</li>
+        <li>Saha ölçümleri birkaç dakikalık yürüyüş verisidir; uzun süreli maruziyeti temsil etmez. Yürüyüş sırasındaki
+          ani yükselmeler (ör. yakında sigara içilmesi) gerçek maruziyet olabileceği için ayıklanmaz, ortalamalara dahildir;
+          az ölçümlü binaların ortalaması tek bir yükselmeden belirgin etkilenebilir.</li>
         <li>PurpleAir'in sıcaklık ve nem değerleri (*) sensör gövdesinin içinden ölçülür: sıcaklık ortamdan yaklaşık 4 °C yüksek,
           nem yaklaşık 4 puan düşük okunur. Bu değerler düzeltilmeden gösterilir.</li>
         <li>Platformdaki değerlendirmeler bilgilendirme amaçlıdır; tıbbi tavsiye yerine geçmez.</li>
@@ -1833,11 +1834,11 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=53"></script>
+<script src="js/colorscale.js?v=54"></script>
 <script src="js/api.js?v=42"></script>
-<script src="js/campus.js?v=53"></script>
-<script src="js/app.js?v=56"></script>
-<script src="js/who.js?v=43"></script>
+<script src="js/campus.js?v=54"></script>
+<script src="js/app.js?v=57"></script>
+<script src="js/who.js?v=44"></script>
 <script src="js/kiyas.js?v=42"></script>
 <script src="js/ozet.js?v=53"></script>
 <script src="js/maruziyet.js?v=4"></script>

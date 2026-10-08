@@ -453,7 +453,7 @@ const Campus = (() => {
     function contextHtml(e, s, pts) {
         const lines = [];
         if (e.dur) lines.push(`⏱ Binada toplam ${fmtDur(e.dur.min)} ölçüm · ${e.dur.days} farklı gün`);
-        const all = pts.filter(p => p.pm2_5 != null && !p.spike).map(p => p.pm2_5);   // ani sıçramalar hariç
+        const all = pts.filter(p => p.pm2_5 != null).map(p => p.pm2_5);
         if (all.length >= 30) {
             const ref = all.reduce((a, b) => a + b, 0) / all.length, pct = (s.avg - ref) / ref * 100;
             lines.push(Math.abs(pct) < 5 ? `≈ Kampüs saha ortalamasıyla benzer (${f1tr(ref)})`
@@ -522,7 +522,7 @@ const Campus = (() => {
             groups.get(b.gk).members.push(b);
         });
         for (const p of points) {
-            if (p.pm2_5 == null || !p.lat || !p.lon || p.spike) continue;   // ani sıçrama bina ortalamasına girmez
+            if (p.pm2_5 == null || !p.lat || !p.lon) continue;
             const b = buildings.find(f => contains(f, p.lon, p.lat));
             if (!b) continue;
             const g = groups.get(b.gk);

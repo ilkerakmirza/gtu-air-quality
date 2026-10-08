@@ -42,7 +42,7 @@ const WHO = (() => {
     const history = () => shared("hist", () =>
         API.purpleairHistory(HISTORY_FROM, new Date().toISOString(), "hourly").then(r => r.data || []));
     const fieldPoints = () => shared("field", () =>
-        API.mapTracks().then(r => (r.tracks || []).flatMap(t => markSpikes(t.points || [])).filter(p => p.lat && p.lon && p.pm2_5 != null)));
+        API.mapTracks().then(r => (r.tracks || []).flatMap(t => t.points || []).filter(p => p.lat && p.lon && p.pm2_5 != null)));
 
     // ── veri hazırlığı ───────────────────────────────────────────────
     // Saatlik kayıtları Türkiye gününe göre günlük ortalamaya çevir
@@ -294,7 +294,7 @@ const WHO = (() => {
         const list = typeof Campus !== "undefined" ? Campus.buildingStats(pts) : null;
         if (list == null) return head + `<div class="who-cap">Kampüs haritası yükleniyor…</div>`;
         if (!list.length) return head + `<div class="who-cap">${periodLabel()} döneminde bina içine düşen saha ölçümü yok.</div>`;
-        const ref = mean(pts.filter(p => !p.spike).map(p => +p.pm2_5));   // ani sıçramalar kampüs ortalamasına da girmez
+        const ref = mean(pts.map(p => +p.pm2_5));
         list.sort((a, b) => b.avg - a.avg);
         const over = list.filter(b => b.avg > ref).length;
         const max = Math.max(ref * 1.6, list[0].avg) * 1.05;

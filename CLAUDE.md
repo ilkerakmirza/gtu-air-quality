@@ -87,6 +87,8 @@ Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök diz
 - **Kaynak kaydı:** Uygulamadaki her eşik, sınıflandırma ve hesap `docs/hesaplama_ve_kaynaklar.md`'de kaynağı ve doğrulama durumuyla
   kayıtlı. Bir eşik/kaynak değişirse ya da yeni hesap eklenirse belgeyi aynı commit'te güncelle; doğrulanmamış değeri "ikincil" diye işaretle.
 - Kısa süreli saha ölçümleri WHO 24 saatlik değeriyle karşılaştırılmaz (kampüs saha ortalamasıyla karşılaştırılır).
+- **Saha ölçümlerindeki ani yükselmeler ayıklanmaz** (kullanıcının kararı, 8 Ekim 2026): yakında sigara içilmesi gibi gerçek,
+  kısa süreli maruziyet olabilir. Ortalamalardan çıkarma, "hatalı" diye işaretleme, Atmotube ölçümlerini silme; tekrar önerme.
 
 ## İş bitince
 1. Değişiklikleri açıklayıcı bir mesajla commit'le.

@@ -2,7 +2,7 @@
 
 **Amaç:** Uygulamada gösterilen her sınıflandırmanın, eşiğin ve hesabın neye dayandığını tek yerde kayda geçirmek;
 ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
-**Belge sürümü:** 1.2 · 8 Ekim 2026
+**Belge sürümü:** 1.3 · 8 Ekim 2026
 **İlgili belge:** Kişisel maruziyet hesabının ayrıntılı yöntemi → [`maruziyet_yontemi.md`](maruziyet_yontemi.md)
 
 > Koddaki bir eşik ya da kaynak değişirse bu belge aynı commit'te güncellenmelidir. Her bölümün sonunda değerin kodda
@@ -125,16 +125,15 @@ I  = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt     → en
 * Kısa süreli oldukları için WHO 24 saatlik değeriyle **karşılaştırılmaz**; aynı dönemdeki tüm saha ölçümlerinin
   ortalamasıyla karşılaştırılır (binanın kampüs ortalamasına göre konumu).
 * Binada geçen süre: ardışık ölçümler arası boşluk ≤ 5 dk ise aynı ziyaret sayılır.
-* **Ani sıçrama kuralı (8 Ekim 2026):** Aynı oturumda (zaman sırasıyla) bir ölçüm, iki komşusunun büyüğünün (en az 5 µg/m³
-  alınır) **5 katını** aşıyorsa tek noktalık ani sıçrama sayılır. Nokta haritada gösterilir ve popup'ta işaretlenir, ancak
-  bina ortalamalarına (ve onları kullanan maruziyet hesabına), binaların karşılaştırıldığı kampüs saha ortalamasına ve saha
-  panelindeki özet değerlere (ort., maks.) katılmaz; veri silinmez. Gerekçe: 8 Ekim 2026 itibarıyla 64 oturumdaki 4285 kampüs içi
-  saha ölçümünün 9'u bu tipte (ör. 8 → 522 → 65 µg/m³); kampüs saha ortalamasını yalnızca 8,80'den 8,49 µg/m³'e indirir ama az
-  ölçümlü binaları belirgin biçimde şişiriyordu (Kelebek Cafe 24,0 → 13,1 µg/m³, 7 ölçüm; Güzide Kafe 20,9 → 16,1 µg/m³, 109 ölçüm). Eşik (5 kat, 5 µg/m³ taban) uygulama içi bir kalite kuralıdır, bir
-  kaynaktan alınmamıştır (yaygın uygulama: düşük maliyetli sensör verisinde tekil sıçramaların ayıklanması).
+* **Ani yükselmeler ayıklanmaz (ekip kararı, 8 Ekim 2026):** Yürüyüş sırasındaki tek noktalık yüksek değerler
+  (ör. 8 → 522 → 65 µg/m³) yakında sigara içilmesi gibi gerçek, kısa süreli bir kaynaktan gelebilir ve maruziyetin parçasıdır.
+  Bu nedenle bütün ölçümler bina ortalamalarına, kampüs saha ortalamasına ve saha özetine dahil edilir; hiçbir ölçüm silinmez.
+  Sınırlılık: 8 Ekim 2026 itibarıyla 4285 kampüs içi saha ölçümünün 9'u, aynı yürüyüşteki komşu ölçümlerin 5 katını aşıyor.
+  Kampüs saha ortalamasına etkileri küçüktür (8,80 µg/m³; bu 9 değer olmasa 8,49), ama az ölçümlü binalarda belirgindir
+  (Kelebek Cafe 24,0 µg/m³, 7 ölçüm; bu değer olmasa 13,1). Az ölçümlü binalar arayüzde "az ölçüm" diye işaretlenir.
+  (1.2 sürümünde bu değerleri ortalamalardan çıkaran bir kural denendi; aynı gün kaldırıldı.)
 
-**Kodda:** `campus.js` → `MIN_PTS = 3`, `FEW = 30`, `buildingStats()`, `durationOf()`; `colorscale.js` → `markSpikes()`,
-`SPIKE_K = 5`, `SPIKE_FLOOR = 5`.
+**Kodda:** `campus.js` → `MIN_PTS = 3`, `FEW = 30`, `buildingStats()`, `durationOf()`.
 
 ## 6. Kampüs–bölge karşılaştırması
 
@@ -237,6 +236,7 @@ Afroz ve ark. (2025), Branco ve ark. (2024). Ayrıntılar, sayısal örnek ve ka
 
 | Sürüm | Tarih | Değişiklik |
 |---|---|---|
-| 1.2 | 8 Ekim 2026 | §4: aşım günü kutucuğu oranla değerlendirilir (≤ %1). §5: ani sıçrama kuralı (bina ve kampüs saha ortalamaları, saha özeti). §7: ay karşılaştırması en az 7 gün. §1: PurpleAir sıcaklık/nem notu. Bölge istasyonu 15 km sınırı (§6). |
+| 1.3 | 8 Ekim 2026 | §5: ani yükselmeleri ortalamalardan çıkaran kural kaldırıldı (ekip kararı: sigara dumanı gibi gerçek kısa süreli maruziyet olabilir); bütün saha ölçümleri ortalamalara dahil. |
+| 1.2 | 8 Ekim 2026 | §4: aşım günü kutucuğu oranla değerlendirilir (≤ %1). §5: ani sıçrama kuralı (1.3'te kaldırıldı). §7: ay karşılaştırması en az 7 gün. §1: PurpleAir sıcaklık/nem notu. Bölge istasyonu 15 km sınırı (§6). |
 | 1.1 | 6 Ekim 2026 | §1'e veri denetimi kuralları eklendi: yinelenen PurpleAir kaydı engeli, 2 km kampüs sınırı, CSV'de saha cihaz adlarının gizlenmesi, Tuzla arşivinin İBB'den sürdürülmesi. PurpleAir durumu güncellendi. |
 | 1.0 | 4 Ekim 2026 | İlk sürüm: HKİ, sınır değerler, WHO değerlendirmesi, bina ve bölge karşılaştırmaları, Özet kuralları, CO₂ ölçeği, harita ölçeği, otomatik duyurular. CO₂ etiketinden doğrulanmamış "WHO hedefi" ifadesi kaldırıldı. |
