@@ -1464,8 +1464,8 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
       <div class="pa-cat" id="pa-cat">Bağlanıyor…</div>
       <div class="pa-grid">
         <div class="pa-cell"><div class="k">PM₁₀</div><div class="v" id="pa-pm10">--</div></div>
-        <div class="pa-cell"><div class="k">Sıcaklık</div><div class="v" id="pa-temp">--</div></div>
-        <div class="pa-cell"><div class="k">Nem</div><div class="v" id="pa-hum">--</div></div>
+        <div class="pa-cell" title="Sensör gövdesinin içinden ölçülür; ortam sıcaklığından yüksek okunur (yaklaşık 4 °C)."><div class="k">Sıcaklık*</div><div class="v" id="pa-temp">--</div></div>
+        <div class="pa-cell" title="Sensör gövdesinin içinden ölçülür; ortam nemi biraz daha yüksektir (yaklaşık 4 puan)."><div class="k">Nem*</div><div class="v" id="pa-hum">--</div></div>
       </div>
       <div class="pa-foot">
         <span id="pa-time">—</span>
@@ -1507,7 +1507,7 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
           <div class="cmp-v" id="cmp-pa">--</div>
         </div>
         <div class="cmp-cell">
-          <div class="cmp-k">Bölge (Tuzla istasyonu)<br><span style="font-weight:500;color:var(--text-2)">~6.4 km</span></div>
+          <div class="cmp-k">Bölge (Tuzla istasyonu)<br><span style="font-weight:500;color:var(--text-2)">~6,4 km</span></div>
           <div class="cmp-v" id="cmp-csb">--</div>
         </div>
       </div>
@@ -1718,7 +1718,10 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
         <li>Kampüs değerleri düşük maliyetli optik sensörlerin <b>ham (düzeltilmemiş)</b> ölçümleridir; yüksek nemde PM₂.₅
           olduğundan yüksek okunabilir, PM₁₀ ise olduğundan düşük okunabilir.</li>
         <li>Ölçümler kesintilidir; günlük değerler o gün ölçülen saatlerin ortalamasıdır ve günün tamamını temsil etmeyebilir.</li>
-        <li>Saha ölçümleri birkaç dakikalık yürüyüş verisidir; uzun süreli maruziyeti temsil etmez.</li>
+        <li>Saha ölçümleri birkaç dakikalık yürüyüş verisidir; uzun süreli maruziyeti temsil etmez. Aynı yürüyüşte komşu ölçümlerin
+          5 katını aşan tek noktalık ani sıçramalar (ör. anlık sensör hatası) haritada gösterilir ama bina ortalamalarına katılmaz.</li>
+        <li>PurpleAir'in sıcaklık ve nem değerleri (*) sensör gövdesinin içinden ölçülür: sıcaklık ortamdan yaklaşık 4 °C yüksek,
+          nem yaklaşık 4 puan düşük okunur. Bu değerler düzeltilmeden gösterilir.</li>
         <li>Platformdaki değerlendirmeler bilgilendirme amaçlıdır; tıbbi tavsiye yerine geçmez.</li>
         <li>Otomatik durum duyuruları sensörlerin son veri zamanına göre oluşturulur; kısa kesintiler birkaç dakika gecikmeyle yansıyabilir.</li>
       </ul>
@@ -1830,13 +1833,13 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=52"></script>
-<script src="js/api.js?v=41"></script>
-<script src="js/campus.js?v=51"></script>
-<script src="js/app.js?v=54"></script>
-<script src="js/who.js?v=41"></script>
-<script src="js/kiyas.js?v=41"></script>
-<script src="js/ozet.js?v=52"></script>
+<script src="js/colorscale.js?v=53"></script>
+<script src="js/api.js?v=42"></script>
+<script src="js/campus.js?v=52"></script>
+<script src="js/app.js?v=55"></script>
+<script src="js/who.js?v=42"></script>
+<script src="js/kiyas.js?v=42"></script>
+<script src="js/ozet.js?v=53"></script>
 <script src="js/maruziyet.js?v=4"></script>
 <script src="js/shell.js?v=52"></script>
 </body>

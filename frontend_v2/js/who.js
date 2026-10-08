@@ -14,6 +14,7 @@ const WHO = (() => {
                  itDay:  [{ k: "AH-4", v: 50 }, { k: "AH-3", v: 75 }, { k: "AH-2", v: 100 }, { k: "AH-1", v: 150 }],
                  itYear: [{ k: "AH-4", v: 20 }, { k: "AH-3", v: 30 }, { k: "AH-2", v: 50 }, { k: "AH-1", v: 70 }] },
     };
+    const EXCEED_SHARE = 0.01;   // WHO: yılda 3–4 aşım günü ≈ 99. yüzdelik → ölçülen günlerin en çok %1'i
     const FULL_H = 18, MIN_H = 6, HISTORY_FROM = "2026-01-01T00:00:00Z";
     const BAD = "#f4615e", BAR = "#6c8cff", THIN = "#5d6678";
     let chart = null, kchart = null, loadedAt = 0, busy = false;
@@ -41,7 +42,7 @@ const WHO = (() => {
     const history = () => shared("hist", () =>
         API.purpleairHistory(HISTORY_FROM, new Date().toISOString(), "hourly").then(r => r.data || []));
     const fieldPoints = () => shared("field", () =>
-        API.mapTracks().then(r => (r.tracks || []).flatMap(t => t.points || []).filter(p => p.lat && p.lon && p.pm2_5 != null)));
+        API.mapTracks().then(r => (r.tracks || []).flatMap(t => markSpikes(t.points || [])).filter(p => p.lat && p.lon && p.pm2_5 != null)));
 
     // ── veri hazırlığı ───────────────────────────────────────────────
     // Saatlik kayıtları Türkiye gününe göre günlük ortalamaya çevir
@@ -130,7 +131,10 @@ const WHO = (() => {
         const g = G.pm2_5, g10 = G.pm10_0;
         return `<div class="wt-grid">
             ${tile("Aşım günü (PM₂.₅)", s.usable.length ? `${s.exceed} / ${s.usable.length}` : "—",
-                   `günlük ${g.day} µg/m³ aşılan gün · WHO: yılda en çok 3–4`, s.usable.length ? s.exceed <= 3 : null)}
+                   `günlük ${g.day} µg/m³ aşılan gün` + (s.usable.length ? ` (%${Math.round(s.exceed / s.usable.length * 100)})` : "")
+                   + ` · WHO: yılda en çok 3–4 gün (≈ %1)`,
+                   // WHO ölçütü bir yıllık veri içindir (99. yüzdelik ≈ günlerin %1'i); kısa dönemde mutlak sayı değil oran karşılaştırılır
+                   s.usable.length ? s.exceed / s.usable.length <= EXCEED_SHARE : null)}
             ${tile("Dönem ortalaması (PM₂.₅)", s.mean != null ? f1(s.mean) : "—",
                    `yıllık kılavuz ${g.year} µg/m³` + (s.mean != null ? ` · ${f1(s.mean / g.year)} katı` : ""), s.mean != null ? s.mean <= g.year : null)}
             ${tile("Dönem ortalaması (PM₁₀)", s10.mean != null ? f1(s10.mean) : "—",
@@ -255,8 +259,8 @@ const WHO = (() => {
             <div class="who-legend"><span><i style="background:${Kiyas.C_CAMPUS}"></i>Kampüs</span><span><i style="background:${Kiyas.C_REGION}"></i>Tuzla</span><span><i class="dash"></i>WHO günlük değer</span></div>
             <table class="who-month" style="margin-top:10px"><thead><tr><th>Ay</th><th>Saat</th><th>Kampüs</th><th>Tuzla</th><th>Fark</th></tr></thead>
               <tbody>${months.map(mrow).join("")}</tbody></table>
-            <div class="who-cap">Yalnızca iki tarafın da ölçüm yaptığı saatler karşılaştırılır (µg/m³). Tuzla ~6,4 km uzaktaki resmî istasyondur;
-              kampüs değeri düzeltilmemiş PurpleAir ölçümüdür.</div>`;
+            <div class="who-cap">Yalnızca iki tarafın da ölçüm yaptığı saatler karşılaştırılır (µg/m³). Tuzla ~6,4 km uzaktaki resmî istasyondur
+              (geçmiş ÇŞB'den; 6 Ekim 2026'dan beri aynı istasyonun İBB üzerinden yayımlanan saatlik değeri); kampüs değeri düzeltilmemiş PurpleAir ölçümüdür.</div>`;
         const days = Kiyas.daily(pairs);
         if (kchart) kchart.destroy();
         kchart = new Chart($("who-kiyas-chart"), {

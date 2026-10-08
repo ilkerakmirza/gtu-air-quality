@@ -522,7 +522,7 @@ const Campus = (() => {
             groups.get(b.gk).members.push(b);
         });
         for (const p of points) {
-            if (p.pm2_5 == null || !p.lat || !p.lon) continue;
+            if (p.pm2_5 == null || !p.lat || !p.lon || p.spike) continue;   // ani sıçrama bina ortalamasına girmez
             const b = buildings.find(f => contains(f, p.lon, p.lat));
             if (!b) continue;
             const g = groups.get(b.gk);

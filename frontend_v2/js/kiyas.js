@@ -1,5 +1,6 @@
 // Kampüs–bölge karşılaştırması: kampüs PurpleAir (PM₂.₅) ile Tuzla istasyonunun AYNI saatlerdeki değerleri.
-// Tuzla geçmişi data/tuzla_saatlik.json dosyasından gelir (PM₂.₅: ÇŞB, scripts/csb_gecmis.py ile indirilir).
+// Tuzla geçmişi: data/tuzla_saatlik.json (PM₂.₅: ÇŞB, scripts/csb_gecmis.py ile indirilir) + sunucu arşivi
+// (6 Ekim 2026'dan beri İBB'den saatlik toplanan aynı Tuzla istasyonu; json'da olmayan saatleri tamamlar).
 // Yalnızca iki tarafın da ölçüm yaptığı saatler karşılaştırılır; böylece eksik günler sonucu çarpıtmaz.
 // Bağımlılıklar: who.js (WHO.history)
 
@@ -19,12 +20,25 @@ const Kiyas = (() => {
     // { pairs: [{k, day, ym, c, r}], regionHours, updated }
     function data() {
         if (!p) {
+            const since = new Date(Date.now() - 400 * 864e5).toISOString().slice(0, 10);
             p = Promise.all([
                 WHO.history(),
-                fetch("data/tuzla_saatlik.json", { cache: "no-cache" }).then(r => r.json()),
-            ]).then(([rows, tz]) => {
+                fetch("data/tuzla_saatlik.json", { cache: "no-cache" }).then(r => r.json()).catch(() => ({})),
+                API.archiveCsv("ibb", since).catch(() => ""),
+            ]).then(([rows, tz, csv]) => {
                 const reg = new Map();
                 for (const r of tz.veri || []) if (r.pm2_5 != null) reg.set(r.t, +r.pm2_5);
+                // Sunucu arşivi: yalnızca Tuzla satırları; anahtar Türkiye saatine göre "YYYY-AA-GGTSS:00"
+                const lines = (csv || "").trim().split(/\r?\n/);
+                const hd = (lines.shift() || "").split(","), iDev = hd.indexOf("device"),
+                      iT = hd.indexOf("recorded_at_TR"), iPm = hd.indexOf("pm2_5");
+                let fromArchive = 0;
+                if (iDev >= 0 && iT >= 0 && iPm >= 0) for (const ln of lines) {
+                    const c = ln.split(",");
+                    if (c[iDev] !== "Tuzla" || c[iPm] === "" || !c[iT]) continue;
+                    const k = c[iT].slice(0, 13).replace(" ", "T") + ":00";
+                    if (!reg.has(k)) { reg.set(k, +c[iPm]); fromArchive++; }
+                }
                 const pairs = [];
                 for (const r of rows) {
                     if (r.pm2_5 == null) continue;
@@ -34,7 +48,7 @@ const Kiyas = (() => {
                     if (v == null) continue;
                     pairs.push({ k, day: k.slice(0, 10), ym: k.slice(0, 7), c: +r.pm2_5, r: v });
                 }
-                return { pairs, regionHours: reg.size, updated: tz.guncelleme };
+                return { pairs, regionHours: reg.size, fromArchive, updated: tz.guncelleme };
             });
             p.catch(() => { p = null; });
         }

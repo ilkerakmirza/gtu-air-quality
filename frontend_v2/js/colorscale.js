@@ -25,6 +25,20 @@ function f1tr(v) {
     return v == null || isNaN(v) ? null : (+v).toLocaleString("tr-TR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 }
 
+// Saha ölçümü kalite kuralı: aynı oturumda komşu iki ölçümün en büyüğünün (en az 5 µg/m³ alınır) 5 katını aşan
+// TEK noktalık değer "ani sıçrama" sayılır (anlık sensör hatası ya da çok yakın geçici kaynak). Nokta haritada kalır,
+// bina ortalamalarına katılmaz. Girdi: tek oturumun noktaları (sıra fark etmez); p.spike = true işaretler.
+const SPIKE_K = 5, SPIKE_FLOOR = 5;
+function markSpikes(points) {
+    const s = (points || []).filter(p => p && p.pm2_5 != null && p.recorded_at)
+        .sort((a, b) => new Date(a.recorded_at) - new Date(b.recorded_at));
+    for (let i = 1; i < s.length - 1; i++) {
+        const ref = Math.max(s[i - 1].pm2_5, s[i + 1].pm2_5, SPIKE_FLOOR);
+        if (s[i].pm2_5 > SPIKE_K * ref) s[i].spike = true;
+    }
+    return points;
+}
+
 function pm25Color(v) {
     if (v == null || isNaN(v)) return "#8a93a6";
     for (const b of PM25_SCALE) if (v <= b.max) return b.color;

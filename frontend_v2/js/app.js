@@ -411,7 +411,8 @@ async function ibbDirect() {
             if (!m || last.PM25 == null) continue;
             const lat = +m[2], lon = +m[1];
             const km = Math.hypot((lat - GTU_CENTER[0]) * 111.2, (lon - GTU_CENTER[1]) * 84.2);
-            if (km < bestKm) { bestKm = km; best = { o, lat, lon, last }; }
+            // Yalnızca kampüse yakın istasyon (Tuzla); Tuzla veri vermezse uzak istasyona geçilmez
+            if (km <= 15 && km < bestKm) { bestKm = km; best = { o, lat, lon, last }; }
         }
         if (!best) return null;
         return { station_name: best.o.Name, pm2_5: best.last.PM25, lat: best.lat, lon: best.lon,
@@ -626,6 +627,7 @@ function updateAtmotubeMarkers(devices) {
 let co2Markers = {};    // cihaz adı → Leaflet marker
 let co2Visible = true;  // CO₂ cihazları aç/kapa
 const CO2_ONLINE_MIN = 30;   // son X dk içinde veri = canlı
+const CO2_SHOW_HOURS = 24;   // daha eski ölçüm haritada gösterilmez (listede "… gün önce" olarak kalır)
 
 async function loadCO2Live() {
     try {
@@ -701,9 +703,10 @@ function updateCO2Markers(devices) {
     for (const d of devices) {
         const r = d.reading;
         // Toggle kapalıysa ya da hiç ölçüm yoksa işaretçiyi gösterme
-        if (!co2Visible || !r || r.co2_ppm == null) { removeCO2Marker(d.device); continue; }
+        const ageMin = r ? (Date.now() - new Date(r.recorded_at).getTime()) / 60000 : Infinity;
+        // Toggle kapalıysa, ölçüm yoksa ya da ölçüm 24 saatten eskiyse işaretçiyi gösterme (eski değer canlı sanılmasın)
+        if (!co2Visible || !r || r.co2_ppm == null || !(ageMin <= CO2_SHOW_HOURS * 60)) { removeCO2Marker(d.device); continue; }
 
-        const ageMin = (Date.now() - new Date(r.recorded_at).getTime()) / 60000;
         const recent = ageMin < CO2_ONLINE_MIN;
         const c = co2Color(r.co2_ppm);
         // ATP'ye bağlıysa o işaretçiyle tam üst üste binmesin diye küçük kuzey offseti (~9 m)
@@ -905,6 +908,7 @@ async function refreshDots() {
         const allPts = [];
         for (const track of res.tracks || []) {
             const person = personOf(track.session_name);
+            markSpikes(track.points || []);
             for (const pt of (track.points || []).filter(p => p.lat && p.lon)) {
                 pt._person = person.name;   // bina popup'ında kişi kırılımı için
                 allPts.push(pt);
@@ -924,6 +928,7 @@ async function refreshDots() {
                       </div>
                       <div style="font-size:20px;font-weight:700;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;color:${pm25Color(pt.pm2_5)}">${f1tr(pt.pm2_5) ?? "--"} <span style="font-size:10px;color:#9aa4b8">µg/m³</span></div>
                       <div style="font-size:11px;color:${pm25Color(pt.pm2_5)};font-weight:600">${pm25Label(pt.pm2_5)}</div>
+                      ${pt.spike ? `<div style="font-size:10.5px;color:#f5b840;margin-top:4px;max-width:200px">Tek noktalık ani sıçrama: komşu ölçümlerin 5 katından fazla. Bina ortalamasına katılmadı.</div>` : ""}
                       <div style="font-size:10.5px;color:#9aa4b8;margin-top:4px">${pt.recorded_at ? new Date(pt.recorded_at).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) : ""}</div>
                     </div>`)
                   .addTo(dotsLayer);

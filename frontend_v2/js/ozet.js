@@ -5,6 +5,7 @@
 
 const Ozet = (() => {
     const PA_FRESH_MIN = 120;
+    const TREND_MIN_DAYS = 7;   // aylar arası yüzde değişim için her iki ayda gereken en az değerlendirilebilir gün
     let month = null, busy = false, loadedAt = 0;
     let hist = [], field = null, now = {}, kiyas = null;
 
@@ -165,7 +166,9 @@ const Ozet = (() => {
           </div>`;
 
         const s = monthStats(days, month);
-        const prevYm = months.slice(0, i).reverse().find(m => monthStats(days, m).mean != null);
+        // Ay karşılaştırması yalnızca her iki ayda da en az TREND_MIN_DAYS değerlendirilebilir gün varsa (az günle yüzde değişim yanıltıcı)
+        const enough = m => monthStats(days, m).usable.length >= TREND_MIN_DAYS;
+        const prevYm = enough(month) ? months.slice(0, i).reverse().find(enough) : null;
         const prev = prevYm ? monthStats(days, prevYm) : null;
         const g = WHO.G.pm2_5;
 

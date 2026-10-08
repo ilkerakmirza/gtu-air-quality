@@ -16,6 +16,9 @@ IBB_URL = "https://havakalitesi.ibb.gov.tr/Pages/GetAirQualityStations?type=0"
 
 # GTÜ kampüs merkezi
 GTU_LAT, GTU_LON = 40.806155, 29.360985
+# Bölge referansı yalnızca kampüse yakın istasyon olabilir (Tuzla ~6–8 km). Tuzla o saat PM2.5 vermezse
+# uzak bir istasyona (ör. Avcılar, Avrupa yakası) geçilmez; veri yok sayılır.
+MAX_KM = 15.0
 
 # 5 dk önbellek (İBB zaten saatlik günceller)
 _cache = {"ts": 0, "data": None}
@@ -42,7 +45,7 @@ def _haversine_km(lat1, lon1, lat2, lon2):
 
 
 def get_nearest_station(force=False):
-    """GTÜ'ye en yakın, PM2.5 verisi olan İBB istasyonunu döner."""
+    """GTÜ'ye en yakın (≤ MAX_KM), PM2.5 verisi olan İBB istasyonunu döner; yoksa None."""
     now = time.time()
     if not force and _cache["data"] is not None and now - _cache["ts"] < CACHE_SECONDS:
         return _cache["data"]
@@ -66,7 +69,7 @@ def get_nearest_station(force=False):
         if pm25 is None:
             continue  # sadece PM2.5 verisi olan istasyonlar
         km = _haversine_km(GTU_LAT, GTU_LON, lat, lon)
-        if km < best_km:
+        if km <= MAX_KM and km < best_km:
             best_km = km
             best = (s, lat, lon)
 

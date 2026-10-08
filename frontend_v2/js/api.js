@@ -25,6 +25,10 @@ const API = {
     co2Live:          () => apiFetch("/api/co2/live"),
     atmotubeHistory:  (device, start, end) =>
         apiFetch(`/api/atmotube/history?device=${device}&start=${start}&end=${end}`),
+    // Sunucu arşivi (CSV, zamanlar Türkiye saati): ör. source=ibb → Tuzla istasyonunun saatlik değerleri
+    archiveCsv:       (source, start) =>
+        fetch(`${API_BASE}/api/export.csv?source=${encodeURIComponent(source)}&start=${encodeURIComponent(start)}`)
+            .then(r => r.ok ? r.text() : Promise.reject(new Error(`HTTP ${r.status}`))),
     mapHeatmap:       (pollutant = "pm2_5", start, end) => {
         let q = `?pollutant=${pollutant}`;
         if (start) q += `&start=${encodeURIComponent(start)}`;

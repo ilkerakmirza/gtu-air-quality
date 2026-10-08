@@ -2,7 +2,7 @@
 
 **Amaç:** Uygulamada gösterilen her sınıflandırmanın, eşiğin ve hesabın neye dayandığını tek yerde kayda geçirmek;
 ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
-**Belge sürümü:** 1.1 · 6 Ekim 2026
+**Belge sürümü:** 1.2 · 8 Ekim 2026
 **İlgili belge:** Kişisel maruziyet hesabının ayrıntılı yöntemi → [`maruziyet_yontemi.md`](maruziyet_yontemi.md)
 
 > Koddaki bir eşik ya da kaynak değişirse bu belge aynı commit'te güncellenmelidir. Her bölümün sonunda değerin kodda
@@ -16,6 +16,7 @@ ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
 | Veri | Kaynak | Not |
 |---|---|---|
 | Kampüs PM₂.₅, PM₁₀, sıcaklık, nem | PurpleAir PA-II (SUMER çatısı, sensör 229263); sunucu PurpleAir API'den 2 dakikada bir okur | Kampüsün genel (dış ortam) hava kalitesini temsil eder. **Ham (düzeltilmemiş)** `pm2.5_atm` değerleri. US EPA nem düzeltmesi uygulanmıyor. 2 Ekim 16:59 – 6 Ekim 16:53 (TR) arasında sensör çevrimdışıydı, veri yok; 7 Ekim 2026'dan beri PurpleAir veri erişim kotası yeterli. |
+| Kampüs sıcaklık ve nem (PurpleAir) | PurpleAir PA-II gövde içi sensör | Düzeltilmeden gösterilir; sıcaklık ortamdan ~4 °C (8 °F) yüksek, nem ~4 puan düşük okunur (PurpleAir'in sensör açıklaması; **ikincil**, bu tarihte birincil kaynağa erişilemedi). Arayüzde "*" ve açıklama ile işaretli. |
 | Saha ölçümleri | Atmotube Pro (yürüyüş ölçümleri, GPS'li) | Amaç: bina bazlı karakterizasyon (§5). Kısa süreli; WHO 24 saatlik değeriyle karşılaştırılmaz (§5). |
 | İç mekân CO₂ | Tuya CO₂ sensörleri | 21 Temmuz 2026'dan beri veri yok. |
 | Bölge (Tuzla istasyonu, ~6,4 km) | İBB hava kalitesi servisi (canlı); ÇŞB SİM arşivi (yerel toplayıcı); geçmiş için `data/tuzla_saatlik.json` | PM₁₀ geçmişi İBB açık verisinden (`scripts/tuzla_gecmis.py`), PM₂.₅ geçmişi ÇŞB'den (`scripts/csb_gecmis.py`, yalnızca Türkiye'den çalışır). |
@@ -107,12 +108,15 @@ I  = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt     → en
 * **Günlük ortalama:** O gün ölçülen saatlik değerlerin ortalaması (Türkiye saatine göre gün).
 * **Kapsam kuralları:** En az **18 saat** ölçülen gün *tam gün*, en az **6 saat** ölçülen gün *gösterge gün*;
   daha az ölçülen günler değerlendirmeye alınmaz (grafikte soluk gösterilir).
-* **Aşım günü:** Günlük ortalaması 15 µg/m³'ü (PM₂.₅) aşan gösterge/tam gün.
+* **Aşım günü:** Günlük ortalaması 15 µg/m³'ü (PM₂.₅) aşan gösterge/tam gün. WHO'ya göre 24 saatlik değer yılda en çok
+  3–4 gün aşılmalıdır (99. yüzdelik ≈ günlerin %1'i). Bir yıldan kısa dönemde mutlak sayı değil **oran** karşılaştırılır:
+  aşım günlerinin oranı ≤ %1 ise kutucuk "uygun", değilse "aşıldı" gösterilir (8 Ekim 2026'ya kadar mutlak sayı ≤ 3 kullanılıyordu;
+  2 ölçülen günün ikisi de aşılmışken yanlışlıkla "uygun" görünüyordu).
 * **Dönem ortalaması:** Değerlendirmeye giren günlerin ortalaması; yıllık kılavuz değerle (5 µg/m³) karşılaştırılır
   ("yıllık kılavuz değerinin X katı"). Dönem bir yıldan kısaysa bu karşılaştırma göstergedir.
 * Veri: PurpleAir saatlik geçmişi, 1 Ocak 2026'dan bugüne.
 
-**Kodda:** `who.js` → `FULL_H = 18`, `MIN_H = 6`, `dailyMeans()`, `HISTORY_FROM`.
+**Kodda:** `who.js` → `FULL_H = 18`, `MIN_H = 6`, `EXCEED_SHARE = 0.01`, `dailyMeans()`, `HISTORY_FROM`.
 
 ## 5. Bina değerleri (saha ölçümleri)
 
@@ -121,8 +125,15 @@ I  = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt     → en
 * Kısa süreli oldukları için WHO 24 saatlik değeriyle **karşılaştırılmaz**; aynı dönemdeki tüm saha ölçümlerinin
   ortalamasıyla karşılaştırılır (binanın kampüs ortalamasına göre konumu).
 * Binada geçen süre: ardışık ölçümler arası boşluk ≤ 5 dk ise aynı ziyaret sayılır.
+* **Ani sıçrama kuralı (8 Ekim 2026):** Aynı oturumda (zaman sırasıyla) bir ölçüm, iki komşusunun büyüğünün (en az 5 µg/m³
+  alınır) **5 katını** aşıyorsa tek noktalık ani sıçrama sayılır. Nokta haritada gösterilir ve popup'ta işaretlenir, ancak
+  bina ortalamalarına (ve onları kullanan maruziyet hesabına) katılmaz; veri silinmez. Gerekçe: 6 Ekim 2026 itibarıyla 4310
+  saha ölçümünün 9'u bu tipte (ör. 8 → 522 → 65 µg/m³); genel ortalamayı yalnızca 8,78'den 8,48 µg/m³'e indirir ama az ölçümlü
+  bir binanın ortalamasını onlarca µg/m³ şişirebilir. Eşik (5 kat, 5 µg/m³ taban) uygulama içi bir kalite kuralıdır, bir
+  kaynaktan alınmamıştır (yaygın uygulama: düşük maliyetli sensör verisinde tekil sıçramaların ayıklanması).
 
-**Kodda:** `campus.js` → `MIN_PTS = 3`, `FEW = 30`, `buildingStats()`, `durationOf()`.
+**Kodda:** `campus.js` → `MIN_PTS = 3`, `FEW = 30`, `buildingStats()`, `durationOf()`; `colorscale.js` → `markSpikes()`,
+`SPIKE_K = 5`, `SPIKE_FLOOR = 5`.
 
 ## 6. Kampüs–bölge karşılaştırması
 
@@ -131,16 +142,22 @@ I  = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt     → en
 * Fark yüzdesi = (kampüs ortalaması − Tuzla ortalaması) / Tuzla ortalaması × 100.
 * Yorum: fark ≤ −%5 → "daha temiz"; ≥ +%5 → "daha kirli"; arası → "benzer".
 * Anlık karşılaştırmada (Özet, Canlı) ±0,5 µg/m³ eşiği kullanılır.
+* **Bölge istasyonu seçimi:** Yalnızca kampüse en fazla **15 km** uzaklıktaki İBB istasyonu (pratikte Tuzla) kullanılır;
+  Tuzla o saat PM₂.₅ vermezse uzak bir istasyona geçilmez, veri yok sayılır (8 Ekim 2026; daha önce bir saat için Avrupa
+  yakasındaki Avcılar istasyonu kullanılmıştı). Kodda: `backend/ibb.py` → `MAX_KM`, `app.js` → `ibbDirect()`.
 
 **Kodda:** `kiyas.js` → `data()`, `summary()`, `verdict()`; `ozet.js` günlük satır.
 
 ## 7. Özet ekranı kuralları
 
 * **Gösterilen değer:** PurpleAir son ölçümü 2 saatten yeniyse kampüs değeri; değilse Tuzla istasyonu (güncelse).
-* **Aylık özet:** Ay ortalaması, değerlendirmeye giren (≥ 6 saat) günlerin ortalamasıdır; önceki aya göre değişim
-  yüzde olarak verilir; en yüksek ve en düşük binalar o ayın saha ölçümlerinden.
+* **Aylık özet:** Ay ortalaması, değerlendirmeye giren (≥ 6 saat) günlerin ortalamasıdır; en yüksek ve en düşük binalar
+  o ayın saha ölçümlerinden.
+* **Ay karşılaştırması:** Yüzde değişim yalnızca gösterilen ay ile karşılaştırılan önceki ayın **her ikisinde de en az 7
+  değerlendirilebilir gün** varsa verilir; karşılaştırılan ay, bu koşulu sağlayan en yakın önceki aydır. (1–2 günlük
+  ölçümle hesaplanan aylık yüzde değişim yanıltıcıdır.)
 
-**Kodda:** `ozet.js` → `PA_FRESH_MIN = 120`, `monthStats()`.
+**Kodda:** `ozet.js` → `PA_FRESH_MIN = 120`, `TREND_MIN_DAYS = 7`, `monthStats()`.
 
 ## 8. İç mekân CO₂ ölçeği
 
@@ -219,5 +236,6 @@ Afroz ve ark. (2025), Branco ve ark. (2024). Ayrıntılar, sayısal örnek ve ka
 
 | Sürüm | Tarih | Değişiklik |
 |---|---|---|
+| 1.2 | 8 Ekim 2026 | §4: aşım günü kutucuğu oranla değerlendirilir (≤ %1). §5: ani sıçrama kuralı. §7: ay karşılaştırması en az 7 gün. §1: PurpleAir sıcaklık/nem notu. Bölge istasyonu 15 km sınırı (§6). |
 | 1.1 | 6 Ekim 2026 | §1'e veri denetimi kuralları eklendi: yinelenen PurpleAir kaydı engeli, 2 km kampüs sınırı, CSV'de saha cihaz adlarının gizlenmesi, Tuzla arşivinin İBB'den sürdürülmesi. PurpleAir durumu güncellendi. |
 | 1.0 | 4 Ekim 2026 | İlk sürüm: HKİ, sınır değerler, WHO değerlendirmesi, bina ve bölge karşılaştırmaları, Özet kuralları, CO₂ ölçeği, harita ölçeği, otomatik duyurular. CO₂ etiketinden doğrulanmamış "WHO hedefi" ifadesi kaldırıldı. |
