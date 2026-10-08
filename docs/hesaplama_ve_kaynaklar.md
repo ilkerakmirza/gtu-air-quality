@@ -145,10 +145,20 @@ I  = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt     → en
 * Kısa süreli oldukları için WHO 24 saatlik değeriyle **karşılaştırılmaz**; aynı dönemdeki tüm saha ölçümlerinin
   ortalamasıyla karşılaştırılır (binanın kampüs ortalamasına göre konumu).
 * Binada geçen süre: ardışık ölçümler arası boşluk ≤ 5 dk ise aynı ziyaret sayılır.
-* **Atmotube ham kullanılır** (US EPA düzeltmesi PurpleAir'e özgüdür). Bina karşılaştırması göreli olduğu için sensörün sabit
-  oranlı sapması sadeleşir; nem gibi değişen etkiler ve cihazlar arası farklar sadeleşmez (mevcut kısa yan yana ölçümler:
-  ATP-2/ATP-4 yakın, ATP-3/ATP-4 uzak; örnek küçük). Öneri: cihazları PurpleAir yanında yan yana ölçüp cihaz başına çarpan
-  çıkarmak (`purpleair_epa_duzeltmesi.md` §9).
+* **Atmotube ham kullanılır; EPA formülü uygulanmaz** (8 Ekim 2026 araştırması):
+  - Kılavuzda PM için düzeltme faktörü yoktur. Üretici, PM sensörünün (Sensirion SPS30, MCERTS sertifikalı) fabrikada referans
+    cihaza göre kontrol edildiğini ve kullanıcı ayarı gerekmediğini belirtir; uygulamada yalnızca sıcaklık/nem için elle sapma ayarı vardır.
+  - Bağımsız testlerde Atmotube PRO'nun saatlik PM₂.₅'i resmî cihazlarla neredeyse bire birdir: Leeds'te 8 cihaz 14 hafta
+    FIDAS 200S yanında, ortalama eğim 0,99, kesişim −1,6 µg/m³; aynı çalışmada ham PurpleAir eğimi 1,37 (Shittu vd., 2025).
+    Güney Kaliforniya AQMD saha testinde R² 0,79–0,90 (PM₁₀ zayıf).
+  - Bu yüzden PurpleAir'in EPA formülü Atmotube'a uygulanmaz; uygulansa değerleri haksız yere ~%35 düşürürdü
+    (ör. 20 µg/m³, nem %35 → 13,2).
+  - Bilinen zayıflıklar: nem > %80'de fazla okur (bizim saha verimizde nem hiç %80'i geçmedi: en yüksek %65, ortanca %35);
+    cihazdan cihaza fark olabilir (Leeds'te 8 cihazdan biri belirgin sapmış; bizde kısa yan yana ölçümlerde ATP-2/ATP-4 yakın,
+    ATP-3/ATP-4 uzak); PM₁₀ güvenilir değildir; düşük derişimde tek ölçümün belirsizliği büyüktür (üretici: ±(5 µg/m³ + %5)).
+  - Öneri (aynı mantık, küçük ölçekte): cihazları bir gün PurpleAir'in yanında çalıştırıp her cihaz için düzeltilmiş PurpleAir'e
+    göre oranı bulmak; oran 1'e yakınsa (±%10, uygulama kuralı) dokunmamak, değilse o cihaza tek bir çarpan uygulamak
+    (`purpleair_epa_duzeltmesi.md` §9).
 * **Ani yükselmeler ayıklanmaz (ekip kararı, 8 Ekim 2026):** Yürüyüş sırasındaki tek noktalık yüksek değerler
   (ör. 8 → 522 → 65 µg/m³) yakında sigara içilmesi gibi gerçek, kısa süreli bir kaynaktan gelebilir ve maruziyetin parçasıdır.
   Bu nedenle bütün ölçümler bina ortalamalarına, kampüs saha ortalamasına ve saha özetine dahil edilir; hiçbir ölçüm silinmez.
@@ -255,6 +265,11 @@ Afroz ve ark. (2025), Branco ve ark. (2024). Ayrıntılar, sayısal örnek ve ka
 
 ## 13. Kaynakça
 
+- Shittu, A. I. ve ark. (2025). Performance evaluation of Atmotube PRO sensors for air quality measurements in an urban location.
+  *Atmospheric Measurement Techniques*, 18, 817–828. https://doi.org/10.5194/amt-18-817-2025
+- South Coast AQMD AQ-SPEC. Atmotube Pro saha ve laboratuvar değerlendirme raporları.
+  https://www.aqmd.gov/docs/default-source/aq-spec/field-evaluations/atmotube-pro---field-evaluation.pdf
+- Atmotube destek sayfaları: Sensor Accuracy and Technical Specifications; How is Atmotube PRO calibrated? (erişim 8 Ekim 2026)
 - Barkjohn, K. K., Gantt, B., Clements, A. L. (2021). *Atmospheric Measurement Techniques*, 14, 4617–4637. https://doi.org/10.5194/amt-14-4617-2021
 - Barkjohn, K. K., Holder, A. L., Frederick, S. G., Clements, A. L. (2022). *Sensors*, 22(24), 9669. https://doi.org/10.3390/s22249669
 - Jaffe, D. A. ve ark. (2023). *Atmospheric Measurement Techniques*, 16, 1311. https://doi.org/10.5194/amt-16-1311-2023

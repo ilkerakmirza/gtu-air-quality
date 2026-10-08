@@ -81,8 +81,9 @@ PurpleAir API (pm2.5_atm, A, B, nem)  →  sunucu (2 dk'da bir kayıt, ham)  →
 - **Tuzla neden düzeltilmez?** Formül, PurpleAir'in okumasını resmî cihazların okuyacağı değere çevirmek için çıkarıldı;
   Tuzla o resmî cihaz tarafındadır. Formül Tuzla'ya uygulansaydı resmî değer haksız yere ~%40 düşerdi
   (ör. 17,4 µg/m³, nem %50 → 10,6).
-- **Atmotube:** EPA formülü PurpleAir'e (Plantower sensörü) özgüdür; farklı sensör olan Atmotube'a uygulanmaz. Atmotube
-  ham değerleri bina–bina (göreli) karşılaştırmada kullanılır. Cihazlar aynı havayı farklı okuyabilir: mevcut veride
+- **Atmotube:** EPA formülü PurpleAir'e (Plantower sensörü) özgüdür; farklı sensör olan Atmotube'a (Sensirion SPS30) uygulanmaz.
+  Bağımsız testlerde Atmotube'un ham PM₂.₅'i resmî cihazlarla neredeyse bire birdir (eğim 0,99; Shittu vd., 2025), yani zaten
+  resmî ölçeğe yakındır; ayrıntı `hesaplama_ve_kaynaklar.md` §5. Atmotube ham değerleri bina–bina (göreli) karşılaştırmada kullanılır. Cihazlar aynı havayı farklı okuyabilir: mevcut veride
   birkaç dakikalık yan yana ölçümlerde ATP-2 ile ATP-4 yakın (10 ölçüm, ortalama fark 1 µg/m³), ATP-3 ile ATP-4 uzak
   (7 ölçüm, 17,0'a karşı 7,4 µg/m³; örnek küçük). Öneri: cihazları bir gün PurpleAir'in yanında çalıştırıp cihaz başına
   basit bir çarpan çıkarmak (kontrol listesi §9).

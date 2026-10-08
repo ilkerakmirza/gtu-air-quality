@@ -1697,8 +1697,9 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
           ölçüme göre <i>gösterge</i> niteliğindedir. Kesim noktaları aşağıda "Sınır değerler ve HKİ" bölümündedir.</li>
         <li><b>Bina değerleri:</b> Saha ölçümlerinin GPS noktaları bina poligonlarıyla eşleştirilir; en az 3 ölçümü olan binalar
           gösterilir. Bu ölçümler kısa süreli olduğundan WHO'nun 24 saatlik değeriyle değil, aynı dönemdeki tüm saha ölçümlerinin
-          ortalamasıyla karşılaştırılır. Atmotube değerleri <b>ham</b> kullanılır: US EPA düzeltmesi PurpleAir'e özgüdür, farklı bir
-          sensör olan Atmotube'a uygulanmaz. Binalar birbiriyle karşılaştırıldığı için bu göreli bir karşılaştırmadır; Atmotube'un
+          ortalamasıyla karşılaştırılır. Atmotube değerleri <b>ham</b> kullanılır: kılavuzunda PM için düzeltme faktörü yoktur ve
+          bağımsız testlerde PM₂.₅ değeri resmî cihazlarla neredeyse bire birdir (Shittu ve ark., 2025: eğim 0,99; aynı çalışmada
+          ham PurpleAir 1,37). Bu yüzden PurpleAir'in EPA formülü Atmotube'a uygulanmaz. Binalar birbiriyle karşılaştırıldığı için bu göreli bir karşılaştırmadır; Atmotube'un
           µg/m³ değerleri ve harita renkleri gösterge niteliğindedir, Tuzla ya da WHO ile karşılaştırılmaz.</li>
         <li><b>Kişisel maruziyet (taslak):</b> Sabit hava kalitesi sensörünün saatlik profili, binaların saha ölçümü oranı ve iç/dış ortam
           varsayımıyla zaman ağırlıklı ortalama derişim; solunan miktar US EPA solunum hızlarıyla tahmin edilir. Varsayımlar hesap
@@ -1760,6 +1761,8 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
           doi:10.5194/amt-14-4617-2021 · Barkjohn, K. K., Holder, A. L., Frederick, S. G., Clements, A. L. (2022). <i>Sensors</i>,
           22(24), 9669, doi:10.3390/s22249669 · U.S. EPA, AirNow Fire and Smoke Map: Questions and Answers · Jaffe, D. A. ve ark.
           (2023). <i>Atmos. Meas. Tech.</i>, 16, 1311, doi:10.5194/amt-16-1311-2023 (toz ve duman olaylarında değerlendirme).</li>
+        <li>Atmotube: Shittu, A. I. ve ark. (2025). <i>Atmos. Meas. Tech.</i>, 18, 817–828, doi:10.5194/amt-18-817-2025 ·
+          South Coast AQMD AQ-SPEC, Atmotube Pro saha ve laboratuvar değerlendirmeleri.</li>
         <li>Harita altlıkları: © Esri, Maxar; © CARTO; © OpenStreetMap katkıcıları (ODbL).</li>
         <li>Yazılım: Leaflet (BSD-2), Leaflet.heat, Chart.js (MIT), Lucide ikonları (ISC); yazı tipleri Inter ve Source Serif 4 (SIL OFL 1.1).</li>
       </ul>
