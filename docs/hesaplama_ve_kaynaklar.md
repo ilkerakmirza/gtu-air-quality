@@ -2,7 +2,7 @@
 
 **Amaç:** Uygulamada gösterilen her sınıflandırmanın, eşiğin ve hesabın neye dayandığını tek yerde kayda geçirmek;
 ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
-**Belge sürümü:** 1.5 · 8 Ekim 2026
+**Belge sürümü:** 1.6 · 8 Ekim 2026
 **İlgili belge:** Kişisel maruziyet hesabının ayrıntılı yöntemi → [`maruziyet_yontemi.md`](maruziyet_yontemi.md)
 
 > Koddaki bir eşik ya da kaynak değişirse bu belge aynı commit'te güncellenmelidir. Her bölümün sonunda değerin kodda
@@ -156,9 +156,19 @@ I  = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt     → en
   - Bilinen zayıflıklar: nem > %80'de fazla okur (bizim saha verimizde nem hiç %80'i geçmedi: en yüksek %65, ortanca %35);
     cihazdan cihaza fark olabilir (Leeds'te 8 cihazdan biri belirgin sapmış; bizde kısa yan yana ölçümlerde ATP-2/ATP-4 yakın,
     ATP-3/ATP-4 uzak); PM₁₀ güvenilir değildir; düşük derişimde tek ölçümün belirsizliği büyüktür (üretici: ±(5 µg/m³ + %5)).
-  - Öneri (aynı mantık, küçük ölçekte): cihazları bir gün PurpleAir'in yanında çalıştırıp her cihaz için düzeltilmiş PurpleAir'e
-    göre oranı bulmak; oran 1'e yakınsa (±%10, uygulama kuralı) dokunmamak, değilse o cihaza tek bir çarpan uygulamak
-    (`purpleair_epa_duzeltmesi.md` §9).
+  - **Yan yana ölçüm (karar: 8 Ekim 2026; sonuç bekleniyor):** beş cihaz SUMER çatısında PurpleAir'in yanında en az 24 saat
+    (tercihen 48) birlikte ölçer. Bu, EPA'nın PurpleAir için yaptığının küçük ölçekli karşılığıdır.
+    - Kurulum: cihazlar PurpleAir'le aynı yükseklikte ve 1–2 m içinde, hava delikleri açık; yağmurdan ve doğrudan güneşten korunur.
+      Uygulamada PM modu "Always ON" (sürekli ölçüm, dakikalık ortalama kaydı). Bu modda pil yaklaşık 1 gün dayandığı için cihazlar
+      USB'ye ya da powerbank'e bağlı kalır. "Upload historical data to the cloud" ayarı açık olur.
+    - Cihazda gerçek zamanlı saat yoktur, saat telefondan alınır: ölçümden hemen önce telefonla eşitlenir, ölçüm boyunca kapatılmaz.
+      Başlangıç ve bitiş saati not edilir. Telefon bağlı olmadan da ölçer ve belleğine yazar (yaklaşık 10 gün); ölçüm bitince
+      telefona bağlanınca kayıt buluta gider. Yedek: uygulamadan CSV (Settings → Export Data to File).
+    - Analiz: saatlik ortalamalar (saatin en az 45 dakikası dolu). Önce her cihaz beş cihazın ortancasıyla, sonra düzeltilmiş
+      PurpleAir'le karşılaştırılır (oran, eğim, kesişim, R², ortalama fark). Oran 1 ± %10 içindeyse cihaza dokunulmaz (uygulama kuralı);
+      dışındaysa o cihazın değerleri tek bir çarpanla ölçeklenir, ham değer veritabanında kalır.
+    - Derişimler düşük ve dar aralıkta kalırsa (ör. hep 10 µg/m³'ün altında) üreticinin ±(5 µg/m³ + %5) belirsizliği oranı
+      bozar; o zaman çarpan uygulanmaz, ölçüm uzatılır. Sonuçlar bu bölüme ve `purpleair_epa_duzeltmesi.md` §9'a yazılır.
 * **Ani yükselmeler ayıklanmaz (ekip kararı, 8 Ekim 2026):** Yürüyüş sırasındaki tek noktalık yüksek değerler
   (ör. 8 → 522 → 65 µg/m³) yakında sigara içilmesi gibi gerçek, kısa süreli bir kaynaktan gelebilir ve maruziyetin parçasıdır.
   Bu nedenle bütün ölçümler bina ortalamalarına, kampüs saha ortalamasına ve saha özetine dahil edilir; hiçbir ölçüm silinmez.
@@ -269,7 +279,8 @@ Afroz ve ark. (2025), Branco ve ark. (2024). Ayrıntılar, sayısal örnek ve ka
   *Atmospheric Measurement Techniques*, 18, 817–828. https://doi.org/10.5194/amt-18-817-2025
 - South Coast AQMD AQ-SPEC. Atmotube Pro saha ve laboratuvar değerlendirme raporları.
   https://www.aqmd.gov/docs/default-source/aq-spec/field-evaluations/atmotube-pro---field-evaluation.pdf
-- Atmotube destek sayfaları: Sensor Accuracy and Technical Specifications; How is Atmotube PRO calibrated? (erişim 8 Ekim 2026)
+- Atmotube destek sayfaları: Sensor Accuracy and Technical Specifications; How is Atmotube PRO calibrated?;
+  How often does the Atmotube take measurements?; Data Storage and Collection (erişim 8 Ekim 2026)
 - Barkjohn, K. K., Gantt, B., Clements, A. L. (2021). *Atmospheric Measurement Techniques*, 14, 4617–4637. https://doi.org/10.5194/amt-14-4617-2021
 - Barkjohn, K. K., Holder, A. L., Frederick, S. G., Clements, A. L. (2022). *Sensors*, 22(24), 9669. https://doi.org/10.3390/s22249669
 - Jaffe, D. A. ve ark. (2023). *Atmospheric Measurement Techniques*, 16, 1311. https://doi.org/10.5194/amt-16-1311-2023
@@ -293,6 +304,7 @@ Afroz ve ark. (2025), Branco ve ark. (2024). Ayrıntılar, sayısal örnek ve ka
 
 | Sürüm | Tarih | Değişiklik |
 |---|---|---|
+| 1.6 | 8 Ekim 2026 | §5: Atmotube yan yana ölçüm kararı (SUMER çatısı): kurulum, analiz ve karar kuralı. |
 | 1.5 | 8 Ekim 2026 | §1a: PurpleAir PM₂.₅ US EPA düzeltmesi ve kanal kalite kontrolü (ayrıntı: purpleair_epa_duzeltmesi.md). §9: PM₂.₅ rengi = HKİ sınıf rengi (18 renkli ölçek kaldırıldı), sabit cihaz renkleri, takvim ekseni. |
 | 1.4 | 8 Ekim 2026 | §6: anlık kampüs–Tuzla karşılaştırması (Özet, Canlı) aynı saati eşleştirir. |
 | 1.3 | 8 Ekim 2026 | §5: ani yükselmeleri ortalamalardan çıkaran kural kaldırıldı (ekip kararı: sigara dumanı gibi gerçek kısa süreli maruziyet olabilir); bütün saha ölçümleri ortalamalara dahil. |

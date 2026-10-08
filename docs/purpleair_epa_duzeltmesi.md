@@ -189,5 +189,6 @@ Kampüs ortalaması WHO yıllık kılavuz değerinin (5 µg/m³) hâlâ üstünd
       denklem tablosundan birincil olarak teyit et (bu belge yazılırken EPA sitelerine erişilemedi).
 - [ ] Barkjohn vd. (2021) makalesinde denklemin (0,524 / 0,0862 / 5,75) ve 24 saatlik kanal kuralının metnini kontrol et.
 - [ ] Mümkünse PurpleAir'i birkaç hafta resmî bir istasyonun yanına koyarak (kolokasyon) yerel doğrulama yap.
-- [ ] Atmotube yan yana ölçüm günü: 5 cihazı PurpleAir'in yanında (SUMER çatısı) en az birkaç saat çalıştır; her cihaz için
-      düzeltilmiş PurpleAir'e göre çarpanı hesapla; cihazlar arası farkı ve çarpanları bu belgeye yaz.
+- [ ] Atmotube yan yana ölçüm (karar 8 Ekim 2026): 5 cihaz SUMER çatısında PurpleAir'in yanında en az 24 saat (tercihen 48);
+      kurulum ve karar kuralı `hesaplama_ve_kaynaklar.md` §5'te. Her cihaz için düzeltilmiş PurpleAir'e göre oranı hesapla;
+      cihazlar arası farkı ve çarpanları bu belgeye yaz.

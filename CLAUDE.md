@@ -41,10 +41,16 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
   (EPA/yayıncı sitelerine bulut ortamından erişilemedi; kaynaklar ikincil ve tutarlı). Masaüstü oturumunda EPA "Sensor Data Cleaning and
   Correction" sunumu ve AirNow Soru-Cevap denklem tablosuyla karşılaştır (`docs/purpleair_epa_duzeltmesi.md` §9). Mümkünse PurpleAir'i
   birkaç hafta resmî bir istasyon yanına koyup (kolokasyon) yerel doğrulama öner.
-- **Atmotube yan yana ölçüm günü (öneri, kullanıcının kararı bekleniyor):** 5 cihazı SUMER çatısında PurpleAir'in yanında en az 24 saat
-  çalıştır (telefona bağlı, fan sürekli). Her cihaz için saatlik "Atmotube / düzeltilmiş PurpleAir" oranını hesapla; oran 1 ± %10 ise dokunma,
-  değilse o cihaza tek çarpan uygula. Literatürde Atmotube PM₂.₅ ≈ resmî cihaz (eğim 0,99, Shittu vd. 2025); EPA formülü Atmotube'a
-  uygulanmaz. Mevcut kısa veride ATP-3 ile ATP-4 arasında büyük fark var. O zamana kadar Atmotube ham ve göreli kullanılır.
+- **Atmotube yan yana ölçüm (karar 8 Ekim 2026; kullanıcı ertesi gün devam edecek):** 5 cihaz SUMER çatısında PurpleAir'in yanına
+  konacak (en az 24 sa, tercihen 48). Kurulum, analiz ve karar kuralı (oran 1 ± %10 → dokunma, değilse cihaza tek çarpan):
+  `docs/hesaplama_ve_kaynaklar.md` §5. EPA formülü Atmotube'a uygulanmaz; sonuç gelene kadar Atmotube ham ve göreli kullanılır.
+  1. Cihazlar telefonsuz ölçer, kendi belleğine dakikalık yazar. Sunucunun canlı toplayıcısı yalnızca telefona bağlı cihazın son değerini
+     aldığı için bu kayıt veritabanına girmez (saha ekranlarını da etkilemez). Ölçüm bitip cihazlar telefona bağlanınca kayıt buluta gider;
+     `/api/atmotube/history?device=ATP-n&start=GG&end=ertesi gün` ile gün gün çekilir. Bulut oturumu onrender.com'a erişemiyor:
+     ortam ayarlarında izinli alan adı eklenmeli ya da masaüstü oturumu kullanılmalı (yedek: uygulamadan CSV dışa aktarımı).
+  2. PurpleAir saatlik değerleri (US EPA düzeltmeli, A/B kanal denetimli) Supabase'den alınır.
+  3. Açık soru: saha verisinin %92'si (27–30 Nisan, 12 CSV oturumu) veritabanında "cihaz 1" diye kayıtlı. Çarpan gerekirse o günlerde
+     hangi oturumun hangi ATP ile ölçüldüğünü kullanıcıya sor (adları koda ve belgeye yazma).
 
 ## Gizlilik ve KVKK (her değişiklikte kontrol et)
 Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök dizin dahil) bir bağlantıyla indirilebilir.

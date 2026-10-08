@@ -119,8 +119,10 @@ def get_live_devices(force=False):
     return result
 
 
-def fetch_device_history(mac, start_date, end_date, limit=2000):
-    """Bir cihazın tarih aralığındaki tüm ölçümlerini döner (sayfalı)."""
+def fetch_device_history(mac, start_date, end_date, limit=1440):
+    """Bir cihazın tarih aralığındaki tüm ölçümlerini döner (sayfalı).
+    Atmotube Cloud API'de limit en çok 1440'tır (bir günün dakikalık kaydı); daha büyük değer
+    sayfalamayı ilk sayfada bitirebilir."""
     all_items = []
     offset = 0
     while True:
