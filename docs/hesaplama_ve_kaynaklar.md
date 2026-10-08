@@ -2,7 +2,7 @@
 
 **Amaç:** Uygulamada gösterilen her sınıflandırmanın, eşiğin ve hesabın neye dayandığını tek yerde kayda geçirmek;
 ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
-**Belge sürümü:** 1.3 · 8 Ekim 2026
+**Belge sürümü:** 1.4 · 8 Ekim 2026
 **İlgili belge:** Kişisel maruziyet hesabının ayrıntılı yöntemi → [`maruziyet_yontemi.md`](maruziyet_yontemi.md)
 
 > Koddaki bir eşik ya da kaynak değişirse bu belge aynı commit'te güncellenmelidir. Her bölümün sonunda değerin kodda
@@ -141,7 +141,11 @@ I  = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt     → en
   ölçüm yaptığı saatler kullanılır.
 * Fark yüzdesi = (kampüs ortalaması − Tuzla ortalaması) / Tuzla ortalaması × 100.
 * Yorum: fark ≤ −%5 → "daha temiz"; ≥ +%5 → "daha kirli"; arası → "benzer".
-* Anlık karşılaştırmada (Özet, Canlı) ±0,5 µg/m³ eşiği kullanılır.
+* Anlık karşılaştırmada (Özet, Canlı) ±0,5 µg/m³ eşiği kullanılır. Burada da **aynı saat** eşleştirilir: Tuzla'nın son
+  yayımlanan saatlik değeri, o saatin PurpleAir saatlik ortalamasıyla karşılaştırılır (8 Ekim 2026). Tuzla değeri İBB yayın
+  gecikmesi yüzünden 1–3 saat geride olabildiğinden, önceden kampüsün son (çoğu zaman henüz dolmamış) saati ya da anlık değeri
+  ile farklı saatler karşılaştırılıyordu. O saat için kampüs verisi yoksa Özet satırı gösterilmez; Canlı kartta kampüsün son
+  saati kullanılır ve notta "saatler farklı" yazar. Kodda: `app.js` → `paSameHour()`.
 * **Bölge istasyonu seçimi:** Yalnızca kampüse en fazla **15 km** uzaklıktaki İBB istasyonu (pratikte Tuzla) kullanılır;
   Tuzla o saat PM₂.₅ vermezse uzak bir istasyona geçilmez, veri yok sayılır (8 Ekim 2026; daha önce bir saat için Avrupa
   yakasındaki Avcılar istasyonu kullanılmıştı). Kodda: `backend/ibb.py` → `MAX_KM`, `app.js` → `ibbDirect()`.
@@ -236,6 +240,7 @@ Afroz ve ark. (2025), Branco ve ark. (2024). Ayrıntılar, sayısal örnek ve ka
 
 | Sürüm | Tarih | Değişiklik |
 |---|---|---|
+| 1.4 | 8 Ekim 2026 | §6: anlık kampüs–Tuzla karşılaştırması (Özet, Canlı) aynı saati eşleştirir. |
 | 1.3 | 8 Ekim 2026 | §5: ani yükselmeleri ortalamalardan çıkaran kural kaldırıldı (ekip kararı: sigara dumanı gibi gerçek kısa süreli maruziyet olabilir); bütün saha ölçümleri ortalamalara dahil. |
 | 1.2 | 8 Ekim 2026 | §4: aşım günü kutucuğu oranla değerlendirilir (≤ %1). §5: ani sıçrama kuralı (1.3'te kaldırıldı). §7: ay karşılaştırması en az 7 gün. §1: PurpleAir sıcaklık/nem notu. Bölge istasyonu 15 km sınırı (§6). |
 | 1.1 | 6 Ekim 2026 | §1'e veri denetimi kuralları eklendi: yinelenen PurpleAir kaydı engeli, 2 km kampüs sınırı, CSV'de saha cihaz adlarının gizlenmesi, Tuzla arşivinin İBB'den sürdürülmesi. PurpleAir durumu güncellendi. |

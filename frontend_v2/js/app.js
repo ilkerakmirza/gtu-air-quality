@@ -294,13 +294,23 @@ function startCountdown() {
 // Kampüs (PurpleAir saatlik ort.) vs Bölge (CSB Tuzla) karşılaştırması
 // ─────────────────────────────────────────────────────────────────
 
+// Tuzla değerinin saatine denk gelen PurpleAir saatlik ortalaması (Sağlık sekmesindeki karşılaştırmayla aynı eşleştirme).
+// Tuzla değeri İBB yayın gecikmesi yüzünden 1–3 saat geride olabilir; kampüsün son saatiyle karşılaştırmak farklı saatleri karşılaştırır.
+function paSameHour(rows, tz) {
+    const t = tz && tz.recorded_at ? trTime(tz.recorded_at) : null;
+    if (!t) return null;
+    const h = Math.floor(t.getTime() / 3600e3);
+    const r = (rows || []).find(x => x.pm2_5 != null && Math.floor(new Date(x.recorded_at).getTime() / 3600e3) === h);
+    return r ? { v: +r.pm2_5, hour: t.toLocaleTimeString("tr-TR", { timeZone: "Europe/Istanbul", hour: "2-digit", minute: "2-digit" }) } : null;
+}
+
 async function loadComparison() {
     const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
     set("cmp-note", "PM₂.₅ µg/m³ karşılaştırması");
     try {
-        // PurpleAir saatlik ortalama (son saat)
+        // PurpleAir saatlik ortalamalar (son 6 saat: Tuzla'nın saatini de kapsasın)
         const now = new Date();
-        const start = new Date(now.getTime() - 3 * 3600 * 1000).toISOString();
+        const start = new Date(now.getTime() - 6 * 3600 * 1000).toISOString();
         const hist = await API.purpleairHistory(start, now.toISOString(), "hourly");
         const paRows = (hist.data || []).filter(r => r.pm2_5 != null);
         let paAvg = paRows.length ? paRows[paRows.length - 1].pm2_5 : null;
@@ -322,6 +332,12 @@ async function loadComparison() {
         // CSB bölge değeri (eskiyse karşılaştırmaya katma)
         const tz = await getTuzla();
         const csb = tz && !tz.stale ? tz.pm2_5 : null;
+        // Aynı saat varsa onu karşılaştır; yoksa kampüsün son saati kullanılır ve notta belirtilir
+        if (csb != null && paAvg != null) {
+            const same = paSameHour(paRows, tz);
+            if (same) { paAvg = same.v; set("cmp-note", `PM₂.₅ µg/m³ · aynı saat (${same.hour}) karşılaştırması`); }
+            else set("cmp-note", "PM₂.₅ µg/m³ · kampüs son saat, Tuzla son yayımlanan saat (saatler farklı)");
+        }
 
         const paEl = document.getElementById("cmp-pa");
         const csbEl = document.getElementById("cmp-csb");

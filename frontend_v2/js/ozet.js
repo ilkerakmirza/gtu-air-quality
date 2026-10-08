@@ -102,10 +102,12 @@ const Ozet = (() => {
             html += `<div class="oz-line ${ok ? "ok" : "bad"}">${ico(ok ? "circle-check" : "triangle-alert")} Bugün şimdiye kadarki kampüs ortalaması <b>${f1(todayRow.v)}</b> µg/m³ —
                 WHO günlük değeri ${WHO.G.pm2_5.day}'in ${ok ? "altında" : "üstünde"} <small>(${todayRow.n} saatlik ölçüm)</small></div>`;
         }
-        if (paFresh && tzFresh) {
-            const d = pa.pm2_5 - tz.pm2_5;
+        // Kampüs ile Tuzla aynı saatte (Tuzla değeri 1–3 saat geride olabilir; anlık kampüs değeriyle karşılaştırılmaz)
+        const same = paFresh && tzFresh && typeof paSameHour === "function" ? paSameHour(hist, tz) : null;
+        if (same) {
+            const d = same.v - tz.pm2_5;
             html += `<div class="oz-line">${d < -0.5 ? ico("trending-down") + " Kampüs bölgeden daha temiz" : d > 0.5 ? ico("trending-up") + " Kampüs bölgeden daha kirli" : ico("equal") + " Kampüs ve bölge benzer"}
-                <small>(kampüs ${f1(pa.pm2_5)} · Tuzla ${f1(tz.pm2_5)})</small></div>`;
+                <small>(saat ${same.hour} · kampüs ${f1(same.v)} · Tuzla ${f1(tz.pm2_5)})</small></div>`;
         }
 
         // Sensör durumu
