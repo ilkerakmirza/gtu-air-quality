@@ -11,6 +11,10 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
    Bu projede tek kaynak `main`; iş bitince `main`'e push edeceğim."
    `git pull` başarısız olduysa veya `main`'e geçilemediyse bunu açıkça söyle; kullanıcı eski sürümle çalışmasın.
 
+## Çalışma tarzı (kullanıcının isteği, 8 Ekim 2026)
+- Kullanıcının takip edemeyeceği karmaşık yapılar kurma: çözümleri sade tut, yanıtları kısa ve düz Türkçe yaz.
+- Birden çok yeni parça (dosya, modül, kural) gerektiren bir değişiklikten önce ne yapacağını bir-iki cümleyle anlat.
+
 ## Bekleyen işler (oturum başında kullanıcıya kısaca hatırlat, bitenleri buradan sil)
 - **Tuzla resmî ÇŞB toplayıcısı Haziran 2026'dan beri çalışmıyor** (yerel bilgisayardaki zamanlanmış görev); Tuzla saatlik
   arşivi 6 Ekim 2026'dan beri sunucuda İBB'den toplanıyor (`collector.collect_hourly`).
