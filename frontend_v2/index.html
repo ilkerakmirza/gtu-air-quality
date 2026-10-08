@@ -1697,12 +1697,17 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
           ölçüme göre <i>gösterge</i> niteliğindedir. Kesim noktaları aşağıda "Sınır değerler ve HKİ" bölümündedir.</li>
         <li><b>Bina değerleri:</b> Saha ölçümlerinin GPS noktaları bina poligonlarıyla eşleştirilir; en az 3 ölçümü olan binalar
           gösterilir. Bu ölçümler kısa süreli olduğundan WHO'nun 24 saatlik değeriyle değil, aynı dönemdeki tüm saha ölçümlerinin
-          ortalamasıyla karşılaştırılır.</li>
+          ortalamasıyla karşılaştırılır. Atmotube değerleri <b>ham</b> kullanılır: US EPA düzeltmesi PurpleAir'e özgüdür, farklı bir
+          sensör olan Atmotube'a uygulanmaz. Binalar birbiriyle karşılaştırıldığı için bu göreli bir karşılaştırmadır; Atmotube'un
+          µg/m³ değerleri ve harita renkleri gösterge niteliğindedir, Tuzla ya da WHO ile karşılaştırılmaz.</li>
         <li><b>Kişisel maruziyet (taslak):</b> Sabit hava kalitesi sensörünün saatlik profili, binaların saha ölçümü oranı ve iç/dış ortam
           varsayımıyla zaman ağırlıklı ortalama derişim; solunan miktar US EPA solunum hızlarıyla tahmin edilir. Varsayımlar hesap
           panelinde ayrıntılı verilmiştir.</li>
-        <li><b>Kampüs–bölge karşılaştırması:</b> Yalnızca sabit hava kalitesi sensörü ile Tuzla istasyonunun aynı saatte ölçüm yaptığı saatler
-          karşılaştırılır.</li>
+        <li><b>Kampüs–bölge karşılaştırması (aynı ölçekte):</b> Tuzla resmî istasyondur; değeri ÇŞB/İBB'nin yayımladığı gibi kullanılır,
+          düzeltilmez. PurpleAir ucuz bir optik sensördür; US EPA düzeltmesi onun okumasını resmî cihazın okuyacağı değere çeker.
+          Bu yüzden karşılaştırmada kampüsün düzeltilmiş değeri kullanılır; böylece iki değer aynı ölçektedir. Yalnızca iki tarafın
+          aynı saatte ölçüm yaptığı saatler karşılaştırılır. (Aynı formül Tuzla'ya da uygulansaydı resmî değer haksız yere yaklaşık
+          %40 düşerdi.)</li>
         <li><b>Veri denetimi:</b> Sabit hava kalitesi sensörü yeni ölçüm göndermediğinde son ölçüm tekrar kaydedilmez (yinelenen kayıt ortalamaları
           etkilemesin). Saha ölçümlerinde kampüs merkezine 2 km'den uzak noktalar kampüs değerlendirmesine alınmaz.</li>
       </ul>
@@ -1740,6 +1745,8 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
         <li>Saha ölçümleri birkaç dakikalık yürüyüş verisidir; uzun süreli maruziyeti temsil etmez. Yürüyüş sırasındaki
           ani yükselmeler (ör. yakında sigara içilmesi) gerçek maruziyet olabileceği için ayıklanmaz, ortalamalara dahildir;
           az ölçümlü binaların ortalaması tek bir yükselmeden belirgin etkilenebilir.</li>
+        <li>Farklı Atmotube cihazları aynı havayı farklı okuyabilir. Cihazlar yan yana ölçülerek birbirine göre ayarlanana kadar,
+          farklı cihazlarla ölçülmüş binaların karşılaştırması ek belirsizlik içerir.</li>
         <li>PurpleAir'in sıcaklık ve nem değerleri (*) sensör gövdesinin içinden ölçülür: sıcaklık ortamdan yaklaşık 4 °C yüksek,
           nem yaklaşık 4 puan düşük okunur. Bu değerler düzeltilmeden gösterilir.</li>
         <li>Platformdaki değerlendirmeler bilgilendirme amaçlıdır; tıbbi tavsiye yerine geçmez.</li>
@@ -1861,7 +1868,7 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
 <script src="js/api.js?v=43"></script>
 <script src="js/campus.js?v=55"></script>
 <script src="js/app.js?v=60"></script>
-<script src="js/who.js?v=46"></script>
+<script src="js/who.js?v=47"></script>
 <script src="js/kiyas.js?v=43"></script>
 <script src="js/ozet.js?v=55"></script>
 <script src="js/maruziyet.js?v=5"></script>

@@ -41,6 +41,9 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
   (EPA/yayıncı sitelerine bulut ortamından erişilemedi; kaynaklar ikincil ve tutarlı). Masaüstü oturumunda EPA "Sensor Data Cleaning and
   Correction" sunumu ve AirNow Soru-Cevap denklem tablosuyla karşılaştır (`docs/purpleair_epa_duzeltmesi.md` §9). Mümkünse PurpleAir'i
   birkaç hafta resmî bir istasyon yanına koyup (kolokasyon) yerel doğrulama öner.
+- **Atmotube yan yana ölçüm günü (öneri, kullanıcının kararı bekleniyor):** 5 cihazı PurpleAir'in yanında birkaç saat çalıştırıp cihaz
+  başına basit bir çarpan çıkar (mevcut kısa veride ATP-3 ile ATP-4 arasında büyük fark var). O zamana kadar Atmotube ham ve göreli kullanılır;
+  Tuzla/WHO ile karşılaştırılmaz.
 
 ## Gizlilik ve KVKK (her değişiklikte kontrol et)
 Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök dizin dahil) bir bağlantıyla indirilebilir.

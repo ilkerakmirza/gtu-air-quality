@@ -78,6 +78,14 @@ PurpleAir API (pm2.5_atm, A, B, nem)  →  sunucu (2 dk'da bir kayıt, ham)  →
 - **Aynı temelde karşılaştırma:** Kampüs–Tuzla karşılaştırmasında PurpleAir düzeltilmiş değeriyle girer (Tuzla resmî ölçümdür,
   düzeltme gerekmez; düzeltme PurpleAir'i bu ölçeğe çeker). Araştırma'daki sensör karşılaştırma grafiğinde ise Atmotube
   düzeltilmediği için PurpleAir'in de **ham** değeri kullanılır (ikisi de ham).
+- **Tuzla neden düzeltilmez?** Formül, PurpleAir'in okumasını resmî cihazların okuyacağı değere çevirmek için çıkarıldı;
+  Tuzla o resmî cihaz tarafındadır. Formül Tuzla'ya uygulansaydı resmî değer haksız yere ~%40 düşerdi
+  (ör. 17,4 µg/m³, nem %50 → 10,6).
+- **Atmotube:** EPA formülü PurpleAir'e (Plantower sensörü) özgüdür; farklı sensör olan Atmotube'a uygulanmaz. Atmotube
+  ham değerleri bina–bina (göreli) karşılaştırmada kullanılır. Cihazlar aynı havayı farklı okuyabilir: mevcut veride
+  birkaç dakikalık yan yana ölçümlerde ATP-2 ile ATP-4 yakın (10 ölçüm, ortalama fark 1 µg/m³), ATP-3 ile ATP-4 uzak
+  (7 ölçüm, 17,0'a karşı 7,4 µg/m³; örnek küçük). Öneri: cihazları bir gün PurpleAir'in yanında çalıştırıp cihaz başına
+  basit bir çarpan çıkarmak (kontrol listesi §9).
 - **Düzeltilmeyenler:** PM₁₀ (yerleşik bir düzeltme yok), Atmotube saha ölçümleri (farklı sensör), Tuzla istasyonu
   (resmî referans cihaz; düzeltmeye gerek yok).
 
@@ -180,3 +188,5 @@ Kampüs ortalaması WHO yıllık kılavuz değerinin (5 µg/m³) hâlâ üstünd
       denklem tablosundan birincil olarak teyit et (bu belge yazılırken EPA sitelerine erişilemedi).
 - [ ] Barkjohn vd. (2021) makalesinde denklemin (0,524 / 0,0862 / 5,75) ve 24 saatlik kanal kuralının metnini kontrol et.
 - [ ] Mümkünse PurpleAir'i birkaç hafta resmî bir istasyonun yanına koyarak (kolokasyon) yerel doğrulama yap.
+- [ ] Atmotube yan yana ölçüm günü: 5 cihazı PurpleAir'in yanında (SUMER çatısı) en az birkaç saat çalıştır; her cihaz için
+      düzeltilmiş PurpleAir'e göre çarpanı hesapla; cihazlar arası farkı ve çarpanları bu belgeye yaz.

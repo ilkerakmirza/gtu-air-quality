@@ -281,8 +281,10 @@ const WHO = (() => {
             <div class="who-legend"><span><i style="background:${Kiyas.C_CAMPUS}"></i>Kampüs</span><span><i style="background:${Kiyas.C_REGION}"></i>Tuzla</span><span><i class="dash"></i>WHO günlük değer</span></div>
             <table class="who-month" style="margin-top:10px"><thead><tr><th>Ay</th><th>Saat</th><th>Kampüs</th><th>Tuzla</th><th>Fark</th></tr></thead>
               <tbody>${months.map(mrow).join("")}</tbody></table>
-            <div class="who-cap">Yalnızca iki tarafın da ölçüm yaptığı saatler karşılaştırılır (µg/m³). Tuzla ~6,4 km uzaktaki resmî istasyondur
-              (geçmiş ÇŞB'den; 6 Ekim 2026'dan beri aynı istasyonun İBB üzerinden yayımlanan saatlik değeri); kampüs değeri US EPA düzeltmeli PurpleAir ölçümüdür (Hakkında › Yöntem). Boş günlerde iki tarafın ortak ölçümü yok.</div>`;
+            <div class="who-cap">Aynı ölçekte karşılaştırma: Tuzla ~6,4 km uzaktaki resmî istasyondur, değeri olduğu gibi kullanılır
+              (geçmiş ÇŞB'den; 6 Ekim 2026'dan beri aynı istasyonun İBB'deki saatlik değeri). Kampüs değeri, PurpleAir'i resmî cihaz
+              ölçeğine çeken US EPA düzeltmesinden geçmiştir (Hakkında › Yöntem). Yalnızca iki tarafın da ölçüm yaptığı saatler
+              karşılaştırılır (µg/m³); boş günlerde ortak ölçüm yok.</div>`;
         const days = calendarDays(Kiyas.daily(pairs), "day");
         if (kchart) kchart.destroy();
         kchart = new Chart($("who-kiyas-chart"), {

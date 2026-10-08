@@ -145,6 +145,10 @@ I  = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt     → en
 * Kısa süreli oldukları için WHO 24 saatlik değeriyle **karşılaştırılmaz**; aynı dönemdeki tüm saha ölçümlerinin
   ortalamasıyla karşılaştırılır (binanın kampüs ortalamasına göre konumu).
 * Binada geçen süre: ardışık ölçümler arası boşluk ≤ 5 dk ise aynı ziyaret sayılır.
+* **Atmotube ham kullanılır** (US EPA düzeltmesi PurpleAir'e özgüdür). Bina karşılaştırması göreli olduğu için sensörün sabit
+  oranlı sapması sadeleşir; nem gibi değişen etkiler ve cihazlar arası farklar sadeleşmez (mevcut kısa yan yana ölçümler:
+  ATP-2/ATP-4 yakın, ATP-3/ATP-4 uzak; örnek küçük). Öneri: cihazları PurpleAir yanında yan yana ölçüp cihaz başına çarpan
+  çıkarmak (`purpleair_epa_duzeltmesi.md` §9).
 * **Ani yükselmeler ayıklanmaz (ekip kararı, 8 Ekim 2026):** Yürüyüş sırasındaki tek noktalık yüksek değerler
   (ör. 8 → 522 → 65 µg/m³) yakında sigara içilmesi gibi gerçek, kısa süreli bir kaynaktan gelebilir ve maruziyetin parçasıdır.
   Bu nedenle bütün ölçümler bina ortalamalarına, kampüs saha ortalamasına ve saha özetine dahil edilir; hiçbir ölçüm silinmez.
