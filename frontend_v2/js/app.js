@@ -944,7 +944,7 @@ async function refreshDots() {
 function setStats(pts) {
     const per = viewMode === "avg" ? Campus.getPeriod() : "all";
     if (per !== "all") pts = pts.filter(p => Campus.monthOf(p) === per);
-    const vals = pts.map(p => p.pm2_5).filter(v => v != null);
+    const vals = pts.filter(p => !p.spike).map(p => p.pm2_5).filter(v => v != null);   // ani sıçramalar özet değerlere girmez
     const set = (id, v) => document.getElementById(id).textContent = v;
     if (!vals.length) { set("st-count","—"); set("st-avg","—"); set("st-max","—"); return; }
     const avg = vals.reduce((a,b)=>a+b,0)/vals.length;

@@ -294,7 +294,7 @@ const WHO = (() => {
         const list = typeof Campus !== "undefined" ? Campus.buildingStats(pts) : null;
         if (list == null) return head + `<div class="who-cap">Kampüs haritası yükleniyor…</div>`;
         if (!list.length) return head + `<div class="who-cap">${periodLabel()} döneminde bina içine düşen saha ölçümü yok.</div>`;
-        const ref = mean(pts.map(p => +p.pm2_5));
+        const ref = mean(pts.filter(p => !p.spike).map(p => +p.pm2_5));   // ani sıçramalar kampüs ortalamasına da girmez
         list.sort((a, b) => b.avg - a.avg);
         const over = list.filter(b => b.avg > ref).length;
         const max = Math.max(ref * 1.6, list[0].avg) * 1.05;
