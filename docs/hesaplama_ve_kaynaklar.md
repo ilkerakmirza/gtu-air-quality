@@ -2,7 +2,7 @@
 
 **Amaç:** Uygulamada gösterilen her sınıflandırmanın, eşiğin ve hesabın neye dayandığını tek yerde kayda geçirmek;
 ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
-**Belge sürümü:** 1.6 · 8 Ekim 2026
+**Belge sürümü:** 1.7 · 10 Ekim 2026
 **İlgili belge:** Kişisel maruziyet hesabının ayrıntılı yöntemi → [`maruziyet_yontemi.md`](maruziyet_yontemi.md)
 
 > Koddaki bir eşik ya da kaynak değişirse bu belge aynı commit'te güncellenmelidir. Her bölümün sonunda değerin kodda
@@ -141,7 +141,14 @@ I  = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt     → en
 ## 5. Bina değerleri (saha ölçümleri)
 
 * Saha ölçümü GPS noktaları bina poligonlarıyla eşleştirilir (`data/campus.geojson`).
-* En az **3** ölçümü olan binalar gösterilir; **30**'dan az ölçümü olanlar "az ölçüm" diye işaretlenir.
+* En az **3** ölçümü olan binalar sıralanır ve haritada boyanır; **30**'dan az ölçümü olanlar "az ölçüm" diye işaretlenir.
+* 1–2 ölçümlü binalar da listede görünür (10 Ekim 2026): sıralamanın altında "1–2 ölçümlü binalar" başlığıyla, değerleri ve
+  ölçüm sayılarıyla. Sıralamaya ve harita boyasına girmezler: tek ölçüm ortalama sayılmaz ve yakında içilen bir sigara gibi tek
+  bir yükselme o binayı sıralamanın başına taşıyabilir. Bina kartında bu ölçümlerin değerleri tek tek yazılır.
+* Ay görünümünde "genelden fark" yalnızca binanın başka aylarda da ölçümü varsa gösterilir (yoksa fark hep 0 çıkar).
+* Sınırlılık: bina değerine yalnızca bina poligonunun içine düşen noktalar girer. Ekim 2026'da 137 saha ölçümünün 62'si
+  (%45) bina içine düştü; 55'i bir binanın 15 m yakınında ama dışında kaldı (telefon GPS'inin bina yanında 5–15 m sapması
+  olağandır), kalanı yol ve açık alanlarda. Bu noktalar "Ölçüm noktaları" görünümünde ve kampüs saha ortalamasında yer alır.
 * Kısa süreli oldukları için WHO 24 saatlik değeriyle **karşılaştırılmaz**; aynı dönemdeki tüm saha ölçümlerinin
   ortalamasıyla karşılaştırılır (binanın kampüs ortalamasına göre konumu).
 * Binada geçen süre: ardışık ölçümler arası boşluk ≤ 5 dk ise aynı ziyaret sayılır.
@@ -304,6 +311,7 @@ Afroz ve ark. (2025), Branco ve ark. (2024). Ayrıntılar, sayısal örnek ve ka
 
 | Sürüm | Tarih | Değişiklik |
 |---|---|---|
+| 1.7 | 10 Ekim 2026 | §5: 1–2 ölçümlü binalar listede ayrıca gösterilir (sıralamaya ve boyaya girmez); "genelden fark" yalnızca başka ayda ölçüm varsa; bina içine düşmeyen noktalar sınırlılığı. |
 | 1.6 | 8 Ekim 2026 | §5: Atmotube yan yana ölçüm kararı (SUMER çatısı): kurulum, analiz ve karar kuralı. |
 | 1.5 | 8 Ekim 2026 | §1a: PurpleAir PM₂.₅ US EPA düzeltmesi ve kanal kalite kontrolü (ayrıntı: purpleair_epa_duzeltmesi.md). §9: PM₂.₅ rengi = HKİ sınıf rengi (18 renkli ölçek kaldırıldı), sabit cihaz renkleri, takvim ekseni. |
 | 1.4 | 8 Ekim 2026 | §6: anlık kampüs–Tuzla karşılaştırması (Özet, Canlı) aynı saati eşleştirir. |

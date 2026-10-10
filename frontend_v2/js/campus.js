@@ -99,6 +99,11 @@ const Campus = (() => {
         if (period === "all") return e.stats;
         return (e.monthly || []).find(m => m.ym === period) || null;
     }
+    // Aynısı, 1–2 ölçümlü binalar dahil (sıralama listesinin altındaki "1–2 ölçümlü binalar" bölümü için)
+    function dispAll(e) {
+        if (period === "all") return e.allStats || null;
+        return (e.monthlyAll || []).find(m => m.ym === period) || null;
+    }
 
     // ── geometri yardımcıları ────────────────────────────────────────
     function ringsOf(geom) {
@@ -488,9 +493,11 @@ const Campus = (() => {
         const s = e.stats;
         let body;
         if (!s) {
-            body = `<div class="bp-empty">${pts.length
-                ? `Seçili ölçümlerden bu binaya düşen ${e.rawN ? e.rawN + " (yetersiz)" : "yok"}.`
-                : "Bina bazlı PM₂.₅ için Araştırma › Saha ölçümleri bölümünden ölçüm günü seçin."}</div>`;
+            const vals = e.fewVals ? e.fewVals.map(v => `${f1tr(v)}`).join(" ve ") : "";
+            body = `<div class="bp-empty">${!pts.length
+                ? "Bina bazlı PM₂.₅ için Araştırma › Saha ölçümleri bölümünden ölçüm günü seçin."
+                : vals ? `Seçili ölçümlerden bu binaya ${e.rawN} ölçüm düşüyor: ${vals} µg/m³. Ortalama için en az ${MIN_PTS} ölçüm gerekir.`
+                : "Seçili ölçümlerden bu binaya düşen ölçüm yok."}</div>`;
         } else {
             const who = Object.entries(s.byPerson || {}).filter(([p]) => p !== "—").sort((a, b) => b[1].n - a[1].n)
                 .map(([p, v]) => `<span class="bp-chip">${p} · ${v.n} · ${f1tr((v.sum / v.n))}</span>`).join("");
@@ -594,14 +601,20 @@ const Campus = (() => {
         focusBuilding(e, g ? { ...e, ...groupSummary(g) } : e, pts);
     }
 
+    // stats/monthly: en az MIN_PTS ölçüm (harita boyası, kart, sıralama). allStats/monthlyAll: 1 ölçüm bile olsa
+    // (sıralamanın altındaki "1–2 ölçümlü binalar" listesi; hiçbir ölçüm listeden düşmesin diye).
     function groupSummary(g) {
         let stats = null, monthly = [];
+        const allStats = g.vals.length ? statsOf(g.vals, g.by) : null;
+        const monthlyAll = Object.entries(g.m).map(([ym, v]) => ({ ym, ...statsOf(v) }))
+            .sort((x, y) => x.ym.localeCompare(y.ym));
         if (g.vals.length >= MIN_PTS) {
-            stats = statsOf(g.vals, g.by);
-            monthly = Object.entries(g.m).filter(([, v]) => v.length >= MIN_PTS)
-                .map(([ym, v]) => ({ ym, ...statsOf(v) })).sort((x, y) => x.ym.localeCompare(y.ym));
+            stats = allStats;
+            monthly = monthlyAll.filter(m => m.n >= MIN_PTS);
         }
-        return { stats, monthly, rawN: g.vals.length, dur: stats ? durationOf(g) : null, visit: stats ? lastVisitOf(g) : null };
+        return { stats, monthly, allStats, monthlyAll, rawN: g.vals.length,
+                 fewVals: g.vals.length && g.vals.length < MIN_PTS ? [...g.vals] : null,
+                 dur: stats ? durationOf(g) : null, visit: stats ? lastVisitOf(g) : null };
     }
 
     function colorByPoints(points) {
@@ -611,7 +624,7 @@ const Campus = (() => {
         const mset = new Set();
         for (const g of groups.values()) {
             const sum = groupSummary(g);
-            sum.monthly.forEach(m => mset.add(m.ym));
+            sum.monthlyAll.forEach(m => mset.add(m.ym));
             for (const b of g.members) Object.assign(b, sum);
         }
         months = [...mset].sort();
@@ -627,11 +640,14 @@ const Campus = (() => {
         renderPeriods();
         renderRanking();
         const shown = new Set(features.filter(e => e.cat === "bina" && disp(e)).map(e => e.gk)).size;
+        const fewN = new Set(features.filter(e => e.cat === "bina" && !disp(e) && dispAll(e)).map(e => e.gk)).size;
+        const fewTxt = fewN ? `${fewN} binada 1–2 ölçüm var (boyanmadı)` : "";
         const note = document.getElementById("campus-note");
         if (note) note.textContent = !lastPoints.length
             ? "Sağ panelden ölçüm seçince binalar ortalama PM₂.₅ ile boyanır"
             : !choropleth ? "Bina ortalamaları için Saha ölçümleri panelinde «Bina ortalamaları» görünümünü seçin"
-            : shown ? `${periodLabel()}: ${shown} bina boyandı (≥${MIN_PTS} ölçüm)` : "Bu dönemde bina içine düşen ölçüm yok";
+            : shown ? `${periodLabel()}: ${shown} bina boyandı (≥${MIN_PTS} ölçüm)${fewTxt ? "; " + fewTxt : ""}`
+            : fewTxt ? `${periodLabel()}: ${fewTxt}` : "Bu dönemde bina içine düşen ölçüm yok";
     }
 
     // Dönem seçimi: Genel + ölçüm olan aylar
@@ -644,29 +660,45 @@ const Campus = (() => {
         wrap.querySelectorAll(".pd-chip").forEach(b => b.addEventListener("click", () => setPeriod(b.dataset.p)));
     }
 
-    // Seçili döneme göre bina sıralaması (yüksekten düşüğe); tıklayınca binaya git
+    // Seçili döneme göre bina sıralaması (yüksekten düşüğe); tıklayınca binaya git.
+    // Ölçümü olan her bina listelenir: en az MIN_PTS ölçümü olanlar sıralanır, 1–2 ölçümlüler altta ayrı durur
+    // (tek ölçüm ortalama sayılmaz; yakında içilen bir sigara gibi tek bir yükselme sıralamanın başına geçmesin).
     function renderRanking() {
         const wrap = document.getElementById("bld-rank");
         if (!wrap) return;
         const seen = new Set();
-        const list = features.filter(e => e.cat === "bina" && disp(e) && !seen.has(e.gk) && seen.add(e.gk))
-            .sort((a, b) => disp(b).avg - disp(a).avg);
-        if (!list.length) {
+        const all = features.filter(e => e.cat === "bina" && dispAll(e) && !seen.has(e.gk) && seen.add(e.gk))
+            .sort((a, b) => dispAll(b).avg - dispAll(a).avg);
+        const ranked = all.filter(e => dispAll(e).n >= MIN_PTS), few = all.filter(e => dispAll(e).n < MIN_PTS);
+        if (!all.length) {
             wrap.innerHTML = `<div class="rk-empty">${lastPoints.length ? "Bu dönemde bina içine düşen ölçüm yok" : "Aşağıdaki listeden ölçüm günü seçin; binalar ortalama PM₂.₅'e göre sıralanır."}</div>`;
             return;
         }
-        wrap.innerHTML = list.map((e, i) => {
-            const s = disp(e), name = e.feature.properties.name || "İsimsiz bina";
+        const nameOf = e => e.feature.properties.name || "İsimsiz bina";
+        const rows = ranked.map((e, i) => {
+            const s = dispAll(e);
             const ms = e.monthly || [];
             const worst = period === "all" && ms.length > 1 ? ms.reduce((a, b) => b.avg > a.avg ? b : a) : null;
-            const diff = period !== "all" && e.stats ? s.avg - e.stats.avg : null;
+            // Genelden fark yalnızca binanın başka aylarda da ölçümü varsa anlamlıdır (yoksa hep +0,0 çıkar)
+            const diff = period !== "all" && e.stats && e.stats.n > s.n ? s.avg - e.stats.avg : null;
             const sub = worst ? `en kötü ay: ${monthLabel(worst.ym, true)} ${f1tr(worst.avg)}${worst.n < FEW ? ` (${worst.n} ölçüm)` : ""}`
                       : diff != null ? `genelden ${diff >= 0 ? "+" : "−"}${f1tr(Math.abs(diff))}` : "";
             return `<button class="rk-row" data-i="${features.indexOf(e)}">
                 <span class="rk-no">${i + 1}</span>
-                <span class="rk-name">${UNIT[e.unit].icon} ${name}<small>${s.n.toLocaleString("tr-TR")} ölçümün ortalaması${sub ? " · " + sub : ""}</small></span>
+                <span class="rk-name">${UNIT[e.unit].icon} ${nameOf(e)}<small>${s.n.toLocaleString("tr-TR")} ölçümün ortalaması${sub ? " · " + sub : ""}</small></span>
                 <b class="rk-val" style="background:${pm25Color(s.avg)}">${f1tr(s.avg)}</b></button>`;
-        }).join("");
+        });
+        if (few.length) {
+            rows.push(`<div class="rk-sub">1–2 ölçümlü binalar · sıralamaya ve harita boyasına girmez</div>`);
+            few.forEach(e => {
+                const s = dispAll(e);
+                rows.push(`<button class="rk-row few" data-i="${features.indexOf(e)}">
+                    <span class="rk-no">–</span>
+                    <span class="rk-name">${UNIT[e.unit].icon} ${nameOf(e)}<small>${s.n} ölçüm${s.n > 1 ? "ün ortalaması" : ""}</small></span>
+                    <b class="rk-val few" style="border-color:${pm25Color(s.avg)}">${f1tr(s.avg)}</b></button>`);
+            });
+        }
+        wrap.innerHTML = rows.join("");
         wrap.querySelectorAll(".rk-row").forEach(btn => btn.addEventListener("click", () => {
             const e = features[+btn.dataset.i], l = e.leafletLayer;
             map.fitBounds(l.getBounds(), { maxZoom: 18, padding: [60, 60] });
