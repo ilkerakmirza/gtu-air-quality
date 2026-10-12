@@ -85,8 +85,11 @@ PurpleAir API (pm2.5_cf_1 A/B, pm2.5_atm A/B, nem)  →  sunucu (2 dk'da bir kay
   kaybolmadan yeniden hesaplanır.
 - Ekranda "ham sensör değeri" olarak gösterilen değer cf_atm'dir; PurpleAir haritasında dönüşüm seçilmediğinde görülen
   değerle aynıdır.
-- **6–12 Ekim 2026 kayıtları:** Sunucu bu günlerde cf_1 kaydetmiyordu. PurpleAir'in kendi verisinden (§5'teki indirme
-  dosyası) aynı zaman damgalı 3389 kayda cf_1 A ve B değerleri eklendi; bu günler de asıl yöntemle hesaplanır.
+- **cf_1 kaydı:** Sunucu cf_1'i 12 Ekim 2026 13:06'dan (Türkiye saati) beri kendisi kaydeder. 6–12 Ekim için PurpleAir'in
+  kendi verisinden (§5'teki indirme dosyası, `docs/veri/`) zaman damgası ve A/B cf_atm değerleri aynı olan 3389 kayda cf_1 A
+  ve B değerleri eklendi; bu günler de asıl yöntemle hesaplanır. cf_1'i olmayan kayıtlar yedek yöntemle hesaplanır:
+  27 Nisan – 2 Ekim arasındaki 4129 kayıt ve 6 Ekim sonrasındaki 28 kayıt (indirme dosyasında karşılığı olmayan 14 kayıt,
+  12 Ekim 12:24–13:05 arasındaki 14 kayıt).
 - **Aynı temelde karşılaştırma:** Kampüs–Tuzla karşılaştırmasında PurpleAir düzeltilmiş değeriyle girer (Tuzla resmî
   ölçümdür, düzeltilmez). Araştırma'daki sensör karşılaştırma grafiğinde Atmotube düzeltilmediği için PurpleAir'in de
   **ham** değeri kullanılır.
@@ -233,8 +236,12 @@ neredeyse değiştirmez. Ekim'in etkisi yukarıdaki iki yöntem tablosundadır. 
       uygulamanın değeriyle karşılaştır. Beklenen: asıl yöntemle aynı (11 Ekim 06:00 için ~35,7 µg/m³).
 - [ ] Barkjohn vd. (2021) makalesinde denklemin (0,524 / 0,0862 / 5,75), girdinin (cf_1) ve kanal kuralının metnini kontrol et.
 - [ ] Mümkünse PurpleAir'i birkaç hafta resmî bir istasyonun yanına koyarak (kolokasyon) yerel doğrulama yap.
-- [ ] İstenirse eski kayıtlara da cf_1 ekle: PurpleAir Data Download Tool'dan 27 Nisan – 6 Ekim 2026, Average 0, alanlar
-      `pm2.5_cf_1_a`, `pm2.5_cf_1_b`; zaman damgasıyla eşleşen kayıtlara yazılır (§3'teki yöntemle).
+- [x] 6–12 Ekim 2026 kayıtlarına cf_1 eklendi (3389 kayıt; PurpleAir indirme dosyası, A/B cf_atm kanalları da aynı
+      olan kayıtlarla eşleştirildi).
+- [ ] İstenirse eski kayıtlara da cf_1 ekle ve sunucunun kaçırdığı kayıtları doldur: PurpleAir Data Download Tool'dan
+      27 Nisan – 6 Ekim 2026, Average 0, alanlar `pm1.0_atm`, `pm2.5_atm_a`, `pm2.5_atm_b`, `pm2.5_cf_1_a`, `pm2.5_cf_1_b`,
+      `pm10.0_atm`, `temperature`, `humidity`. Dosya `docs/veri/`'ye konur; zaman damgasıyla eşleşen kayıtlara cf_1 yazılır,
+      eksik zamanlar yeni kayıt olarak eklenir (§3'teki yöntemle). Böylece tüm geçmiş tek yöntemle hesaplanır.
 - [ ] Tuzla saatlik değerinin etiketinin saatin başını mı sonunu mu gösterdiğini İBB/ÇŞB belgesinden doğrula; sonunu
       gösteriyorsa kampüs–Tuzla aynı saat eşleştirmesini (`app.js` → `paSameHour`, `kiyas.js`) bir saat kaydır.
 - [ ] Atmotube yan yana ölçüm (karar 8 Ekim 2026): 5 cihaz SUMER çatısında PurpleAir'in yanında en az 24 saat (tercihen 48);

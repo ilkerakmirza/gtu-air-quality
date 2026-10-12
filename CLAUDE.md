@@ -40,9 +40,10 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
 - **PurpleAir düzeltmesi, kontroller** (yöntem 12 Ekim 2026'da EPA'nın ABD geneli denklemine, cf_1 girdisiyle geçti;
   ayrıntı `docs/purpleair_epa_duzeltmesi.md` §9): (1) PurpleAir haritasında orta düzeyde bir saatin (ör. 11 Ekim 06:00, saatlik)
   "US EPA" değerini uygulamayla karşılaştır, beklenen ~35,7 µg/m³; (2) Barkjohn vd. 2021 denklemini ve girdisini (cf_1) birincil
-  kaynaktan teyit et (masaüstü oturumu); (3) eski kayıtlara cf_1 eklemek ve sunucunun Nisan–Ağustos'ta kaçırdığı kayıtları doldurmak
-  için kullanıcı PurpleAir Data Download Tool'dan 27 Nisan – 6 Ekim 2026'yı (Average 0; `pm2.5_atm_a/b`, `pm2.5_cf_1_a/b`,
-  `humidity`) indirebilir, karar bekleniyor; (4) Tuzla saat etiketi büyük olasılıkla saatin sonu, İBB/ÇŞB belgesinden doğrulanırsa
+  kaynaktan teyit et (masaüstü oturumu); (3) 6–12 Ekim kayıtlarına cf_1 eklendi (3389 kayıt); 27 Nisan – 2 Ekim kayıtları yedek
+  yöntemle (saatlerin %9'u 35–65 aralığında, ~4 µg/m³ yüksek). Tüm geçmişi tek yönteme almak ve sunucunun kaçırdığı kayıtları
+  doldurmak için kullanıcı PurpleAir Data Download Tool'dan 27 Nisan – 6 Ekim 2026'yı (Average 0; alan listesi
+  `docs/purpleair_epa_duzeltmesi.md` §9) indirebilir, karar bekleniyor; (4) Tuzla saat etiketi büyük olasılıkla saatin sonu, İBB/ÇŞB belgesinden doğrulanırsa
   aynı saat eşleştirmesi 1 saat kaydırılacak. Kullanıcı yöntem kararlarının Tuzla karşılaştırmasına dayanmasını istemiyor.
 - **Atmotube yan yana ölçüm (karar 8 Ekim 2026; tarih belli değil, en kısa sürede; kurulumu kullanıcı yapacak, ölçüm bitince haber verecek):** 5 cihaz SUMER çatısında PurpleAir'in yanına
   konacak (en az 24 sa, tercihen 48). Kurulum, analiz ve karar kuralı (oran 1 ± %10 → dokunma, değilse cihaza tek çarpan):
