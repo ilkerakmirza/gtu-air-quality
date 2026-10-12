@@ -41,6 +41,10 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
   (EPA/yayıncı sitelerine bulut ortamından erişilemedi; kaynaklar ikincil ve tutarlı). Masaüstü oturumunda EPA "Sensor Data Cleaning and
   Correction" sunumu ve AirNow Soru-Cevap denklem tablosuyla karşılaştır (`docs/purpleair_epa_duzeltmesi.md` §9). Mümkünse PurpleAir'i
   birkaç hafta resmî bir istasyon yanına koyup (kolokasyon) yerel doğrulama öner.
+- **PurpleAir denetimi (12 Ekim 2026), açık kararlar** (ayrıntı `docs/purpleair_epa_duzeltmesi.md` §5, §9): (1) EPA biçimi:
+  2021 cf_1 biçimi Tuzla'ya daha yakın çıktı, geçmek için sunucu `pm2.5_cf_1_a/b` kaydetmeli; (2) Tuzla saat etiketi büyük
+  olasılıkla saatin sonu, doğrulanırsa aynı saat eşleştirmesi 1 saat kaydırılacak; (3) sunucu Nisan–Ağustos'ta çok kayıt kaçırmış,
+  boşluklar PurpleAir geçmişinden doldurulabilir (kullanıcıya önerildi, karar bekleniyor).
 - **Atmotube yan yana ölçüm (karar 8 Ekim 2026; tarih belli değil, en kısa sürede; kurulumu kullanıcı yapacak, ölçüm bitince haber verecek):** 5 cihaz SUMER çatısında PurpleAir'in yanına
   konacak (en az 24 sa, tercihen 48). Kurulum, analiz ve karar kuralı (oran 1 ± %10 → dokunma, değilse cihaza tek çarpan):
   `docs/hesaplama_ve_kaynaklar.md` §5. EPA formülü Atmotube'a uygulanmaz; sonuç gelene kadar Atmotube ham ve göreli kullanılır.

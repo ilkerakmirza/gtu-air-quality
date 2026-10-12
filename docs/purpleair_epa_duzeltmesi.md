@@ -1,6 +1,6 @@
 # PurpleAir PM₂.₅ için US EPA düzeltmesi
 
-**Belge sürümü:** 1.0 · 8 Ekim 2026
+**Belge sürümü:** 1.1 · 12 Ekim 2026 (§5'e PurpleAir indirme verisiyle denetim eklendi)
 **Kodda:** `frontend_v2/js/colorscale.js` → `epaPM25()`, `paChannelsAgree()`, `paCorrect()`; uygulandığı tek yer
 `frontend_v2/js/api.js` (`purpleairLatest`, `purpleairHistory`). Sunucu saatlik/günlük geçmişte A ve B kanal
 ortalamalarını da döndürür (`backend/db.py` → `get_purpleair_history()`).
@@ -124,6 +124,48 @@ Ortalama mutlak fark: ham 10,3 → düzeltilmiş 6,4 µg/m³. Ham/düzeltilmiş 
 ve yerel kaynaklar (kampüs içi trafik, inşaat, rüzgâr yönü) farklıdır. **Bu karşılaştırma kolokasyon değildir;**
 düzeltmenin yönünü ve büyüklüğünü destekleyen bir tutarlılık göstergesidir.
 
+**PurpleAir'in kendi verisiyle denetim (12 Ekim 2026).** PurpleAir Data Download Tool ile sensör 229263'ün
+6 Ekim 16:53 – 12 Ekim 12:23 (TR) arası 2 dakikalık kayıtları indirildi (3892 kayıt; `pm2.5_atm_a/b`, `pm2.5_cf_1_a/b`,
+`pm2.5_alt_a/b` (ALT-CF3, sabit 3), `humidity`). Sunucu kayıtları ve Tuzla (İBB) saatlik değerleriyle karşılaştırıldı.
+
+- **Kayıt hattı doğru:** Aynı zaman damgalı 3389 kayıtta A, B ve nem değerleri aynı (en büyük fark 0,05 µg/m³, yuvarlama).
+  Sunucu 503 kaydı kaçırmış (%13); 413'ü 6–7 Ekim'de (sunucu uyuyordu, uyanık tutma işi 7 Ekim'de kuruldu).
+  Günlük kayıt oranı: 6 Ekim %20, 7 Ekim %65, 8–11 Ekim %97–99, 12 Ekim (öğlene kadar) %90.
+- **Saatlik düzeltilmiş değer doğru:** Sunucu kayıtlarından hesaplanan saatlik EPA değeri ile PurpleAir dosyasından
+  hesaplanan arasındaki ortalama mutlak fark 0,13 µg/m³. 1 µg/m³'ten büyük fark yalnızca kaydı eksik 3 saatte var
+  (en çok 6,0 µg/m³; o saatte 30 yerine 7 kayıt).
+- **cf_atm ile cf_1 ve iki EPA biçimi (saatlik):**
+
+| Ham (cf_atm) aralığı | Saat | cf_atm / cf_1 | Genişletilmiş biçim (cf_atm) − 2021 biçimi (cf_1) |
+|---|---|---|---|
+| 0–25 µg/m³ | 27 | 1,00 | −0,01 |
+| 25–50 | 45 | 0,89 | +2,8 (en çok 8,6) |
+| 50–80 | 59 | 0,73 | +3,4 (en çok 8,8) |
+| 80–200 | 3 | 0,66 | −0,8 |
+
+  25 µg/m³'ün altında iki biçim aynıdır. Genişletilmiş biçimdeki 0,786 katsayısı cf_atm'nin cf_1'in üçte ikisi olduğunu
+  varsayar (0,786 = 0,524 × 1,5); bu sensörde oran 25–80 aralığında henüz 2/3'e inmediği için genişletilmiş biçim bu
+  aralıkta ortalama 3 µg/m³ daha yüksek çıkar.
+- **Tuzla'ya göre (121 ortak saat, Tuzla ortalaması 32,7 µg/m³; kolokasyon değil, 6,4 km):**
+
+| Değer | Fark (aynı saat) | Ort. mutlak fark | r | Fark (Tuzla 1 saat kaydırılmış) | r |
+|---|---|---|---|---|---|
+| Ham (cf_atm) | +14,7 (+%45) | 16,9 | 0,64 | +14,4 (+%43) | 0,69 |
+| US EPA, genişletilmiş (uygulama) | +3,5 (+%11) | 10,6 | 0,66 | +3,1 (+%9) | 0,71 |
+| US EPA 2021 (cf_1) | +1,0 (+%3) | 9,4 | 0,68 | +0,6 (+%2) | 0,73 |
+| ALT-CF3 | −4,4 (−%13) | 9,3 | 0,70 | −4,9 (−%15) | 0,75 |
+| ALT-CF3,4 (3,4/3 ile ölçeklenmiş) | −0,6 (−%2) | 8,8 | 0,70 | −1,1 (−%3) | 0,75 |
+
+  Günlük ortalamalar (µg/m³; Tuzla / ham / uygulama EPA / EPA 2021 / ALT-CF3): 7 Ekim 15,6 / 22,2 / 13,4 / 13,0 / 11,2;
+  8 Ekim 22,3 / 49,5 / 37,3 / 33,4 / 28,6; 9 Ekim 33,1 / 47,1 / 36,2 / 33,6 / 27,4; 11 Ekim 40,5 / 56,9 / 44,5 / 41,8 / 35,5.
+- **Yorum:** Üç düzeltme de ham değerin yaklaşık %45'lik fazlasını giderir ve Tuzla'nın ±%15'i içine iner. Bu haftada
+  2021 biçimi (cf_1) ve ALT-CF3,4 Tuzla'ya en yakındır; uygulamanın kullandığı genişletilmiş biçim +%11 yüksektir.
+  Tek hafta ve 6,4 km uzaklıktaki bir istasyon yöntem değiştirmek için yeterli değildir; karar uzun seriyle ya da
+  kolokasyonla verilmelidir (§9).
+- **Tuzla saat etiketi:** Tuzla değeri 1 saat sonraki etiketle eşleştirildiğinde bütün seriler için korelasyon artıyor
+  (ham 0,64 → 0,69). Tuzla'nın saat etiketi büyük olasılıkla ortalama alınan saatin sonunu gösteriyor (10:00 = 09:00–10:00).
+  Doğrulanırsa uygulamadaki "aynı saat" eşleştirmesi bir saat kaydırılmalıdır (§9).
+
 ## 6. Uygulamadaki sonuçlara etkisi (8 Ekim 2026)
 
 | Ay | Değerlendirilen gün | Ham ortalama | Düzeltilmiş ortalama | WHO günlük değeri (15) aşılan gün: ham → düzeltilmiş |
@@ -189,6 +231,10 @@ Kampüs ortalaması WHO yıllık kılavuz değerinin (5 µg/m³) hâlâ üstünd
       denklem tablosundan birincil olarak teyit et (bu belge yazılırken EPA sitelerine erişilemedi).
 - [ ] Barkjohn vd. (2021) makalesinde denklemin (0,524 / 0,0862 / 5,75) ve 24 saatlik kanal kuralının metnini kontrol et.
 - [ ] Mümkünse PurpleAir'i birkaç hafta resmî bir istasyonun yanına koyarak (kolokasyon) yerel doğrulama yap.
+- [ ] Tuzla saatlik değerinin etiketinin saatin başını mı sonunu mu gösterdiğini İBB/ÇŞB belgesinden doğrula; sonunu
+      gösteriyorsa kampüs–Tuzla aynı saat eşleştirmesini (`app.js` → `paSameHour`, `kiyas.js`) bir saat kaydır (§5).
+- [ ] İki EPA biçimi arasında karar (2021 cf_1 ↔ genişletilmiş cf_atm): 12 Ekim denetiminde 2021 biçimi Tuzla'ya daha
+      yakındı. 2021 biçimine geçmek sunucunun `pm2.5_cf_1_a/b` alanlarını da kaydetmesini gerektirir (§5).
 - [ ] Atmotube yan yana ölçüm (karar 8 Ekim 2026): 5 cihaz SUMER çatısında PurpleAir'in yanında en az 24 saat (tercihen 48);
       kurulum ve karar kuralı `hesaplama_ve_kaynaklar.md` §5'te. Her cihaz için düzeltilmiş PurpleAir'e göre oranı hesapla;
       cihazlar arası farkı ve çarpanları bu belgeye yaz.
