@@ -146,6 +146,34 @@ const Campus = (() => {
         }
         return false;
     }
+    // Bina dışında ama sınırına NEAR_M'den yakın nokta en yakın binaya sayılır: telefon GPS'i açık havada ~5 m,
+    // bina yanında daha fazla sapar (gps.gov). Uzaklık yerel düzlemde metre cinsinden (kampüs ölçeğinde yeterli).
+    const NEAR_M = 15;
+    const M_LAT = 111320, M_LON = 111320 * Math.cos(40.81 * Math.PI / 180);
+    function edgeDist(f, lon, lat) {
+        let best = Infinity;
+        for (const poly of ringsOf(f.feature.geometry)) for (const r of poly) {
+            for (let i = 0; i < r.length - 1; i++) {
+                const ax = (r[i][0] - lon) * M_LON, ay = (r[i][1] - lat) * M_LAT;
+                const dx = (r[i + 1][0] - r[i][0]) * M_LON, dy = (r[i + 1][1] - r[i][1]) * M_LAT;
+                const len2 = dx * dx + dy * dy;
+                const t = len2 ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / len2)) : 0;
+                best = Math.min(best, Math.hypot(ax + t * dx, ay + t * dy));
+            }
+        }
+        return best;
+    }
+    function nearestBuilding(buildings, lon, lat) {
+        const padLat = NEAR_M / M_LAT, padLon = NEAR_M / M_LON;
+        let best = null, bestD = NEAR_M;
+        for (const f of buildings) {
+            const [a, b, c, d] = f.bbox;
+            if (lon < a - padLon || lon > c + padLon || lat < b - padLat || lat > d + padLat) continue;
+            const dist = edgeDist(f, lon, lat);
+            if (dist <= bestD) { bestD = dist; best = f; }
+        }
+        return best;
+    }
 
     // ── kurulum ──────────────────────────────────────────────────────
     async function init(leafletMap) {
@@ -507,7 +535,8 @@ const Campus = (() => {
                 <div><span>Medyan</span><b style="color:${pm25Color(s.med)}">${f1tr(s.med)}</b></div>
                 <div><span>Maks.</span><b style="color:${pm25Color(s.max)}">${f1tr(s.max)}</b></div>
               </div>
-              <div class="bp-cat">Genel ortalama · ${s.n.toLocaleString("tr-TR")} ölçüm (µg/m³, kısa süreli saha ölçümü)</div>
+              <div class="bp-cat">Genel ortalama · ${s.n.toLocaleString("tr-TR")} ölçüm (µg/m³, kısa süreli saha ölçümü)${e.nearN
+                ? ` · ${e.nearN.toLocaleString("tr-TR")} tanesi bina dışında, sınırına ${NEAR_M} m'den yakın` : ""}</div>
               ${contextHtml(e, s, pts)}
               <div class="bp-who">${who}</div>${monthsHtml(e)}`;
         }
@@ -540,15 +569,17 @@ const Campus = (() => {
         buildings.forEach((b, i) => {
             const p = b.feature.properties;
             b.gk = p.name ? `${p.region}|${p.name}` : `#${i}`;
-            if (!groups.has(b.gk)) groups.set(b.gk, { vals: [], by: {}, m: {}, d: {}, ts: [], members: [] });
+            if (!groups.has(b.gk)) groups.set(b.gk, { vals: [], by: {}, m: {}, d: {}, ts: [], members: [], near: 0 });
             groups.get(b.gk).members.push(b);
         });
         for (const p of points) {
             if (p.pm2_5 == null || !p.lat || !p.lon) continue;
-            const b = buildings.find(f => contains(f, p.lon, p.lat));
+            let b = buildings.find(f => contains(f, p.lon, p.lat)), near = false;
+            if (!b) { b = nearestBuilding(buildings, p.lon, p.lat); near = !!b; }
             if (!b) continue;
             const g = groups.get(b.gk);
             g.vals.push(p.pm2_5);
+            if (near) g.near++;
             const who = p._person || "—";
             (g.by[who] ||= { n: 0, sum: 0 }); g.by[who].n++; g.by[who].sum += p.pm2_5;
             const ym = monthOf(p);
@@ -612,7 +643,7 @@ const Campus = (() => {
             stats = allStats;
             monthly = monthlyAll.filter(m => m.n >= MIN_PTS);
         }
-        return { stats, monthly, allStats, monthlyAll, rawN: g.vals.length,
+        return { stats, monthly, allStats, monthlyAll, rawN: g.vals.length, nearN: g.near,
                  fewVals: g.vals.length && g.vals.length < MIN_PTS ? [...g.vals] : null,
                  dur: stats ? durationOf(g) : null, visit: stats ? lastVisitOf(g) : null };
     }

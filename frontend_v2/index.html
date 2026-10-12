@@ -1704,7 +1704,8 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
           altı sınıf (İyi, Orta, Hassas, Sağlıksız, Kötü, Tehlikeli). PM₂.₅ derişimi, sınıfın kesim noktaları arasında doğrusal
           olarak 0–500 indeks değerine çevrilir. Resmî HKİ 24 saatlik ortalamalar için tanımlıdır; özet ekranındaki değer son
           ölçüme göre <i>gösterge</i> niteliğindedir. Kesim noktaları aşağıda "Sınır değerler ve HKİ" bölümündedir.</li>
-        <li><b>Bina değerleri:</b> Saha ölçümlerinin GPS noktaları bina poligonlarıyla eşleştirilir; en az 3 ölçümü olan binalar
+        <li><b>Bina değerleri:</b> Saha ölçümlerinin GPS noktaları bina poligonlarıyla eşleştirilir; bina dışında ama sınırına
+          15 m'den yakın noktalar en yakın binaya sayılır (telefon GPS'i bina yanında birkaç metre sapar). En az 3 ölçümü olan binalar
           sıralanır ve haritada boyanır, 1–2 ölçümlü binalar listede ayrıca gösterilir (tek ölçüm ortalama sayılmaz). Bu ölçümler kısa süreli olduğundan WHO'nun 24 saatlik değeriyle değil, aynı dönemdeki tüm saha ölçümlerinin
           ortalamasıyla karşılaştırılır. Atmotube değerleri <b>ham</b> kullanılır: kılavuzunda PM için düzeltme faktörü yoktur ve
           bağımsız testlerde PM₂.₅ değeri resmî cihazlarla neredeyse bire birdir (Shittu ve ark., 2025: eğim 0,99; aynı çalışmada
@@ -1772,6 +1773,7 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
           (2023). <i>Atmos. Meas. Tech.</i>, 16, 1311, doi:10.5194/amt-16-1311-2023 (toz ve duman olaylarında değerlendirme).</li>
         <li>Atmotube: Shittu ve ark. (2025). <i>Atmos. Meas. Tech.</i>, 18, 817–828, doi:10.5194/amt-18-817-2025 ·
           South Coast AQMD AQ-SPEC, Atmotube Pro saha ve laboratuvar değerlendirmeleri.</li>
+        <li>GPS doğruluğu (bina eşleştirmesindeki 15 m payı): GPS.gov, <i>GPS Accuracy</i>.</li>
         <li>Harita altlıkları: © Esri, Maxar; © CARTO; © OpenStreetMap katkıcıları (ODbL).</li>
         <li>Yazılım: Leaflet (BSD-2), Leaflet.heat, Chart.js (MIT), Lucide ikonları (ISC); yazı tipleri Inter ve Source Serif 4 (SIL OFL 1.1).</li>
       </ul>
@@ -1878,7 +1880,7 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
 
 <script src="js/colorscale.js?v=55"></script>
 <script src="js/api.js?v=43"></script>
-<script src="js/campus.js?v=56"></script>
+<script src="js/campus.js?v=57"></script>
 <script src="js/app.js?v=60"></script>
 <script src="js/who.js?v=47"></script>
 <script src="js/kiyas.js?v=43"></script>

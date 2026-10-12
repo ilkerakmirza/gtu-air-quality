@@ -2,7 +2,7 @@
 
 **Proje:** GTÜ AirLab, kampüs hava kalitesi platformu
 **Kod:** `frontend_v2/js/maruziyet.js` (arayüzde Özet → "AirLab asistanı: kampüste ne kadar PM₂.₅ soludum?")
-**Belge sürümü:** 1.2 · 8 Ekim 2026
+**Belge sürümü:** 1.3 · 12 Ekim 2026
 **Durum:** Taslak model. Sonuçlar senaryo tahminidir, kişisel ölçüm değildir.
 **Uygulamanın diğer hesapları ve kaynakları:** [`hesaplama_ve_kaynaklar.md`](hesaplama_ve_kaynaklar.md)
 
@@ -62,7 +62,7 @@ hesaba etkisi yoktur.
 |---|---|---|
 | Kampüs PM₂.₅ (saatlik) | PurpleAir PA-II, SUMER çatısı; sunucu `/api/purpleair/history?interval=hourly`, 1 Ocak 2026'dan bugüne | `WHO.history()` |
 | Saha ölçümleri (nokta) | Atmotube Pro yürüyüş ölçümleri; sunucu `/api/map/tracks` | `WHO.fieldPoints()` |
-| Bina eşleştirmesi | Saha noktalarının bina poligonlarıyla eşleştirilmesi (`data/campus.geojson`) | `Campus.buildingStats()` |
+| Bina eşleştirmesi | Saha noktalarının bina poligonlarıyla eşleştirilmesi (`data/campus.geojson`); sınırına 15 m'den yakın dış noktalar en yakın binaya sayılır | `Campus.buildingStats()` |
 
 Sabit hava kalitesi sensörünün PM₂.₅ değerleri **US EPA düzeltmeli** değerlerdir (8 Ekim 2026'dan beri; yöntem: [`purpleair_epa_duzeltmesi.md`](purpleair_epa_duzeltmesi.md)). R (bina) Atmotube'un ham değerlerinden bir **oran** olarak hesaplandığından, Atmotube'un mutlak sapması bu orana büyük ölçüde yansımaz.
 
@@ -244,6 +244,7 @@ Künyeler Crossref kayıtlarından, EPA değerleri bölümün PDF'inden (Tablo 6
 
 | Sürüm | Tarih | Değişiklik |
 |---|---|---|
+| 1.3 | 12 Ekim 2026 | R (bina oranı) için bina eşleştirmesi: sınıra 15 m'den yakın dış noktalar da binaya sayılır (`hesaplama_ve_kaynaklar.md` §5). Model ve katsayılar değişmedi. |
 | 1.2 | 8 Ekim 2026 | P (saatlik profil) US EPA düzeltmeli PurpleAir değerlerinden kurulur; sınırlılık 2 güncellendi. Model ve katsayılar değişmedi. |
 | 1.1 | 4 Ekim 2026 | Kural tabanlı asistan (sohbet) eklendi; hesap değişmedi. Asistan eşlemesi ve ek notlar (§2.1, §7). |
 | 1.0 | 3 Ekim 2026 | İlk sürüm. IR değerleri EPA Tablo 6-2'ye göre kesinleştirildi (0,25 / 0,72 / 1,56 / 3,0); "mekanik havalandırma" (F = 0,25) eklendi; güncel I/O kaynakları eklendi. |
