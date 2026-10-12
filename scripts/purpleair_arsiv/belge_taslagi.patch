@@ -1,0 +1,263 @@
+diff --git a/docs/hesaplama_ve_kaynaklar.md b/docs/hesaplama_ve_kaynaklar.md
+index 0f20ffa..94c5f6b 100644
+--- a/docs/hesaplama_ve_kaynaklar.md
++++ b/docs/hesaplama_ve_kaynaklar.md
+@@ -2,7 +2,7 @@
+ 
+ **Amaç:** Uygulamada gösterilen her sınıflandırmanın, eşiğin ve hesabın neye dayandığını tek yerde kayda geçirmek;
+ ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
+-**Belge sürümü:** 1.9 · 12 Ekim 2026
++**Belge sürümü:** 1.10 · 12 Ekim 2026
+ **İlgili belge:** Kişisel maruziyet hesabının ayrıntılı yöntemi → [`maruziyet_yontemi.md`](maruziyet_yontemi.md)
+ 
+ > Koddaki bir eşik ya da kaynak değişirse bu belge aynı commit'te güncellenmelidir. Her bölümün sonunda değerin kodda
+@@ -15,13 +15,13 @@ ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
+ 
+ | Veri | Kaynak | Not |
+ |---|---|---|
+-| Kampüs PM₂.₅, PM₁₀, sıcaklık, nem | PurpleAir PA-II (SUMER çatısı, sensör 229263); sunucu PurpleAir API'den 2 dakikada bir okur | Kampüsün genel (dış ortam) hava kalitesini temsil eder. Sunucu `pm2.5_atm` ve `pm2.5_cf_1` (A ve B kanalı) değerlerini **ham** kaydeder (cf_1, 12 Ekim 2026'dan beri); ekranda ve bütün hesaplarda PM₂.₅ **US EPA düzeltmeli** kullanılır (§1a). PM₁₀ düzeltilmez. 2 Ekim 16:59 – 6 Ekim 16:53 (TR) arasında sensör çevrimdışıydı, veri yok; 7 Ekim 2026'dan beri PurpleAir veri erişim kotası yeterli. |
++| Kampüs PM₂.₅, PM₁₀, sıcaklık, nem | PurpleAir PA-II (SUMER çatısı, sensör 229263); sunucu PurpleAir API'den 2 dakikada bir okur | Kampüsün genel (dış ortam) hava kalitesini temsil eder. Sunucu `pm2.5_atm` ve `pm2.5_cf_1` (A ve B kanalı) değerlerini **ham** kaydeder (cf_1, 12 Ekim 2026'dan beri); ekranda ve bütün hesaplarda PM₂.₅ **US EPA düzeltmeli** kullanılır (§1a). PM₁₀ düzeltilmez. 2 Ekim 16:59 – 6 Ekim 16:53 (TR) arasında sensör çevrimdışıydı, veri yok; 7 Ekim 2026'dan beri PurpleAir veri erişim kotası yeterli. **27 Nisan – 6 Ekim 2026 geçmişi PurpleAir'in kendi arşivinden tamamlandı** (12 Ekim 2026; yalnızca PM₂.₅ kanalları ve nem; ayrıntı `purpleair_epa_duzeltmesi.md` §3a): bu dönemde PM₁₀ ve sıcaklık yalnızca sunucunun canlı kayıtlarında vardır. |
+ | Kampüs sıcaklık ve nem (PurpleAir) | PurpleAir PA-II gövde içi sensör | Düzeltilmeden gösterilir; sıcaklık ortamdan ~4 °C (8 °F) yüksek, nem ~4 puan düşük okunur (PurpleAir'in sensör açıklaması; **ikincil**, bu tarihte birincil kaynağa erişilemedi). Arayüzde "*" ve açıklama ile işaretli. |
+ | Saha ölçümleri | Atmotube Pro (yürüyüş ölçümleri, GPS'li) | Amaç: bina bazlı karakterizasyon (§5). Kısa süreli; WHO 24 saatlik değeriyle karşılaştırılmaz (§5). |
+ | İç mekân CO₂ | Tuya CO₂ sensörleri | 21 Temmuz 2026'dan beri veri yok. |
+ | Bölge (Tuzla istasyonu, ~6,4 km) | İBB hava kalitesi servisi (canlı); ÇŞB SİM arşivi (yerel toplayıcı); geçmiş için `data/tuzla_saatlik.json` | PM₁₀ geçmişi İBB açık verisinden (`scripts/tuzla_gecmis.py`), PM₂.₅ geçmişi ÇŞB'den (`scripts/csb_gecmis.py`, yalnızca Türkiye'den çalışır). |
+ 
+-Saatlik değerler sunucuda `interval=hourly` ile ortalanır; uygulamadaki tüm gün ve saat gruplamaları **Türkiye saatine**
++Saatlik değerler sunucuda `interval=hourly` ile ortalanır (2 ondalığa yuvarlı, 12 Ekim 2026'dan beri); uygulamadaki tüm gün ve saat gruplamaları **Türkiye saatine**
+ (Europe/Istanbul) göredir.
+ 
+ **Veri denetimi kuralları (6 Ekim 2026):**
+@@ -32,6 +32,7 @@ Saatlik değerler sunucuda `interval=hourly` ile ortalanır; uygulamadaki tüm g
+ | Kampüs sınırı: merkez 40,8114 K, 29,3563 D; yarıçap 2 km. Dışındaki Atmotube konumları harita izlerine, ısı haritasına, saha oturumlarına ve canlı cihaz konumuna alınmaz; CSV dışa aktarımda konum boş bırakılır. | Cihazlar eve/yola götürüldüğünde kampüs dışı noktalar kaydediliyordu (39 nokta, 11–44 km); hem kişisel konum (KVKK) hem kampüs ortalamasını bozan veri. Merkez `campus.geojson` binalarının kapsadığı alanın ortası; en uzak bina ~1,06 km. Ham arşiv (`measurements`) değiştirilmez. | `backend/kampus.py`, `backend/config.py` (`CAMPUS_*`), `frontend_v2/js/app.js` (`offCampus`) |
+ | CSV dışa aktarımda saha ölçümlerinin cihaz adı `saha-1, saha-2…` olarak verilir. | Saha cihaz adları kişi adı içeriyor. | `backend/archive.py` → `iter_csv()` |
+ | Tuzla istasyonu saatlik arşivi İBB'den sürdürülür. | ÇŞB yerel toplayıcısı Haziran 2026'dan beri çalışmıyor; arşiv 16 Haziran'dan beri boştu. | `backend/collector.py` → `collect_hourly()` |
++| PurpleAir arşivi içe aktarımı (12 Ekim 2026): aynı zaman damgalı ve A/B cf_atm farkı ≤ 0,06 µg/m³ sunucu kaydına cf_1 yazılır; arşivdeki bir zamanın ±60 s içinde kayıt yoksa yeni kayıt eklenir, varsa sunucu kaydı korunur. 15 Haziran'da içe aktarılmış 781 Nisan kaydı `yedek_purpleair_nisan` tablosuna alınıp arşivle değiştirildi. | Geçmişin tamamını tek yöntemle (cf_1) hesaplamak ve sunucunun kaçırdığı kayıtları doldurmak; aynı ölçüm iki kez yazılmasın. Örtüşen 3391 kaydın 3385'i (%99,82) aynı zamanlı; bunların 3384'ü aynı değerli (fark ≤ 0,05 µg/m³), 1'i tutarsız (22 Haziran, B kanalı). Sonuç: 6 Ekim öncesi 110 752 kayıt, 110 745'inde cf_1 <<KESINLESECEK>>. | Supabase (tek seferlik SQL); belge `purpleair_epa_duzeltmesi.md` §3a |
+ | Veritabanında `purpleair_readings.recorded_at` tekil; 7 Ekim 2026'da 2011 yinelenen satır (değerleri birebir aynı) ve `atmotube_readings`'ten 40 kampüs dışı nokta silindi. | Tek kayıt, tek ölçüm; kişisel konum tutulmaz. | Supabase (dizin `purpleair_readings_recorded_at_key`), `backend/db.py` (`ON CONFLICT DO NOTHING`) |
+ 
+ ## 1a. PurpleAir PM₂.₅ düzeltmesi (US EPA; yöntem 12 Ekim 2026'da güncellendi)
+@@ -42,8 +43,10 @@ düzeltme denklemi, yayımlandığı girdiyle kullanılır (Barkjohn vd., 2021):
+ - **PM₂.₅ = 0,524 × cf_1 − 0,0862 × RH + 5,75** (cf_1 = A/B ortalaması `pm2.5_cf_1`, RH = PurpleAir nemi; nem eksikse %50;
+   negatif sonuç 0, uygulama kuralı). PurpleAir haritasındaki "US EPA" dönüşümü de bu denklemi kullanır (ikincil kaynak;
+   haritayla tek noktada tutarlı, orta düzeyde karşılaştırma bekleniyor).
+-- **Yedek yöntem:** cf_1'i kaydedilmemiş eski ölçümlerde EPA'nın genişletilmiş denklemi cf_atm ile (AirNow Yangın ve Duman
+-  Haritası). Ham değer 30 µg/m³'ün altında iki denklem aynı sonucu verir (fark en çok 0,3 µg/m³).
++- **cf_1 geçmişi:** Sunucu cf_1'i 12 Ekim 2026'dan beri kaydeder; 27 Nisan – 12 Ekim geçmişine PurpleAir'in kendi arşivinden
++  eklendi (6 Ekim öncesi 110 752 kaydın 110 745'i <<KESINLESECEK>>; `purpleair_epa_duzeltmesi.md` §3a).
++- **Yedek yöntem:** cf_1'i olmayan az sayıdaki kayıtta (6 Ekim öncesi 7, sonrası 28) EPA'nın genişletilmiş denklemi cf_atm ile
++  (AirNow Yangın ve Duman Haritası). Ham değer 30 µg/m³'ün altında iki denklem aynı sonucu verir (fark en çok 0,3 µg/m³).
+ - **Gerekçe:** Denklem cf_1 ile geliştirildi. Genişletilmiş biçim cf_atm'nin yüksek derişimde cf_1'in üçte ikisi olduğunu
+   varsayar; bu sensörde oran derişimle değişiyor (1,00 → 0,89 → 0,73 → 0,66) ve genişletilmiş biçim ham 35–65 µg/m³ arasında
+   ortalama 4 µg/m³ yüksek çıkıyordu (12 Ekim 2026 PurpleAir indirmesi). PurpleAir'in bağımsız ALT-CF3 yöntemi de bu aralıkta
+@@ -53,8 +56,9 @@ düzeltme denklemi, yayımlandığı girdiyle kullanılır (Barkjohn vd., 2021):
+ - Aynı temelde karşılaştırma: Tuzla (resmî ölçüm) ile düzeltilmiş PurpleAir; Atmotube (düzeltilmez) ile ham PurpleAir (sensör karşılaştırma grafiği).
+ 
+ Formül, gerekçe, çalışılmış örnekler, doğrulama, sınırlılıklar ve kaynakların doğrulama durumu:
+-[`purpleair_epa_duzeltmesi.md`](purpleair_epa_duzeltmesi.md). Kaynakların durumu **ikincil** (EPA ve yayıncı sitelerine bu
+-ortamdan erişilemedi; aynı denklem birden çok bağımsız kaynakta aynı); kontrol listesinde.
++[`purpleair_epa_duzeltmesi.md`](purpleair_epa_duzeltmesi.md). Denklemin girdisi (CF=1 ve PurpleAir nemi) Barkjohn vd. (2021)
++makalesinden **birincil** olarak teyit edildi (12 Ekim 2026); katsayılar (0,524 / 0,0862 / 5,75) ve kanal kuralı (5 µg/m³ ve
++%70 birlikte) **ikincil** (aynı değerler birden çok bağımsız kaynakta); kontrol listesinde.
+ 
+ **Kodda:** `colorscale.js` → `epaCf1()` (asıl), `epaPM25()` (yedek), `paChannelsAgree()`, `paCorrect()`; tek uygulama noktası
+ `api.js` (`purpleairLatest`, `purpleairHistory`); sunucu `purpleair.py` (cf_1 ve cf_atm kanallarını kaydeder), `db.py` →
+@@ -133,7 +137,13 @@ I  = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt     → en
+ 
+ * **Günlük ortalama:** O gün ölçülen saatlik değerlerin ortalaması (Türkiye saatine göre gün).
+ * **Kapsam kuralları:** En az **18 saat** ölçülen gün *tam gün*, en az **6 saat** ölçülen gün *gösterge gün*;
+-  daha az ölçülen günler değerlendirmeye alınmaz (grafikte soluk gösterilir).
++  daha az ölçülen günler değerlendirmeye alınmaz (grafikte soluk gösterilir). 18 saat, günlük ortalama için yaygın %75
++  (18/24) tamlık kuralıdır (40 CFR Part 50 Ek K, PM₁₀; sürekli PM₂.₅ ölçümlerinde de yaygın uygulanır). Barkjohn vd. (2021)
++  düzeltme denklemini geliştirirken 24 saatlik ortalamalarda %90 tamlık aradı. 6 saatlik gösterge gün eşiği **uygulama
++  kuralıdır** (kaynağı yok; kesintili dönemlerde günleri tamamen atmamak için).
++* **PM₁₀ kapsamı:** PM₁₀ yalnızca sunucunun canlı kayıtlarında vardır (27 Nisan – 6 Ekim 2026 arşivinde yok). PM₁₀
++  kutucuğu ve aylık tabloda PM₁₀'un dayandığı gün sayısı her zaman yazılır; PM₂.₅ günlerinin yarısından azsa kutucuk
++  "yetersiz PM₁₀ verisi" der ve renklendirilmez (uygun/aşıldı denmez), tablo hücresi soluk gösterilir.
+ * **Aşım günü:** Günlük ortalaması 15 µg/m³'ü (PM₂.₅) aşan gösterge/tam gün. WHO'ya göre 24 saatlik değer yılda en çok
+   3–4 gün aşılmalıdır (99. yüzdelik ≈ günlerin %1'i). Bir yıldan kısa dönemde mutlak sayı değil **oran** karşılaştırılır:
+   aşım günlerinin oranı ≤ %1 ise kutucuk "uygun", değilse "aşıldı" gösterilir (8 Ekim 2026'ya kadar mutlak sayı ≤ 3 kullanılıyordu;
+@@ -142,7 +152,8 @@ I  = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt     → en
+   ("yıllık kılavuz değerinin X katı"). Dönem bir yıldan kısaysa bu karşılaştırma göstergedir.
+ * Veri: PurpleAir saatlik geçmişi, 1 Ocak 2026'dan bugüne.
+ 
+-**Kodda:** `who.js` → `FULL_H = 18`, `MIN_H = 6`, `EXCEED_SHARE = 0.01`, `dailyMeans()`, `HISTORY_FROM`.
++**Kodda:** `who.js` → `FULL_H = 18`, `MIN_H = 6`, `EXCEED_SHARE = 0.01`, `dailyMeans()`, `HISTORY_FROM`, `tilesHtml()`
++(`pm10Thin`), `monthlyHtml()`.
+ 
+ ## 5. Bina değerleri (saha ölçümleri)
+ 
+@@ -223,7 +234,8 @@ I  = (I_üst − I_alt) / (C_üst − C_alt) × (C − C_alt) + I_alt     → en
+   o ayın saha ölçümlerinden.
+ * **Ay karşılaştırması:** Yüzde değişim yalnızca gösterilen ay ile karşılaştırılan önceki ayın **her ikisinde de en az 7
+   değerlendirilebilir gün** varsa verilir; karşılaştırılan ay, bu koşulu sağlayan en yakın önceki aydır. (1–2 günlük
+-  ölçümle hesaplanan aylık yüzde değişim yanıltıcıdır.)
++  ölçümle hesaplanan aylık yüzde değişim yanıltıcıdır.) Fark %5'ten küçükse yüzde yerine "… ayıyla benzer" yazılır
++  (kampüs–Tuzla karşılaştırmasındaki ±%5 eşiğiyle aynı, §6; uygulama kuralı).
+ 
+ **Kodda:** `ozet.js` → `PA_FRESH_MIN = 120`, `TREND_MIN_DAYS = 7`, `monthStats()`.
+ 
+@@ -288,6 +300,8 @@ Afroz ve ark. (2025), Branco ve ark. (2024). Ayrıntılar, sayısal örnek ve ka
+ - [ ] HKİ: ÇŞB SİM'in güncel ulusal tablosunda PM₂.₅ sütunu var mı, İBB tablosuyla aynı mı?
+ - [ ] CO₂ 800 ppm eşiğinin dayandığı kaynak (iddia: WHO COVID-19 havalandırma rehberi) doğrulanmalı.
+ - [x] PurpleAir için US EPA düzeltmesi uygulandı (8 Ekim 2026, §1a).
++- [x] PurpleAir 27 Nisan – 6 Ekim 2026 geçmişi PurpleAir arşivinden tamamlandı; cf_1 tüm geçmişte (12 Ekim 2026, §1a).
++- [ ] Barkjohn vd. (2021) katsayıları (0,524 / 0,0862 / 5,75) birincil metinden okunmalı (girdi CF=1 ve nem teyit edildi).
+ - [ ] US EPA beş bölümlü denklemi ve kanal kuralı birincil kaynaktan (EPA "Sensor Data Cleaning and Correction" sunumu,
+       AirNow Soru-Cevap denklem tablosu, Barkjohn vd. 2021) teyit edilmeli.
+ - [ ] PurpleAir'in resmî bir istasyon yanında (kolokasyon) yerel doğrulaması yapılabilirse yapılmalı.
+@@ -322,11 +336,14 @@ Afroz ve ark. (2025), Branco ve ark. (2024). Ayrıntılar, sayısal örnek ve ka
+ - Salamalikis, V. ve ark. (2025). *Air Quality, Atmosphere & Health*, 18, 2609–2624. https://doi.org/10.1007/s11869-025-01787-4
+ - U.S. EPA (2011). *Exposure Factors Handbook: 2011 Edition*, Bölüm 6 (EPA/600/R-09/052F).
+ - WHO (2021). *WHO global air quality guidelines.* ISBN 978-92-4-003422-8.
++- U.S. Code of Federal Regulations, 40 CFR Part 50, Appendix K: Interpretation of the National Ambient Air Quality Standards
++  for Particulate Matter (günlük ortalamada %75 tamlık). https://www.ecfr.gov/current/title-40/chapter-I/subchapter-C/part-50/appendix-Appendix%20K%20to%20Part%2050
+ 
+ ## 14. Sürüm geçmişi
+ 
+ | Sürüm | Tarih | Değişiklik |
+ |---|---|---|
++| 1.10 | 12 Ekim 2026 | §1, §1a: 27 Nisan – 6 Ekim 2026 PurpleAir geçmişi üreticinin arşivinden tamamlandı (cf_1 eşleştirme ve ±60 s ekleme kuralı, Nisan kayıtlarının yedekle değiştirilmesi); saatlik/günlük ortalamalar 2 ondalık. §4: 18 saat kuralının kaynağı (40 CFR 50 Ek K), PM₁₀ kapsamının gösterilmesi. §7: %5'ten küçük ay farkı "benzer". Barkjohn vd. 2021 girdisi birincil olarak teyit edildi. |
+ | 1.9 | 12 Ekim 2026 | §1a: PurpleAir düzeltmesi EPA'nın ABD geneli denklemine, yayımlandığı girdi cf_1 ile geçti (PurpleAir haritasındaki "US EPA" ile aynı); cf_1'i olmayan eski kayıtlarda genişletilmiş denklem (yedek). |
+ | 1.8 | 12 Ekim 2026 | §5: bina sınırına 15 m'den yakın dış noktalar en yakın binaya sayılır (GPS sapması); etkisi ve sınırlılığı yazıldı. |
+ | 1.7 | 10 Ekim 2026 | §5: 1–2 ölçümlü binalar listede ayrıca gösterilir (sıralamaya ve boyaya girmez); "genelden fark" yalnızca başka ayda ölçüm varsa; bina içine düşmeyen noktalar sınırlılığı. |
+diff --git a/docs/purpleair_epa_duzeltmesi.md b/docs/purpleair_epa_duzeltmesi.md
+index f90e6b4..cbd5cba 100644
+--- a/docs/purpleair_epa_duzeltmesi.md
++++ b/docs/purpleair_epa_duzeltmesi.md
+@@ -1,6 +1,7 @@
+ # PurpleAir PM₂.₅ için US EPA düzeltmesi
+ 
+-**Belge sürümü:** 2.0 · 12 Ekim 2026 (asıl yöntem EPA'nın ABD geneli denklemine, yayımlandığı girdi cf_1 ile geçti)
++**Belge sürümü:** 2.1 · 12 Ekim 2026 (27 Nisan – 6 Ekim 2026 geçmişi PurpleAir'in kendi arşivinden tamamlandı, §3)
++Önceki: 2.0 · 12 Ekim 2026 (asıl yöntem EPA'nın ABD geneli denklemine, yayımlandığı girdi cf_1 ile geçti)
+ **Kodda:** `frontend_v2/js/colorscale.js` → `epaCf1()` (asıl yöntem), `epaPM25()` (yedek yöntem), `paChannelsAgree()`,
+ `paCorrect()`; uygulandığı tek yer `frontend_v2/js/api.js` (`purpleairLatest`, `purpleairHistory`). Sunucu `cf_1` ve `cf_atm`
+ kanallarını kaydeder (`backend/purpleair.py`), saatlik/günlük geçmişte kanal ortalamalarını döndürür (`backend/db.py` →
+@@ -24,10 +25,11 @@ kanallarını kaydeder (`backend/purpleair.py`), saatlik/günlük geçmişte kan
+    değişiyor (1,00 → 0,89 → 0,73 → 0,66, §5); bu yüzden genişletilmiş biçim ham değer 35–65 µg/m³ arasındayken
+    4 µg/m³ kadar yüksek çıkıyordu. Denklemi kendi girdisiyle kullanmak bu varsayımı ortadan kaldırır.
+ 5. **Kalite kontrolü:** A ve B kanalı birbirinden çok farklıysa (hem ≥ 5 µg/m³ hem ≥ %70) o ölçüm kullanılmaz.
+-6. **Eski kayıtlar:** 12 Ekim 2026'dan önce sunucu cf_1 kaydetmiyordu. cf_1'i olmayan kayıtlarda EPA'nın genişletilmiş
+-   denklemi cf_atm ile kullanılır (yedek yöntem). Ham değer 30 µg/m³'ün altında iki biçim aynı sonucu verir (fark en çok
+-   0,3 µg/m³). 6 Ekim öncesi saatlerin %83'ü bu düzeydedir; %9'u 35–65 µg/m³ aralığındadır ve bu saatlerde yedek yöntem
+-   ortalama 4 µg/m³ yüksek kalabilir (§7). 6–12 Ekim kayıtlarına cf_1 PurpleAir'in kendi verisinden eklendi (§3).
++6. **Geçmiş kayıtlar:** Sunucu cf_1'i 12 Ekim 2026'dan beri kaydediyor. 27 Nisan – 12 Ekim geçmişi PurpleAir'in kendi
++   veri arşivinden (Data Download Tool, 2 dakikalık) tamamlandı: sunucu kayıtlarına cf_1 eklendi, sunucunun kaçırdığı
++   zamanlar yeni kayıt olarak girdi (§3). Böylece geçmişin tamamı asıl yöntemle hesaplanır; 6 Ekim öncesinde cf_1'i olmayan
++   yalnızca 7 kayıt kalır (yedek yöntem: EPA'nın genişletilmiş denklemi cf_atm ile). Arşivden eklenen kayıtlarda yalnızca
++   PM₂.₅ kanalları ve nem vardır; PM₁₀ ve sıcaklık bu dönemde yalnızca sunucunun canlı kayıtlarında bulunur.
+ 7. **Sınırlılık:** Denklem ABD verisiyle geliştirildi; Türkiye'de resmî bir cihazın yanında (kolokasyon) doğrulanmadı.
+    Çöl tozu olaylarında PM₂.₅ olduğundan düşük görünebilir. PM₁₀ ve Atmotube saha ölçümleri düzeltilmez.
+ 
+@@ -87,9 +89,45 @@ PurpleAir API (pm2.5_cf_1 A/B, pm2.5_atm A/B, nem)  →  sunucu (2 dk'da bir kay
+   değerle aynıdır.
+ - **cf_1 kaydı:** Sunucu cf_1'i 12 Ekim 2026 13:06'dan (Türkiye saati) beri kendisi kaydeder. 6–12 Ekim için PurpleAir'in
+   kendi verisinden (§5'teki indirme dosyası, `docs/veri/`) zaman damgası ve A/B cf_atm değerleri aynı olan 3389 kayda cf_1 A
+-  ve B değerleri eklendi; bu günler de asıl yöntemle hesaplanır. cf_1'i olmayan kayıtlar yedek yöntemle hesaplanır:
+-  27 Nisan – 2 Ekim arasındaki 4129 kayıt ve 6 Ekim sonrasındaki 28 kayıt (indirme dosyasında karşılığı olmayan 14 kayıt,
+-  12 Ekim 12:24–13:05 arasındaki 14 kayıt).
++  ve B değerleri eklendi. 27 Nisan – 6 Ekim için aşağıdaki içe aktarma yapıldı. cf_1'i olmayan kayıtlar yedek yöntemle
++  hesaplanır: 6 Ekim öncesinde 7 kayıt (aşağıda) ve 6 Ekim sonrasında 28 kayıt (indirme dosyasında karşılığı olmayan
++  14 kayıt, 12 Ekim 12:24–13:05 arasındaki 14 kayıt).
++
++### 3a. 27 Nisan – 6 Ekim 2026 geçmişinin PurpleAir arşivinden tamamlanması (12 Ekim 2026)
++
++- **Kaynak dosya:** [`veri/purpleair_229263_2dk_2026-04-27_2026-10-06.csv`](veri/purpleair_229263_2dk_2026-04-27_2026-10-06.csv)
++  (PurpleAir Data Download Tool, sensör 229263, Average 0 = 2 dakikalık kayıt; alanlar `time_stamp`, `humidity`,
++  `pm2.5_atm_a/b`, `pm2.5_cf_1_a/b`; 110 752 satır, 27 Nisan 00:00 – 6 Ekim 23:59 TR). Dosyada PM₁, PM₁₀ ve sıcaklık yoktur.
++- **Arşiv canlı kayıtla aynı ölçüm mü?** Üretici arşivi ile canlı API okumasının eşdeğerliği için literatürde bir kaynak
++  bulunamadı; eşdeğerlik veriyle gösterildi: dönemdeki 3391 sunucu kaydının 3385'i (%99,82) dosyadaki bir kayıtla aynı zaman
++  damgalıdır; bunların 3384'ünde A/B cf_atm farkı en çok 0,05 µg/m³ (sunucu 2, dosya 1 ondalık yazar), 1'i tutarsızdır
++  (22 Haziran, aşağıda); nem 3385'inde aynıdır; cf_1'i zaten
++  olan 43 kayıt (6 Ekim) dosyayla birebir aynıdır. İki kaynakta da aynı kesintiler var (5–7 Temmuz, 3–5 Ekim; sensör kapalı).
++- **cf_1 ekleme kuralı:** Zaman damgası aynı ve A/B cf_atm farkı en çok 0,06 µg/m³ olan sunucu kaydına dosyanın cf_1 A ve B
++  değerleri yazıldı (3341 kayıt <<KESINLESECEK>>).
++- **Yeni kayıt kuralı:** Dosyadaki bir zamanın **±60 saniye** içinde veritabanında hiçbir kayıt yoksa yeni kayıt eklendi
++  (107 361 kayıt <<KESINLESECEK>>); varsa sunucu kaydı korundu (aynı ölçümün ikinci kez yazılmaması için; sunucu 2 dakikada bir okur).
++  Yeni kayıtta `pm2_5` = A/B cf_atm ortalaması, 0,1'e yuvarlı (yarım yukarı; yalnızca ekranda "ham" diye gösterilen değeri
++  etkiler, EPA hesabı cf_1'den yapılır); nem dosyadan; PM₁, PM₁₀ ve sıcaklık boş; konum sunucu kayıtlarıyla aynı
++  (40,8062 K, 29,361 D). `recorded_at` tekil olduğundan aynı zaman iki kez yazılamaz.
++- **Nisan kayıtlarının değiştirilmesi (kullanıcı onayıyla):** 15 Haziran 2026'da başka yoldan içe aktarılmış, cf_1'i olmayan
++  27–30 Nisan kayıtları (781) silindi; yerine dosyanın 2 dakikalık kayıtları girdi. Silinen kayıtlar veritabanında
++  `yedek_purpleair_nisan` tablosunda saklanıyor (RLS açık; geri yüklenebilir).
++- **cf_1'i olmayan kalan 7 kayıt (6 Ekim öncesi):** 6 sunucu kaydı dosyadaki kayıttan 1 saniye kayık (aynı ölçüm; dosya
++  satırı ±60 s kuralıyla eklenmedi, sunucu kaydı korundu; kayıt no 901, 1233, 1652, 1766, 2110, 3829) ve 22 Haziran 2026
++  11:50:28 UTC kaydı: zaman aynı, B kanalı sunucuda 9,0, dosyada 8,3 µg/m³ (**kaynaklar arası tutarsızlık**; sunucu kaydı
++  korundu, cf_1 eklenmedi). Bunlar yedek yöntemle hesaplanır.
++- **Sonuç <<KESINLESECEK>>:** 6 Ekim 21:00 UTC öncesinde 110 752 kayıt, 110 745'inde cf_1 var. Kapsam: beklenen 2 dakikalık
++  kayıtların %94,4'ü; 3718 saat; **153 tam gün** (≥ 18 saat), 4 gösterge gün (4 ve 8 Temmuz, 2 ve 6 Ekim), 6 saatten az
++  ölçümlü gün yok. Ay ay tam gün: Nisan 4/4, Mayıs 31/31, Haziran 30/30, Temmuz 26/31, Ağustos 31/31, Eylül 30/30, Ekim 1/6 (payda takvim günü).
++- **Kanal denetimi (§2):** 134 iki dakikalık kayıt (%0,12) ve 5 saat geçersiz sayılır (1 Mayıs 15:00 ve 16:00, 2 Mayıs 09:00,
++  4 Mayıs 09:00, 5 Mayıs 05:00); Mayıs başında B kanalı küçük ve sistematik olarak yüksek okuyor. 27 kısa ani yükselmenin
++  24'ünde iki kanal uyumlu; bunlar gerçek olay sayılır ve ayıklanmaz (ekip kararı, 8 Ekim 2026). En yüksek saatlik düzeltilmiş
++  değer 58,4 µg/m³ (7 Mayıs 06:00).
++- **Elle denetim (saat ortalaması, TR):** 15 Mayıs 14:00 → 11,05; 1 Ağustos 08:00 → 7,37; 6 Mayıs 08:00 → 27,93 µg/m³
++  (veritabanından SQL ile, uygulamadaki hesapla aynı: saatlik cf_1 A/B ve nem ortalaması, §1) <<KESINLESECEK>>.
++- **Sunucu yanıtı:** Saatlik ve günlük ortalamalar sunucuda 2 ondalığa yuvarlanır (`db.py` → `get_purpleair_history()`);
++  1 Ocak'tan bugüne saatlik geçmiş ~3900 satırdır ve yuvarlama yanıtı ~%30 küçültür.
+ - **Aynı temelde karşılaştırma:** Kampüs–Tuzla karşılaştırmasında PurpleAir düzeltilmiş değeriyle girer (Tuzla resmî
+   ölçümdür, düzeltilmez). Araştırma'daki sensör karşılaştırma grafiğinde Atmotube düzeltilmediği için PurpleAir'in de
+   **ham** değeri kullanılır.
+@@ -164,6 +202,10 @@ Değerler saat ortalamasıdır. Aynı saatlerde eski (genişletilmiş) yöntem 8
+ 
+ ## 6. Uygulamadaki sonuçlara etkisi
+ 
++**12 Ekim 2026, geçmiş tamamlandıktan sonra (asıl yöntem, tüm ölçümler):** <<KESINLESECEK>> (ay, değerlendirilen gün, ham ve
++düzeltilmiş ortalama, WHO günlük değeri aşılan gün; içe aktarma doğrulandıktan sonra doldurulacak). Aşağıdaki 8 Ekim tablosu
++o tarihte veritabanında bulunan 19 güne dayanır ve tarihsel kayıt olarak korunmuştur.
++
+ **8 Ekim 2026 (eski yöntemle hesaplanmıştı):**
+ 
+ | Ay | Değerlendirilen gün | Ham ortalama | Düzeltilmiş ortalama | WHO günlük değeri (15) aşılan gün: ham → düzeltilmiş |
+@@ -188,10 +230,11 @@ neredeyse değiştirmez. Ekim'in etkisi yukarıdaki iki yöntem tablosundadır.
+ 3. **Aşırı duman:** Asıl denklem olağan ortam düzeyleri için geliştirildi; yüzlerce µg/m³'lük orman yangını dumanında düşük
+    tahmin ettiği için EPA genişletilmiş denklemi çıkarmıştır (Barkjohn vd., 2022). Kampüste bu düzey görülmedi (6–12 Ekim'de
+    en yüksek iki dakikalık cf_1 173, saatlik 156 µg/m³).
+-4. **İki yöntemli geçmiş:** cf_1'i olmayan eski kayıtlar (27 Nisan – 2 Ekim 2026) yedek yöntemle hesaplanır. Ham değer
+-   30 µg/m³'ün altında fark en çok 0,3 µg/m³'tür (bu dönemin saatlerinin %83'ü). Saatlerin %9'u 35–65 aralığındadır; bu
+-   saatlerde değer 6–12 Ekim verisine göre ortalama 4, en çok 9 µg/m³ yüksek olabilir. Bu kayıtlara da cf_1 PurpleAir
+-   geçmişinden eklenirse tüm geçmiş tek yöntemle hesaplanır (§9).
++4. **Geçmişin kaynağı ve PM₁₀:** 27 Nisan – 6 Ekim 2026 kayıtlarının büyük çoğunluğu (107 361 <<KESINLESECEK>>) sunucunun canlı
++   okuması değil, PurpleAir'in kendi arşividir; örtüşen 3391 kaydın 3385'i (%99,82) aynı zaman damgalı, bunların 3384'ü aynı değerlidir
++   (§3a). Arşivde PM₁₀ ve sıcaklık olmadığı için bu dönemde PM₁₀ değerlendirmesi yalnızca sunucunun canlı kayıt aldığı
++   saatlere dayanır ve dönemi temsil etmeyebilir; Sağlık sekmesi PM₁₀'un kaç güne dayandığını yazar. cf_1'i olmayan 7 kayıt
++   (ve 6 Ekim sonrası 28 kayıt) yedek yöntemle hesaplanır; ham değer 30 µg/m³'ün altındaysa fark en çok 0,3 µg/m³'tür.
+ 5. **Nem:** PurpleAir'in nem sensörü gövde içinde olduğundan ortamdan birkaç puan düşük okur. Denklem PurpleAir'in kendi nem
+    ölçümüyle geliştirildiği için bu değer düzeltilmeden kullanılır (doğru kullanım budur).
+ 6. **Anlık değer:** 2 dakikalık tek ölçüme uygulanan düzeltme saatlik değer kadar kararlı değildir; gösterge niteliğindedir
+@@ -202,11 +245,12 @@ neredeyse değiştirmez. Ekim'in etkisi yukarıdaki iki yöntem tablosundadır.
+ 
+ | Bilgi | Kaynak | Doğrulama |
+ |---|---|---|
+-| ABD geneli denklem 0,524 × cf_1 − 0,0862 × RH + 5,75; ham değerin ~%40 yüksek olması; ~12 000 ölçüm, 16 eyalet | Barkjohn, Gantt, Clements (2021) | **İkincil:** makale özeti, 2024 düzeltme notu (Barkjohn vd. 2022'ye) ve birden çok bağımsız kaynakta aynı katsayılar ve aynı girdi (cf_1). Tam metin bu ortamdan açılamadı. |
++| ABD geneli denklem 0,524 × cf_1 − 0,0862 × RH + 5,75; ham değerin ~%40 yüksek olması; ~12 000 ölçüm, 16 eyalet | Barkjohn, Gantt, Clements (2021) | Girdi (CF=1 ve PurpleAir nemi) ve 24 saatlik ortalamada %90 tamlık ölçütü: **birincil** (makale, 12 Ekim 2026). Katsayılar: **ikincil** (makale özeti, 2024 düzeltme notu ve birden çok bağımsız kaynakta aynı; katsayıların geçtiği metin buradan görülemedi). |
++| Üretici arşivinin (Data Download Tool) canlı API kaydıyla aynı ölçüm olması | Bu sensörün kendi verisi (§3a) | **Birincil ölçüm;** literatür kaynağı bulunamadı. Örtüşen 3391 kaydın 3385'i aynı zamanlı; 3384'ünde değer farkı ≤ 0,05 µg/m³, 1'i tutarsız. |
+ | PurpleAir haritasındaki "US EPA" dönüşümünün bu denklemi cf_1 ile kullanması | PurpleAir Community sayfaları | **İkincil;** haritayla tek noktada tutarlı (§5), orta düzeyde karşılaştırma bekleniyor (§9). |
+ | cf_atm/cf_1 oranının derişimle değişmesi | Bu sensörün kendi verisi (12 Ekim indirmesi, §5) | **Birincil ölçüm.** cf_atm'nin ~25 µg/m³ üstünde doğrusal olmadığı literatürde de belirtilir (Barkjohn vd. 2021 hakem süreci). |
+ | Genişletilmiş denklem (yedek yöntem) | EPA AirNow Yangın ve Duman Haritası; Barkjohn vd. (2022) | **İkincil:** AirGradient, Maine DEP ve PurpleAir topluluğu aynı denklemi veriyor. |
+-| Kanal kuralı (≥ 5 µg/m³ ve ≥ %70), nem eksikse %50 | AirNow Soru-Cevap; Barkjohn vd. 2022 | **İkincil.** 2021 makalesi 24 saatlik veride %61 kullanmıştı; saatlik veride güncel kural %70'tir. |
++| Kanal kuralı (≥ 5 µg/m³ ve ≥ %70), nem eksikse %50 | AirNow Soru-Cevap; Barkjohn vd. 2022 | **İkincil** (5 µg/m³ ile %70'in birlikte kullanımı birincil metinde görülemedi). 2021 makalesi 24 saatlik veride %61 kullanmıştı; saatlik veride güncel kural %70'tir. |
+ | Toz olaylarında düşük tahmin | Jaffe vd. (2023) | **İkincil** (makale özeti). |
+ 
+ **Kaynakça**
+@@ -234,14 +278,16 @@ neredeyse değiştirmez. Ekim'in etkisi yukarıdaki iki yöntem tablosundadır.
+ - [x] Yöntem kararı (12 Ekim 2026): EPA'nın ABD geneli denklemi, cf_1 girdisiyle; cf_1'i olmayan eski kayıtlar için yedek yöntem.
+ - [ ] PurpleAir haritasında orta düzeyde bir saatin (ham 45–55 µg/m³; ör. 11 Ekim 06:00, saatlik ortalama) "US EPA" değerini
+       uygulamanın değeriyle karşılaştır. Beklenen: asıl yöntemle aynı (11 Ekim 06:00 için ~35,7 µg/m³).
+-- [ ] Barkjohn vd. (2021) makalesinde denklemin (0,524 / 0,0862 / 5,75), girdinin (cf_1) ve kanal kuralının metnini kontrol et.
++- [ ] Barkjohn vd. (2021) makalesinde denklemin katsayılarını (0,524 / 0,0862 / 5,75) ve kanal kuralını (5 µg/m³ ve %70)
++      birincil metinden kontrol et. Girdi (CF=1 ve PurpleAir nemi) ve 24 saatlik ortalamalarda %90 tamlık ölçütü makaleden
++      teyit edildi (12 Ekim 2026).
+ - [ ] Mümkünse PurpleAir'i birkaç hafta resmî bir istasyonun yanına koyarak (kolokasyon) yerel doğrulama yap.
+ - [x] 6–12 Ekim 2026 kayıtlarına cf_1 eklendi (3389 kayıt; PurpleAir indirme dosyası, A/B cf_atm kanalları da aynı
+       olan kayıtlarla eşleştirildi).
+-- [ ] İstenirse eski kayıtlara da cf_1 ekle ve sunucunun kaçırdığı kayıtları doldur: PurpleAir Data Download Tool'dan
+-      27 Nisan – 6 Ekim 2026, Average 0, alanlar `pm1.0_atm`, `pm2.5_atm_a`, `pm2.5_atm_b`, `pm2.5_cf_1_a`, `pm2.5_cf_1_b`,
+-      `pm10.0_atm`, `temperature`, `humidity`. Dosya `docs/veri/`'ye konur; zaman damgasıyla eşleşen kayıtlara cf_1 yazılır,
+-      eksik zamanlar yeni kayıt olarak eklenir (§3'teki yöntemle). Böylece tüm geçmiş tek yöntemle hesaplanır.
++- [x] 27 Nisan – 6 Ekim 2026 geçmişi PurpleAir arşivinden tamamlandı (12 Ekim 2026, §3a): 3341 kayda cf_1 eklendi,
++      107 361 kayıt eklendi, 781 Nisan kaydı yedeklenip değiştirildi <<KESINLESECEK>>. İndirilen dosyada PM₁₀ ve sıcaklık yok;
++      gerekirse aynı dönem `pm10.0_atm` ve `temperature` alanlarıyla ayrıca indirilip yalnızca bu alanlar eklenebilir.
++- [ ] Kalan 7 cf_1'siz kaydı izle; 22 Haziran 11:50:28 UTC tutarsızlığı (B 9,0 / 8,3) için PurpleAir'in ham kaydına bakılabilir.
+ - [ ] Tuzla saatlik değerinin etiketinin saatin başını mı sonunu mu gösterdiğini İBB/ÇŞB belgesinden doğrula; sonunu
+       gösteriyorsa kampüs–Tuzla aynı saat eşleştirmesini (`app.js` → `paSameHour`, `kiyas.js`) bir saat kaydır.
+ - [ ] Atmotube yan yana ölçüm (karar 8 Ekim 2026): 5 cihaz SUMER çatısında PurpleAir'in yanında en az 24 saat (tercihen 48);
