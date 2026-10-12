@@ -1,6 +1,6 @@
 // WHO durumu — kampüs PurpleAir ölçümlerinin WHO 2021 hava kalitesi kılavuz değerleriyle karşılaştırması.
-// Saatlik ortalamalar Türkiye gününe göre günlük ortalamaya çevrilir. Ölçümler kesintili olduğu için
-// (sunucu yalnızca açıkken kayıt alıyordu) günler kapsamlarına göre ayrılır:
+// Saatlik ortalamalar Türkiye gününe göre günlük ortalamaya çevrilir. Günler kapsamlarına göre ayrılır (27 Nisan – 6 Ekim
+// 2026 PurpleAir arşivinden tamamlandı; sensörün kapalı olduğu günler ve 6 Ekim öncesi PM₁₀ eksikleri kalır):
 //   tam gün ≥18 saat · gösterge gün ≥6 saat (karşılaştırmaya girer) · az veri <6 saat (yalnızca grafikte, soluk).
 // Bağımlılıklar: api.js, colorscale.js, Chart.js
 
@@ -129,6 +129,7 @@ const WHO = (() => {
     function tilesHtml(s, s10) {
         const tile = (k, v, sub, ok) => `<div class="wt ${ok == null ? "" : ok ? "ok" : "bad"}"><span>${k}</span><b>${v}</b><small>${sub}</small></div>`;
         const g = G.pm2_5, g10 = G.pm10_0;
+        const pm10Thin = s10.usable.length < s.usable.length / 2;
         return `<div class="wt-grid">
             ${tile("Aşım günü (PM₂.₅)", s.usable.length ? `${s.exceed} / ${s.usable.length}` : "—",
                    `günlük ${g.day} µg/m³ aşılan gün` + (s.usable.length ? ` (%${Math.round(s.exceed / s.usable.length * 100)})` : "")
@@ -137,8 +138,14 @@ const WHO = (() => {
                    s.usable.length ? s.exceed / s.usable.length <= EXCEED_SHARE : null)}
             ${tile("Dönem ortalaması (PM₂.₅)", s.mean != null ? f1(s.mean) : "—",
                    `yıllık kılavuz ${g.year} µg/m³` + (s.mean != null ? ` · ${f1(s.mean / g.year)} katı` : ""), s.mean != null ? s.mean <= g.year : null)}
-            ${tile("Dönem ortalaması (PM₁₀)", s10.mean != null ? f1(s10.mean) : "—",
-                   `yıllık kılavuz ${g10.year} µg/m³` + (s10.mean != null ? ` · ${s10.exceed} günde günlük ${g10.day} aşıldı` : "") + " · ham sensör değeri", s10.mean != null ? s10.mean <= g10.year : null)}
+            ${tile("Dönem ortalaması (PM₁₀)", s10.mean != null && !pm10Thin ? f1(s10.mean) : "—",
+                   // PM₁₀ yalnızca sunucunun canlı kayıtlarında var (27 Nisan – 6 Ekim arşivinden yalnızca PM₂.₅ alındı):
+                   // kaç güne dayandığı her zaman yazılır; PM₂.₅ günlerinin yarısından azsa dönemi temsil etmez.
+                   s10.mean == null ? `bu dönemde PM₁₀ ölçümü yok · yıllık kılavuz ${g10.year} µg/m³`
+                   : (pm10Thin ? `yalnızca ${s10.usable.length} günlük ölçüm (PM₂.₅: ${s.usable.length} gün), dönemi temsil etmeyebilir: ortalama ${f1(s10.mean)} µg/m³`
+                               : `${s10.usable.length} günlük ölçüm`)
+                     + ` · günlük ${g10.day} µg/m³ aşılan gün: ${s10.exceed} / ${s10.usable.length} · yıllık kılavuz ${g10.year} µg/m³ · düzeltilmemiş sensör değeri`,
+                   s10.mean != null && !pm10Thin ? s10.mean <= g10.year : null)}
             ${tile("Ölçüm kapsamı", `${s.hours} saat`, `${s.days.length} günde ölçüm var · ${s.usable.length} gün ≥${MIN_H} saat · ${s.full} gün tam (≥${FULL_H} saat)`, null)}
         </div>`;
     }
@@ -216,7 +223,7 @@ const WHO = (() => {
         });
     }
 
-    // Aylık özet: eski ölçümlerin ay ay WHO ile karşılaştırması
+    // Aylık özet: ölçümlerin ay ay WHO ile karşılaştırması
     function monthlyHtml(all, all10) {
         const months = [...new Set(all.map(d => d.k.slice(0, 7)))].sort().reverse();
         if (!months.length) return "";
@@ -227,12 +234,14 @@ const WHO = (() => {
             return `<tr class="${ym === period ? "sel" : ""}" data-p="${ym}"><td>${monthName(ym)}</td><td>${s.hours}</td>
                 <td class="${bad ? "bad" : ""}">${m != null ? f1(m) : "—"}</td>
                 <td class="${s.exceed ? "bad" : ""}">${s.usable.length ? `${s.exceed}/${s.usable.length}` : "—"}</td>
-                <td>${s10.mean != null ? f1(s10.mean) : "—"}</td></tr>`;
+                <td class="${s10.usable.length < s.usable.length / 2 ? "na" : ""}">${s10.mean != null ? `${f1(s10.mean)} <small>${s10.usable.length} gün</small>` : "—"}</td></tr>`;
         };
-        return `<div class="nsec-title">Aylık özet · eski ölçümler</div>
+        return `<div class="nsec-title">Aylık özet · ay ay</div>
             <table class="who-month"><thead><tr><th>Ay</th><th>Saat</th><th>PM₂.₅ ort.</th><th>Aşım günü</th><th>PM₁₀ ort.</th></tr></thead>
             <tbody>${months.map(row).join("")}</tbody></table>
-            <div class="who-cap">Satıra dokunarak o ayı seçin. Aşım günü: günlük 15 µg/m³'ü aşan gün / en az ${MIN_H} saat ölçülen gün.</div>`;
+            <div class="who-cap">Satıra dokunarak o ayı seçin. Aşım günü: günlük 15 µg/m³'ü aşan gün / en az ${MIN_H} saat ölçülen gün.
+              PM₁₀ yalnızca sunucunun canlı kayıtlarında vardır (27 Nisan – 6 Ekim 2026 için PurpleAir arşivinden yalnızca PM₂.₅ alındı);
+              altında dayandığı gün sayısı, gri: PM₂.₅ günlerinin yarısından az.</div>`;
     }
 
     function tableHtml(days, days10) {
@@ -245,7 +254,8 @@ const WHO = (() => {
             `<tr><td>${dayLabel(d.k)}</td>${cell(d, G.pm2_5.day)}${cell(pm10.get(d.k), G.pm10_0.day)}<td class="na">${d.n}</td></tr>`).join("");
         return `<details class="who-table"><summary>Günlük değerler (tablo)</summary>
             <table><thead><tr><th>Gün</th><th>PM₂.₅</th><th>PM₁₀</th><th>Saat</th></tr></thead><tbody>${rowsHtml}</tbody></table>
-            <div class="who-cap">Gri değerler ${MIN_H} saatten az ölçüme dayanır, değerlendirmeye girmez.</div></details>`;
+            <div class="who-cap">Gri değerler ${MIN_H} saatten az ölçüme dayanır, değerlendirmeye girmez. Saat sütunu PM₂.₅ içindir;
+              PM₁₀ yalnızca sunucunun canlı kayıtlarında vardır, "—" o gün PM₁₀ ölçümü olmadığını gösterir.</div></details>`;
     }
 
     // Kampüs ve bölge: aynı saatlerde kampüs PurpleAir ile Tuzla istasyonu (PM₂.₅)

@@ -8,9 +8,10 @@ function f1tr(v) {
 // Asıl yöntem (12 Ekim 2026'dan itibaren): US EPA'nın ABD geneli düzeltmesi, yayımlandığı girdiyle (Barkjohn vd. 2021):
 //   PM₂.₅ = 0,524 × cf_1 − 0,0862 × nem + 5,75   (cf_1 = A ve B kanalı pm2.5_cf_1 ortalaması, nem = PurpleAir'in nemi, %)
 // PurpleAir haritasındaki "US EPA" dönüşümü de bu denklemi kullanır; uygulamadaki değer haritadakiyle karşılaştırılabilir.
-// Yedek yöntem: cf_1 kaydı olmayan eski ölçümlerde (12 Ekim 2026 öncesi) EPA'nın genişletilmiş denklemi cf_atm ile
-// (AirNow Yangın ve Duman Haritası biçimi, aşağıdaki epaPM25). Ham değer 30 µg/m³'ün altında iki denklem aynı sonucu verir
-// (fark en çok 0,3 µg/m³); 6 Ekim öncesi saatlerin %83'ü bu düzeydedir.
+// cf_1: sunucu 12 Ekim 2026'dan beri kaydeder; 27 Nisan – 12 Ekim geçmişine PurpleAir'in kendi arşivinden eklendi.
+// Yedek yöntem: cf_1'i olmayan birkaç kayıtta (arşivde eşi bulunmayan sunucu kayıtları) EPA'nın genişletilmiş denklemi
+// cf_atm ile (AirNow Yangın ve Duman Haritası biçimi, aşağıdaki epaPM25). Ham değer 30 µg/m³'ün altında iki denklem aynı
+// sonucu verir (fark en çok 0,3 µg/m³).
 // ─────────────────────────────────────────────────────────────────
 function epaCf1(cf1, rh) {
     if (cf1 == null || isNaN(cf1)) return null;
@@ -43,7 +44,7 @@ function paChannelsAgree(a, b) {
 
 // PurpleAir kaydını düzeltilmiş değere çevirir (api.js tek yerden çağırır). Ham değer (cf_atm, PurpleAir haritasındaki
 // "ham" değerle aynı) pm2_5_raw'da kalır; kanallar uyuşmuyorsa pm2_5 = null olur ve o kayıt hesaplara girmez.
-// pm2_5_method: "cf1" (asıl yöntem) ya da "atm" (cf_1 kaydı olmayan eski ölçüm, yedek yöntem).
+// pm2_5_method: "cf1" (asıl yöntem) ya da "atm" (cf_1 kaydı olmayan ölçüm, yedek yöntem).
 function paCorrect(r) {
     if (!r || r._epa) return r;
     const num = v => v != null && v !== "" && !isNaN(v) ? +v : null;

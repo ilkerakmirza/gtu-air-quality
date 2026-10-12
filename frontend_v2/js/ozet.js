@@ -178,8 +178,12 @@ const Ozet = (() => {
             const ok = s.mean <= g.year;
             let trend = "";
             if (prev && prev.mean != null) {
-                const pct = (s.mean - prev.mean) / prev.mean * 100;
-                trend = `<div class="oz-trend ${pct > 0 ? "up" : "down"}">${pct > 0 ? "▲" : "▼"} ${monthName(prevYm).split(" ")[0]} ayına göre %${Math.abs(pct).toFixed(0)} ${pct > 0 ? "daha kirli" : "daha temiz"}</div>`;
+                const pct = (s.mean - prev.mean) / prev.mean * 100, prevName = monthName(prevYm).split(" ")[0];
+                const ap = Math.round(Math.abs(pct));   // karar ve yazı aynı (yuvarlanmış) sayıya dayanır
+                // ±%5 içi "benzer" (kampüs–Tuzla karşılaştırmasıyla aynı eşik, kiyas.js → verdict)
+                trend = ap < 5
+                    ? `<div class="oz-trend">${ico("equal")} ${prevName} ayıyla benzer <small>(fark %${ap})</small></div>`
+                    : `<div class="oz-trend ${pct > 0 ? "up" : "down"}">${pct > 0 ? "▲" : "▼"} ${prevName} ayına göre %${ap} ${pct > 0 ? "daha kirli" : "daha temiz"}</div>`;
             }
             html += `<div class="oz-card">
                 <div class="wh-k">Kampüs ortalaması · PM₂.₅ · PurpleAir</div>

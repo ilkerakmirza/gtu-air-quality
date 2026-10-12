@@ -1142,14 +1142,13 @@ async function startPlayback(sessionId) {
     Player.play();
 }
 
+// Oynatmada en yakın PurpleAir kaydı (10 dk içinde). PurpleAir arşivinden eklenen 2 dakikalık kayıtlarda (27 Nisan –
+// 6 Ekim 2026) PM₁₀ ve sıcaklık yoktur; bu iki alan 10 dk içindeki en yakın sunucu kaydından alınır, yoksa "--" kalır.
 function nearestPA(ts) {
-    if (!paHistory.length) return null;
-    let best = paHistory[0], bd = Math.abs(ts - best.ts);
-    for (const r of paHistory) {
-        const d = Math.abs(ts - r.ts);
-        if (d < bd) { best = r; bd = d; }
-    }
-    return bd < 10 * 60 * 1000 ? best : null;
+    const best = nearestPAIn(paHistory, ts);
+    if (!best || (best.pm10_0 != null && best.temperature_c != null)) return best;
+    const srv = nearestPAIn(paHistory.filter(r => r.pm10_0 != null || r.temperature_c != null), ts);
+    return srv ? { ...best, pm10_0: best.pm10_0 ?? srv.pm10_0, temperature_c: best.temperature_c ?? srv.temperature_c } : best;
 }
 
 function onStep(pt, idx, total) {
