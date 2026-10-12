@@ -563,22 +563,25 @@ function renderAtmotubeDevices(devices) {
         if (online) onlineCount++;
         // 3 kademe: yeşil=canlı, sarı=senkron eski (24 sa), gri=veri yok/çok eski
         const statusCls = online ? "on" : (recentish ? "warn" : "off");
-        const pmColor = r ? pm25Color(r.pm2_5) : "#3a4254";
+        // 24 saatten eski son ölçüm güncel değer gibi renkli gösterilmez (yalnızca ne zaman geldiği yazılır)
+        const pmColor = r && recentish ? pm25Color(r.pm2_5) : "#3a4254";
         const far = offCampus(r);
         const hasGps = r && r.lat != null && r.lon != null && !far;
         const gpsTxt = far ? "kampüs dışında"
             : !hasGps ? "GPS yok"
             : online ? "GPS canlı" : "son konum";
-        const info = r ? `${timeAgo(r.recorded_at)} · ${gpsTxt}` : "senkron bekliyor";
+        const info = !r ? "son 120 günde veri yok"
+            : recentish ? `${timeAgo(r.recorded_at)} · ${gpsTxt}`
+            : `son veri ${timeAgo(r.recorded_at)} · telefonla eşitlenmedi`;
         const tip = r
-            ? `Son veri (TR): ${trClock(r.recorded_at)}${hasGps ? " — haritada göster" : ""}`
-            : "Cihaz telefondaki Atmotube uygulamasıyla senkronlanınca veri düşer";
+            ? `Son veri (TR): ${trClock(r.recorded_at)}${r.pm2_5 != null ? ` · PM₂.₅ ${f1tr(r.pm2_5)} µg/m³` : ""}${hasGps ? " — haritada göster" : ""}`
+            : "Cihaz telefondaki Atmotube uygulamasıyla eşitlenince veri gelir";
         return `
           <div class="atp-row" ${hasGps ? `data-lat="${r.lat}" data-lon="${r.lon}" style="cursor:pointer"` : ""} title="${tip}">
             <span class="atp-status ${statusCls}"></span>
             <span class="atp-name">${d.device}</span>
             <span class="atp-info">${info}</span>
-            <span class="atp-val" style="color:${pmColor}">${r && r.pm2_5 != null ? f1tr(r.pm2_5) : "--"}<small> µg/m³</small></span>
+            <span class="atp-val" style="color:${pmColor}">${r && recentish && r.pm2_5 != null ? f1tr(r.pm2_5) : "--"}<small> µg/m³</small></span>
           </div>`;
     }).join("");
 

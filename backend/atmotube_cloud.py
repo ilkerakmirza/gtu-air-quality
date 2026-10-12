@@ -25,6 +25,7 @@ DEVICES = {
 # Basit bellek içi önbellek — Atmotube API'sini her istekte yormamak için
 _cache = {"ts": 0, "data": None}
 CACHE_SECONDS = 60
+STALE_LOOKBACK_DAYS = 120   # son 2 günde veri yoksa son ölçümü bulmak için bakılan süre
 
 
 def _fetch_device_latest(mac):
@@ -42,6 +43,13 @@ def _fetch_device_latest(mac):
     r = requests.get(ATMOTUBE_URL, params=params, timeout=20)
     r.raise_for_status()
     items = r.json().get("data", {}).get("items", [])
+    if not items:
+        # Son 2 günde kayıt yok (cihaz telefonla eşitlenmemiş): son ölçümün zamanını göstermek için
+        # daha geriye bak; yoksa arayüz "veri yok" der (eski hâli hep "senkron bekliyor" gösteriyordu).
+        params.update(start_date=(today - datetime.timedelta(days=STALE_LOOKBACK_DAYS)).isoformat(), limit=50)
+        r = requests.get(ATMOTUBE_URL, params=params, timeout=20)
+        r.raise_for_status()
+        items = r.json().get("data", {}).get("items", [])
     if not items:
         return None
     # En yeni okuma (değerler için)
