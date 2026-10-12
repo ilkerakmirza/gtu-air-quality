@@ -37,14 +37,13 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
 - **Tanıtım videoları (6 Ekim 2026 deneme sürümü hazır):** `scripts/tanitim_video/` (Shorts 9:16 → Instagram/LinkedIn, uzun 16:9 → YouTube).
   Yayın sürümü PurpleAir veri göndermeye başlayınca `GERCEK=1` ile ve kalıcı adres (gtuairlab / airlab.gtu.edu.tr) karekodla yeniden kaydedilecek.
 - **Adsız 20 bina:** ekip numaralı haritadan eşleştirince `campus.geojson`'a adları işle.
-- **PurpleAir US EPA düzeltmesi (8 Ekim 2026'da uygulandı):** beş bölümlü denklem ve kanal kuralı birincil kaynaktan teyit edilmedi
-  (EPA/yayıncı sitelerine bulut ortamından erişilemedi; kaynaklar ikincil ve tutarlı). Masaüstü oturumunda EPA "Sensor Data Cleaning and
-  Correction" sunumu ve AirNow Soru-Cevap denklem tablosuyla karşılaştır (`docs/purpleair_epa_duzeltmesi.md` §9). Mümkünse PurpleAir'i
-  birkaç hafta resmî bir istasyon yanına koyup (kolokasyon) yerel doğrulama öner.
-- **PurpleAir denetimi (12 Ekim 2026), açık kararlar** (ayrıntı `docs/purpleair_epa_duzeltmesi.md` §5, §9): (1) EPA biçimi:
-  2021 cf_1 biçimi Tuzla'ya daha yakın çıktı, geçmek için sunucu `pm2.5_cf_1_a/b` kaydetmeli; (2) Tuzla saat etiketi büyük
-  olasılıkla saatin sonu, doğrulanırsa aynı saat eşleştirmesi 1 saat kaydırılacak; (3) sunucu Nisan–Ağustos'ta çok kayıt kaçırmış,
-  boşluklar PurpleAir geçmişinden doldurulabilir (kullanıcıya önerildi, karar bekleniyor).
+- **PurpleAir düzeltmesi, kontroller** (yöntem 12 Ekim 2026'da EPA'nın ABD geneli denklemine, cf_1 girdisiyle geçti;
+  ayrıntı `docs/purpleair_epa_duzeltmesi.md` §9): (1) PurpleAir haritasında orta düzeyde bir saatin (ör. 11 Ekim 06:00, saatlik)
+  "US EPA" değerini uygulamayla karşılaştır, beklenen ~35,7 µg/m³; (2) Barkjohn vd. 2021 denklemini ve girdisini (cf_1) birincil
+  kaynaktan teyit et (masaüstü oturumu); (3) eski kayıtlara cf_1 eklemek ve sunucunun Nisan–Ağustos'ta kaçırdığı kayıtları doldurmak
+  için kullanıcı PurpleAir Data Download Tool'dan 27 Nisan – 6 Ekim 2026'yı (Average 0; `pm2.5_atm_a/b`, `pm2.5_cf_1_a/b`,
+  `humidity`) indirebilir, karar bekleniyor; (4) Tuzla saat etiketi büyük olasılıkla saatin sonu, İBB/ÇŞB belgesinden doğrulanırsa
+  aynı saat eşleştirmesi 1 saat kaydırılacak. Kullanıcı yöntem kararlarının Tuzla karşılaştırmasına dayanmasını istemiyor.
 - **Atmotube yan yana ölçüm (karar 8 Ekim 2026; tarih belli değil, en kısa sürede; kurulumu kullanıcı yapacak, ölçüm bitince haber verecek):** 5 cihaz SUMER çatısında PurpleAir'in yanına
   konacak (en az 24 sa, tercihen 48). Kurulum, analiz ve karar kuralı (oran 1 ± %10 → dokunma, değilse cihaza tek çarpan):
   `docs/hesaplama_ve_kaynaklar.md` §5. EPA formülü Atmotube'a uygulanmaz; sonuç gelene kadar Atmotube ham ve göreli kullanılır.
@@ -108,8 +107,10 @@ Repo ve GitHub Pages sitesi **herkese açık**: repoya giren her dosya (kök diz
 - **Sayı biçimi:** Ekranda gösterilen ölçüm değerleri Türkçe biçimdedir (12,3): `colorscale.js` → `f1tr()`. `toFixed` yalnızca hesap/CSS içinde kullanılır.
 - **Kaynak kaydı:** Uygulamadaki her eşik, sınıflandırma ve hesap `docs/hesaplama_ve_kaynaklar.md`'de kaynağı ve doğrulama durumuyla
   kayıtlı. Bir eşik/kaynak değişirse ya da yeni hesap eklenirse belgeyi aynı commit'te güncelle; doğrulanmamış değeri "ikincil" diye işaretle.
-- **PurpleAir düzeltmesi:** Ekrandaki ve hesaplardaki kampüs PM₂.₅'i US EPA düzeltmelidir (`colorscale.js` → `epaPM25`, `paCorrect`;
-  tek uygulama noktası `api.js`). Ham değer `pm2_5_raw`'da ve veritabanında kalır. PM₁₀, Atmotube ve Tuzla düzeltilmez. Formül ya da kanal
+- **PurpleAir düzeltmesi:** Ekrandaki ve hesaplardaki kampüs PM₂.₅'i US EPA düzeltmelidir: asıl yöntem
+  0,524 × cf_1 − 0,0862 × nem + 5,75 (`colorscale.js` → `epaCf1`; PurpleAir haritasındaki "US EPA" ile aynı), cf_1'i olmayan eski
+  kayıtlarda genişletilmiş denklem cf_atm ile (`epaPM25`); seçim `paCorrect` içinde, tek uygulama noktası `api.js`. Ham değerler
+  (`pm2_5_raw` = cf_atm, `pm2_5_cf1_a/b`) veritabanında kalır. PM₁₀, Atmotube ve Tuzla düzeltilmez. Formül ya da kanal
   kuralı değişirse `docs/purpleair_epa_duzeltmesi.md` ve `hesaplama_ve_kaynaklar.md` §1a aynı commit'te güncellenir.
 - **Renkler:** PM₂.₅ rengi her yerde HKİ sınıf rengidir (`pm25Color`; ayrı renk ölçeği ekleme). Cihaz/seri renkleri `DEVICE_COLOR`
   (PurpleAir `#6380f0`, Tuzla `#bf8418`, Atmotube `#2fa79a`): aynı cihaz her grafikte aynı renk; yeni seri rengi doğrulayıcıdan geçir.

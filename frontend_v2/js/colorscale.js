@@ -4,12 +4,21 @@ function f1tr(v) {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// PurpleAir PM₂.₅ düzeltmesi: US EPA genişletilmiş ABD geneli düzeltmesi (AirNow Yangın ve Duman Haritası'nın uyguladığı biçim).
-// Kaynaklar ve gerekçe: docs/purpleair_epa_duzeltmesi.md. Kısaca: optik sensör ham değeri referans cihazlara göre yaklaşık
-// %40 yüksek okur ve nemden etkilenir (Barkjohn vd. 2021). Girdi: x = PurpleAir cf_atm PM₂.₅ (A ve B kanal ortalaması, µg/m³),
-// rh = PurpleAir'in kendi nem ölçümü (%). Formül cf_1 verisiyle geliştirildi; EPA haritada cf_atm'ye uygular (iki değer
-// ~25–28 µg/m³'e kadar aynı, yüksek derişimde cf_atm ≈ 2/3 × cf_1; 0,786 = 0,524 × 1,5). Ara bölgelerde ağırlıklı geçiş vardır.
+// PurpleAir PM₂.₅ düzeltmesi (gerekçe ve kaynaklar: docs/purpleair_epa_duzeltmesi.md).
+// Asıl yöntem (12 Ekim 2026'dan itibaren): US EPA'nın ABD geneli düzeltmesi, yayımlandığı girdiyle (Barkjohn vd. 2021):
+//   PM₂.₅ = 0,524 × cf_1 − 0,0862 × nem + 5,75   (cf_1 = A ve B kanalı pm2.5_cf_1 ortalaması, nem = PurpleAir'in nemi, %)
+// PurpleAir haritasındaki "US EPA" dönüşümü de bu denklemi kullanır; uygulamadaki değer haritadakiyle karşılaştırılabilir.
+// Yedek yöntem: cf_1 kaydı olmayan eski ölçümlerde (12 Ekim 2026 öncesi) EPA'nın genişletilmiş denklemi cf_atm ile
+// (AirNow Yangın ve Duman Haritası biçimi, aşağıdaki epaPM25). Ham değer 30 µg/m³'ün altında iki denklem aynı sonucu verir
+// (fark en çok 0,3 µg/m³); 6 Ekim öncesi saatlerin %83'ü bu düzeydedir.
 // ─────────────────────────────────────────────────────────────────
+function epaCf1(cf1, rh) {
+    if (cf1 == null || isNaN(cf1)) return null;
+    if (rh == null || isNaN(rh) || rh < 0 || rh > 100) rh = 50;
+    return Math.max(0, 0.524 * cf1 - 0.0862 * rh + 5.75);
+}
+
+// Yedek: genişletilmiş denklem (girdi x = cf_atm, A ve B kanal ortalaması). Ara bölgelerde ağırlıklı geçiş vardır.
 function epaPM25(x, rh) {
     if (x == null || isNaN(x)) return null;
     x = +x;
@@ -32,15 +41,21 @@ function paChannelsAgree(a, b) {
     return !(d >= 5 && m > 0 && d / m >= 0.70);
 }
 
-// PurpleAir kaydını düzeltilmiş değere çevirir (api.js tek yerden çağırır). Ham değer pm2_5_raw'da kalır;
-// kanallar uyuşmuyorsa pm2_5 = null olur ve o kayıt hesaplara girmez.
+// PurpleAir kaydını düzeltilmiş değere çevirir (api.js tek yerden çağırır). Ham değer (cf_atm, PurpleAir haritasındaki
+// "ham" değerle aynı) pm2_5_raw'da kalır; kanallar uyuşmuyorsa pm2_5 = null olur ve o kayıt hesaplara girmez.
+// pm2_5_method: "cf1" (asıl yöntem) ya da "atm" (cf_1 kaydı olmayan eski ölçüm, yedek yöntem).
 function paCorrect(r) {
     if (!r || r._epa) return r;
-    const raw = r.pm2_5 != null && !isNaN(r.pm2_5) ? +r.pm2_5 : null;
-    const ok = paChannelsAgree(r.pm2_5_a, r.pm2_5_b);
+    const num = v => v != null && v !== "" && !isNaN(v) ? +v : null;
+    const raw = num(r.pm2_5), c1a = num(r.pm2_5_cf1_a), c1b = num(r.pm2_5_cf1_b);
+    const cf1 = c1a != null && c1b != null;
+    const ok = cf1 ? paChannelsAgree(c1a, c1b) : paChannelsAgree(r.pm2_5_a, r.pm2_5_b);
     r.pm2_5_raw = raw;
     r.qa_ab = ok;
-    r.pm2_5 = raw == null || ok === false ? null : epaPM25(raw, r.humidity_pct);
+    r.pm2_5_method = cf1 ? "cf1" : "atm";
+    r.pm2_5 = ok === false ? null
+        : cf1 ? epaCf1((c1a + c1b) / 2, r.humidity_pct)
+        : raw == null ? null : epaPM25(raw, r.humidity_pct);
     r._epa = true;
     return r;
 }

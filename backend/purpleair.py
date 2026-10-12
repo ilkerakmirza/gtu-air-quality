@@ -9,7 +9,8 @@ import datetime
 from config import PURPLEAIR_API_KEY, PURPLEAIR_SENSOR_ID, PURPLEAIR_LAT, PURPLEAIR_LON
 import db
 
-FIELDS = "pm1.0_atm,pm2.5_atm,pm2.5_atm_a,pm2.5_atm_b,pm10.0_atm,temperature,humidity,last_seen"
+# pm2.5_cf_1_a/b: US EPA 2021 düzeltmesinin girdisi (PurpleAir haritasındaki "US EPA" dönüşümü de bunu kullanır)
+FIELDS = "pm1.0_atm,pm2.5_atm,pm2.5_atm_a,pm2.5_atm_b,pm2.5_cf_1_a,pm2.5_cf_1_b,pm10.0_atm,temperature,humidity,last_seen"
 API_URL = f"https://api.purpleair.com/v1/sensors/{PURPLEAIR_SENSOR_ID}"
 
 _last_poll_status = {"success": None, "error": None, "at": None}
@@ -48,6 +49,8 @@ def poll():
             "pm2_5":        sensor.get("pm2.5_atm"),
             "pm2_5_a":      sensor.get("pm2.5_atm_a"),
             "pm2_5_b":      sensor.get("pm2.5_atm_b"),
+            "pm2_5_cf1_a":  sensor.get("pm2.5_cf_1_a"),
+            "pm2_5_cf1_b":  sensor.get("pm2.5_cf_1_b"),
             "pm10_0":       sensor.get("pm10.0_atm"),
             "temperature_c": _fahrenheit_to_celsius(sensor.get("temperature")),
             "humidity_pct": sensor.get("humidity"),

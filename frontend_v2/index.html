@@ -1688,13 +1688,15 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
       <ul>
         <li><b>PurpleAir düzeltmesi (US EPA):</b> Optik sensörün ham PM₂.₅ değeri referans cihazlara göre yüksek okur ve nemden
           etkilenir (ABD genelinde yaklaşık %40; Barkjohn vd., 2021). Kampüs PM₂.₅ değerleri, ABD Çevre Koruma Ajansı'nın
-          AirNow Yangın ve Duman Haritası'nda uyguladığı düzeltmeyle hesaplanır. Girdiler: iki lazer kanalının (A, B)
-          ortalaması (PA, µg/m³) ve sensörün nem ölçümü (RH, %). 30 µg/m³'ün altında
-          <b>PM₂.₅ = 0,524 × PA − 0,0862 × RH + 5,75</b>; daha yüksek değerlerde eğim 0,786'ya geçer, çok yüksek değerlerde
-          ikinci derece terim eklenir. A ve B kanalları hem 5 µg/m³'ten hem %70'ten fazla ayrışan ölçümler kullanılmaz; nem
-          eksikse %50 alınır. Örnek: ham 35,1 µg/m³ ve nem %34 → <b>23,6 µg/m³</b>. Ham değer Araştırma görünümündeki
-          PurpleAir panelinde görünür. PM₁₀ ve taşınabilir sensörler için yerleşik bir düzeltme yoktur.
-          <a href="https://github.com/ilkerakmirza/gtu-air-quality/blob/main/docs/purpleair_epa_duzeltmesi.md" target="_blank" rel="noopener">Formülün tamamı, örnekler ve doğrulama</a></li>
+          ABD geneli düzeltme denklemiyle hesaplanır: <b>PM₂.₅ = 0,524 × cf_1 − 0,0862 × nem + 5,75</b>. Burada cf_1, sensörün
+          iki lazer kanalının (A, B) "CF=1" çıktısının ortalaması (µg/m³), nem sensörün kendi ölçümüdür (%). PurpleAir
+          haritasında "US EPA" dönüşümü seçildiğinde görülen değer de bu denklemle hesaplanır. A ve B kanalları hem 5 µg/m³'ten
+          hem %70'ten fazla ayrışan ölçümler kullanılmaz; nem eksikse %50 alınır. Örnek (9 Ekim 2026, 09:00 saat ortalaması):
+          cf_1 62,5 µg/m³ ve nem %50 → <b>34,2 µg/m³</b> (ham değer 49,9). cf_1'i kaydedilmemiş eski ölçümlerde EPA'nın
+          AirNow haritasındaki genişletilmiş denklemi kullanılır; ham değer 30 µg/m³'ün altında iki denklem aynı sonucu verir.
+          Ham değer Araştırma görünümündeki PurpleAir panelinde görünür. PM₁₀ ve taşınabilir sensörler için yerleşik bir
+          düzeltme yoktur.
+          <a href="https://github.com/ilkerakmirza/gtu-air-quality/blob/main/docs/purpleair_epa_duzeltmesi.md" target="_blank" rel="noopener">Formül, gerekçe, örnekler ve doğrulama</a></li>
         <li><b>Zaman ortalamaları:</b> Ölçümler saatlik ortalamaya, saatlik değerler Türkiye saatine göre günlük ortalamaya
           çevrilir. En az 18 saat ölçümü olan gün <i>tam gün</i>, en az 6 saat olan gün <i>gösterge gün</i> kabul edilir;
           daha az ölçümlü günler değerlendirmeye alınmaz.</li>
@@ -1878,7 +1880,7 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
 <!-- Legend -->
 <div class="legend" id="legend"></div>
 
-<script src="js/colorscale.js?v=55"></script>
+<script src="js/colorscale.js?v=56"></script>
 <script src="js/api.js?v=43"></script>
 <script src="js/campus.js?v=57"></script>
 <script src="js/app.js?v=60"></script>

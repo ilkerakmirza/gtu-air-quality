@@ -86,6 +86,8 @@ CREATE TABLE IF NOT EXISTS purpleair_readings (
     pm2_5        REAL,
     pm2_5_a      REAL,
     pm2_5_b      REAL,
+    pm2_5_cf1_a  REAL,
+    pm2_5_cf1_b  REAL,
     pm10_0       REAL,
     temperature_c REAL,
     humidity_pct REAL,
@@ -133,6 +135,8 @@ CREATE TABLE IF NOT EXISTS purpleair_readings (
     pm2_5         REAL,
     pm2_5_a       REAL,
     pm2_5_b       REAL,
+    pm2_5_cf1_a   REAL,
+    pm2_5_cf1_b   REAL,
     pm10_0        REAL,
     temperature_c REAL,
     humidity_pct  REAL,
@@ -183,6 +187,10 @@ def init_db():
                     cur.execute(stmt)
         else:
             cur.executescript(SQLITE_SCHEMA)
+            cols = {r[1] for r in cur.execute("PRAGMA table_info(purpleair_readings)").fetchall()}
+            for c in ("pm2_5_cf1_a", "pm2_5_cf1_b"):
+                if c not in cols:
+                    cur.execute(f"ALTER TABLE purpleair_readings ADD COLUMN {c} REAL")
     print(f"[db] Schema initialised ({'PostgreSQL' if _USE_POSTGRES else 'SQLite'})")
 
 
@@ -193,18 +201,19 @@ def init_db():
 def save_purpleair_reading(data: dict):
     sql = """
     INSERT INTO purpleair_readings
-        (recorded_at, pm1_0, pm2_5, pm2_5_a, pm2_5_b, pm10_0, temperature_c, humidity_pct, lat, lon)
+        (recorded_at, pm1_0, pm2_5, pm2_5_a, pm2_5_b, pm2_5_cf1_a, pm2_5_cf1_b, pm10_0, temperature_c, humidity_pct, lat, lon)
     VALUES
-        (%(recorded_at)s, %(pm1_0)s, %(pm2_5)s, %(pm2_5_a)s, %(pm2_5_b)s, %(pm10_0)s,
+        (%(recorded_at)s, %(pm1_0)s, %(pm2_5)s, %(pm2_5_a)s, %(pm2_5_b)s, %(pm2_5_cf1_a)s, %(pm2_5_cf1_b)s, %(pm10_0)s,
          %(temperature_c)s, %(humidity_pct)s, %(lat)s, %(lon)s)
     ON CONFLICT (recorded_at) DO NOTHING
     """ if _USE_POSTGRES else """
     INSERT OR IGNORE INTO purpleair_readings
-        (recorded_at, pm1_0, pm2_5, pm2_5_a, pm2_5_b, pm10_0, temperature_c, humidity_pct, lat, lon)
+        (recorded_at, pm1_0, pm2_5, pm2_5_a, pm2_5_b, pm2_5_cf1_a, pm2_5_cf1_b, pm10_0, temperature_c, humidity_pct, lat, lon)
     VALUES
-        (:recorded_at, :pm1_0, :pm2_5, :pm2_5_a, :pm2_5_b, :pm10_0,
+        (:recorded_at, :pm1_0, :pm2_5, :pm2_5_a, :pm2_5_b, :pm2_5_cf1_a, :pm2_5_cf1_b, :pm10_0,
          :temperature_c, :humidity_pct, :lat, :lon)
     """
+    data = {"pm2_5_cf1_a": None, "pm2_5_cf1_b": None, **data}
     with get_conn() as conn:
         conn.cursor().execute(sql, data)
 
@@ -222,7 +231,8 @@ def get_purpleair_history(start: str, end: str, interval: str = "raw"):
         if _USE_POSTGRES:
             sql = """
             SELECT date_trunc('hour', recorded_at) AS recorded_at,
-                   AVG(pm2_5) AS pm2_5, AVG(pm2_5_a) AS pm2_5_a, AVG(pm2_5_b) AS pm2_5_b, AVG(pm10_0) AS pm10_0,
+                   AVG(pm2_5) AS pm2_5, AVG(pm2_5_a) AS pm2_5_a, AVG(pm2_5_b) AS pm2_5_b,
+                   AVG(pm2_5_cf1_a) AS pm2_5_cf1_a, AVG(pm2_5_cf1_b) AS pm2_5_cf1_b, AVG(pm10_0) AS pm10_0,
                    AVG(temperature_c) AS temperature_c, AVG(humidity_pct) AS humidity_pct
             FROM purpleair_readings
             WHERE recorded_at BETWEEN %(start)s AND %(end)s
@@ -231,7 +241,8 @@ def get_purpleair_history(start: str, end: str, interval: str = "raw"):
         else:
             sql = """
             SELECT strftime('%Y-%m-%dT%H:00:00', recorded_at) AS recorded_at,
-                   AVG(pm2_5) AS pm2_5, AVG(pm2_5_a) AS pm2_5_a, AVG(pm2_5_b) AS pm2_5_b, AVG(pm10_0) AS pm10_0,
+                   AVG(pm2_5) AS pm2_5, AVG(pm2_5_a) AS pm2_5_a, AVG(pm2_5_b) AS pm2_5_b,
+                   AVG(pm2_5_cf1_a) AS pm2_5_cf1_a, AVG(pm2_5_cf1_b) AS pm2_5_cf1_b, AVG(pm10_0) AS pm10_0,
                    AVG(temperature_c) AS temperature_c, AVG(humidity_pct) AS humidity_pct
             FROM purpleair_readings
             WHERE recorded_at BETWEEN :start AND :end
@@ -241,7 +252,8 @@ def get_purpleair_history(start: str, end: str, interval: str = "raw"):
         if _USE_POSTGRES:
             sql = """
             SELECT date_trunc('day', recorded_at) AS recorded_at,
-                   AVG(pm2_5) AS pm2_5, AVG(pm2_5_a) AS pm2_5_a, AVG(pm2_5_b) AS pm2_5_b, AVG(pm10_0) AS pm10_0,
+                   AVG(pm2_5) AS pm2_5, AVG(pm2_5_a) AS pm2_5_a, AVG(pm2_5_b) AS pm2_5_b,
+                   AVG(pm2_5_cf1_a) AS pm2_5_cf1_a, AVG(pm2_5_cf1_b) AS pm2_5_cf1_b, AVG(pm10_0) AS pm10_0,
                    AVG(temperature_c) AS temperature_c, AVG(humidity_pct) AS humidity_pct
             FROM purpleair_readings
             WHERE recorded_at BETWEEN %(start)s AND %(end)s
@@ -250,7 +262,8 @@ def get_purpleair_history(start: str, end: str, interval: str = "raw"):
         else:
             sql = """
             SELECT strftime('%Y-%m-%dT00:00:00', recorded_at) AS recorded_at,
-                   AVG(pm2_5) AS pm2_5, AVG(pm2_5_a) AS pm2_5_a, AVG(pm2_5_b) AS pm2_5_b, AVG(pm10_0) AS pm10_0,
+                   AVG(pm2_5) AS pm2_5, AVG(pm2_5_a) AS pm2_5_a, AVG(pm2_5_b) AS pm2_5_b,
+                   AVG(pm2_5_cf1_a) AS pm2_5_cf1_a, AVG(pm2_5_cf1_b) AS pm2_5_cf1_b, AVG(pm10_0) AS pm10_0,
                    AVG(temperature_c) AS temperature_c, AVG(humidity_pct) AS humidity_pct
             FROM purpleair_readings
             WHERE recorded_at BETWEEN :start AND :end

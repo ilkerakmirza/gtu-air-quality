@@ -16,6 +16,8 @@ atmotube_deneme_harita/
 
 # Geçici
 *.csv
+# İstisna: yöntem doğrulamasında kullanılan PurpleAir sensör verisi (herkese açık ölçüm; kişisel veri içermez)
+!docs/veri/purpleair_*.csv
 *.log
 .DS_Store
 Thumbs.db

@@ -2,7 +2,7 @@
 
 **Amaç:** Uygulamada gösterilen her sınıflandırmanın, eşiğin ve hesabın neye dayandığını tek yerde kayda geçirmek;
 ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
-**Belge sürümü:** 1.8 · 12 Ekim 2026
+**Belge sürümü:** 1.9 · 12 Ekim 2026
 **İlgili belge:** Kişisel maruziyet hesabının ayrıntılı yöntemi → [`maruziyet_yontemi.md`](maruziyet_yontemi.md)
 
 > Koddaki bir eşik ya da kaynak değişirse bu belge aynı commit'te güncellenmelidir. Her bölümün sonunda değerin kodda
@@ -15,7 +15,7 @@ ileride değerlerin ve kaynakların güncelliğini denetleyebilmek.
 
 | Veri | Kaynak | Not |
 |---|---|---|
-| Kampüs PM₂.₅, PM₁₀, sıcaklık, nem | PurpleAir PA-II (SUMER çatısı, sensör 229263); sunucu PurpleAir API'den 2 dakikada bir okur | Kampüsün genel (dış ortam) hava kalitesini temsil eder. Sunucu `pm2.5_atm` (A ve B kanalı) değerini **ham** kaydeder; ekranda ve bütün hesaplarda PM₂.₅ **US EPA düzeltmeli** kullanılır (§1a). PM₁₀ düzeltilmez. 2 Ekim 16:59 – 6 Ekim 16:53 (TR) arasında sensör çevrimdışıydı, veri yok; 7 Ekim 2026'dan beri PurpleAir veri erişim kotası yeterli. |
+| Kampüs PM₂.₅, PM₁₀, sıcaklık, nem | PurpleAir PA-II (SUMER çatısı, sensör 229263); sunucu PurpleAir API'den 2 dakikada bir okur | Kampüsün genel (dış ortam) hava kalitesini temsil eder. Sunucu `pm2.5_atm` ve `pm2.5_cf_1` (A ve B kanalı) değerlerini **ham** kaydeder (cf_1, 12 Ekim 2026'dan beri); ekranda ve bütün hesaplarda PM₂.₅ **US EPA düzeltmeli** kullanılır (§1a). PM₁₀ düzeltilmez. 2 Ekim 16:59 – 6 Ekim 16:53 (TR) arasında sensör çevrimdışıydı, veri yok; 7 Ekim 2026'dan beri PurpleAir veri erişim kotası yeterli. |
 | Kampüs sıcaklık ve nem (PurpleAir) | PurpleAir PA-II gövde içi sensör | Düzeltilmeden gösterilir; sıcaklık ortamdan ~4 °C (8 °F) yüksek, nem ~4 puan düşük okunur (PurpleAir'in sensör açıklaması; **ikincil**, bu tarihte birincil kaynağa erişilemedi). Arayüzde "*" ve açıklama ile işaretli. |
 | Saha ölçümleri | Atmotube Pro (yürüyüş ölçümleri, GPS'li) | Amaç: bina bazlı karakterizasyon (§5). Kısa süreli; WHO 24 saatlik değeriyle karşılaştırılmaz (§5). |
 | İç mekân CO₂ | Tuya CO₂ sensörleri | 21 Temmuz 2026'dan beri veri yok. |
@@ -34,25 +34,31 @@ Saatlik değerler sunucuda `interval=hourly` ile ortalanır; uygulamadaki tüm g
 | Tuzla istasyonu saatlik arşivi İBB'den sürdürülür. | ÇŞB yerel toplayıcısı Haziran 2026'dan beri çalışmıyor; arşiv 16 Haziran'dan beri boştu. | `backend/collector.py` → `collect_hourly()` |
 | Veritabanında `purpleair_readings.recorded_at` tekil; 7 Ekim 2026'da 2011 yinelenen satır (değerleri birebir aynı) ve `atmotube_readings`'ten 40 kampüs dışı nokta silindi. | Tek kayıt, tek ölçüm; kişisel konum tutulmaz. | Supabase (dizin `purpleair_readings_recorded_at_key`), `backend/db.py` (`ON CONFLICT DO NOTHING`) |
 
-## 1a. PurpleAir PM₂.₅ düzeltmesi (US EPA, 8 Ekim 2026)
+## 1a. PurpleAir PM₂.₅ düzeltmesi (US EPA; yöntem 12 Ekim 2026'da güncellendi)
 
-Optik sensörün ham PM₂.₅ değeri referans cihazlara göre yaklaşık %40 yüksek okur ve nemden etkilenir. EPA'nın AirNow
-Yangın ve Duman Haritası'nda uyguladığı genişletilmiş ABD geneli düzeltmesi kullanılır (PA = A/B ortalaması `pm2.5_atm`,
-RH = PurpleAir nemi; nem eksikse %50):
+Optik sensörün ham PM₂.₅ değeri referans cihazlara göre yaklaşık %40 yüksek okur ve nemden etkilenir. EPA'nın ABD geneli
+düzeltme denklemi, yayımlandığı girdiyle kullanılır (Barkjohn vd., 2021):
 
-- PA < 30: **0,524 × PA − 0,0862 × RH + 5,75** (Barkjohn vd., 2021); 50–210: 0,786 × PA − 0,0862 × RH + 5,75;
-  30–50 ve 210–260 ağırlıklı geçiş; ≥ 260: 2,966 + 0,69 × PA + 8,84×10⁻⁴ × PA² (Barkjohn vd., 2022). Negatif sonuç 0 alınır (uygulama kuralı).
-- Kalite kontrolü: A ve B kanalları hem ≥ 5 µg/m³ hem ≥ %70 ayrışırsa ölçüm hesaplara girmez.
-- Yerel tutarlılık: Tuzla istasyonuyla aynı 241 saatte ortalama fark ham +%43 → düzeltilmiş −%2 (kolokasyon değil).
-- Ham değer veritabanında ve Araştırma panelinde; düzeltme yalnızca gösterim/hesap katmanında (formül değişirse geçmiş yeniden hesaplanır).
+- **PM₂.₅ = 0,524 × cf_1 − 0,0862 × RH + 5,75** (cf_1 = A/B ortalaması `pm2.5_cf_1`, RH = PurpleAir nemi; nem eksikse %50;
+  negatif sonuç 0, uygulama kuralı). PurpleAir haritasındaki "US EPA" dönüşümü de bu denklemi kullanır (ikincil kaynak;
+  haritayla tek noktada tutarlı, orta düzeyde karşılaştırma bekleniyor).
+- **Yedek yöntem:** cf_1'i kaydedilmemiş eski ölçümlerde EPA'nın genişletilmiş denklemi cf_atm ile (AirNow Yangın ve Duman
+  Haritası). Ham değer 30 µg/m³'ün altında iki denklem aynı sonucu verir (fark en çok 0,3 µg/m³).
+- **Gerekçe:** Denklem cf_1 ile geliştirildi. Genişletilmiş biçim cf_atm'nin yüksek derişimde cf_1'in üçte ikisi olduğunu
+  varsayar; bu sensörde oran derişimle değişiyor (1,00 → 0,89 → 0,73 → 0,66) ve genişletilmiş biçim ham 35–65 µg/m³ arasında
+  ortalama 4 µg/m³ yüksek çıkıyordu (12 Ekim 2026 PurpleAir indirmesi). PurpleAir'in bağımsız ALT-CF3 yöntemi de bu aralıkta
+  asıl yöntemle uyumlu.
+- Kalite kontrolü: A ve B kanalları hem ≥ 5 µg/m³ hem ≥ %70 ayrışırsa ölçüm hesaplara girmez (asıl yöntemde cf_1 kanalları).
+- Ham değerler veritabanında; düzeltme yalnızca gösterim/hesap katmanında (yöntem değişirse geçmiş yeniden hesaplanır).
 - Aynı temelde karşılaştırma: Tuzla (resmî ölçüm) ile düzeltilmiş PurpleAir; Atmotube (düzeltilmez) ile ham PurpleAir (sensör karşılaştırma grafiği).
 
-Formülün tamamı, çalışılmış örnekler, doğrulama, etki tabloları, sınırlılıklar ve kaynakların doğrulama durumu:
+Formül, gerekçe, çalışılmış örnekler, doğrulama, sınırlılıklar ve kaynakların doğrulama durumu:
 [`purpleair_epa_duzeltmesi.md`](purpleair_epa_duzeltmesi.md). Kaynakların durumu **ikincil** (EPA ve yayıncı sitelerine bu
-ortamdan erişilemedi; aynı denklem birden çok bağımsız kaynakta aynı); kontrol listesinde (§12).
+ortamdan erişilemedi; aynı denklem birden çok bağımsız kaynakta aynı); kontrol listesinde.
 
-**Kodda:** `colorscale.js` → `epaPM25()`, `paChannelsAgree()`, `paCorrect()`; tek uygulama noktası `api.js`
-(`purpleairLatest`, `purpleairHistory`); sunucu `db.py` → `get_purpleair_history()` A/B saatlik ortalamaları.
+**Kodda:** `colorscale.js` → `epaCf1()` (asıl), `epaPM25()` (yedek), `paChannelsAgree()`, `paCorrect()`; tek uygulama noktası
+`api.js` (`purpleairLatest`, `purpleairHistory`); sunucu `purpleair.py` (cf_1 ve cf_atm kanallarını kaydeder), `db.py` →
+`get_purpleair_history()` (kanal saatlik ortalamaları).
 
 ## 2. Ulusal Hava Kalitesi İndeksi (HKİ)
 
@@ -321,6 +327,7 @@ Afroz ve ark. (2025), Branco ve ark. (2024). Ayrıntılar, sayısal örnek ve ka
 
 | Sürüm | Tarih | Değişiklik |
 |---|---|---|
+| 1.9 | 12 Ekim 2026 | §1a: PurpleAir düzeltmesi EPA'nın ABD geneli denklemine, yayımlandığı girdi cf_1 ile geçti (PurpleAir haritasındaki "US EPA" ile aynı); cf_1'i olmayan eski kayıtlarda genişletilmiş denklem (yedek). |
 | 1.8 | 12 Ekim 2026 | §5: bina sınırına 15 m'den yakın dış noktalar en yakın binaya sayılır (GPS sapması); etkisi ve sınırlılığı yazıldı. |
 | 1.7 | 10 Ekim 2026 | §5: 1–2 ölçümlü binalar listede ayrıca gösterilir (sıralamaya ve boyaya girmez); "genelden fark" yalnızca başka ayda ölçüm varsa; bina içine düşmeyen noktalar sınırlılığı. |
 | 1.6 | 8 Ekim 2026 | §5: Atmotube yan yana ölçüm kararı (SUMER çatısı): kurulum, analiz ve karar kuralı. |
