@@ -56,12 +56,14 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
   3. Açık soru: saha verisinin %92'si (27–30 Nisan, 12 CSV oturumu) veritabanında "cihaz 1" diye kayıtlı. Çarpan gerekirse o günlerde
      hangi oturumun hangi ATP ile ölçüldüğünü kullanıcıya sor (adları koda ve belgeye yazma).
 
-## Ajanlar (12 Ekim 2026, kullanıcının isteği)
-Kullanıcı yalnızca ana ajanla (bu oturum) konuşur. Büyük işlerde dört uzman ajan kullanılır; kimlik kartları `.claude/agents/`,
+## Ajanlar (12 Ekim 2026, kullanıcının isteği; 5. ajan 13 Ekim 2026)
+Kullanıcı yalnızca ana ajanla (bu oturum) konuşur. Büyük işlerde beş uzman ajan kullanılır; kimlik kartları `.claude/agents/`,
 hafıza ve çalışma klasörleri `ajanlar/<ad>/` (`HAFIZA.md`), özet `ajanlar/BENIOKU.md`.
 - **1 · veri-kontrol** (salt okur): uygunluk, literatür, beklenen sayılar. **2 · isleme-yontem**: geri alınabilir plan, belge, kod, test
   (commit/veritabanı yok). **4 · arayuz-kalitesi** (salt okur): işlev, grafikler, anlaşılırlık; ekran görüntüsüyle. **3 · son-kontrol**
-  (salt okur): geri alınamazlık, tutarlılık, onay/ret, `anlatim_notu.md`.
+  (salt okur): geri alınamazlık, tutarlılık, onay/ret, `anlatim_notu.md`. **5 · veri-analiz**: analiz ve akademik rapor (grafik, harita,
+  `sayilar.json`); yalnızca `ajanlar/veri-analiz/` altına yazar.
+- Analiz akışı: 5 → 1 (kritik sayıları bağımsız yeniden hesaplar) → 3 → ana ajan yayımlar.
 - Akış: 1 → 2 → 4 → 3 → ana ajan uygular ve sayıları 1'in beklentisiyle karşılaştırır. Veritabanına yazma, commit ve `main`
   yalnızca ana ajanda; silme gibi kararlar kullanıcıya sorulur. Salt okuyan ajanların "Hafızaya eklenecek" maddelerini ana ajan işler.
 - Küçük işte ajan açma: tek dosyalık düzeltme ya da soru için ana ajan doğrudan çalışır.
