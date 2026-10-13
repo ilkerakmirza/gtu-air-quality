@@ -1,0 +1,2049 @@
+{
+ "A.atp_cihaz_kayit": {
+  "deger": {
+   "ATP-1": 48,
+   "ATP-2": 70,
+   "ATP-3": 149,
+   "ATP-4": 104,
+   "ATP-5": 45
+  },
+  "birim": "kayıt",
+  "tarif": "cihaz başına canlı kayıt",
+  "kaynak": "Q3 atp_canli"
+ },
+ "A.atp_gun": {
+  "deger": 30,
+  "birim": "gün",
+  "tarif": "en az bir canlı kaydı olan gün",
+  "kaynak": "Q3 atp_canli"
+ },
+ "A.atp_ilk_son": {
+  "deger": "15.06.2026 – 12.10.2026",
+  "birim": "",
+  "tarif": "canlı kayıtların ilk ve son günü (TR)",
+  "kaynak": "Q3 atp_canli"
+ },
+ "A.atp_kayit": {
+  "deger": 416,
+  "birim": "kayıt",
+  "tarif": "Atmotube canlı kayıt (13 Ekim 00:00'a kadar)",
+  "kaynak": "Q3 atp_canli"
+ },
+ "A.cf1_payi": {
+  "deger": 100.0,
+  "birim": "%",
+  "tarif": "analiz dönemindeki saatlerin asıl yöntemle (cf_1) düzeltilen payı",
+  "kaynak": "Q1"
+ },
+ "A.pa_kayit_2dk": {
+  "deger": 111578,
+  "birim": "kayıt",
+  "tarif": "1 Mayıs – 12 Ekim (TR) PurpleAir 2 dk kayıt sayısı (Q1'deki saatlik n toplamı)",
+  "kaynak": "Q1"
+ },
+ "A.pa_nisan_saat": {
+  "deger": 33,
+  "birim": "saat",
+  "tarif": "27–30 Nisan'da veritabanındaki eski biçimli kayıtlardan saatlik değer (analiz dönemine alınmadı)",
+  "kaynak": "Q1"
+ },
+ "A.pa_saat": {
+  "deger": 3751,
+  "birim": "saat",
+  "tarif": "aynı dönemde düzeltilmiş değeri olan saat",
+  "kaynak": "Q1"
+ },
+ "A.pa_takvim_gun": {
+  "deger": 165,
+  "birim": "gün",
+  "tarif": "1 Mayıs – 12 Ekim takvim günü",
+  "kaynak": ""
+ },
+ "A.pa_tam_gun": {
+  "deger": 154,
+  "birim": "gün",
+  "tarif": "aynı dönemde tam gün (≥ 18 saat)",
+  "kaynak": "Q1"
+ },
+ "A.pa_tam_olmayan_gunler": {
+  "deger": "2026-07-04, 2026-07-05, 2026-07-06, 2026-07-07, 2026-07-08, 2026-10-02, 2026-10-03, 2026-10-04, 2026-10-05, 2026-10-06, 2026-10-10",
+  "birim": "",
+  "tarif": "tam gün olmayan takvim günleri (kesinti ya da < 18 saat)",
+  "kaynak": "Q1"
+ },
+ "A.saha_ekip": {
+  "deger": 3,
+  "birim": "ekip",
+  "tarif": "saha ekibi (A, B, C)",
+  "kaynak": "Q2"
+ },
+ "A.saha_nokta": {
+  "deger": 4015,
+  "birim": "nokta",
+  "tarif": "saha noktası (konumlu)",
+  "kaynak": "Q2"
+ },
+ "A.saha_oturum": {
+  "deger": 12,
+  "birim": "oturum",
+  "tarif": "saha oturumu (27–30 Nisan)",
+  "kaynak": "Q2"
+ },
+ "A.saha_oturum_ekip": {
+  "deger": {
+   "A": 4,
+   "B": 4,
+   "C": 4
+  },
+  "birim": "oturum",
+  "tarif": "ekip başına oturum",
+  "kaynak": "Q2"
+ },
+ "B.asim_mayis_eylul": {
+  "deger": 38,
+  "birim": "gün",
+  "tarif": "Mayıs–Eylül'de günlük ortalaması 15 µg/m³'ü aşan tam gün",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.asim_tum": {
+  "deger": 42,
+  "birim": "gün",
+  "tarif": "1 Mayıs – 12 Ekim, günlük ortalaması > 15 µg/m³ olan tam gün",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_05_asim": {
+  "deger": 12,
+  "birim": "gün",
+  "tarif": "Mayıs: günlük ort. > 15 µg/m³",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_05_ort": {
+  "deger": 13.36,
+  "birim": "µg/m³",
+  "tarif": "Mayıs: tam günlerin ortalaması (n = 31)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_05_tam_gun": {
+  "deger": 31,
+  "birim": "gün",
+  "tarif": "Mayıs tam gün sayısı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_06_asim": {
+  "deger": 9,
+  "birim": "gün",
+  "tarif": "Haziran: günlük ort. > 15 µg/m³",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_06_ort": {
+  "deger": 12.11,
+  "birim": "µg/m³",
+  "tarif": "Haziran: tam günlerin ortalaması (n = 30)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_06_tam_gun": {
+  "deger": 30,
+  "birim": "gün",
+  "tarif": "Haziran tam gün sayısı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_07_asim": {
+  "deger": 3,
+  "birim": "gün",
+  "tarif": "Temmuz: günlük ort. > 15 µg/m³",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_07_ort": {
+  "deger": 11.2,
+  "birim": "µg/m³",
+  "tarif": "Temmuz: tam günlerin ortalaması (n = 26)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_07_tam_gun": {
+  "deger": 26,
+  "birim": "gün",
+  "tarif": "Temmuz tam gün sayısı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_08_asim": {
+  "deger": 12,
+  "birim": "gün",
+  "tarif": "Ağustos: günlük ort. > 15 µg/m³",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_08_ort": {
+  "deger": 13.89,
+  "birim": "µg/m³",
+  "tarif": "Ağustos: tam günlerin ortalaması (n = 31)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_08_tam_gun": {
+  "deger": 31,
+  "birim": "gün",
+  "tarif": "Ağustos tam gün sayısı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_09_asim": {
+  "deger": 2,
+  "birim": "gün",
+  "tarif": "Eylül: günlük ort. > 15 µg/m³",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_09_ort": {
+  "deger": 9.75,
+  "birim": "µg/m³",
+  "tarif": "Eylül: tam günlerin ortalaması (n = 30)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_09_tam_gun": {
+  "deger": 30,
+  "birim": "gün",
+  "tarif": "Eylül tam gün sayısı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_10_asim": {
+  "deger": 4,
+  "birim": "gün",
+  "tarif": "Ekim: günlük ort. > 15 µg/m³",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_10_ort": {
+  "deger": 27.74,
+  "birim": "µg/m³",
+  "tarif": "Ekim: tam günlerin ortalaması (n = 6)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ay_10_tam_gun": {
+  "deger": 6,
+  "birim": "gün",
+  "tarif": "Ekim tam gün sayısı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_05_enb": {
+  "deger": 18.81,
+  "birim": "µg/m³",
+  "tarif": "Mayıs profilinin en yüksek değeri",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_05_enb_saat": {
+  "deger": 7,
+  "birim": "saat (TR)",
+  "tarif": "Mayıs saatlik ortalama profilinin en yüksek saati",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_05_enk": {
+  "deger": 9.8,
+  "birim": "µg/m³",
+  "tarif": "Mayıs profilinin en düşük değeri (saat 19)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_06_enb": {
+  "deger": 16.37,
+  "birim": "µg/m³",
+  "tarif": "Haziran profilinin en yüksek değeri",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_06_enb_saat": {
+  "deger": 5,
+  "birim": "saat (TR)",
+  "tarif": "Haziran saatlik ortalama profilinin en yüksek saati",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_06_enk": {
+  "deger": 8.52,
+  "birim": "µg/m³",
+  "tarif": "Haziran profilinin en düşük değeri (saat 18)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_07_enb": {
+  "deger": 15.75,
+  "birim": "µg/m³",
+  "tarif": "Temmuz profilinin en yüksek değeri",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_07_enb_saat": {
+  "deger": 6,
+  "birim": "saat (TR)",
+  "tarif": "Temmuz saatlik ortalama profilinin en yüksek saati",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_07_enk": {
+  "deger": 8.38,
+  "birim": "µg/m³",
+  "tarif": "Temmuz profilinin en düşük değeri (saat 17)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_08_enb": {
+  "deger": 17.04,
+  "birim": "µg/m³",
+  "tarif": "Ağustos profilinin en yüksek değeri",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_08_enb_saat": {
+  "deger": 6,
+  "birim": "saat (TR)",
+  "tarif": "Ağustos saatlik ortalama profilinin en yüksek saati",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_08_enk": {
+  "deger": 10.51,
+  "birim": "µg/m³",
+  "tarif": "Ağustos profilinin en düşük değeri (saat 18)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_09_enb": {
+  "deger": 13.43,
+  "birim": "µg/m³",
+  "tarif": "Eylül profilinin en yüksek değeri",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_09_enb_saat": {
+  "deger": 7,
+  "birim": "saat (TR)",
+  "tarif": "Eylül saatlik ortalama profilinin en yüksek saati",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_09_enk": {
+  "deger": 6.71,
+  "birim": "µg/m³",
+  "tarif": "Eylül profilinin en düşük değeri (saat 17)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_10_enb": {
+  "deger": 35.71,
+  "birim": "µg/m³",
+  "tarif": "Ekim profilinin en yüksek değeri",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_10_enb_saat": {
+  "deger": 22,
+  "birim": "saat (TR)",
+  "tarif": "Ekim saatlik ortalama profilinin en yüksek saati",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_ay_10_enk": {
+  "deger": 15.69,
+  "birim": "µg/m³",
+  "tarif": "Ekim profilinin en düşük değeri (saat 12)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_mayis_eylul_enb": {
+  "deger": 15.82,
+  "birim": "µg/m³",
+  "tarif": "aynı profilin en yüksek değeri",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_mayis_eylul_enb_saat": {
+  "deger": 6,
+  "birim": "saat (TR)",
+  "tarif": "Mayıs–Eylül tüm geçerli saatler: saatlik ortalama profilin en yüksek saati",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_mayis_eylul_enk": {
+  "deger": 8.87,
+  "birim": "µg/m³",
+  "tarif": "aynı profilin en düşük değeri",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_mayis_eylul_enk_saat": {
+  "deger": 18,
+  "birim": "saat (TR)",
+  "tarif": "aynı profilin en düşük saati",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_tum_enb": {
+  "deger": 16.47,
+  "birim": "µg/m³",
+  "tarif": "1 Mayıs – 12 Ekim profili, en yüksek saat 06:00",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.dongu_tum_enk": {
+  "deger": 9.39,
+  "birim": "µg/m³",
+  "tarif": "1 Mayıs – 12 Ekim profili, en düşük saat 18:00",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.epizot_enb": {
+  "deger": 82.34,
+  "birim": "µg/m³",
+  "tarif": "8–12 Ekim en yüksek saatlik değer",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.epizot_enb_zaman": {
+  "deger": "2026-10-11 22:00",
+  "birim": "",
+  "tarif": "en yüksek saatin başlangıcı (TR)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.epizot_gun_2026-10-08": {
+  "deger": 33.34,
+  "birim": "µg/m³",
+  "tarif": "2026-10-08 günlük ortalama (24 saat)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.epizot_gun_2026-10-09": {
+  "deger": 33.57,
+  "birim": "µg/m³",
+  "tarif": "2026-10-09 günlük ortalama (24 saat)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.epizot_gun_2026-10-10": {
+  "deger": 39.3,
+  "birim": "µg/m³",
+  "tarif": "2026-10-10 günlük ortalama (17 saat)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.epizot_gun_2026-10-11": {
+  "deger": 41.82,
+  "birim": "µg/m³",
+  "tarif": "2026-10-11 günlük ortalama (24 saat)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.epizot_gun_2026-10-12": {
+  "deger": 37.37,
+  "birim": "µg/m³",
+  "tarif": "2026-10-12 günlük ortalama (24 saat)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.epizot_hassas_payi": {
+  "deger": 50.4,
+  "birim": "%",
+  "tarif": "8–12 Ekim saatlerinin ≥ 35,5 µg/m³ (Hassas ve üstü) payı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.epizot_ort": {
+  "deger": 36.94,
+  "birim": "µg/m³",
+  "tarif": "8–12 Ekim saatlik değerlerin ortalaması",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.epizot_saat": {
+  "deger": 113,
+  "birim": "saat",
+  "tarif": "8–12 Ekim geçerli saat",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.epizot_saglksiz_saat": {
+  "deger": 9,
+  "birim": "saat",
+  "tarif": "8–12 Ekim'de ≥ 55,5 µg/m³ (Sağlıksız) saat",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.epizot_sicaklik_aralik": {
+  "deger": "15,6–34,5",
+  "birim": "°C",
+  "tarif": "8–12 Ekim saatlik PurpleAir gövde içi sıcaklık aralığı (ortamdan ~4 °C yüksek okur)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.gunduz_hafta_ici_medyan": {
+  "deger": 11.24,
+  "birim": "µg/m³",
+  "tarif": "10:00–16:00, hafta içi saatlerin ortancası",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.gunduz_hafta_sonu_medyan": {
+  "deger": 9.18,
+  "birim": "µg/m³",
+  "tarif": "10:00–16:00, hafta sonu saatlerin ortancası",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.gunluk_tepe_00_09_payi": {
+  "deger": 58.4,
+  "birim": "%",
+  "tarif": "tam günlerde günün en yüksek saatlik değerinin 00:00–09:59 arasına düştüğü günlerin payı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.gunluk_tepe_06_07_payi": {
+  "deger": 25.3,
+  "birim": "%",
+  "tarif": "tam günlerde günün en yüksek saatinin 06 ya da 07 olduğu günlerin payı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.isi_enb": {
+  "deger": 17.93,
+  "birim": "µg/m³",
+  "tarif": "saat × gün ortancalarının en yükseği",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.isi_enb_hucre": {
+  "deger": "Sal 05:00",
+  "birim": "",
+  "tarif": "en yüksek hücre (gün, saat)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.isi_enk": {
+  "deger": 7.22,
+  "birim": "µg/m³",
+  "tarif": "saat × gün ortancalarının en düşüğü",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.isi_enk_hucre": {
+  "deger": "Cmt 13:00",
+  "birim": "",
+  "tarif": "en düşük hücre (gün, saat)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.isi_hucre_n_max": {
+  "deger": 24,
+  "birim": "saat",
+  "tarif": "ısı haritasında hücre başına en çok gözlem",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.isi_hucre_n_min": {
+  "deger": 20,
+  "birim": "saat",
+  "tarif": "ısı haritasında hücre başına en az gözlem",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.nem_75_ustu_payi": {
+  "deger": 0.13,
+  "birim": "%",
+  "tarif": "aynı saatlerin payı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.nem_75_ustu_saat": {
+  "deger": 5,
+  "birim": "saat",
+  "tarif": "saatlik ortalama nemi %75'in üstünde olan geçerli saat (PurpleAir gövde içi nem)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.nem_enb_saat": {
+  "deger": "05:00 (61)",
+  "birim": "%",
+  "tarif": "saatlik ortalama nemin en yüksek olduğu saat",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.nem_enk_saat": {
+  "deger": "17:00 (30)",
+  "birim": "%",
+  "tarif": "saatlik ortalama nemin en düşük olduğu saat",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.nem_spearman_anomali": {
+  "deger": 0.11,
+  "birim": "",
+  "tarif": "ay × saat ortancasından sapmalar arasında Spearman (günlük döngü çıkarılmış)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.nem_spearman_gun_ici": {
+  "deger": 0.42,
+  "birim": "",
+  "tarif": "gün içi sapmalar (günlük ortalamadan) arasında Spearman",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.nem_spearman_gunluk": {
+  "deger": 0.04,
+  "birim": "",
+  "tarif": "tam günlerin günlük ortalamaları arasında Spearman",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.nem_spearman_tum": {
+  "deger": 0.23,
+  "birim": "",
+  "tarif": "saatlik PM₂.₅ ile nem, Spearman sıra korelasyonu (tüm saatler)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ort_mayis_eylul": {
+  "deger": 12.11,
+  "birim": "µg/m³",
+  "tarif": "Mayıs–Eylül tam günlerinin günlük ortalamalarının ortalaması",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.ort_tum": {
+  "deger": 12.71,
+  "birim": "µg/m³",
+  "tarif": "1 Mayıs – 12 Ekim tam günlerinin ortalaması",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.p95_03_09_payi": {
+  "deger": 54.8,
+  "birim": "%",
+  "tarif": "en kötü %5 saatin 03:00–09:59 arasına düşen payı (tüm dönem)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.p95_03_09_payi_mayis_eylul": {
+  "deger": 59.2,
+  "birim": "%",
+  "tarif": "aynı pay, yalnızca Mayıs–Eylül (eşik Mayıs–Eylül'ün 95. yüzdeliği)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.p95_14_19_payi": {
+  "deger": 7.4,
+  "birim": "%",
+  "tarif": "en kötü %5 saatin 14:00–19:59 arasına düşen payı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.p95_ekim_payi": {
+  "deger": 44.1,
+  "birim": "%",
+  "tarif": "en kötü %5 saatin Ekim'e düşen payı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.p95_esik": {
+  "deger": 27.46,
+  "birim": "µg/m³",
+  "tarif": "1 Mayıs – 12 Ekim geçerli saatlerin 95. yüzdeliği (en kötü %5 eşiği)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.p95_mayis_eylul_esik": {
+  "deger": 24.77,
+  "birim": "µg/m³",
+  "tarif": "yalnızca Mayıs–Eylül saatleriyle 95. yüzdelik",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.p95_mayis_payi": {
+  "deger": 25.0,
+  "birim": "%",
+  "tarif": "en kötü %5 saatin Mayıs'a düşen payı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.p95_saat_orani_enb": {
+  "deger": 11.5,
+  "birim": "%",
+  "tarif": "bir saatin en kötü %5'e girme oranının en yükseği (saat 07)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.p95_saat_sayisi": {
+  "deger": 188,
+  "birim": "saat",
+  "tarif": "eşiği aşan ya da eşit saat sayısı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.saat_gecerli": {
+  "deger": 3751,
+  "birim": "saat",
+  "tarif": "1 Mayıs 00:00 – 13 Ekim 00:00 (TR) arasında düzeltilmiş değeri olan saat",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.saat_hassas_ustu": {
+  "deger": 78,
+  "birim": "saat",
+  "tarif": "saatlik değeri ≥ 35,5 µg/m³ (Hassas ve üstü) saat sayısı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.saat_hassas_ustu_ekim": {
+  "deger": 57,
+  "birim": "saat",
+  "tarif": "aynı sayının Ekim'e düşen kısmı",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.saat_hki_Hassas": {
+  "deger": 1.79,
+  "birim": "%",
+  "tarif": "geçerli saatlerin HKİ 'Hassas' aralığındaki payı (saatlik değer, 0,1'e kesilerek; gösterge)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.saat_hki_Orta": {
+  "deger": 39.7,
+  "birim": "%",
+  "tarif": "geçerli saatlerin HKİ 'Orta' aralığındaki payı (saatlik değer, 0,1'e kesilerek; gösterge)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.saat_hki_Sağlıksız": {
+  "deger": 0.29,
+  "birim": "%",
+  "tarif": "geçerli saatlerin HKİ 'Sağlıksız' aralığındaki payı (saatlik değer, 0,1'e kesilerek; gösterge)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.saat_hki_İyi": {
+  "deger": 58.22,
+  "birim": "%",
+  "tarif": "geçerli saatlerin HKİ 'İyi' aralığındaki payı (saatlik değer, 0,1'e kesilerek; gösterge)",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.saat_kanal_disi": {
+  "deger": 5,
+  "birim": "saat",
+  "tarif": "A/B kanal kuralıyla dışarıda kalan saat",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.sabah_hafta_ici_medyan": {
+  "deger": 13.95,
+  "birim": "µg/m³",
+  "tarif": "06:00–10:00, hafta içi ortanca",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.sabah_hafta_sonu_medyan": {
+  "deger": 13.44,
+  "birim": "µg/m³",
+  "tarif": "06:00–10:00, hafta sonu ortanca",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.tam_gun": {
+  "deger": 154,
+  "birim": "gün",
+  "tarif": "≥ 18 geçerli saati olan Türkiye günü, 1 Mayıs – 12 Ekim",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.tam_gun_mayis_eylul": {
+  "deger": 148,
+  "birim": "gün",
+  "tarif": "Mayıs–Eylül tam günleri",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "B.yuksek_gunler_20": {
+  "deger": "2026-05-07 (26,2), 2026-05-08 (21,8), 2026-05-10 (20,6), 2026-05-19 (20,2), 2026-06-07 (20,8), 2026-08-26 (23,4), 2026-09-21 (20,6), 2026-10-08 (33,3), 2026-10-09 (33,6), 2026-10-11 (41,8), 2026-10-12 (37,4)",
+  "birim": "µg/m³",
+  "tarif": "günlük ortalaması 20 µg/m³'ü aşan tam günler",
+  "kaynak": "Q1 (PurpleAir saatlik) → paCorrect; Türkiye saati"
+ },
+ "C.G_GPA_spearman": {
+  "deger": 0.47,
+  "birim": "",
+  "tarif": "uygun hücre ve binalarda G ile G_PA ortancaları arasında Spearman",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.G_kimya_disi": {
+  "deger": 1.1,
+  "birim": "oran",
+  "tarif": "Kimya binası dışındaki noktalarda G ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.K_kimya": {
+  "deger": 0.65,
+  "birim": "oran",
+  "tarif": "Kimya binası noktalarında K (Atmotube / düzeltilmiş PurpleAir) ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.K_kimya_disi": {
+  "deger": 0.82,
+  "birim": "oran",
+  "tarif": "Kimya binası dışındaki noktalarda K ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.atmotube_cozunurluk_tamsayi_payi": {
+  "deger": 95.3,
+  "birim": "%",
+  "tarif": "Atmotube PM₂.₅ değerlerinin tam sayı olan payı (1 µg/m³ çözünürlük)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.bant_akşamüstü": {
+  "deger": {
+   "n": 1591,
+   "G": 1.0,
+   "K": 0.68,
+   "atmotube_ortanca": 6.0,
+   "purpleair_epa_ortanca": 5.8
+  },
+  "birim": "oran / µg/m³",
+  "tarif": "saha saat bandı: nokta sayısı, G ve K ortancası, Atmotube ham ve eş zamanlı PurpleAir (EPA) ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.bant_sabah": {
+  "deger": {
+   "n": 828,
+   "G": 0.88,
+   "K": 0.63,
+   "atmotube_ortanca": 5.0,
+   "purpleair_epa_ortanca": 8.0
+  },
+  "birim": "oran / µg/m³",
+  "tarif": "saha saat bandı: nokta sayısı, G ve K ortancası, Atmotube ham ve eş zamanlı PurpleAir (EPA) ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.bant_öğle": {
+  "deger": {
+   "n": 1589,
+   "G": 1.1,
+   "K": 0.66,
+   "atmotube_ortanca": 7.0,
+   "purpleair_epa_ortanca": 12.9
+  },
+  "birim": "oran / µg/m³",
+  "tarif": "saha saat bandı: nokta sayısı, G ve K ortancası, Atmotube ham ve eş zamanlı PurpleAir (EPA) ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.bina_Güzide Kafe": {
+  "deger": {
+   "n": 110,
+   "oturum": 6,
+   "G": 1.89,
+   "G_GA": [
+    1.43,
+    2.57
+   ],
+   "G_PA": 1.07,
+   "K": 0.96,
+   "pm_ortanca": 8.0
+  },
+  "birim": "oran / µg/m³",
+  "tarif": "bina: nokta ve oturum sayısı, G ortancası ve bootstrap %95 GA, G_PA ve K ortancaları, ham PM₂.₅ ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.bina_Kimya ve Çevre Mühendisliği Bölümü": {
+  "deger": {
+   "n": 3518,
+   "oturum": 12,
+   "G": 1.0,
+   "G_GA": [
+    1.0,
+    1.0
+   ],
+   "G_PA": 1.0,
+   "K": 0.65,
+   "pm_ortanca": 6.0
+  },
+  "birim": "oran / µg/m³",
+  "tarif": "bina: nokta ve oturum sayısı, G ortancası ve bootstrap %95 GA, G_PA ve K ortancaları, ham PM₂.₅ ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.bina_Kütüphane": {
+  "deger": {
+   "n": 92,
+   "oturum": 3,
+   "G": 1.0,
+   "G_GA": [
+    0.82,
+    2.5
+   ],
+   "G_PA": 1.33,
+   "K": 0.69,
+   "pm_ortanca": 4.0
+  },
+  "birim": "oran / µg/m³",
+  "tarif": "bina: nokta ve oturum sayısı, G ortancası ve bootstrap %95 GA, G_PA ve K ortancaları, ham PM₂.₅ ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.bina_SUMER": {
+  "deger": {
+   "n": 29,
+   "oturum": 7,
+   "G": 1.0,
+   "G_GA": [
+    0.9,
+    1.0
+   ],
+   "G_PA": 1.03,
+   "K": 0.82,
+   "pm_ortanca": 6.0
+  },
+  "birim": "oran / µg/m³",
+  "tarif": "bina: nokta ve oturum sayısı, G ortancası ve bootstrap %95 GA, G_PA ve K ortancaları, ham PM₂.₅ ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.bina_disi": {
+  "deger": 184,
+  "birim": "nokta",
+  "tarif": "hiçbir binaya ≤ 15 m olmayan nokta (yol, açık alan)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.bina_disi_ozet": {
+  "deger": {
+   "n": 184,
+   "oturum": 8,
+   "G": 1.1,
+   "G_GA": [
+    0.82,
+    1.46
+   ],
+   "G_PA": 1.28,
+   "K": 0.95
+  },
+  "birim": "oran",
+  "tarif": "hiçbir binaya ≤ 15 m olmayan noktalar",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.bina_ici": {
+  "deger": 3651,
+  "birim": "nokta",
+  "tarif": "bir bina poligonunun içine düşen nokta",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.bina_noktali": {
+  "deger": 10,
+  "birim": "bina",
+  "tarif": "en az bir noktası olan bina",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.bina_uygun": {
+  "deger": 4,
+  "birim": "bina",
+  "tarif": "≥ 2 oturum ve ≥ 10 noktası olan bina",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.bina_yakin": {
+  "deger": 173,
+  "birim": "nokta",
+  "tarif": "bina dışında ama sınırına ≤ 15 m olan nokta",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.donme_yaricapi_aralik": {
+  "deger": "31–378",
+  "birim": "m",
+  "tarif": "aynı ölçünün en küçük ve en büyük değeri",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.donme_yaricapi_ortanca": {
+  "deger": 46.0,
+  "birim": "m",
+  "tarif": "oturum başına dönme yarıçapı (noktaların ağırlık merkezine uzaklığının kareli ortalamasının kökü), 12 oturumun ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.hucre_uygun": {
+  "deger": 26,
+  "birim": "hücre",
+  "tarif": "25 m hücrelerden ≥ 2 oturum ve ≥ 10 nokta içerenler",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.hucre_uygun_nokta": {
+  "deger": 3786,
+  "birim": "nokta",
+  "tarif": "bu hücrelerdeki nokta sayısı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.kampus_disi": {
+  "deger": 0,
+  "birim": "nokta",
+  "tarif": "kampüs sınırı (merkezden 2 km) dışında kalan nokta",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.kimya_oturum_85": {
+  "deger": 8,
+  "birim": "oturum",
+  "tarif": "noktalarının %85'ten fazlası bu binada olan oturum sayısı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.kimya_payi": {
+  "deger": 87.8,
+  "birim": "%",
+  "tarif": "noktaların 'Kimya ve Çevre Mühendisliği Bölümü' binasına (15 m kuralıyla) düşen payı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.nokta_pm": {
+  "deger": 4008,
+  "birim": "nokta",
+  "tarif": "PM₂.₅ değeri olan noktalar",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.nokta_tum": {
+  "deger": 4015,
+  "birim": "nokta",
+  "tarif": "12 saha oturumunun konumlu noktaları (kampüs içi, 2 km kuralı)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.sicak_GPA_de_sicak": {
+  "deger": 3,
+  "birim": "hücre",
+  "tarif": "sıcak hücrelerden G_PA ölçütüyle de ≥ 1,25 olanlar",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.sicak_H1": {
+  "deger": {
+   "konum": "Güzide Kafe",
+   "n": 36,
+   "oturum": 4,
+   "G": 2.1,
+   "G_GA": [
+    1.92,
+    4.42
+   ],
+   "G_PA": 1.36,
+   "K": 1.36
+  },
+  "birim": "oran",
+  "tarif": "sıcak hücre: ortanca G, oturum düzeyinde bootstrap %95 GA, G_PA ve K ortancaları",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.sicak_H2": {
+  "deger": {
+   "konum": "Güzide Kafe",
+   "n": 55,
+   "oturum": 4,
+   "G": 1.75,
+   "G_GA": [
+    1.23,
+    3.97
+   ],
+   "G_PA": 1.0,
+   "K": 0.9
+  },
+  "birim": "oran",
+  "tarif": "sıcak hücre: ortanca G, oturum düzeyinde bootstrap %95 GA, G_PA ve K ortancaları",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.sicak_H3": {
+  "deger": {
+   "konum": "SUMER yakını (21 m)",
+   "n": 12,
+   "oturum": 4,
+   "G": 1.35,
+   "G_GA": [
+    0.82,
+    1.38
+   ],
+   "G_PA": 1.54,
+   "K": 1.03
+  },
+  "birim": "oran",
+  "tarif": "sıcak hücre: ortanca G, oturum düzeyinde bootstrap %95 GA, G_PA ve K ortancaları",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.sicak_H4": {
+  "deger": {
+   "konum": "Güzide Kafe yakını (44 m)",
+   "n": 21,
+   "oturum": 7,
+   "G": 1.31,
+   "G_GA": [
+    0.88,
+    2.23
+   ],
+   "G_PA": 1.33,
+   "K": 0.94
+  },
+  "birim": "oran",
+  "tarif": "sıcak hücre: ortanca G, oturum düzeyinde bootstrap %95 GA, G_PA ve K ortancaları",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.sicak_K_1_25": {
+  "deger": 1,
+  "birim": "hücre",
+  "tarif": "sıcak hücrelerden K ≥ 1,25 olanlar (çatı düzeyinin belirgin üstü)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "C.sicak_hucre": {
+  "deger": 4,
+  "birim": "hücre",
+  "tarif": "G ortancası ≥ 1.25 olan uygun hücre",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk)"
+ },
+ "D.ani_yukselme_sayisi": {
+  "deger": 10,
+  "birim": "kayıt",
+  "tarif": "komşu iki kaydın ortalamasının 5 katını aşan kayıt (ayıklanmadı; gerçek kısa süreli maruziyet olarak raporlanır)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.atp_09_17_payi": {
+  "deger": 83.7,
+  "birim": "%",
+  "tarif": "eşleşen kayıtların 09:00–16:59 arasındaki payı",
+  "kaynak": "Q3 atp_canli"
+ },
+ "D.atp_K_0_75_alti": {
+  "deger": 48.9,
+  "birim": "%",
+  "tarif": "K < 0,75 olan kayıtların payı",
+  "kaynak": "Q3 atp_canli"
+ },
+ "D.atp_K_1_25_ustu": {
+  "deger": 13.7,
+  "birim": "%",
+  "tarif": "K ≥ 1,25 olan kayıtların payı",
+  "kaynak": "Q3 atp_canli"
+ },
+ "D.atp_K_1_alti": {
+  "deger": 78.1,
+  "birim": "%",
+  "tarif": "K < 1 olan kayıtların payı",
+  "kaynak": "Q3 atp_canli"
+ },
+ "D.atp_K_ceyrek": {
+  "deger": "0,58–0,96",
+  "birim": "oran",
+  "tarif": "K'nin çeyrekler arası aralığı",
+  "kaynak": "Q3 atp_canli"
+ },
+ "D.atp_K_ortanca": {
+  "deger": 0.75,
+  "birim": "oran",
+  "tarif": "ATP kayıtlarında K = Atmotube / düzeltilmiş PurpleAir ortancası",
+  "kaynak": "Q3 atp_canli"
+ },
+ "D.atp_K_p10_p90": {
+  "deger": "0,32–1,66",
+  "birim": "oran",
+  "tarif": "K'nin 10. ve 90. yüzdeliği",
+  "kaynak": "Q3 atp_canli"
+ },
+ "D.atp_cihaz_gun": {
+  "deger": 48,
+  "birim": "cihaz-gün",
+  "tarif": "eşleşen kayıtların dağıldığı cihaz-gün sayısı",
+  "kaynak": "Q3 atp_canli"
+ },
+ "D.atp_esli": {
+  "deger": 233,
+  "birim": "kayıt",
+  "tarif": "±8 dk içinde en az 4 düzeltilmiş PurpleAir kaydıyla eşleşen kampüs içi kayıt",
+  "kaynak": "Q3 atp_canli"
+ },
+ "D.atp_kampus": {
+  "deger": 299,
+  "birim": "kayıt",
+  "tarif": "PM₂.₅ değeri olan ve konumu kampüs içinde (2 km) olanlar",
+  "kaynak": "Q3 atp_canli"
+ },
+ "D.atp_kayit": {
+  "deger": 416,
+  "birim": "kayıt",
+  "tarif": "Atmotube canlı kayıtları (measurements, source='atmotube'), 13 Ekim 00:00'a kadar",
+  "kaynak": "Q3 atp_canli"
+ },
+ "D.atp_nem_80_ustu": {
+  "deger": 0,
+  "birim": "kayıt",
+  "tarif": "eşleşen kayıtlarda Atmotube nemi > %80 olan kayıt",
+  "kaynak": "Q3 atp_canli"
+ },
+ "D.atp_pm": {
+  "deger": 389,
+  "birim": "kayıt",
+  "tarif": "PM₂.₅ değeri olanlar",
+  "kaynak": "Q3 atp_canli"
+ },
+ "D.doz_oturma_aralik": {
+  "deger": "3,5–37,0",
+  "birim": "µg",
+  "tarif": "TWA × 0,25 m³/sa × süre, oturum aralığı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.doz_yurume_aralik": {
+  "deger": "21,8–231,0",
+  "birim": "µg",
+  "tarif": "TWA × 1,56 m³/sa × süre, oturum aralığı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.enb_15dk": {
+  "deger": 87.62,
+  "birim": "µg/m³",
+  "tarif": "en yüksek 15 dk kayan ortalama (Oturum 5)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.enb_60dk": {
+  "deger": 53.07,
+  "birim": "µg/m³",
+  "tarif": "en yüksek 60 dk kayan ortalama (Oturum 10)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.enb_kayit_kimya_disi": {
+  "deger": 4,
+  "birim": "oturum",
+  "tarif": "en yüksek tek kaydı Kimya binası dışında alınan oturum sayısı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.enb_tek_kayit": {
+  "deger": 522.0,
+  "birim": "µg/m³",
+  "tarif": "tüm oturumlarda en yüksek tek kayıt (Oturum 5)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.k_twa_aralik": {
+  "deger": "0,53–1,74",
+  "birim": "oran",
+  "tarif": "oturum K_TWA aralığı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.k_twa_ic_oturum_dis6": {
+  "deger": "0,53–0,88 (n = 6)",
+  "birim": "oran",
+  "tarif": "aynı oturumlardan eş zamanlı PurpleAir ortalaması ≥ 6 µg/m³ olanların K_TWA aralığı (27 Nisan'ın çok temiz günü hariç)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.k_twa_ic_oturum_ortanca": {
+  "deger": 0.68,
+  "birim": "oran",
+  "tarif": "noktalarının ≥ %85'i Kimya binasında olan 8 oturumun K_TWA ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.k_twa_ortanca": {
+  "deger": 0.79,
+  "birim": "oran",
+  "tarif": "12 oturumun K_TWA ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.oturum_01": {
+  "deger": {
+   "ekip": "Saha ekibi A",
+   "tarih": "27.04.2026",
+   "saat": "08:08–15:13",
+   "adim_dk": 1.0,
+   "kayit": 341,
+   "olcum_suresi_sa": 5.68,
+   "kimya_binasi_payi_yuzde": 95.9,
+   "TWA": 4.13,
+   "PurpleAir_EPA_es_zamanli": 3.91,
+   "K_TWA": 1.06,
+   "enb_tek_kayit": 37.0,
+   "enb_tek_kayit_saat": "14:45",
+   "enb_15dk": 13.27,
+   "enb_15dk_bitis": "14:59",
+   "enb_60dk": 5.93,
+   "enb_60dk_bitis": "15:05",
+   "en_yuksek_yuzde10_katki": 21.9,
+   "doz_yurume_ug": 36.6,
+   "doz_oturma_ug": 5.9
+  },
+  "birim": "µg/m³ · sa · µg · oran",
+  "tarif": "oturum özeti: TWA = kayıtların ortalaması; K_TWA = TWA / eş zamanlı düzeltilmiş PurpleAir; kayan pencereler ≥ %75 dolu; doz = TWA × IR × süre (IR 1,56 ve 0,25 m³/sa)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.oturum_02": {
+  "deger": {
+   "ekip": "Saha ekibi C",
+   "tarih": "27.04.2026",
+   "saat": "09:51–17:48",
+   "adim_dk": 1.0,
+   "kayit": 478,
+   "olcum_suresi_sa": 7.97,
+   "kimya_binasi_payi_yuzde": 100.0,
+   "TWA": 4.18,
+   "PurpleAir_EPA_es_zamanli": 4.17,
+   "K_TWA": 1.0,
+   "enb_tek_kayit": 326.0,
+   "enb_tek_kayit_saat": "17:46",
+   "enb_15dk": 28.0,
+   "enb_15dk_bitis": "17:48",
+   "enb_60dk": 8.52,
+   "enb_60dk_bitis": "17:48",
+   "en_yuksek_yuzde10_katki": 37.4,
+   "doz_yurume_ug": 51.9,
+   "doz_oturma_ug": 8.3
+  },
+  "birim": "µg/m³ · sa · µg · oran",
+  "tarif": "oturum özeti: TWA = kayıtların ortalaması; K_TWA = TWA / eş zamanlı düzeltilmiş PurpleAir; kayan pencereler ≥ %75 dolu; doz = TWA × IR × süre (IR 1,56 ve 0,25 m³/sa)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.oturum_03": {
+  "deger": {
+   "ekip": "Saha ekibi B",
+   "tarih": "27.04.2026",
+   "saat": "10:42–16:18",
+   "adim_dk": 2.0,
+   "kayit": 88,
+   "olcum_suresi_sa": 2.93,
+   "kimya_binasi_payi_yuzde": 15.8,
+   "TWA": 4.77,
+   "PurpleAir_EPA_es_zamanli": 4.15,
+   "K_TWA": 1.15,
+   "enb_tek_kayit": 28.0,
+   "enb_tek_kayit_saat": "15:22",
+   "enb_15dk": 9.75,
+   "enb_15dk_bitis": "15:46",
+   "enb_60dk": 7.0,
+   "enb_60dk_bitis": "16:16",
+   "en_yuksek_yuzde10_katki": 26.9,
+   "doz_yurume_ug": 21.8,
+   "doz_oturma_ug": 3.5
+  },
+  "birim": "µg/m³ · sa · µg · oran",
+  "tarif": "oturum özeti: TWA = kayıtların ortalaması; K_TWA = TWA / eş zamanlı düzeltilmiş PurpleAir; kayan pencereler ≥ %75 dolu; doz = TWA × IR × süre (IR 1,56 ve 0,25 m³/sa)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.oturum_04": {
+  "deger": {
+   "ekip": "Saha ekibi C",
+   "tarih": "28.04.2026",
+   "saat": "08:51–18:22",
+   "adim_dk": 1.0,
+   "kayit": 572,
+   "olcum_suresi_sa": 9.53,
+   "kimya_binasi_payi_yuzde": 100.0,
+   "TWA": 5.34,
+   "PurpleAir_EPA_es_zamanli": 8.07,
+   "K_TWA": 0.66,
+   "enb_tek_kayit": 209.0,
+   "enb_tek_kayit_saat": "16:05",
+   "enb_15dk": 37.07,
+   "enb_15dk_bitis": "16:15",
+   "enb_60dk": 12.38,
+   "enb_60dk_bitis": "16:59",
+   "en_yuksek_yuzde10_katki": 29.2,
+   "doz_yurume_ug": 79.5,
+   "doz_oturma_ug": 12.7
+  },
+  "birim": "µg/m³ · sa · µg · oran",
+  "tarif": "oturum özeti: TWA = kayıtların ortalaması; K_TWA = TWA / eş zamanlı düzeltilmiş PurpleAir; kayan pencereler ≥ %75 dolu; doz = TWA × IR × süre (IR 1,56 ve 0,25 m³/sa)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.oturum_05": {
+  "deger": {
+   "ekip": "Saha ekibi B",
+   "tarih": "28.04.2026",
+   "saat": "09:00–17:00",
+   "adim_dk": 2.0,
+   "kayit": 142,
+   "olcum_suresi_sa": 4.73,
+   "kimya_binasi_payi_yuzde": 4.2,
+   "TWA": 11.75,
+   "PurpleAir_EPA_es_zamanli": 6.76,
+   "K_TWA": 1.74,
+   "enb_tek_kayit": 522.0,
+   "enb_tek_kayit_saat": "14:18",
+   "enb_15dk": 87.62,
+   "enb_15dk_bitis": "14:30",
+   "enb_60dk": 31.7,
+   "enb_60dk_bitis": "14:52",
+   "en_yuksek_yuzde10_katki": 62.3,
+   "doz_yurume_ug": 86.7,
+   "doz_oturma_ug": 13.9
+  },
+  "birim": "µg/m³ · sa · µg · oran",
+  "tarif": "oturum özeti: TWA = kayıtların ortalaması; K_TWA = TWA / eş zamanlı düzeltilmiş PurpleAir; kayan pencereler ≥ %75 dolu; doz = TWA × IR × süre (IR 1,56 ve 0,25 m³/sa)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.oturum_06": {
+  "deger": {
+   "ekip": "Saha ekibi A",
+   "tarih": "28.04.2026",
+   "saat": "09:31–15:03",
+   "adim_dk": 1.0,
+   "kayit": 333,
+   "olcum_suresi_sa": 5.55,
+   "kimya_binasi_payi_yuzde": 92.2,
+   "TWA": 7.16,
+   "PurpleAir_EPA_es_zamanli": 10.16,
+   "K_TWA": 0.7,
+   "enb_tek_kayit": 22.0,
+   "enb_tek_kayit_saat": "11:37",
+   "enb_15dk": 13.07,
+   "enb_15dk_bitis": "11:47",
+   "enb_60dk": 10.75,
+   "enb_60dk_bitis": "12:32",
+   "en_yuksek_yuzde10_katki": 16.8,
+   "doz_yurume_ug": 62.0,
+   "doz_oturma_ug": 9.9
+  },
+  "birim": "µg/m³ · sa · µg · oran",
+  "tarif": "oturum özeti: TWA = kayıtların ortalaması; K_TWA = TWA / eş zamanlı düzeltilmiş PurpleAir; kayan pencereler ≥ %75 dolu; doz = TWA × IR × süre (IR 1,56 ve 0,25 m³/sa)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.oturum_07": {
+  "deger": {
+   "ekip": "Saha ekibi B",
+   "tarih": "29.04.2026",
+   "saat": "09:00–17:00",
+   "adim_dk": 2.0,
+   "kayit": 241,
+   "olcum_suresi_sa": 8.03,
+   "kimya_binasi_payi_yuzde": 68.5,
+   "TWA": 9.81,
+   "PurpleAir_EPA_es_zamanli": 15.45,
+   "K_TWA": 0.64,
+   "enb_tek_kayit": 34.6,
+   "enb_tek_kayit_saat": "12:50",
+   "enb_15dk": 16.75,
+   "enb_15dk_bitis": "14:02",
+   "enb_60dk": 14.57,
+   "enb_60dk_bitis": "14:26",
+   "en_yuksek_yuzde10_katki": 17.7,
+   "doz_yurume_ug": 123.0,
+   "doz_oturma_ug": 19.7
+  },
+  "birim": "µg/m³ · sa · µg · oran",
+  "tarif": "oturum özeti: TWA = kayıtların ortalaması; K_TWA = TWA / eş zamanlı düzeltilmiş PurpleAir; kayan pencereler ≥ %75 dolu; doz = TWA × IR × süre (IR 1,56 ve 0,25 m³/sa)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.oturum_08": {
+  "deger": {
+   "ekip": "Saha ekibi C",
+   "tarih": "29.04.2026",
+   "saat": "09:31–18:08",
+   "adim_dk": 1.0,
+   "kayit": 498,
+   "olcum_suresi_sa": 8.3,
+   "kimya_binasi_payi_yuzde": 100.0,
+   "TWA": 10.05,
+   "PurpleAir_EPA_es_zamanli": 15.43,
+   "K_TWA": 0.65,
+   "enb_tek_kayit": 320.0,
+   "enb_tek_kayit_saat": "18:06",
+   "enb_15dk": 47.27,
+   "enb_15dk_bitis": "18:08",
+   "enb_60dk": 16.52,
+   "enb_60dk_bitis": "18:08",
+   "en_yuksek_yuzde10_katki": 29.7,
+   "doz_yurume_ug": 130.2,
+   "doz_oturma_ug": 20.9
+  },
+  "birim": "µg/m³ · sa · µg · oran",
+  "tarif": "oturum özeti: TWA = kayıtların ortalaması; K_TWA = TWA / eş zamanlı düzeltilmiş PurpleAir; kayan pencereler ≥ %75 dolu; doz = TWA × IR × süre (IR 1,56 ve 0,25 m³/sa)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.oturum_09": {
+  "deger": {
+   "ekip": "Saha ekibi A",
+   "tarih": "29.04.2026",
+   "saat": "09:50–16:39",
+   "adim_dk": 1.0,
+   "kayit": 410,
+   "olcum_suresi_sa": 6.83,
+   "kimya_binasi_payi_yuzde": 96.8,
+   "TWA": 8.82,
+   "PurpleAir_EPA_es_zamanli": 16.52,
+   "K_TWA": 0.53,
+   "enb_tek_kayit": 18.0,
+   "enb_tek_kayit_saat": "15:40",
+   "enb_15dk": 14.2,
+   "enb_15dk_bitis": "15:42",
+   "enb_60dk": 13.82,
+   "enb_60dk_bitis": "15:51",
+   "en_yuksek_yuzde10_katki": 16.2,
+   "doz_yurume_ug": 94.0,
+   "doz_oturma_ug": 15.1
+  },
+  "birim": "µg/m³ · sa · µg · oran",
+  "tarif": "oturum özeti: TWA = kayıtların ortalaması; K_TWA = TWA / eş zamanlı düzeltilmiş PurpleAir; kayan pencereler ≥ %75 dolu; doz = TWA × IR × süre (IR 1,56 ve 0,25 m³/sa)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.oturum_10": {
+  "deger": {
+   "ekip": "Saha ekibi B",
+   "tarih": "30.04.2026",
+   "saat": "09:17–17:01",
+   "adim_dk": 2.0,
+   "kayit": 233,
+   "olcum_suresi_sa": 7.77,
+   "kimya_binasi_payi_yuzde": 46.4,
+   "TWA": 19.07,
+   "PurpleAir_EPA_es_zamanli": 17.66,
+   "K_TWA": 1.08,
+   "enb_tek_kayit": 63.0,
+   "enb_tek_kayit_saat": "12:51",
+   "enb_15dk": 57.62,
+   "enb_15dk_bitis": "13:11",
+   "enb_60dk": 53.07,
+   "enb_60dk_bitis": "13:49",
+   "en_yuksek_yuzde10_katki": 30.8,
+   "doz_yurume_ug": 231.0,
+   "doz_oturma_ug": 37.0
+  },
+  "birim": "µg/m³ · sa · µg · oran",
+  "tarif": "oturum özeti: TWA = kayıtların ortalaması; K_TWA = TWA / eş zamanlı düzeltilmiş PurpleAir; kayan pencereler ≥ %75 dolu; doz = TWA × IR × süre (IR 1,56 ve 0,25 m³/sa)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.oturum_11": {
+  "deger": {
+   "ekip": "Saha ekibi A",
+   "tarih": "30.04.2026",
+   "saat": "09:40–12:35",
+   "adim_dk": 1.0,
+   "kayit": 176,
+   "olcum_suresi_sa": 2.93,
+   "kimya_binasi_payi_yuzde": 85.8,
+   "TWA": 9.72,
+   "PurpleAir_EPA_es_zamanli": 16.46,
+   "K_TWA": 0.59,
+   "enb_tek_kayit": 41.0,
+   "enb_tek_kayit_saat": "12:10",
+   "enb_15dk": 23.13,
+   "enb_15dk_bitis": "11:56",
+   "enb_60dk": 15.78,
+   "enb_60dk_bitis": "12:35",
+   "en_yuksek_yuzde10_katki": 30.1,
+   "doz_yurume_ug": 44.5,
+   "doz_oturma_ug": 7.1
+  },
+  "birim": "µg/m³ · sa · µg · oran",
+  "tarif": "oturum özeti: TWA = kayıtların ortalaması; K_TWA = TWA / eş zamanlı düzeltilmiş PurpleAir; kayan pencereler ≥ %75 dolu; doz = TWA × IR × süre (IR 1,56 ve 0,25 m³/sa)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.oturum_12": {
+  "deger": {
+   "ekip": "Saha ekibi C",
+   "tarih": "30.04.2026",
+   "saat": "10:01–18:16",
+   "adim_dk": 1.0,
+   "kayit": 496,
+   "olcum_suresi_sa": 8.27,
+   "kimya_binasi_payi_yuzde": 100.0,
+   "TWA": 13.96,
+   "PurpleAir_EPA_es_zamanli": 15.85,
+   "K_TWA": 0.88,
+   "enb_tek_kayit": 127.0,
+   "enb_tek_kayit_saat": "15:07",
+   "enb_15dk": 39.75,
+   "enb_15dk_bitis": "13:07",
+   "enb_60dk": 30.78,
+   "enb_60dk_bitis": "13:07",
+   "en_yuksek_yuzde10_katki": 26.5,
+   "doz_yurume_ug": 180.1,
+   "doz_oturma_ug": 28.9
+  },
+  "birim": "µg/m³ · sa · µg · oran",
+  "tarif": "oturum özeti: TWA = kayıtların ortalaması; K_TWA = TWA / eş zamanlı düzeltilmiş PurpleAir; kayan pencereler ≥ %75 dolu; doz = TWA × IR × süre (IR 1,56 ve 0,25 m³/sa)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.oturum_sayisi": {
+  "deger": 12,
+  "birim": "oturum",
+  "tarif": "27–30 Nisan saha oturumları",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.pay10_aralik": {
+  "deger": "16,2–62,3",
+  "birim": "%",
+  "tarif": "en yüksek %10 kaydın Σc içindeki payı, oturum aralığı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.pay10_ortanca": {
+  "deger": 28.0,
+  "birim": "%",
+  "tarif": "aynı payın 12 oturum ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.saha_K_disari_ortanca": {
+  "deger": 0.82,
+  "birim": "oran",
+  "tarif": "saha noktaları, Kimya binası dışı: K ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.saha_K_kimya_ortanca": {
+  "deger": 0.65,
+  "birim": "oran",
+  "tarif": "saha noktaları, Kimya binası: K ortancası",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.toplam_sure": {
+  "deger": 78.5,
+  "birim": "sa",
+  "tarif": "12 oturumun toplam ölçüm süresi (kayıt × adım)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "D.twa_aralik": {
+  "deger": "4,1–19,1",
+  "birim": "µg/m³",
+  "tarif": "oturum TWA'larının en küçüğü ve en büyüğü (Atmotube ham)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan); Q3 atp_canli"
+ },
+ "E.gun": {
+  "deger": 154,
+  "birim": "gün",
+  "tarif": "değerlendirilen tam gün (1 Mayıs – 12 Ekim)",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.k15_enb": {
+  "deger": 102.7,
+  "birim": "µg/m³",
+  "tarif": "aynı ölçünün en yükseği",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.k15_enb_zaman": {
+  "deger": "2026-05-10 17:37",
+  "birim": "",
+  "tarif": "en yüksek pencerenin bittiği gün ve saat (TR)",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.k15_hassas_gun": {
+  "deger": 11,
+  "birim": "gün",
+  "tarif": "15 dk, kampüs saatleri (08–18): en yüksek penceresi ≥ 35,5 µg/m³ olan gün (HKİ Hassas aralığı; gösterge)",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.k15_ortanca": {
+  "deger": 17.5,
+  "birim": "µg/m³",
+  "tarif": "günlük en yüksek kayan ortalama (15 dk, kampüs saatleri (08–18)): günler arası ortanca",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.k15_p95": {
+  "deger": 36.0,
+  "birim": "µg/m³",
+  "tarif": "aynı ölçünün 95. yüzdeliği",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.k15_saglksiz_gun": {
+  "deger": 2,
+  "birim": "gün",
+  "tarif": "15 dk, kampüs saatleri (08–18): ≥ 55,5 µg/m³ olan gün (HKİ Sağlıksız aralığı; gösterge)",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.k60_bitis_09_payi": {
+  "deger": 35.1,
+  "birim": "%",
+  "tarif": "kampüs saatlerindeki en yüksek 60 dk penceresinin 09:00–09:59 arasında bittiği (yani 08:00–10:00 arasına düştüğü) günlerin payı",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.k60_enb": {
+  "deger": 58.2,
+  "birim": "µg/m³",
+  "tarif": "aynı ölçünün en yükseği",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.k60_enb_zaman": {
+  "deger": "2026-10-12 09:09",
+  "birim": "",
+  "tarif": "en yüksek pencerenin bittiği gün ve saat (TR)",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.k60_hassas_gun": {
+  "deger": 6,
+  "birim": "gün",
+  "tarif": "60 dk, kampüs saatleri (08–18): en yüksek penceresi ≥ 35,5 µg/m³ olan gün (HKİ Hassas aralığı; gösterge)",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.k60_ortanca": {
+  "deger": 16.1,
+  "birim": "µg/m³",
+  "tarif": "günlük en yüksek kayan ortalama (60 dk, kampüs saatleri (08–18)): günler arası ortanca",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.k60_p95": {
+  "deger": 34.0,
+  "birim": "µg/m³",
+  "tarif": "aynı ölçünün 95. yüzdeliği",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.k60_saglksiz_gun": {
+  "deger": 1,
+  "birim": "gün",
+  "tarif": "60 dk, kampüs saatleri (08–18): ≥ 55,5 µg/m³ olan gün (HKİ Sağlıksız aralığı; gösterge)",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.kampus_disi_tepe_payi": {
+  "deger": 70.8,
+  "birim": "%",
+  "tarif": "günün en yüksek 60 dk penceresinin kampüs saatleri dışında kaldığı günlerin payı",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.kisa_olaylar": {
+  "deger": "2026-05-10 (2 dk 228,0, 15 dk 102,7, 60 dk 51,1), 2026-07-19 (2 dk 238,2, 15 dk 111,9, 60 dk 41,4), 2026-07-28 (2 dk 125,7, 15 dk 82,4, 60 dk 44,4)",
+  "birim": "µg/m³",
+  "tarif": "2 dk düzeltilmiş değeri 100 µg/m³'ü aşan günler: en yüksek 2 dk, 15 dk ve 60 dk",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.kisisel_m15_enb": {
+  "deger": 87.6,
+  "birim": "µg/m³",
+  "tarif": "en yüksek 15 dk (Oturum 5)",
+  "kaynak": "Q2"
+ },
+ "E.kisisel_m15_ortanca": {
+  "deger": 25.6,
+  "birim": "µg/m³",
+  "tarif": "saha oturumlarının en yüksek 15 dk kayan ortalamaları, ortanca (Atmotube ham)",
+  "kaynak": "Q2"
+ },
+ "E.kisisel_m60_enb": {
+  "deger": 53.1,
+  "birim": "µg/m³",
+  "tarif": "en yüksek 60 dk (Oturum 10)",
+  "kaynak": "Q2"
+ },
+ "E.kisisel_m60_ortanca": {
+  "deger": 14.2,
+  "birim": "µg/m³",
+  "tarif": "saha oturumlarının en yüksek 60 dk kayan ortalamaları, ortanca (Atmotube ham)",
+  "kaynak": "Q2"
+ },
+ "E.m15_enb": {
+  "deger": 111.9,
+  "birim": "µg/m³",
+  "tarif": "aynı ölçünün en yükseği",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m15_enb_zaman": {
+  "deger": "2026-07-19 19:43",
+  "birim": "",
+  "tarif": "en yüksek pencerenin bittiği gün ve saat (TR)",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m15_hassas_gun": {
+  "deger": 21,
+  "birim": "gün",
+  "tarif": "15 dk, tüm gün: en yüksek penceresi ≥ 35,5 µg/m³ olan gün (HKİ Hassas aralığı; gösterge)",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m15_ortanca": {
+  "deger": 21.9,
+  "birim": "µg/m³",
+  "tarif": "günlük en yüksek kayan ortalama (15 dk, tüm gün): günler arası ortanca",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m15_p95": {
+  "deger": 55.8,
+  "birim": "µg/m³",
+  "tarif": "aynı ölçünün 95. yüzdeliği",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m15_saglksiz_gun": {
+  "deger": 8,
+  "birim": "gün",
+  "tarif": "15 dk, tüm gün: ≥ 55,5 µg/m³ olan gün (HKİ Sağlıksız aralığı; gösterge)",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m60_enb": {
+  "deger": 83.7,
+  "birim": "µg/m³",
+  "tarif": "aynı ölçünün en yükseği",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m60_enb_zaman": {
+  "deger": "2026-10-11 22:41",
+  "birim": "",
+  "tarif": "en yüksek pencerenin bittiği gün ve saat (TR)",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m60_hassas_gun": {
+  "deger": 14,
+  "birim": "gün",
+  "tarif": "60 dk, tüm gün: en yüksek penceresi ≥ 35,5 µg/m³ olan gün (HKİ Hassas aralığı; gösterge)",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m60_ortanca": {
+  "deger": 20.1,
+  "birim": "µg/m³",
+  "tarif": "günlük en yüksek kayan ortalama (60 dk, tüm gün): günler arası ortanca",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m60_p95": {
+  "deger": 44.4,
+  "birim": "µg/m³",
+  "tarif": "aynı ölçünün 95. yüzdeliği",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m60_saat_01_10_payi": {
+  "deger": 59.7,
+  "birim": "%",
+  "tarif": "en yüksek 60 dk penceresinin 01:00–10:59 arasında bittiği günlerin payı",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m60_saat_max_fark": {
+  "deger": 0.27,
+  "birim": "µg/m³",
+  "tarif": "en yüksek 60 dk kayan ortalama − en yüksek saatlik (saat başı) değer, ortanca",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m60_saat_mod": {
+  "deger": "07",
+  "birim": "saat",
+  "tarif": "en yüksek 60 dk penceresinin en sık bittiği saat",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.m60_saglksiz_gun": {
+  "deger": 5,
+  "birim": "gün",
+  "tarif": "60 dk, tüm gün: ≥ 55,5 µg/m³ olan gün (HKİ Sağlıksız aralığı; gösterge)",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.tepe_ortalama_orani": {
+  "deger": 1.69,
+  "birim": "oran",
+  "tarif": "günlük en yüksek 60 dk / günlük ortalama, günler arası ortanca",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "E.tepe_ortalama_orani_kampus": {
+  "deger": 1.31,
+  "birim": "oran",
+  "tarif": "kampüs saatleri en yüksek 60 dk / günlük ortalama, ortanca",
+  "kaynak": "Q3 gunluk_tepe (SQL pencere fonksiyonları) + Q1 (tam gün)"
+ },
+ "F.aksam_ortanca": {
+  "deger": 9.02,
+  "birim": "µg/m³",
+  "tarif": "16:00–19:00 penceresinin günlük ortalaması, ortanca",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.dagilim_D_dis": {
+  "deger": {
+   "ortanca": 39.944,
+   "en_kucuk": 11.081,
+   "en_buyuk": 104.882
+  },
+  "birim": "µg",
+  "tarif": "107 senaryo gününde dağılım",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.dagilim_D_gercekci": {
+  "deger": {
+   "ortanca": 28.809,
+   "en_kucuk": 7.894,
+   "en_buyuk": 75.344
+  },
+  "birim": "µg",
+  "tarif": "107 senaryo gününde dağılım",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.dagilim_Dis_Ic_D": {
+  "deger": {
+   "ortanca": 1.356,
+   "en_kucuk": 1.264,
+   "en_buyuk": 1.486
+  },
+  "birim": "oran",
+  "tarif": "107 senaryo gününde dağılım",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.dagilim_Dis_Ic_TWA": {
+  "deger": {
+   "ortanca": 1.775,
+   "en_kucuk": 1.691,
+   "en_buyuk": 1.855
+  },
+  "birim": "oran",
+  "tarif": "107 senaryo gününde dağılım",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.dagilim_TWA_dis": {
+  "deger": {
+   "ortanca": 12.34,
+   "en_kucuk": 3.513,
+   "en_buyuk": 33.208
+  },
+  "birim": "µg/m³",
+  "tarif": "107 senaryo gününde dağılım",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.dagilim_TWA_gercekci": {
+  "deger": {
+   "ortanca": 6.973,
+   "en_kucuk": 1.971,
+   "en_buyuk": 18.439
+  },
+  "birim": "µg/m³",
+  "tarif": "107 senaryo gününde dağılım",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.dagilim_yuruyus_doz_payi": {
+  "deger": {
+   "ortanca": 0.644,
+   "en_kucuk": 0.514,
+   "en_buyuk": 0.736
+  },
+  "birim": "oran",
+  "tarif": "107 senaryo gününde dağılım",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.duyarlilik_Açık pencere F 0,8": {
+  "deger": {
+   "TWA": 10.22,
+   "D_ug": 38.73,
+   "D_dis_ug": 42.96,
+   "Dis_Ic_D": 1.11
+  },
+  "birim": "µg/m³ · µg · oran",
+  "tarif": "tipik gün (2026-05-05) için duyarlılık: Açık pencere F 0,8",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.duyarlilik_Kapalı pencere F 0,3": {
+  "deger": {
+   "TWA": 4.92,
+   "D_ug": 28.13,
+   "D_dis_ug": 42.96,
+   "Dis_Ic_D": 1.53
+  },
+  "birim": "µg/m³ · µg · oran",
+  "tarif": "tipik gün (2026-05-05) için duyarlılık: Kapalı pencere F 0,3",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.duyarlilik_Kapalı pencere F 0,75": {
+  "deger": {
+   "TWA": 9.69,
+   "D_ug": 37.67,
+   "D_dis_ug": 42.96,
+   "Dis_Ic_D": 1.14
+  },
+  "birim": "µg/m³ · µg · oran",
+  "tarif": "tipik gün (2026-05-05) için duyarlılık: Kapalı pencere F 0,75",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.duyarlilik_Mekanik havalandırma F 0,25": {
+  "deger": {
+   "TWA": 4.39,
+   "D_ug": 27.07,
+   "D_dis_ug": 42.96,
+   "Dis_Ic_D": 1.59
+  },
+  "birim": "µg/m³ · µg · oran",
+  "tarif": "tipik gün (2026-05-05) için duyarlılık: Mekanik havalandırma F 0,25",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.duyarlilik_Solunum hızı %95 (0,39 / 2,28)": {
+  "deger": {
+   "TWA": 7.04,
+   "D_ug": 48.35,
+   "D_dis_ug": 64.88,
+   "Dis_Ic_D": 1.34
+  },
+  "birim": "µg/m³ · µg · oran",
+  "tarif": "tipik gün (2026-05-05) için duyarlılık: Solunum hızı %95 (0,39 / 2,28)",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.duyarlilik_Temel: kapalı pencere F 0,5": {
+  "deger": {
+   "TWA": 7.04,
+   "D_ug": 32.37,
+   "D_dis_ug": 42.96,
+   "Dis_Ic_D": 1.33
+  },
+  "birim": "µg/m³ · µg · oran",
+  "tarif": "tipik gün (2026-05-05) için duyarlılık: Temel: kapalı pencere F 0,5",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.duyarlilik_Ölçülen K: Kimya binası 0,65": {
+  "deger": {
+   "TWA": 8.63,
+   "D_ug": 35.55,
+   "D_dis_ug": 42.96,
+   "Dis_Ic_D": 1.21
+  },
+  "birim": "µg/m³ · µg · oran",
+  "tarif": "tipik gün (2026-05-05) için duyarlılık: Ölçülen K: Kimya binası 0,65",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.en_kötü": {
+  "deger": {
+   "tarih": "2026-10-12",
+   "TWA_gercekci": 18.44,
+   "TWA_dis": 33.21,
+   "D_gercekci_ug": 75.34,
+   "D_dis_ug": 104.88,
+   "Dis_Ic_TWA": 1.8,
+   "Dis_Ic_D": 1.39,
+   "yuruyus_saatinin_doz_payi_yuzde": 60.8
+  },
+  "birim": "µg/m³ · µg · oran",
+  "tarif": "en kötü gün: günler 09–17 dış ortam TWA'sına göre sıralanır; ortanca = (107−1)/2. sıradaki gün",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.en_temiz": {
+  "deger": {
+   "tarih": "2026-09-23",
+   "TWA_gercekci": 2.02,
+   "TWA_dis": 3.51,
+   "D_gercekci_ug": 9.64,
+   "D_dis_ug": 12.62,
+   "Dis_Ic_TWA": 1.74,
+   "Dis_Ic_D": 1.31,
+   "yuruyus_saatinin_doz_payi_yuzde": 69.1
+  },
+  "birim": "µg/m³ · µg · oran",
+  "tarif": "en temiz gün: günler 09–17 dış ortam TWA'sına göre sıralanır; ortanca = (107−1)/2. sıradaki gün",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.gun": {
+  "deger": 107,
+  "birim": "gün",
+  "tarif": "senaryo günleri: tam gün, hafta içi, 06:00–19:00 saatlerinin hepsi ölçülmüş",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.sabah_aksam_oran_ortanca": {
+  "deger": 1.5,
+  "birim": "oran",
+  "tarif": "sabah / akşamüstü oranının ortancası",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.sabah_kotu_gun_payi": {
+  "deger": 84.1,
+  "birim": "%",
+  "tarif": "sabah penceresinin akşamüstünden yüksek olduğu günlerin payı",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.sabah_ortanca": {
+  "deger": 14.69,
+  "birim": "µg/m³",
+  "tarif": "06:00–09:00 penceresinin günlük ortalaması, günler arası ortanca",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.spor_1sa_aksam": {
+  "deger": 27.1,
+  "birim": "µg",
+  "tarif": "1 saat spor, akşamüstü ortanca düzeyinde",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.spor_1sa_sabah": {
+  "deger": 44.1,
+  "birim": "µg",
+  "tarif": "1 saat spor (3,0 m³/sa), sabah ortanca düzeyinde",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.tipik_gün": {
+  "deger": {
+   "tarih": "2026-05-05",
+   "TWA_gercekci": 7.04,
+   "TWA_dis": 12.34,
+   "D_gercekci_ug": 32.37,
+   "D_dis_ug": 42.96,
+   "Dis_Ic_TWA": 1.75,
+   "Dis_Ic_D": 1.33,
+   "yuruyus_saatinin_doz_payi_yuzde": 67.3
+  },
+  "birim": "µg/m³ · µg · oran",
+  "tarif": "tipik gün (ortanca): günler 09–17 dış ortam TWA'sına göre sıralanır; ortanca = (107−1)/2. sıradaki gün",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.uygulama_profili": {
+  "deger": {
+   "TWA_gercekci": 6.77,
+   "TWA_dis": 12.0,
+   "D_gercekci_ug": 29.69,
+   "D_dis_ug": 40.15,
+   "Dis_Ic_TWA": 1.77,
+   "Dis_Ic_D": 1.35
+  },
+  "birim": "µg/m³ · µg · oran",
+  "tarif": "uygulamanın P profiliyle (1 Mayıs – 12 Ekim tüm geçerli saatlerin saat ortalaması) aynı senaryolar",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.yuruyus_1sa_aksam": {
+  "deger": 14.1,
+  "birim": "µg",
+  "tarif": "aynısı akşamüstü penceresinde",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "F.yuruyus_1sa_sabah": {
+  "deger": 22.9,
+  "birim": "µg",
+  "tarif": "1 saat tempolu yürüme (1,56 m³/sa), sabah penceresi ortanca düzeyinde",
+  "kaynak": "Q1 (PurpleAir saatlik, paCorrect) + maruziyet.js (ENV, ACT, DEFAULT)"
+ },
+ "G.co2_1000_ustu": {
+  "deger": 0,
+  "birim": "kayıt",
+  "tarif": "1000 ppm'i aşan kayıt (veri donmuş olduğundan yorumlanamaz)",
+  "kaynak": "Q3 co2"
+ },
+ "G.co2_400_payi": {
+  "deger": 99.43,
+  "birim": "%",
+  "tarif": "CO₂ = 400 ppm olan kayıtların payı",
+  "kaynak": "Q3 co2"
+ },
+ "G.co2_degisken_aralik": {
+  "deger": "450–753",
+  "birim": "ppm",
+  "tarif": "bu kayıtların CO₂ aralığı",
+  "kaynak": "Q3 co2"
+ },
+ "G.co2_degisken_kayit": {
+  "deger": 16,
+  "birim": "kayıt",
+  "tarif": "değer üçlüsü farklı olan kayıt (gerçek ölçüm olabilecek)",
+  "kaynak": "Q3 co2"
+ },
+ "G.co2_donem": {
+  "deger": "22.06.2026 14:30 – 21.07.2026 16:52",
+  "birim": "",
+  "tarif": "ilk ve son kayıt (TR)",
+  "kaynak": "Q3 co2"
+ },
+ "G.co2_donuk_basi": {
+  "deger": "22.06.2026 15:01",
+  "birim": "",
+  "tarif": "aynı değer üçlüsünün ilk görüldüğü kayıt (TR)",
+  "kaynak": "Q3 co2"
+ },
+ "G.co2_donuk_kayit": {
+  "deger": 2798,
+  "birim": "kayıt",
+  "tarif": "CO₂ 400 ppm, sıcaklık 27,2 °C ve nem %49'un birlikte tekrarlandığı kayıt",
+  "kaynak": "Q3 co2"
+ },
+ "G.co2_gun": {
+  "deger": 19,
+  "birim": "gün",
+  "tarif": "en az bir kaydı olan gün",
+  "kaynak": "Q3 co2"
+ },
+ "G.co2_kayit": {
+  "deger": 2814,
+  "birim": "kayıt",
+  "tarif": "iç ortam CO₂ kayıtları (tek cihaz)",
+  "kaynak": "Q3 co2"
+ },
+ "G.co2_onceki_ile_ayni": {
+  "deger": 2804,
+  "birim": "kayıt",
+  "tarif": "bir önceki kayıtla üç değeri de aynı olan kayıt",
+  "kaynak": "Q3 co2"
+ }
+}

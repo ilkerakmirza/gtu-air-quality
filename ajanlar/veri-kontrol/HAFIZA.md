@@ -9,6 +9,11 @@
 - Beklenen sayılar (içe aktarma): 781 Nisan kaydı değişir, 3341 kayda cf_1, 107 361 yeni kayıt; sonuçta 6 Ekim 21:00 UTC öncesi
   110 752 kayıt, 110 745'inde cf_1. Elle denetim (TR): 15 Mayıs 14:00 → 11,053; 1 Ağustos 08:00 → 7,370; 6 Mayıs 08:00 → 27,931 µg/m³.
 
+- **13 Ekim 2026, Ajan 5 kampüs maruziyet raporu:** 8 kritik sayı bağımsız hesapla doğrulandı, hepsi tuttu (154 tam gün, 12,71;
+  döngü 06:00 16,47 / 18:00 9,39; %5 eşiği 27,46; 8–12 Ekim 36,94; en kötü 60 dk ortanca 20,09; Kimya payı %87,8; tipik gün 7,04 / 12,34;
+  CO₂ 2 798 donuk kayıt). `scratchpad/tanitim/veri/saatlik.json`'un son saati (12 Ekim 13:00 UTC) yarım: SQL'den yeniden al.
+  Saha paydası: 4 015 nokta (12 oturum), PM₂.₅'i olan 4 008.
+
 ## Literatür durumu
 - Barkjohn, Gantt, Clements (2021), *AMT* 14:4617–4637, doi:10.5194/amt-14-4617-2021: girdi cf_1 ve PurpleAir nemi, %90 günlük
   tamlık **birincil (özetten)**; katsayılar 0,524 / 0,0862 / 5,75 ve 5 µg/m³ + %70 kanal kuralı **ikincil** (tam metin bulut

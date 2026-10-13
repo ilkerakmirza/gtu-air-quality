@@ -13,3 +13,18 @@
 
 ## Açık sorular
 - (yok)
+
+## Raporlar
+- **13 Ekim 2026 · kampüs maruziyet raporu** (`raporlar/2026-10-13_kampus_maruziyet/`, PDF dahil; kesim 13 Ekim 00:00 TR). Ajan 1 sekiz
+  kritik sayıyı bağımsız doğruladı, hepsi tuttu. Ana ajan Tablo 4 ve Şekil 8–9'dan ekip harflerini kaldırdı (oturum + saat + bina
+  içi/dışı birlikte kişiyi izlenebilir kılıyordu). Yeniden üretim: Q1–Q3 çıktıları → `python3 -I -B betikler/hepsi.py <ham> <rapor>`;
+  ham çıktılar depoya konmaz (saha konumları).
+- Saha oturumları (27–30 Nisan) çoğunlukla tek binada geçen çalışma günleri: noktaların %87,8'i Kimya ve Çevre Müh. binasında. G iç–dış
+  farkını da içerir; dış ortam sıcak noktaları için K (Atmotube / düzeltilmiş PurpleAir) kullanılmalı.
+- Ölçülen kişisel/çatı oranı: Kimya binası 0,65 (oturumlar 0,53–0,88), canlı ATP 0,75; uygulamanın F = 0,5–0,8 aralığıyla uyumlu.
+  Atmotube yan yana ölçümü bitince cihaz çarpanıyla yeniden hesaplanmalı.
+- CO₂ verisi 22 Haziran 2026 15:01'den itibaren donmuş (2 798 kayıt: 400 ppm / 27,2 °C / %49).
+- Yöntem notları (Ajan 1): döngü ve en kötü %5 tam olmayan günlerin saatlerini de içerir (tanımı yaz); kayan pencereler gün sınırında
+  kesilir, gece yarısını aşan olaylar iki güne bölünebilir.
+- Teknik: ATP canlı analizinde koordinat istenmez (izin sistemi reddetti; yalnızca "kampüs içi" bayrağı). `saatlik.json`'un son saati yarım.
+- Açık: Güzide Kafe H1 hücresindeki fazlalık (K = 1,36) tekrarlı ölçümle doğrulanmalı; 10 Mayıs ve 19 Temmuz kısa tepelerin kaynağı bilinmiyor.
