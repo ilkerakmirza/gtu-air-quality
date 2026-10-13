@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git fetch *)",
+      "Bash(git pull *)",
+      "Bash(git checkout *)",
+      "Bash(git push origin main)",
+      "Bash(git push -q origin main)",
+      "Bash(git push -f origin main:claude/gtu-air-quality-frontend-7c6yj4)",
+      "Bash(git push -q -f origin main:claude/gtu-air-quality-frontend-7c6yj4)",
+      "Bash(python3 *)",
+      "Bash(node *)",
+      "Bash(pdftoppm *)",
+      "Bash(pdfinfo *)",
+      "Bash(pdftotext *)",
+      "Bash(convert *)",
+      "Bash(montage *)",
+      "Bash(identify *)",
+      "Bash(ls *)",
+      "Bash(grep *)",
+      "Bash(sed *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(find *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(date*)"
+    ],
+    "deny": [
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)",
+      "Bash(rm -rf *)"
+    ]
+  }
+}
