@@ -4,7 +4,7 @@ Kullanım: python3 -I e_en_kotu.py <ham klasörü> <rapor klasörü>
 Pencere hesapları SQL'de (Q3 → gunluk_tepe): 2 dk kayıtlar, US EPA düzeltmesi SQL'de, pencere tamamen aynı Türkiye günü
 içinde, 15 dk için ≥ 6 kayıt, 60 dk için ≥ 23 kayıt. "Kampüs saatleri": pencere 08:00–18:00 içinde.
 Yalnızca tam günler (Q1'e göre ≥ 18 geçerli saat). Kişisel tepeler d_kisisel.py ile aynı tanımla (saha oturumları).
-Üretir: sekiller/sekil10_en_kotu.png; sayilar.json'a 'E.*'.
+Üretir: sekiller/sekil13_en_kotu.png; sayilar.json'a 'E.*'.
 """
 import os
 import sys
@@ -76,7 +76,7 @@ def main(ham, cikti):
     S.ekle("E.kisisel_m15_enb", round(float(kis.m15.max()), 1), "µg/m³", f"en yüksek 15 dk (Oturum {int(kis.m15.idxmax())})", "Q2")
     S.ekle("E.kisisel_m60_enb", round(float(kis.m60.max()), 1), "µg/m³", f"en yüksek 60 dk (Oturum {int(kis.m60.idxmax())})", "Q2")
 
-    # ── Şekil 10 ──
+    # ── Şekil 13 (v1.1: Şekil 10) ──
     from matplotlib.ticker import FuncFormatter
     fig = plt.figure(figsize=(7.5, 6.9))
     ax = fig.add_axes([0.09, 0.62, 0.89, 0.30])
@@ -133,7 +133,7 @@ def main(ham, cikti):
     kaynak_notu(fig, "Kaynak: PurpleAir PA-II (SUMER çatısı), 2 dk kayıtlar; US EPA düzeltmesi ve kayan ortalamalar SQL'de (Q3); 1 Mayıs – 12 Ekim 2026,\n"
                      f"{len(t)} tam gün. Pencere tamamen aynı Türkiye günü içinde; 08–18: pencere 08:00–18:00 arasında. (b) Nokta: ortanca; çizgi: %5–95;\n"
                      "×: en yüksek; zemin: HKİ sınıf aralıkları. Atmotube: 27–30 Nisan saha oturumları (ham; PurpleAir'le mutlak düzeyde karşılaştırılamaz).")
-    fig.savefig(os.path.join(cikti, "sekiller", "sekil10_en_kotu.png"))
+    fig.savefig(os.path.join(cikti, "sekiller", "sekil13_en_kotu.png"))
     plt.close(fig)
 
     S.yaz(os.path.join(cikti, "sayilar.json"))

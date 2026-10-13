@@ -13,6 +13,7 @@
   döngü 06:00 16,47 / 18:00 9,39; %5 eşiği 27,46; 8–12 Ekim 36,94; en kötü 60 dk ortanca 20,09; Kimya payı %87,8; tipik gün 7,04 / 12,34;
   CO₂ 2 798 donuk kayıt). `scratchpad/tanitim/veri/saatlik.json`'un son saati (12 Ekim 13:00 UTC) yarım: SQL'den yeniden al.
   Saha paydası: 4 015 nokta (12 oturum), PM₂.₅'i olan 4 008.
+- 13 Ekim 2026 (rapor v1.2, saha karşılaştırması): yedi kritik madde bağımsız yeniden hesaplandı, hepsi TUTAR. Eşleme kuralları: Atmotube–PurpleAir ±3 dk, bina eşlemesi campus.geojson içi ya da ≤15 m (B'nin K_D'si 15 m sınırındaki tek kayda göre 1,12–1,13), %10 kırpma round(0,1·n).
 
 ## Literatür durumu
 - Barkjohn, Gantt, Clements (2021), *AMT* 14:4617–4637, doi:10.5194/amt-14-4617-2021: girdi cf_1 ve PurpleAir nemi, %90 günlük
@@ -20,6 +21,7 @@
   ortamından açılamadı).
 - 18 saat (%75) günlük tamlık kuralı: 40 CFR 50 **Ek K** (PM₁₀). Ek N (PM₂.₅) için 18/24 ifadesi doğrulanmadı.
 - Üretici arşivi ile canlı API kaydının eşdeğerliği için literatür kaynağı bulunamadı; veriyle gösterildi.
+- Kaynak denetimi (13 Ekim 2026): Shittu 2025, Künsch 1989, Dons 2011 gerçek (Dons kara karbon içindir, PM₂.₅ diye anılmaz). Kitagawa 1955'in geçerli DOI'si yok; DOI yazma.
 
 ## Açık sorular
 - Katsayıları masaüstü oturumunda makalenin tam metninden teyit et.

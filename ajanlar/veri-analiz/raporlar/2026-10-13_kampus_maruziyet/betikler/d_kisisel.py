@@ -138,25 +138,14 @@ def main(ham, cikti):
     kk = pd_.pm2_5 / pd_.pa_epa
 
     # ── Şekil 8: iki oturumun zaman serisi ──
-    secim = [(8, "çoğunlukla Kimya binası", 60, "sol"), (10, "bina içi ve dışı", 80, "sag")]
+    secim = [(8, "K_TWA 1'in altında", 60, "sol"), (10, "K_TWA 1'e yakın", 80, "sag")]
     fig, axs = plt.subplots(2, 1, figsize=(7.5, 6.4))
     for k_, (ax, (o, aciklama, ust, kutu)) in enumerate(zip(axs, secim)):
         g = d[d.oturum == o].sort_values("t")
         r = t.loc[o]
         t0, t1 = g.t.min() - pd.Timedelta("20min"), g.t.max() + pd.Timedelta("20min")
         p = pa[(pa.t >= t0) & (pa.t <= t1)]
-        dis = (~g.kimya).astype(int).values
-        tl = g.tl.values
-        i = 0
-        while i < len(dis):
-            if dis[i]:
-                j = i
-                while j + 1 < len(dis) and dis[j + 1]:
-                    j += 1
-                ax.axvspan(tl[i], tl[j], color=GRI, alpha=0.16, lw=0)
-                i = j + 1
-            else:
-                i += 1
+        # v1.2: bina içi/dışı gölgelendirmesi kaldırıldı (KVKK: §3.4 ölçümcü etiketleriyle birleşince dakikalık konum izlenebilirdi)
         px, py = bosluk_kir(p.tl, p.epa, "10min")
         ax.plot(px, py, color=DEVICE_COLOR["purpleair"], lw=1.3)
         gx, gy = bosluk_kir(g.tl, g.pm2_5, "10min")
@@ -186,15 +175,13 @@ def main(ham, cikti):
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M", tz=veri.TZ))
         virgul_eksen(ax)
     from matplotlib.lines import Line2D
-    from matplotlib.patches import Patch
     h = [Line2D([], [], color=DEVICE_COLOR["purpleair"], lw=1.3, label="PurpleAir, US EPA düzeltmeli (2 dk)"),
          Line2D([], [], color=DEVICE_COLOR["atmotube"], lw=1.0, label="Atmotube, ham (kişisel; 1–2 dk)"),
-         Line2D([], [], color=MUREKKEP, lw=1.0, label="Atmotube 15 dk kayan ortalama"),
-         Patch(color=GRI, alpha=0.3, label="konum Kimya binası dışında")]
+         Line2D([], [], color=MUREKKEP, lw=1.0, label="Atmotube 15 dk kayan ortalama")]
     fig.legend(handles=h, loc="lower left", bbox_to_anchor=(0.08, 0.075), ncol=2, frameon=False, fontsize=7.8)
     axs[1].set_xlabel("Saat (Türkiye saati)")
     kaynak_notu(fig, "Kaynak: Atmotube PRO saha oturumları (ham PM₂.₅) ve PurpleAir PA-II (SUMER çatısı; sensör arşivi, 2 dk, US EPA düzeltmeli).\n"
-                     "Konum: Kimya ve Çevre Müh. Bölümü poligonu (15 m kuralı). Ani yükselmeler ayıklanmamıştır.")
+                     "Konum bilgisi gösterilmemiştir (KVKK). Ani yükselmeler ayıklanmamıştır.")
     fig.subplots_adjust(top=0.95, bottom=0.21, hspace=0.38, left=0.09, right=0.98)
     fig.savefig(os.path.join(cikti, "sekiller", "sekil08_oturum_seri.png"))
     plt.close(fig)

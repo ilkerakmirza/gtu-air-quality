@@ -8,7 +8,7 @@ Gerçekçi senaryo = uygulamanın varsayılan satırları (maruziyet.js → DEFA
   09:00–12:00 iç, kapalı pencere (F 0,5), oturma (IR 0,25) · 12:00–13:00 açık hava (F 1), tempolu yürüme (IR 1,56)
   · 13:00–17:00 iç, kapalı pencere, oturma.  Tamamen dış ortam: aynı saat ve etkinlikler, F = 1.
 Günler: tam gün (≥ 18 saat), hafta içi, 06:00–19:00 arasındaki 13 saatin hepsi ölçülmüş; 1 Mayıs – 12 Ekim.
-Üretir: sekiller/sekil11_senaryo.png; sayilar.json'a 'F.*'.
+Üretir: sekiller/sekil14_senaryo.png; sayilar.json'a 'F.*'.
 """
 import os
 import sys
@@ -144,7 +144,7 @@ def main(ham, cikti):
     S.ekle("F.spor_1sa_sabah", round(float(t.sabah.median() * IR["sport"]), 1), "µg", "1 saat spor (3,0 m³/sa), sabah ortanca düzeyinde", Q)
     S.ekle("F.spor_1sa_aksam", round(float(t.aksam.median() * IR["sport"]), 1), "µg", "1 saat spor, akşamüstü ortanca düzeyinde", Q)
 
-    # ── Şekil 11 ──
+    # ── Şekil 14 (v1.1: Şekil 11) ──
     fig = plt.figure(figsize=(7.5, 7.6))
     konum = {"a": [0.09, 0.62, 0.38, 0.32], "b": [0.60, 0.62, 0.38, 0.32], "c": [0.30, 0.17, 0.30, 0.34], "d": [0.73, 0.17, 0.25, 0.34]}
     c_r, c_o = KATEGORIK[0], KATEGORIK[1]
@@ -203,7 +203,7 @@ def main(ham, cikti):
                      f"Günler: 1 Mayıs – 12 Ekim 2026, hafta içi tam günler (n = {len(t)}); günler 09–17 dış ortam ortalamasına göre sıralanmıştır.\n"
                      "(c) Koyu çubuk: temel varsayım. (d) Her nokta bir gün; kutu: çeyrekler arası; kalın çizgi: ortanca.\n"
                      "Değerler yalnızca kampüste geçen 8 saat içindir; WHO 24 saatlik değeriyle karşılaştırılmaz.")
-    fig.savefig(os.path.join(cikti, "sekiller", "sekil11_senaryo.png"))
+    fig.savefig(os.path.join(cikti, "sekiller", "sekil14_senaryo.png"))
     plt.close(fig)
 
     S.yaz(os.path.join(cikti, "sayilar.json"))

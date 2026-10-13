@@ -2045,5 +2045,1167 @@
   "birim": "kayıt",
   "tarif": "bir önceki kayıtla üç değeri de aynı olan kayıt",
   "kaynak": "Q3 co2"
+ },
+ "S.K_P_sinifi": {
+  "deger": {
+   "A <6": 1.03,
+   "A 6–12": 0.69,
+   "A ≥12": 0.55,
+   "B <6": 1.32,
+   "B 6–12": 1.23,
+   "B ≥12": 0.87,
+   "C <6": 1.03,
+   "C 6–12": 0.75,
+   "C ≥12": 0.7
+  },
+  "birim": "oran",
+  "tarif": "ölçümcü ve eş zamanlı PurpleAir sınıfına (µg/m³) göre Σc·Δt/ΣP·Δt",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.K_P_spearman": {
+  "deger": -0.54,
+  "birim": "ρ",
+  "tarif": "12 oturumda K_TWA ile eş zamanlı PurpleAir ortalaması arasında Spearman sıra korelasyonu",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.K_dis_payi_spearman": {
+  "deger": 0.28,
+  "birim": "ρ",
+  "tarif": "12 ölçümcü-günde K_TWA ile bina dışı süre payı arasında Spearman",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.K_kimya_disi_payi_spearman": {
+  "deger": 0.44,
+  "birim": "ρ",
+  "tarif": "12 ölçümcü-günde K_TWA ile Kimya binası dışında geçen süre payı arasında Spearman",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.K_saat_dilimi": {
+  "deger": {
+   "A 08–11": 0.63,
+   "A 11–14": 0.63,
+   "A 14–19": 0.65,
+   "B 08–11": 0.7,
+   "B 11–14": 0.92,
+   "B 14–19": 1.14,
+   "C 08–11": 0.61,
+   "C 11–14": 0.72,
+   "C 14–19": 0.86
+  },
+  "birim": "oran",
+  "tarif": "ölçümcü ve saat dilimine göre Σc·Δt/ΣP·Δt",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.K_tepeli_aralik": {
+  "deger": "0,53–1,74",
+  "birim": "oran",
+  "tarif": "K_TWA aralığı (karşılaştırma için)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.K_tepesiz_aralik": {
+  "deger": "0,49–0,95",
+  "birim": "oran",
+  "tarif": "K, en yüksek %10 kayıt hariç (duyarlılık), aralık",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.ayni_gun_27.04": {
+  "deger": {
+   "TWA_oran_enb_enk": 1.16,
+   "TWA_fark_ugm3": 0.64,
+   "TWA_en_yuksek": "Ölçümcü B",
+   "TWA_en_dusuk": "Ölçümcü A",
+   "K_TWA_oran_enb_enk": 1.15,
+   "K_TWA_fark": 0.15,
+   "K_en_yuksek": "Ölçümcü B",
+   "K_en_dusuk": "Ölçümcü C",
+   "D_saat_oran": 2.73,
+   "D_saat_fark_ug": 1.8,
+   "ortak_pencere": "10:42–15:13",
+   "ortak_pencere_sa": 4.52,
+   "ortak_TWA": {
+    "A": 4.34,
+    "B": 3.64,
+    "C": 3.81
+   },
+   "ortak_K_TWA": {
+    "A": 1.08,
+    "B": 0.94,
+    "C": 0.95
+   },
+   "ortak_TWA_oran": 1.19,
+   "ortak_TWA_fark_ugm3": 0.7,
+   "ortak_K_oran": 1.16,
+   "Kitagawa_dK": 0.15,
+   "Kitagawa_yer_dagilimi": 0.15,
+   "Kitagawa_yerdeki_duzey": -0.01,
+   "dK_tepesiz": 0.24,
+   "K_tepesiz_oran_enb_enk": 1.35
+  },
+  "birim": "oran · µg/m³ · µg/sa",
+  "tarif": "aynı gün üç ölçümcü: en yüksek/en düşük oranı ve farkı; D_saat = D / süre (IR iç 0,25, dış 1,56); ortak pencere = üç oturumun zaman kesişimi; Kitagawa: K'si en yüksek ve en düşük iki ölçümcü, katmanlar Kimya / diğer bina / bina dışı, ağırlık ΣP·Δt payı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.ayni_gun_28.04": {
+  "deger": {
+   "TWA_oran_enb_enk": 2.2,
+   "TWA_fark_ugm3": 6.41,
+   "TWA_en_yuksek": "Ölçümcü B",
+   "TWA_en_dusuk": "Ölçümcü C",
+   "K_TWA_oran_enb_enk": 2.63,
+   "K_TWA_fark": 1.08,
+   "K_en_yuksek": "Ölçümcü B",
+   "K_en_dusuk": "Ölçümcü C",
+   "D_saat_oran": 2.31,
+   "D_saat_fark_ug": 1.75,
+   "ortak_pencere": "09:31–15:03",
+   "ortak_pencere_sa": 5.53,
+   "ortak_TWA": {
+    "A": 7.16,
+    "B": 16.46,
+    "C": 5.05
+   },
+   "ortak_K_TWA": {
+    "A": 0.7,
+    "B": 2.01,
+    "C": 0.5
+   },
+   "ortak_TWA_oran": 3.26,
+   "ortak_TWA_fark_ugm3": 11.41,
+   "ortak_K_oran": 4.03,
+   "Kitagawa_dK": 1.08,
+   "Kitagawa_yer_dagilimi": 1.18,
+   "Kitagawa_yerdeki_duzey": -0.1,
+   "dK_tepesiz": 0.17,
+   "K_tepesiz_oran_enb_enk": 1.3
+  },
+  "birim": "oran · µg/m³ · µg/sa",
+  "tarif": "aynı gün üç ölçümcü: en yüksek/en düşük oranı ve farkı; D_saat = D / süre (IR iç 0,25, dış 1,56); ortak pencere = üç oturumun zaman kesişimi; Kitagawa: K'si en yüksek ve en düşük iki ölçümcü, katmanlar Kimya / diğer bina / bina dışı, ağırlık ΣP·Δt payı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.ayni_gun_29.04": {
+  "deger": {
+   "TWA_oran_enb_enk": 1.14,
+   "TWA_fark_ugm3": 1.23,
+   "TWA_en_yuksek": "Ölçümcü C",
+   "TWA_en_dusuk": "Ölçümcü A",
+   "K_TWA_oran_enb_enk": 1.22,
+   "K_TWA_fark": 0.12,
+   "K_en_yuksek": "Ölçümcü C",
+   "K_en_dusuk": "Ölçümcü A",
+   "D_saat_oran": 1.38,
+   "D_saat_fark_ug": 0.91,
+   "ortak_pencere": "09:50–16:39",
+   "ortak_pencere_sa": 6.82,
+   "ortak_TWA": {
+    "A": 8.82,
+    "B": 10.39,
+    "C": 9.6
+   },
+   "ortak_K_TWA": {
+    "A": 0.53,
+    "B": 0.63,
+    "C": 0.58
+   },
+   "ortak_TWA_oran": 1.18,
+   "ortak_TWA_fark_ugm3": 1.57,
+   "ortak_K_oran": 1.18,
+   "Kitagawa_dK": 0.12,
+   "Kitagawa_yer_dagilimi": 0.0,
+   "Kitagawa_yerdeki_duzey": 0.12,
+   "dK_tepesiz": 0.01,
+   "K_tepesiz_oran_enb_enk": 1.18
+  },
+  "birim": "oran · µg/m³ · µg/sa",
+  "tarif": "aynı gün üç ölçümcü: en yüksek/en düşük oranı ve farkı; D_saat = D / süre (IR iç 0,25, dış 1,56); ortak pencere = üç oturumun zaman kesişimi; Kitagawa: K'si en yüksek ve en düşük iki ölçümcü, katmanlar Kimya / diğer bina / bina dışı, ağırlık ΣP·Δt payı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.ayni_gun_30.04": {
+  "deger": {
+   "TWA_oran_enb_enk": 1.96,
+   "TWA_fark_ugm3": 9.35,
+   "TWA_en_yuksek": "Ölçümcü B",
+   "TWA_en_dusuk": "Ölçümcü A",
+   "K_TWA_oran_enb_enk": 1.83,
+   "K_TWA_fark": 0.49,
+   "K_en_yuksek": "Ölçümcü B",
+   "K_en_dusuk": "Ölçümcü A",
+   "D_saat_oran": 5.46,
+   "D_saat_fark_ug": 14.62,
+   "ortak_pencere": "10:01–12:35",
+   "ortak_pencere_sa": 2.57,
+   "ortak_TWA": {
+    "A": 9.94,
+    "B": 9.6,
+    "C": 12.64
+   },
+   "ortak_K_TWA": {
+    "A": 0.6,
+    "B": 0.58,
+    "C": 0.76
+   },
+   "ortak_TWA_oran": 1.32,
+   "ortak_TWA_fark_ugm3": 3.03,
+   "ortak_K_oran": 1.32,
+   "Kitagawa_dK": 0.49,
+   "Kitagawa_yer_dagilimi": 0.2,
+   "Kitagawa_yerdeki_duzey": 0.29,
+   "dK_tepesiz": 0.41,
+   "K_tepesiz_oran_enb_enk": 1.83
+  },
+  "birim": "oran · µg/m³ · µg/sa",
+  "tarif": "aynı gün üç ölçümcü: en yüksek/en düşük oranı ve farkı; D_saat = D / süre (IR iç 0,25, dış 1,56); ortak pencere = üç oturumun zaman kesişimi; Kitagawa: K'si en yüksek ve en düşük iki ölçümcü, katmanlar Kimya / diğer bina / bina dışı, ağırlık ΣP·Δt payı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.ayni_gun_K_oran_aralik": {
+  "deger": "1,15–2,63",
+  "birim": "oran",
+  "tarif": "aynı gün en yüksek / en düşük K_TWA oranı aralığı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.ayni_gun_K_oran_ortak_aralik": {
+  "deger": "1,16–4,03",
+  "birim": "oran",
+  "tarif": "aynı oran, ortak zaman penceresinde",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.ayni_gun_TWA_fark_aralik": {
+  "deger": "0,6–9,4",
+  "birim": "µg/m³",
+  "tarif": "aynı gün en yüksek − en düşük TWA aralığı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.ayni_gun_TWA_oran_aralik": {
+  "deger": "1,14–2,20",
+  "birim": "oran",
+  "tarif": "dört günde aynı gün en yüksek / en düşük TWA oranı aralığı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.ayni_gun_tepesiz_K_oran_aralik": {
+  "deger": "1,18–1,83",
+  "birim": "oran",
+  "tarif": "aynı oran, her oturumun en yüksek %10 kaydı hariç (duyarlılık)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.bina_K_Güzide_Kafe": {
+  "deger": {
+   "K": 2.16,
+   "sure_sa": 3.57,
+   "oturum": 6
+  },
+  "birim": "oran · sa",
+  "tarif": "Güzide Kafe poligonu (≤ 15 m) içindeki tüm saha kayıtları: Σc·Δt/ΣP·Δt",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.bina_K_Kütüphane": {
+  "deger": {
+   "K": 0.7,
+   "sure_sa": 2.93,
+   "oturum": 3
+  },
+  "birim": "oran · sa",
+  "tarif": "Kütüphane poligonu (≤ 15 m) içindeki tüm saha kayıtları: Σc·Δt/ΣP·Δt",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.cozunurluk_K_yari_genislik": {
+  "deger": "2,6–12,1",
+  "birim": "%",
+  "tarif": "c ∓ 0,5 µg/m³ sınırıyla K_TWA'nın göreli yarı genişliği, ölçümcü-gün aralığı (en büyüğü en temiz günde)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.duzen": {
+  "deger": "her gün 3 ölçümcü, her ölçümcü-gün 1 oturum",
+  "birim": "",
+  "tarif": "gün × ölçümcü düzeni: 4 gün × 3 ölçümcü = 12 oturum (oturum ≡ ölçümcü-gün)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.gun_27.04": {
+  "deger": {
+   "TWA": 4.27,
+   "PurpleAir_ayni_anlar": 4.08,
+   "K_TWA": 1.05,
+   "K_TWA_GA95": [
+    0.87,
+    1.26
+   ],
+   "K_D": 1.05,
+   "K_D_GA95": [
+    0.91,
+    1.22
+   ],
+   "sure_sa": 16.6
+  },
+  "birim": "µg/m³ · oran · sa",
+  "tarif": "günün üç oturumu birlikte (Δt ağırlıklı); GA95 oturum içi blok bootstrap",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.gun_28.04": {
+  "deger": {
+   "TWA": 7.38,
+   "PurpleAir_ayni_anlar": 8.34,
+   "K_TWA": 0.88,
+   "K_TWA_GA95": [
+    0.67,
+    1.22
+   ],
+   "K_D": 0.86,
+   "K_D_GA95": [
+    0.66,
+    1.16
+   ],
+   "sure_sa": 19.8
+  },
+  "birim": "µg/m³ · oran · sa",
+  "tarif": "günün üç oturumu birlikte (Δt ağırlıklı); GA95 oturum içi blok bootstrap",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.gun_29.04": {
+  "deger": {
+   "TWA": 9.61,
+   "PurpleAir_ayni_anlar": 15.76,
+   "K_TWA": 0.61,
+   "K_TWA_GA95": [
+    0.56,
+    0.68
+   ],
+   "K_D": 0.6,
+   "K_D_GA95": [
+    0.55,
+    0.67
+   ],
+   "sure_sa": 23.2
+  },
+  "birim": "µg/m³ · oran · sa",
+  "tarif": "günün üç oturumu birlikte (Δt ağırlıklı); GA95 oturum içi blok bootstrap",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.gun_30.04": {
+  "deger": {
+   "TWA": 15.4,
+   "PurpleAir_ayni_anlar": 16.69,
+   "K_TWA": 0.92,
+   "K_TWA_GA95": [
+    0.79,
+    1.06
+   ],
+   "K_D": 1.14,
+   "K_D_GA95": [
+    0.93,
+    1.31
+   ],
+   "sure_sa": 19.0
+  },
+  "birim": "µg/m³ · oran · sa",
+  "tarif": "günün üç oturumu birlikte (Δt ağırlıklı); GA95 oturum içi blok bootstrap",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.gun_etkisi_K_geo": {
+  "deger": {
+   "27.04": 1.27,
+   "28.04": 1.11,
+   "29.04": 0.72,
+   "30.04": 0.98
+  },
+  "birim": "kat",
+  "tarif": "toplamsal modelde gün etkisi",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.gun_sayisi": {
+  "deger": 4,
+  "birim": "gün",
+  "tarif": "saha ölçümü yapılan takvim günü (27–30 Nisan 2026, TR)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.katman_K": {
+  "deger": {
+   "diger": 1.24,
+   "dis": 1.2,
+   "kimya": 0.7
+  },
+  "birim": "oran",
+  "tarif": "tüm ölçümcüler: katmanlara göre Σc·Δt/ΣP·Δt",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_A_27.04": {
+  "deger": {
+   "TWA": 4.13,
+   "PurpleAir_ayni_anlar": 3.91,
+   "K_TWA": 1.06,
+   "K_TWA_GA95": [
+    0.9,
+    1.25
+   ],
+   "K_D": 1.05,
+   "K_D_GA95": [
+    0.91,
+    1.24
+   ],
+   "K_D_ic_hafif": 1.05,
+   "D_ug": 6.5,
+   "D_saat_ug": 1.14,
+   "sure_sa": 5.68,
+   "bina_disi_payi_yuzde": 2.3,
+   "kimya_payi_yuzde": 95.9,
+   "diger_bina_payi_yuzde": 1.8,
+   "K_kimya": 1.06,
+   "K_diger_bina": 1.01,
+   "K_bina_disi": 1.02,
+   "K_tepesiz": 0.92,
+   "tepe10_payi_yuzde": 21.9,
+   "K_cozunurluk_sinir": [
+    0.93,
+    1.18
+   ]
+  },
+  "birim": "µg/m³ · oran · µg · sa · %",
+  "tarif": "ölçümcü-gün (= oturum) özeti: TWA = Σc·Δt/ΣΔt; K_TWA = Σc·Δt/ΣP·Δt; K_D = Σc·IR·Δt/ΣP·IR·Δt (IR iç 0,25, dış 1,56); GA95: 30 dk blok bootstrap (2000); K_tepesiz: en yüksek %10 kayıt hariç (duyarlılık); çözünürlük sınırı c ∓ 0,5",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_A_28.04": {
+  "deger": {
+   "TWA": 7.16,
+   "PurpleAir_ayni_anlar": 10.16,
+   "K_TWA": 0.7,
+   "K_TWA_GA95": [
+    0.66,
+    0.77
+   ],
+   "K_D": 0.7,
+   "K_D_GA95": [
+    0.63,
+    0.76
+   ],
+   "K_D_ic_hafif": 0.7,
+   "D_ug": 12.1,
+   "D_saat_ug": 2.17,
+   "sure_sa": 5.55,
+   "bina_disi_payi_yuzde": 6.0,
+   "kimya_payi_yuzde": 92.2,
+   "diger_bina_payi_yuzde": 1.8,
+   "K_kimya": 0.71,
+   "K_diger_bina": 0.73,
+   "K_bina_disi": 0.66,
+   "K_tepesiz": 0.69,
+   "tepe10_payi_yuzde": 16.8,
+   "K_cozunurluk_sinir": [
+    0.66,
+    0.75
+   ]
+  },
+  "birim": "µg/m³ · oran · µg · sa · %",
+  "tarif": "ölçümcü-gün (= oturum) özeti: TWA = Σc·Δt/ΣΔt; K_TWA = Σc·Δt/ΣP·Δt; K_D = Σc·IR·Δt/ΣP·IR·Δt (IR iç 0,25, dış 1,56); GA95: 30 dk blok bootstrap (2000); K_tepesiz: en yüksek %10 kayıt hariç (duyarlılık); çözünürlük sınırı c ∓ 0,5",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_A_29.04": {
+  "deger": {
+   "TWA": 8.82,
+   "PurpleAir_ayni_anlar": 16.52,
+   "K_TWA": 0.53,
+   "K_TWA_GA95": [
+    0.48,
+    0.59
+   ],
+   "K_D": 0.53,
+   "K_D_GA95": [
+    0.48,
+    0.59
+   ],
+   "K_D_ic_hafif": 0.53,
+   "D_ug": 16.5,
+   "D_saat_ug": 2.41,
+   "sure_sa": 6.83,
+   "bina_disi_payi_yuzde": 2.9,
+   "kimya_payi_yuzde": 96.8,
+   "diger_bina_payi_yuzde": 0.2,
+   "K_kimya": 0.53,
+   "K_diger_bina": 0.3,
+   "K_bina_disi": 0.52,
+   "K_tepesiz": 0.51,
+   "tepe10_payi_yuzde": 16.2,
+   "K_cozunurluk_sinir": [
+    0.5,
+    0.56
+   ]
+  },
+  "birim": "µg/m³ · oran · µg · sa · %",
+  "tarif": "ölçümcü-gün (= oturum) özeti: TWA = Σc·Δt/ΣΔt; K_TWA = Σc·Δt/ΣP·Δt; K_D = Σc·IR·Δt/ΣP·IR·Δt (IR iç 0,25, dış 1,56); GA95: 30 dk blok bootstrap (2000); K_tepesiz: en yüksek %10 kayıt hariç (duyarlılık); çözünürlük sınırı c ∓ 0,5",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_A_30.04": {
+  "deger": {
+   "TWA": 9.72,
+   "PurpleAir_ayni_anlar": 16.46,
+   "K_TWA": 0.59,
+   "K_TWA_GA95": [
+    0.43,
+    0.81
+   ],
+   "K_D": 0.64,
+   "K_D_GA95": [
+    0.44,
+    0.85
+   ],
+   "K_D_ic_hafif": 0.6,
+   "D_ug": 9.6,
+   "D_saat_ug": 3.28,
+   "sure_sa": 2.93,
+   "bina_disi_payi_yuzde": 3.4,
+   "kimya_payi_yuzde": 85.8,
+   "diger_bina_payi_yuzde": 10.8,
+   "K_kimya": 0.52,
+   "K_diger_bina": 0.94,
+   "K_bina_disi": 0.82,
+   "K_tepesiz": 0.49,
+   "tepe10_payi_yuzde": 30.1,
+   "K_cozunurluk_sinir": [
+    0.56,
+    0.62
+   ]
+  },
+  "birim": "µg/m³ · oran · µg · sa · %",
+  "tarif": "ölçümcü-gün (= oturum) özeti: TWA = Σc·Δt/ΣΔt; K_TWA = Σc·Δt/ΣP·Δt; K_D = Σc·IR·Δt/ΣP·IR·Δt (IR iç 0,25, dış 1,56); GA95: 30 dk blok bootstrap (2000); K_tepesiz: en yüksek %10 kayıt hariç (duyarlılık); çözünürlük sınırı c ∓ 0,5",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_B_27.04": {
+  "deger": {
+   "TWA": 4.77,
+   "PurpleAir_ayni_anlar": 4.15,
+   "K_TWA": 1.15,
+   "K_TWA_GA95": [
+    0.94,
+    1.39
+   ],
+   "K_D": 1.11,
+   "K_D_GA95": [
+    0.96,
+    1.27
+   ],
+   "K_D_ic_hafif": 1.13,
+   "D_ug": 8.4,
+   "D_saat_ug": 2.85,
+   "sure_sa": 2.93,
+   "bina_disi_payi_yuzde": 28.4,
+   "kimya_payi_yuzde": 14.8,
+   "diger_bina_payi_yuzde": 56.8,
+   "K_kimya": 0.99,
+   "K_diger_bina": 1.22,
+   "K_bina_disi": 1.08,
+   "K_tepesiz": 0.95,
+   "tepe10_payi_yuzde": 26.9,
+   "K_cozunurluk_sinir": [
+    1.03,
+    1.27
+   ]
+  },
+  "birim": "µg/m³ · oran · µg · sa · %",
+  "tarif": "ölçümcü-gün (= oturum) özeti: TWA = Σc·Δt/ΣΔt; K_TWA = Σc·Δt/ΣP·Δt; K_D = Σc·IR·Δt/ΣP·IR·Δt (IR iç 0,25, dış 1,56); GA95: 30 dk blok bootstrap (2000); K_tepesiz: en yüksek %10 kayıt hariç (duyarlılık); çözünürlük sınırı c ∓ 0,5",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_B_28.04": {
+  "deger": {
+   "TWA": 11.75,
+   "PurpleAir_ayni_anlar": 6.76,
+   "K_TWA": 1.74,
+   "K_TWA_GA95": [
+    0.81,
+    3.17
+   ],
+   "K_D": 1.54,
+   "K_D_GA95": [
+    0.75,
+    2.83
+   ],
+   "K_D_ic_hafif": 1.69,
+   "D_ug": 14.6,
+   "D_saat_ug": 3.08,
+   "sure_sa": 4.73,
+   "bina_disi_payi_yuzde": 3.5,
+   "kimya_payi_yuzde": 4.2,
+   "diger_bina_payi_yuzde": 92.3,
+   "K_kimya": 0.46,
+   "K_diger_bina": 1.83,
+   "K_bina_disi": 0.47,
+   "K_tepesiz": 0.73,
+   "tepe10_payi_yuzde": 62.3,
+   "K_cozunurluk_sinir": [
+    1.67,
+    1.81
+   ]
+  },
+  "birim": "µg/m³ · oran · µg · sa · %",
+  "tarif": "ölçümcü-gün (= oturum) özeti: TWA = Σc·Δt/ΣΔt; K_TWA = Σc·Δt/ΣP·Δt; K_D = Σc·IR·Δt/ΣP·IR·Δt (IR iç 0,25, dış 1,56); GA95: 30 dk blok bootstrap (2000); K_tepesiz: en yüksek %10 kayıt hariç (duyarlılık); çözünürlük sınırı c ∓ 0,5",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_B_29.04": {
+  "deger": {
+   "TWA": 9.81,
+   "PurpleAir_ayni_anlar": 15.45,
+   "K_TWA": 0.64,
+   "K_TWA_GA95": [
+    0.6,
+    0.67
+   ],
+   "K_D": 0.62,
+   "K_D_GA95": [
+    0.55,
+    0.68
+   ],
+   "K_D_ic_hafif": 0.63,
+   "D_ug": 26.7,
+   "D_saat_ug": 3.32,
+   "sure_sa": 8.03,
+   "bina_disi_payi_yuzde": 7.9,
+   "kimya_payi_yuzde": 68.5,
+   "diger_bina_payi_yuzde": 23.7,
+   "K_kimya": 0.64,
+   "K_diger_bina": 0.65,
+   "K_bina_disi": 0.58,
+   "K_tepesiz": 0.6,
+   "tepe10_payi_yuzde": 17.7,
+   "K_cozunurluk_sinir": [
+    0.6,
+    0.67
+   ]
+  },
+  "birim": "µg/m³ · oran · µg · sa · %",
+  "tarif": "ölçümcü-gün (= oturum) özeti: TWA = Σc·Δt/ΣΔt; K_TWA = Σc·Δt/ΣP·Δt; K_D = Σc·IR·Δt/ΣP·IR·Δt (IR iç 0,25, dış 1,56); GA95: 30 dk blok bootstrap (2000); K_tepesiz: en yüksek %10 kayıt hariç (duyarlılık); çözünürlük sınırı c ∓ 0,5",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_B_30.04": {
+  "deger": {
+   "TWA": 19.07,
+   "PurpleAir_ayni_anlar": 17.66,
+   "K_TWA": 1.08,
+   "K_TWA_GA95": [
+    0.8,
+    1.34
+   ],
+   "K_D": 1.29,
+   "K_D_GA95": [
+    1.03,
+    1.48
+   ],
+   "K_D_ic_hafif": 1.18,
+   "D_ug": 139.0,
+   "D_saat_ug": 17.9,
+   "sure_sa": 7.77,
+   "bina_disi_payi_yuzde": 38.2,
+   "kimya_payi_yuzde": 46.4,
+   "diger_bina_payi_yuzde": 15.5,
+   "K_kimya": 0.64,
+   "K_diger_bina": 1.57,
+   "K_bina_disi": 1.39,
+   "K_tepesiz": 0.89,
+   "tepe10_payi_yuzde": 30.8,
+   "K_cozunurluk_sinir": [
+    1.05,
+    1.11
+   ]
+  },
+  "birim": "µg/m³ · oran · µg · sa · %",
+  "tarif": "ölçümcü-gün (= oturum) özeti: TWA = Σc·Δt/ΣΔt; K_TWA = Σc·Δt/ΣP·Δt; K_D = Σc·IR·Δt/ΣP·IR·Δt (IR iç 0,25, dış 1,56); GA95: 30 dk blok bootstrap (2000); K_tepesiz: en yüksek %10 kayıt hariç (duyarlılık); çözünürlük sınırı c ∓ 0,5",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_C_27.04": {
+  "deger": {
+   "TWA": 4.18,
+   "PurpleAir_ayni_anlar": 4.17,
+   "K_TWA": 1.0,
+   "K_TWA_GA95": [
+    0.71,
+    1.41
+   ],
+   "K_D": 1.0,
+   "K_D_GA95": [
+    0.71,
+    1.41
+   ],
+   "K_D_ic_hafif": 1.0,
+   "D_ug": 8.3,
+   "D_saat_ug": 1.04,
+   "sure_sa": 7.97,
+   "bina_disi_payi_yuzde": 0.0,
+   "kimya_payi_yuzde": 100.0,
+   "diger_bina_payi_yuzde": 0.0,
+   "K_kimya": 1.0,
+   "K_diger_bina": null,
+   "K_bina_disi": null,
+   "K_tepesiz": 0.7,
+   "tepe10_payi_yuzde": 37.4,
+   "K_cozunurluk_sinir": [
+    0.88,
+    1.12
+   ]
+  },
+  "birim": "µg/m³ · oran · µg · sa · %",
+  "tarif": "ölçümcü-gün (= oturum) özeti: TWA = Σc·Δt/ΣΔt; K_TWA = Σc·Δt/ΣP·Δt; K_D = Σc·IR·Δt/ΣP·IR·Δt (IR iç 0,25, dış 1,56); GA95: 30 dk blok bootstrap (2000); K_tepesiz: en yüksek %10 kayıt hariç (duyarlılık); çözünürlük sınırı c ∓ 0,5",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_C_28.04": {
+  "deger": {
+   "TWA": 5.34,
+   "PurpleAir_ayni_anlar": 8.07,
+   "K_TWA": 0.66,
+   "K_TWA_GA95": [
+    0.51,
+    0.98
+   ],
+   "K_D": 0.66,
+   "K_D_GA95": [
+    0.51,
+    0.98
+   ],
+   "K_D_ic_hafif": 0.66,
+   "D_ug": 12.7,
+   "D_saat_ug": 1.34,
+   "sure_sa": 9.53,
+   "bina_disi_payi_yuzde": 0.0,
+   "kimya_payi_yuzde": 100.0,
+   "diger_bina_payi_yuzde": 0.0,
+   "K_kimya": 0.66,
+   "K_diger_bina": null,
+   "K_bina_disi": null,
+   "K_tepesiz": 0.56,
+   "tepe10_payi_yuzde": 29.2,
+   "K_cozunurluk_sinir": [
+    0.6,
+    0.72
+   ]
+  },
+  "birim": "µg/m³ · oran · µg · sa · %",
+  "tarif": "ölçümcü-gün (= oturum) özeti: TWA = Σc·Δt/ΣΔt; K_TWA = Σc·Δt/ΣP·Δt; K_D = Σc·IR·Δt/ΣP·IR·Δt (IR iç 0,25, dış 1,56); GA95: 30 dk blok bootstrap (2000); K_tepesiz: en yüksek %10 kayıt hariç (duyarlılık); çözünürlük sınırı c ∓ 0,5",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_C_29.04": {
+  "deger": {
+   "TWA": 10.05,
+   "PurpleAir_ayni_anlar": 15.43,
+   "K_TWA": 0.65,
+   "K_TWA_GA95": [
+    0.53,
+    0.87
+   ],
+   "K_D": 0.65,
+   "K_D_GA95": [
+    0.53,
+    0.87
+   ],
+   "K_D_ic_hafif": 0.65,
+   "D_ug": 20.9,
+   "D_saat_ug": 2.51,
+   "sure_sa": 8.3,
+   "bina_disi_payi_yuzde": 0.0,
+   "kimya_payi_yuzde": 100.0,
+   "diger_bina_payi_yuzde": 0.0,
+   "K_kimya": 0.65,
+   "K_diger_bina": null,
+   "K_bina_disi": null,
+   "K_tepesiz": 0.53,
+   "tepe10_payi_yuzde": 29.7,
+   "K_cozunurluk_sinir": [
+    0.62,
+    0.68
+   ]
+  },
+  "birim": "µg/m³ · oran · µg · sa · %",
+  "tarif": "ölçümcü-gün (= oturum) özeti: TWA = Σc·Δt/ΣΔt; K_TWA = Σc·Δt/ΣP·Δt; K_D = Σc·IR·Δt/ΣP·IR·Δt (IR iç 0,25, dış 1,56); GA95: 30 dk blok bootstrap (2000); K_tepesiz: en yüksek %10 kayıt hariç (duyarlılık); çözünürlük sınırı c ∓ 0,5",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_C_30.04": {
+  "deger": {
+   "TWA": 13.96,
+   "PurpleAir_ayni_anlar": 15.85,
+   "K_TWA": 0.88,
+   "K_TWA_GA95": [
+    0.78,
+    0.97
+   ],
+   "K_D": 0.88,
+   "K_D_GA95": [
+    0.78,
+    0.97
+   ],
+   "K_D_ic_hafif": 0.88,
+   "D_ug": 28.9,
+   "D_saat_ug": 3.49,
+   "sure_sa": 8.27,
+   "bina_disi_payi_yuzde": 0.0,
+   "kimya_payi_yuzde": 100.0,
+   "diger_bina_payi_yuzde": 0.0,
+   "K_kimya": 0.88,
+   "K_diger_bina": null,
+   "K_bina_disi": null,
+   "K_tepesiz": 0.79,
+   "tepe10_payi_yuzde": 26.5,
+   "K_cozunurluk_sinir": [
+    0.85,
+    0.91
+   ]
+  },
+  "birim": "µg/m³ · oran · µg · sa · %",
+  "tarif": "ölçümcü-gün (= oturum) özeti: TWA = Σc·Δt/ΣΔt; K_TWA = Σc·Δt/ΣP·Δt; K_D = Σc·IR·Δt/ΣP·IR·Δt (IR iç 0,25, dış 1,56); GA95: 30 dk blok bootstrap (2000); K_tepesiz: en yüksek %10 kayıt hariç (duyarlılık); çözünürlük sınırı c ∓ 0,5",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_KD_KTWA_fark_enb": {
+  "deger": 0.21,
+  "birim": "oran",
+  "tarif": "|K_D − K_TWA| en büyük ölçümcü-gün farkı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_KD_buyuk": {
+  "deger": 2,
+  "birim": "ölçümcü-gün",
+  "tarif": "K_D > K_TWA olan ölçümcü-gün (bina dışı kayıtları daha kirli)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_K_1_alti": {
+  "deger": 7,
+  "birim": "ölçümcü-gün",
+  "tarif": "K_TWA < 1 olan ölçümcü-gün (12'den)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_K_GA_1_alti": {
+  "deger": 7,
+  "birim": "ölçümcü-gün",
+  "tarif": "K_TWA'nın %95 aralığının tamamı 1'in altında olan ölçümcü-gün",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kg_K_GA_1_ustu": {
+  "deger": 0,
+  "birim": "ölçümcü-gün",
+  "tarif": "K_TWA'nın %95 aralığının tamamı 1'in üstünde olan ölçümcü-gün",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kimya_A_C_ortak": {
+  "deger": {
+   "27.04": {
+    "pencere": "09:51–15:13",
+    "K_A": 1.07,
+    "K_C": 0.94,
+    "C_A": 0.88
+   },
+   "28.04": {
+    "pencere": "09:31–15:03",
+    "K_A": 0.71,
+    "K_C": 0.5,
+    "C_A": 0.7
+   },
+   "29.04": {
+    "pencere": "09:50–16:39",
+    "K_A": 0.53,
+    "K_C": 0.58,
+    "C_A": 1.09
+   },
+   "30.04": {
+    "pencere": "10:01–12:35",
+    "K_A": 0.53,
+    "K_C": 0.76,
+    "C_A": 1.45
+   }
+  },
+  "birim": "oran",
+  "tarif": "A ve C, yalnızca Kimya binası kayıtları, iki oturumun ortak penceresi: Σc·Δt/ΣP·Δt ve C/A oranı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kimya_C_A_aralik_27_haric": {
+  "deger": "0,70–1,45",
+  "birim": "oran",
+  "tarif": "aynı C/A oranı, 28–30 Nisan",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.kisi_etkisi_K_geo": {
+  "deger": {
+   "A": 0.83,
+   "B": 1.29,
+   "C": 0.94
+  },
+  "birim": "kat",
+  "tarif": "toplamsal modelde ölçümcü etkisi: exp(ölçümcünün log K ortalaması − genel ortalama)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.nem_75_ustu_kayit": {
+  "deger": 0,
+  "birim": "kayıt",
+  "tarif": "Atmotube nemi ≥ %75 olan saha kaydı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.nem_PA_enb": {
+  "deger": 53.0,
+  "birim": "%",
+  "tarif": "oturum süreleri içinde PurpleAir gövde içi nem en yüksek değeri",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.nem_atmotube_enb": {
+  "deger": 56.0,
+  "birim": "%",
+  "tarif": "saha kayıtlarında Atmotube nemi en yüksek değeri (A ve B)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.olcumcu_A": {
+  "deger": {
+   "TWA": 7.24,
+   "PurpleAir_ayni_anlar": 11.42,
+   "K_TWA": 0.63,
+   "K_TWA_GA95": [
+    0.58,
+    0.69
+   ],
+   "K_D": 0.64,
+   "K_D_GA95": [
+    0.59,
+    0.71
+   ],
+   "bina_disi_payi_yuzde": 3.7,
+   "kimya_payi_yuzde": 93.8,
+   "sure_sa": 21.0
+  },
+  "birim": "µg/m³ · oran · % · sa",
+  "tarif": "ölçümcünün dört oturumu birlikte (Δt ağırlıklı); GA95 oturum içi blok bootstrap",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.olcumcu_A_envanter": {
+  "deger": {
+   "oturum": 4,
+   "kayit": 1260,
+   "adim_dk": [
+    1
+   ],
+   "sure_sa": 21.0,
+   "atmotube_nem_kayit_payi_yuzde": 89.0,
+   "tam_sayi_payi_yuzde": 100.0
+  },
+  "birim": "oturum · kayıt · dk · sa · %",
+  "tarif": "ölçümcü başına envanter; nem alanı ve tam sayı payı kayıt yolunun (cihaz/dışa aktarım) farklı olduğunu gösterir",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.olcumcu_A_katman": {
+  "deger": {
+   "K_kimya": 0.62,
+   "K_diger_bina": 0.91,
+   "K_bina_disi": 0.7,
+   "kimya_payi_yuzde": 93.8,
+   "diger_payi_yuzde": 2.5,
+   "bina_disi_payi_yuzde": 3.7
+  },
+  "birim": "oran · %",
+  "tarif": "ölçümcünün dört oturumu: yer katmanlarına göre Σc·Δt/ΣP·Δt ve süre payları (15 m kuralı)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.olcumcu_B": {
+  "deger": {
+   "TWA": 12.64,
+   "PurpleAir_ayni_anlar": 13.02,
+   "K_TWA": 0.97,
+   "K_TWA_GA95": [
+    0.8,
+    1.17
+   ],
+   "K_D": 1.13,
+   "K_D_GA95": [
+    0.93,
+    1.3
+   ],
+   "bina_disi_payi_yuzde": 19.6,
+   "kimya_payi_yuzde": 41.5,
+   "sure_sa": 23.5
+  },
+  "birim": "µg/m³ · oran · % · sa",
+  "tarif": "ölçümcünün dört oturumu birlikte (Δt ağırlıklı); GA95 oturum içi blok bootstrap",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.olcumcu_B_envanter": {
+  "deger": {
+   "oturum": 4,
+   "kayit": 704,
+   "adim_dk": [
+    2
+   ],
+   "sure_sa": 23.5,
+   "atmotube_nem_kayit_payi_yuzde": 100.0,
+   "tam_sayi_payi_yuzde": 95.9
+  },
+  "birim": "oturum · kayıt · dk · sa · %",
+  "tarif": "ölçümcü başına envanter; nem alanı ve tam sayı payı kayıt yolunun (cihaz/dışa aktarım) farklı olduğunu gösterir",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.olcumcu_B_katman": {
+  "deger": {
+   "K_kimya": 0.64,
+   "K_diger_bina": 1.27,
+   "K_bina_disi": 1.26,
+   "kimya_payi_yuzde": 41.5,
+   "diger_payi_yuzde": 38.9,
+   "bina_disi_payi_yuzde": 19.6
+  },
+  "birim": "oran · %",
+  "tarif": "ölçümcünün dört oturumu: yer katmanlarına göre Σc·Δt/ΣP·Δt ve süre payları (15 m kuralı)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.olcumcu_C": {
+  "deger": {
+   "TWA": 8.31,
+   "PurpleAir_ayni_anlar": 10.84,
+   "K_TWA": 0.77,
+   "K_TWA_GA95": [
+    0.68,
+    0.88
+   ],
+   "K_D": 0.77,
+   "K_D_GA95": [
+    0.68,
+    0.88
+   ],
+   "bina_disi_payi_yuzde": 0.0,
+   "kimya_payi_yuzde": 100.0,
+   "sure_sa": 34.1
+  },
+  "birim": "µg/m³ · oran · % · sa",
+  "tarif": "ölçümcünün dört oturumu birlikte (Δt ağırlıklı); GA95 oturum içi blok bootstrap",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.olcumcu_C_envanter": {
+  "deger": {
+   "oturum": 4,
+   "kayit": 2044,
+   "adim_dk": [
+    1
+   ],
+   "sure_sa": 34.1,
+   "atmotube_nem_kayit_payi_yuzde": 0.0,
+   "tam_sayi_payi_yuzde": 92.3
+  },
+  "birim": "oturum · kayıt · dk · sa · %",
+  "tarif": "ölçümcü başına envanter; nem alanı ve tam sayı payı kayıt yolunun (cihaz/dışa aktarım) farklı olduğunu gösterir",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.olcumcu_C_katman": {
+  "deger": {
+   "K_kimya": 0.77,
+   "K_diger_bina": null,
+   "K_bina_disi": null,
+   "kimya_payi_yuzde": 100.0,
+   "diger_payi_yuzde": 0.0,
+   "bina_disi_payi_yuzde": 0.0
+  },
+  "birim": "oran · %",
+  "tarif": "ölçümcünün dört oturumu: yer katmanlarına göre Σc·Δt/ΣP·Δt ve süre payları (15 m kuralı)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.olcumcu_K_oranlari": {
+  "deger": {
+   "B/A": 1.53,
+   "B/C": 1.27,
+   "C/A": 1.21
+  },
+  "birim": "oran",
+  "tarif": "ölçümcülerin dört gün birlikte K_TWA oranları (farkın tümü cihazdan gelseydi gereken çarpan)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.olcumcu_sayisi": {
+  "deger": 3,
+  "birim": "kişi",
+  "tarif": "ölçüm yapan kişi (app.js → PEOPLE: Saha ekibi A/B/C)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.oturum_sayisi": {
+  "deger": 12,
+  "birim": "oturum",
+  "tarif": "saha oturumu (upload_sessions, kampüs içi)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.seyreltme_15dk_degisim_enb": {
+  "deger": 58.5,
+  "birim": "%",
+  "tarif": "aynı seyreltmede en yüksek 15 dk kayan ortalamanın en büyük göreli değişimi",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.seyreltme_K_degisim_enb": {
+  "deger": 12.9,
+  "birim": "%",
+  "tarif": "1 dk'lık 8 oturum her ikinci kayıt alınarak 2 dk'ya seyreltildiğinde K_TWA'nın en büyük göreli değişimi (iki evre)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.tepe10_payi_aralik": {
+  "deger": "16,2–62,3",
+  "birim": "%",
+  "tarif": "en yüksek %10 kaydın Σc·Δt içindeki payı, ölçümcü-gün aralığı",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.tum_K_D": {
+  "deger": 0.92,
+  "birim": "oran",
+  "tarif": "12 oturum birlikte K_D (IR iç 0,25 / dış 1,56)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.tum_K_D_GA95": {
+  "deger": [
+   0.8,
+   1.03
+  ],
+  "birim": "oran",
+  "tarif": "blok bootstrap %95 aralık",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.tum_K_TWA": {
+  "deger": 0.8,
+  "birim": "oran",
+  "tarif": "12 oturum birlikte Σc·Δt/ΣP·Δt",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.tum_K_TWA_GA95": {
+  "deger": [
+   0.73,
+   0.88
+  ],
+  "birim": "oran",
+  "tarif": "blok bootstrap %95 aralık",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.tum_P": {
+  "deger": 11.65,
+  "birim": "µg/m³",
+  "tarif": "aynı kayıtların düzeltilmiş PurpleAir ortalaması",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.tum_TWA": {
+  "deger": 9.32,
+  "birim": "µg/m³",
+  "tarif": "12 oturum birlikte Σc·Δt/ΣΔt (Atmotube ham)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.tum_sure": {
+  "deger": 78.5,
+  "birim": "sa",
+  "tarif": "eş zamanlı PurpleAir değeri olan kayıtların toplam süresi (kayıt × Δt)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.varyans_logK": {
+  "deger": {
+   "kisi": 31.1,
+   "gun": 39.7,
+   "kalan": 29.1
+  },
+  "birim": "%",
+  "tarif": "log K_TWA, 3 ölçümcü × 4 gün toplamsal ayrıştırma: kareler toplamı payı (kalan = etkileşim + gürültü)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.varyans_logK_27_haric": {
+  "deger": {
+   "kisi": 44.8,
+   "gun": 27.4,
+   "kalan": 27.8
+  },
+  "birim": "%",
+  "tarif": "aynı ayrıştırma, çok temiz 27 Nisan hariç (3 × 3)",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
+ },
+ "S.varyans_logTWA": {
+  "deger": {
+   "kisi": 11.1,
+   "gun": 78.6,
+   "kalan": 10.3
+  },
+  "birim": "%",
+  "tarif": "log TWA için aynı ayrıştırma",
+  "kaynak": "Q2 (saha noktaları) + docs/veri PurpleAir arşivi (27–30 Nisan, 2 dk, US EPA düzeltmeli)"
  }
 }

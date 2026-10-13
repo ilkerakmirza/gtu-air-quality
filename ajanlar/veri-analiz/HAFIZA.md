@@ -28,3 +28,8 @@
   kesilir, gece yarısını aşan olaylar iki güne bölünebilir.
 - Teknik: ATP canlı analizinde koordinat istenmez (izin sistemi reddetti; yalnızca "kampüs içi" bayrağı). `saatlik.json`'un son saati yarım.
 - Açık: Güzide Kafe H1 hücresindeki fazlalık (K = 1,36) tekrarlı ölçümle doğrulanmalı; 10 Mayıs ve 19 Temmuz kısa tepelerin kaynağı bilinmiyor.
+- **v1.2 (13 Ekim 2026):** saha karşılaştırması eklendi (§2.8, §3.4; Tablo 5–7; Şekil 10–12). 4 gün, 3 ölçümcü, 12 oturum, 78,5 sa.
+  Genel K_TWA 0,80 (%95 blok bootstrap 0,73–0,88), K_D 0,92; 12 ölçümcü-günün 7'sinde aralığın tamamı 1'in altında. Aynı gün
+  kişiler arası TWA oranı 1,14–2,20; 28.04'te farkın ~%84'ü kısa tepelerden, 30.04'te ölçüm saatlerinden (ortak pencerede K oranı
+  1,83 → 1,32). Kimya binası K 0,70, diğer binalar 1,24. Varyans payları betimseldir, kişi etkisi diye yorumlanmaz. Neyin neden
+  kullanıldığı: rapor klasöründeki `karar_kaydi.md`. KVKK: kişi karşılaştırması yalnızca "Ölçümcü A/B/C", konum zaman çizelgesi yok.

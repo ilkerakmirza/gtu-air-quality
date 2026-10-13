@@ -1,6 +1,6 @@
 # GTÜ kampüsünde PM₂.₅: sorunlu zamanlar ve yerler, kişisel maruziyet ve iç/dış ortam senaryoları
 
-**Hazırlayan:** GTÜ AirLab · **Tarih:** 13 Ekim 2026 · **Sürüm:** 1.1 (CO₂ çıkarıldı)
+**Hazırlayan:** GTÜ AirLab · **Tarih:** 13 Ekim 2026 · **Sürüm:** 1.2 (saha ölçümlerinin karşılaştırması eklendi, §2.8 ve §3.4; değişiklikler Ek B'de)
 **Veri dönemi:** PurpleAir 1 Mayıs – 12 Ekim 2026 (Türkiye saati; 13 Ekim 00:00'da kesildi); saha oturumları 27–30 Nisan 2026;
 Atmotube canlı kayıtları 15 Haziran – 12 Ekim 2026
 **Sayıların kaydı:** her sayı `sayilar.json`'da değer, birim, hesap tarifi ve kaynak sorgusuyla yer alır (anahtarlar metinde köşeli
@@ -27,18 +27,28 @@ tipik bir hafta içi günde (5 Mayıs) 7 saat kapalı pencereli iç ortam ve 1 s
 ortalama 7,0 µg/m³, aynı sürenin tamamı dış ortamda geçseydi 12,3 µg/m³ olurdu (1,75 kat); solunan miktar 32,4 µg yerine 43,0 µg
 olurdu (1,33 kat). Açık havadaki tek saat, gerçekçi senaryodaki solunan miktarın %67'sini oluşturmaktadır; bu saatin sabah 06–09
 yerine akşamüstü 16–19 arasına alınması tipik günde yaklaşık %40 daha az PM₂.₅ solunması anlamına gelmektedir.
+**Saha ölçümlerinin karşılaştırması (sürüm 1.2):** 4 günde 3 ölçümcü, her gün birer oturumla 12 oturum (78,5 saat) ölçmüştür.
+On iki ölçümcü-günün yedisinde kişisel maruziyet çatıdaki dış ortamın belirgin biçimde altındadır (K_TWA 0,53–0,88; %95 aralığı
+1'in altında), belirgin biçimde üstünde kalan yoktur; 12 oturum birlikte K_TWA 0,80 (0,73–0,88), solunan miktara göre 0,92
+(0,80–1,03)'tür. Aynı gün ölçüm yapanların ortalamaları 1,14–2,20 kat (0,6–9,4 µg/m³) farklıdır. Mutlak maruziyetteki değişkenliğin
+%79'u günden (dış ortam düzeyi), dış ortama oranındaki değişkenliğin yaklaşık üçte biri ölçümcüden gelmektedir. İki büyük farktan
+28 Nisan'daki büyük ölçüde kısa tepelerden (farkın yaklaşık %84'ü), 30 Nisan'daki ise ölçüm saatlerinin ve bina dışında geçen sürenin
+farklılığından kaynaklanmaktadır; nem ve örnekleme aralığı belirleyici görünmemekte, cihaz farkı ise yan yana ölçüm yapılmadığı için
+ayrılamamaktadır.
 
 ---
 
 ## 1 Giriş
 
 GTÜ AirLab platformu kampüs hava kalitesini bir sabit sensörle (PurpleAir PA-II, SUMER çatısı), kişisel ölçerlerle (Atmotube PRO)
-izlemektedir. İç ortam CO₂ ölçümü şu an yapılmadığı için bu rapora alınmamıştır; sensörler yeniden tanımlandığında ayrıca incelenecektir. Bu rapor kullanıcının dört sorusunu yanıtlamayı amaçlar:
+izlemektedir. İç ortam CO₂ ölçümü şu an yapılmadığı için bu rapora alınmamıştır; sensörler yeniden tanımlandığında ayrıca incelenecektir. Bu rapor kullanıcının beş sorusunu yanıtlamayı amaçlar:
 
 1. Kampüste sorunlu alanlar: nerede, nasıl ve ne zaman kötü?
 2. Kişisel maruziyete göre bir sensörün gün içindeki en kötü durumdaki maruziyeti ne kadar?
 3. Kampüste geçirilen zaman tamamen dış ortamda geçseydi maruziyet nasıl olurdu?
 4. Bunların grafik ve görsellerle, akademik dille çözümlenmesi.
+5. (Sürüm 1.2) Saha ölçümleri kendi içinde (gün, ölçümcü, oturum) nasıl karşılaştırılır; dış ortama göre kişisel maruziyet
+   arttı mı, azaldı mı; aynı gün ölçüm yapanlar arasındaki fark ne kadar ve bu farkı hangi etkenler yaratıyor?
 
 Analizde uygulamanın yöntemleri değiştirilmeden kullanılmıştır: PurpleAir için US EPA düzeltmesi ve A/B kanal denetimi
 (`colorscale.js` → `paCorrect`), Türkiye saati, tam gün kuralı (≥ 18 saat), Ulusal Hava Kalitesi İndeksi (HKİ, değer 0,1 µg/m³'e
@@ -131,6 +141,36 @@ etkinlikler F = 1 ile hesaplanmıştır. Günler: 1 Mayıs – 12 Ekim arasında
 için F'nin belgedeki aralıkları (kapalı pencere 0,3–0,75; mekanik 0,25; açık pencere 0,8), bu çalışmada ölçülen K (Kimya binası
 0,65) ve IR'nin 95. yüzdelikleri (0,39 ve 2,28 m³/sa; U.S. EPA, 2011) kullanılmıştır. Açık hava saatinin etkisi için 06:00–09:00
 ve 16:00–19:00 pencere ortalamaları gün gün karşılaştırılmıştır.
+
+### 2.8 Saha ölçümlerinin karşılaştırması (sürüm 1.2)
+
+Saha verisi dengeli bir düzendedir: 4 gün × 3 ölçümcü, her ölçümcü-gün tek oturum. Ölçümcüler uygulamadaki "Saha ekibi A/B/C"
+etiketleriyle "Ölçümcü A/B/C" diye anılır; ad, oturum adı ve koordinat kullanılmaz ve ölçümcü etiketiyle birlikte dakikalık konum
+(bina içi/dışı zaman çizelgesi) verilmez. PM₂.₅'i ve ±3 dk içinde düzeltilmiş PurpleAir değeri olan 4.008 kayıt kullanılmıştır. Her
+kayıt oturumun örnekleme aralığını (Δt: 1 ya da 2 dk) temsil eder. Seçilen yöntemlerin gerekçe ve alternatifleri `karar_kaydi.md`'dedir.
+
+- **Düzey ve oran:** TWA = Σc·Δt / ΣΔt; çatı değeri P aynı kayıtların düzeltilmiş PurpleAir ortalaması; K_TWA = Σc·Δt / ΣP·Δt. Gün,
+  ölçümcü ve 12 oturum düzeyinde kayıtlar birleştirilir (oranların ortalaması değil, toplamların oranı).
+- **Solunan miktara göre oran:** K_D = Σc·IR·Δt / ΣP·IR·Δt. Etkinlik ölçülmediği için IR, uygulamanın varsayılan günüyle aynı
+  mantıkla konuma göre atanmıştır: bina poligonu içinde ya da 15 m yakınında 0,25 m³/sa (oturma), dışında 1,56 m³/sa (tempolu
+  yürüme; U.S. EPA, 2011). K_D, kişinin soluduğu miktarın aynı etkinlikle çatı havasında solunacak miktara oranıdır. Duyarlılık:
+  bina içi IR = 0,72 m³/sa (hafif etkinlik).
+- **Belirsizlik:** ardışık dakikalar bağımsız olmadığından güven aralıkları oturum içinde 30 dakikalık blokların yerine konarak
+  yeniden örneklenmesiyle (blok bootstrap; Künsch, 1989; 2000 yineleme, %2,5–97,5 yüzdelikleri) verilmiştir; gün ve ölçümcü
+  düzeyinde her oturumun blokları kendi içinde yeniden örneklenir. Bu aralık yalnızca örnekleme belirsizliğidir. Cihaz kalibrasyonu
+  (yan yana ölçüm yok) ve PurpleAir düzeltmesinin belirsizliği aralığa dahil değildir; Atmotube'un 1 µg/m³ çözünürlüğü c ∓ 0,5 µg/m³
+  sınırlarıyla ayrıca hesaplanmıştır.
+- **Aynı gün farkı:** en yüksek / en düşük oranı ve en yüksek − en düşük farkı. Oturumların saatleri farklı olduğundan, aynı günün
+  üç oturumunun zaman kesişiminde (ortak pencere) de hesaplanmıştır.
+- **Ayrıştırma:** 12 oturumda ölçümcü, cihaz ve kayıt yolu, gezilen yerler birbirine bağlıdır ve ardışık kayıtlar bağımlıdır; kayıt
+  düzeyinde log K regresyonu bu nedenle yanıltıcı bir kesinlik gösterirdi ve kurulmamıştır. Bunun yerine üç saydam adım uygulanmıştır:
+  (1) 3 × 4 düzende log K_TWA ve log TWA için toplamsal kareler toplamı ayrıştırması (ölçümcü, gün, kalan; kalan etkileşim ve
+  gürültüyü birlikte içerir); (2) aynı günün en yüksek ve en düşük K'li iki ölçümcüsü arasında Kitagawa (1955) ayrıştırması:
+  K = Σ w_s K_s (s: Kimya binası, diğer binalar, bina dışı; w_s katmanın ΣP·Δt payı) olduğundan ΔK, "yer dağılımı" (nerede
+  bulunulduğu) ve "yerdeki düzey" (aynı tür yerde ölçülen oran) bileşenlerine kalansız ayrılır; bir ölçümcünün hiç bulunmadığı
+  katmanda diğerinin K'si kullanılır; (3) tek etken denetimleri: her oturumun en yüksek %10 kaydı hesaptan çıkarılarak K (yalnızca
+  duyarlılık; veri ayıklanmaz), saat dilimine ve dış ortam sınıfına göre K, 1 dakikalık oturumların 2 dakikaya seyreltilmesi, aynı
+  bina ve aynı saatlerde iki ölçümcünün karşılaştırılması ve nem denetimi.
 
 ---
 
@@ -298,14 +338,13 @@ Kaynak: [D.oturum_01 … D.oturum_12]. Süre = kayıt × örnekleme aralığı (
 D.twa_aralik, D.k_twa_aralik, D.k_twa_ortanca]. Noktalarının %85'ten fazlası Kimya binasında olan 8 oturumun K_TWA ortancası 0,68'dir;
 bunlardan dış ortamın ≥ 6 µg/m³ olduğu 6 oturumda oran 0,53–0,88 arasındadır [D.k_twa_ic_oturum_ortanca, D.k_twa_ic_oturum_dis6].
 Dış ortamın çok temiz olduğu 27 Nisan'da (çatıda yaklaşık 4 µg/m³) oranlar 1,00–1,15'tir; bu düzeyde Atmotube'un 1 µg/m³
-çözünürlüğü ve düzeltme denkleminin sabit terimi oranı belirlediği için bu günün oranı bilgi taşımamaktadır. Bina dışında daha çok
-zaman geçen oturumlarda (5 ve 10) oran 1'in üstündedir (1,74 ve 1,08).
+çözünürlüğü ve düzeltme denkleminin sabit terimi oranı belirlediği için bu günün oranı bilgi taşımamaktadır. Kimya binası dışında daha
+çok zaman geçen oturumlarda (5 ve 10) oran 1'in üstündedir (1,74 ve 1,08); bu farkların kaynağı §3.4'te ayrıştırılmıştır.
 
-**Tepeler.** En yüksek tek kayıt 522 µg/m³ (Oturum 5, 14:18, Kimya binası dışında), en yüksek 15 dakikalık ortalama 87,6 µg/m³
-(Oturum 5), en yüksek 60 dakikalık ortalama 53,1 µg/m³'tür (Oturum 10) [D.enb_tek_kayit, D.enb_15dk, D.enb_60dk]. Konumun Kimya binası olarak göründüğü
-dilimlerde de 100 µg/m³'ü aşan kısa tepeler vardır: Oturum 2 ve 8'in son dakikalarında 326 ve 320 µg/m³, Oturum 4'te 209 µg/m³
-(16:05). Oturum sonundaki tepeler binadan çıkış sırasında yakın bir kaynağa (ör. giriş önünde sigara dumanı) maruz kalınmasıyla
-uyumludur, ancak nedeni bilinmemektedir. Komşu iki kaydın ortalamasının
+**Tepeler.** En yüksek tek kayıt 522 µg/m³ (Oturum 5, 14:18), en yüksek 15 dakikalık ortalama 87,6 µg/m³
+(Oturum 5), en yüksek 60 dakikalık ortalama 53,1 µg/m³'tür (Oturum 10) [D.enb_tek_kayit, D.enb_15dk, D.enb_60dk]. 100 µg/m³'ü aşan başka kısa tepeler
+de vardır: Oturum 2 ve 8'in son dakikalarında 326 ve 320 µg/m³, Oturum 4'te 209 µg/m³ (16:05). Oturum sonundaki tepeler, ölçüm
+bitiminde yakın bir kaynağa (ör. bina girişinde sigara dumanı) maruz kalınmasıyla uyumlu olabilir; nedeni bilinmemektedir. Komşu iki kaydın ortalamasının
 5 katını aşan 10 kayıt vardır; hiçbiri ayıklanmamıştır [D.ani_yukselme_sayisi]. En yüksek %10 kayıt, oturumdaki toplam solunan
 miktarın %16,2–62,3'ünü (ortanca %28,0) oluşturur [D.pay10_aralik, D.pay10_ortanca]; Oturum 5'te kısa tepeler toplamın %62'sidir.
 
@@ -316,9 +355,9 @@ miktarın K_TWA katıdır (0,53–1,74).
 
 ![Şekil 8](sekiller/sekil08_oturum_seri.png)
 
-**Şekil 8.** İki oturumun zaman serisi: (a) Oturum 8 (çoğunlukla Kimya binası), (b) Oturum 10 (bina içi ve dışı). Yeşil: Atmotube
-ham (1–2 dk), siyah: 15 dk kayan ortalama, mavi: eş zamanlı PurpleAir (US EPA, 2 dk); gri dilimler kişinin konumunun Kimya binası
-dışında olduğu süreler. Birim µg/m³; Türkiye saati.
+**Şekil 8.** İki oturumun zaman serisi: (a) Oturum 8 (K_TWA 0,65), (b) Oturum 10 (K_TWA 1,08). Yeşil: Atmotube ham (1–2 dk),
+siyah: 15 dk kayan ortalama, mavi: eş zamanlı PurpleAir (US EPA, 2 dk). Birim µg/m³; Türkiye saati. Sürüm 1.2'de bina içi/dışı
+gölgelendirmesi kaldırılmıştır: §3.4'teki ölçümcü etiketleriyle birleşince kişinin dakikalık konumu izlenebilir hâle gelirdi (KVKK).
 
 **Atmotube canlı kayıtları.** 15 Haziran – 12 Ekim'deki 416 kaydın 389'unda PM₂.₅ vardır; konumu kampüs içinde olan 299 kayıttan
 233'ü PurpleAir'le eşleşmiştir (48 cihaz-gün; %83,7'si 09:00–16:59 arasında) [D.atp_*]. K ortancası 0,75'tir (çeyrekler arası
@@ -334,9 +373,173 @@ pencere (0,8) katsayıları arasında yer almaktadır.
 (logaritmik eksen; kutu: çeyrekler arası, kalın çizgi: ortanca, ince çizgi: %5–95) ve uygulamanın F değerleri. Kaynak: Atmotube PRO
 (saha oturumları 27–30 Nisan; ATP-1…5 canlı kayıtları 15 Haziran – 12 Ekim, kampüs içi) ve PurpleAir PA-II (US EPA düzeltmeli).
 
-### 3.4 En kötü durum
+### 3.4 Saha ölçümlerinin karşılaştırması
 
-**Tablo 5.** Sabit sensörde her tam günün en yüksek kayan ortalamasının günler arası dağılımı (154 tam gün; µg/m³).
+**Kapsam: kaç gün, kaç oturum, kaç kişi?** 27–30 Nisan 2026'da 4 gün boyunca 3 kişi ölçüm yapmış, her kişi her gün bir oturum
+açmıştır: 12 oturum, eş zamanlı çatı değeri olan kayıtlarla toplam 78,5 saat [S.gun_sayisi, S.oturum_sayisi, S.olcumcu_sayisi,
+S.duzen, S.tum_sure]. Oturum ≡ ölçümcü-gün olduğundan oturum düzeyindeki değerler Tablo 4'te, aynı değerler gün × ölçümcü düzeninde
+Tablo 5'tedir. Ölçümcüler kayıt biçimi bakımından da farklıdır: A ve C dakikada bir, B iki dakikada bir kayıt almıştır; C'nin
+kayıtlarında nem ve sıcaklık alanı yoktur; değerlerin tam sayı payı A'da %100, B'de %95,9, C'de %92,3'tür [S.olcumcu_A_envanter,
+S.olcumcu_B_envanter, S.olcumcu_C_envanter]. Bu, ölçümcülerin farklı cihaz ya da kayıt/dışa aktarım yoluyla ölçtüğünü
+düşündürmektedir; bu nedenle aşağıda "ölçümcü" etkisi cihaz ve ayar etkisinden ayrılamaz. Ölçümcülerin bulunduğu yerler de farklıdır:
+A sürenin %93,8'ini, C tamamını Kimya binasında (15 m kuralıyla) geçirmiştir; B'nin süresinin %41,5'i Kimya binasında, %38,9'u diğer
+binalarda (çoğunlukla Güzide Kafe ve Kütüphane), %19,6'sı bina dışındadır [S.olcumcu_A_katman, S.olcumcu_B_katman, S.olcumcu_C_katman].
+
+**Tablo 5.** Gün × ölçümcü kişisel maruziyet ve dış ortama oranı (Atmotube ham; çatı: aynı anların US EPA düzeltmeli PurpleAir
+değeri; parantez içinde oturum içi 30 dakikalık blok bootstrap %95 aralığı).
+
+| Gün | Ölçümcü | Süre (sa) | Bina dışı (%) | TWA (µg/m³) | Çatı, aynı anlar (µg/m³) | K_TWA (%95 GA) | K_D (%95 GA) | K, en yüksek %10 kayıt hariç |
+|---|---|---|---|---|---|---|---|---|
+| 27.04 | A | 5,7 | 2,3 | 4,1 | 3,9 | 1,06 (0,90–1,25) | 1,05 (0,91–1,24) | 0,92 |
+| 27.04 | B | 2,9 | 28,4 | 4,8 | 4,2 | 1,15 (0,94–1,39) | 1,11 (0,96–1,27) | 0,95 |
+| 27.04 | C | 8,0 | 0 | 4,2 | 4,2 | 1,00 (0,71–1,41) | 1,00 (0,71–1,41) | 0,70 |
+| 28.04 | A | 5,6 | 6,0 | 7,2 | 10,2 | 0,70 (0,66–0,77) | 0,70 (0,63–0,76) | 0,69 |
+| 28.04 | B | 4,7 | 3,5 | 11,8 | 6,8 | 1,74 (0,81–3,17) | 1,54 (0,75–2,83) | 0,73 |
+| 28.04 | C | 9,5 | 0 | 5,3 | 8,1 | 0,66 (0,51–0,98) | 0,66 (0,51–0,98) | 0,56 |
+| 29.04 | A | 6,8 | 2,9 | 8,8 | 16,5 | 0,53 (0,48–0,59) | 0,53 (0,48–0,59) | 0,51 |
+| 29.04 | B | 8,0 | 7,9 | 9,8 | 15,5 | 0,64 (0,60–0,67) | 0,62 (0,55–0,68) | 0,60 |
+| 29.04 | C | 8,3 | 0 | 10,1 | 15,4 | 0,65 (0,53–0,87) | 0,65 (0,53–0,87) | 0,53 |
+| 30.04 | A | 2,9 | 3,4 | 9,7 | 16,5 | 0,59 (0,43–0,81) | 0,64 (0,44–0,85) | 0,49 |
+| 30.04 | B | 7,8 | 38,2 | 19,1 | 17,7 | 1,08 (0,80–1,34) | 1,29 (1,03–1,48) | 0,89 |
+| 30.04 | C | 8,3 | 0 | 14,0 | 15,9 | 0,88 (0,78–0,97) | 0,88 (0,78–0,97) | 0,79 |
+| 4 gün | A | 21,0 | 3,7 | 7,2 | 11,4 | 0,63 (0,58–0,69) | 0,64 (0,59–0,71) | — |
+| 4 gün | B | 23,5 | 19,6 | 12,6 | 13,0 | 0,97 (0,80–1,17) | 1,13 (0,93–1,30) | — |
+| 4 gün | C | 34,1 | 0 | 8,3 | 10,8 | 0,77 (0,68–0,88) | 0,77 (0,68–0,88) | — |
+| 12 oturum | — | 78,5 | — | 9,3 | 11,7 | 0,80 (0,73–0,88) | 0,92 (0,80–1,03) | — |
+
+Kaynak: [S.kg_A_27.04 … S.kg_C_30.04, S.olcumcu_A/B/C, S.tum_*]. K_D: bina içinde 0,25, bina dışında 1,56 m³/sa solunum hızıyla
+solunan miktarın, aynı etkinlikle çatı havasında solunacak miktara oranı. Son sütun yalnızca duyarlılık hesabıdır; veri ayıklanmamıştır.
+
+**Gün gün.** Günlerin üç ölçümcü birlikte değerleri çatıdaki düzeyle birlikte yükselmiştir: kişisel TWA 27 Nisan'da 4,3, 28 Nisan'da
+7,4, 29 Nisan'da 9,6, 30 Nisan'da 15,4 µg/m³; aynı anlarda çatı 4,1, 8,3, 15,8 ve 16,7 µg/m³'tür. Günün K_TWA'sı sırasıyla 1,05
+(0,87–1,26), 0,88 (0,67–1,22), 0,61 (0,56–0,68) ve 0,92 (0,79–1,06)'dır [S.gun_27.04 … S.gun_30.04].
+
+**Dış ortama göre risk arttı mı, azaldı mı?** On iki ölçümcü-günün yedisinde K_TWA'nın %95 aralığının tamamı 1'in altındadır;
+aralığı tamamen 1'in üstünde kalan ölçümcü-gün yoktur [S.kg_K_GA_1_alti, S.kg_K_GA_1_ustu]. Aralığı 1'i içeren beş ölçümcü-günün
+üçü çok temiz 27 Nisan'dır (çatıda yaklaşık 4 µg/m³; bu düzeyde oran bilgi taşımamaktadır, §3.3); diğer ikisi B'nin 28 ve 30 Nisan
+oturumlarıdır. On iki oturum birlikte K_TWA 0,80 (0,73–0,88)'dir [S.tum_K_TWA, S.tum_K_TWA_GA95]. Ölçümcüler birlikte: A 0,63
+(0,58–0,69), C 0,77 (0,68–0,88), B 0,97 (0,80–1,17) [S.olcumcu_A, S.olcumcu_B, S.olcumcu_C]. Bu sonuçlar, ölçülen kişisel maruziyetin
+çoğunlukla çatıdaki dış ortam düzeyinin altında kaldığını (bu yedi ölçümcü-günde %12–47 daha düşük), A ve C için belirgin biçimde
+azaldığını, B için ise dış ortamdan ayırt edilemediğini göstermektedir. **Solunan miktara göre** K_D, bina dışı süresi kısa olan
+ölçümcü-günlerde K_TWA'ya eşittir (en büyük fark 0,21) [S.kg_KD_KTWA_fark_enb]; 12 oturum birlikte 0,92 (0,80–1,03)'tür
+[S.tum_K_D, S.tum_K_D_GA95]. Fark B'de belirgindir: 30 Nisan'da K_D 1,29 (1,03–1,48), yani solunan miktar ölçeğinde çatı düzeyinin
+üstündedir; bu sonuç bina dışında tempolu yürüme varsayımına dayanır (bina içi solunum hızı 0,72 m³/sa alındığında 1,18); B'nin dört gün birlikte K_D'si 15 m sınırındaki tek bir kaydın tarafına göre 1,12–1,13 arasında değişir (bağımsız denetim)
+[S.kg_B_30.04]. Belirsizlik: aralıklar yalnızca örnekleme belirsizliğini içerir. Atmotube'un 1 µg/m³ çözünürlüğü K'yi ±%2,6–12,1
+kaydırabilir (en büyüğü 27 Nisan'da) [S.cozunurluk_K_yari_genislik]; Atmotube PRO için cihazlar arası değişim katsayısı dakikalık
+verilerde %28, saatlikte %18 bildirilmiştir (Shittu vd., 2025). A ve C'deki "azaldı" sonucu bu büyüklükte bir cihaz farkına karşı
+korunur (ör. 0,63 × 1,3 ≈ 0,82), B'deki "değişmedi" sonucu ise cihaz çarpanına duyarlıdır.
+
+![Şekil 10](sekiller/sekil10_gun_kisi.png)
+
+**Şekil 10.** (a) Gün × ölçümcü kişisel TWA (renkli işaret ve harf) ve aynı anların düzeltilmiş çatı ortalaması (mavi çizgi);
+(b) K_TWA (dolu işaret; dikey çizgi: oturum içi 30 dk blok bootstrap %95 aralığı), K_D (boş işaret) ve günün üç ölçümcü birlikte
+K'si (kesikli). Logaritmik eksen. Kaynak: Atmotube PRO saha ölçümleri (ham PM₂.₅; 27–30 Nisan 2026) ve PurpleAir PA-II (SUMER çatısı,
+2 dk, US EPA düzeltmeli; ±3 dk eşleştirme).
+
+**Aynı gün ölçüm yapanlar arasındaki fark.** Aynı gündeki üç ölçümcünün TWA'ları arasında en yüksek / en düşük oranı 1,14–2,20,
+farkı 0,6–9,4 µg/m³; dış ortama oranları (K_TWA) arasında oran 1,15–2,63'tür [S.ayni_gun_TWA_oran_aralik, S.ayni_gun_TWA_fark_aralik,
+S.ayni_gun_K_oran_aralik]. Farklar iki günde küçüktür (27 ve 29 Nisan: oran ≤ 1,22, fark ≤ 1,2 µg/m³); bu büyüklük çözünürlüğün ve
+bildirilen cihazlar arası değişkenliğin (saatlikte %18) mertebesindedir. İki günde büyüktür: 28 Nisan'da B'nin TWA'sı C'ninkinin 2,20
+katı (6,4 µg/m³ fazla), 30 Nisan'da B'ninki A'nınkinin 1,96 katıdır (9,4 µg/m³ fazla) (Tablo 6). Saat başına solunan miktarda oran
+daha büyüktür (30 Nisan'da 5,46 kat, 14,6 µg/sa fark) [S.ayni_gun_30.04]; bu ölçülmüş değil, bina dışındaki süre için varsayılan
+yüksek solunum hızından gelen bir farktır. Bu büyüklükler, aynı evde yaşayan kişiler arasında zaman-etkinlik farkına bağlı olarak
+%30'a varan maruziyet farkı bildiren çalışmalarla (Dons vd., 2011; kara karbon için) aynı mertebededir; 28 ve 30 Nisan'daki farklar bunun üstündedir.
+
+**Tablo 6.** Aynı gün farkları (üç ölçümcü; oran = en yüksek / en düşük).
+
+| Gün | TWA oranı (ölçümcüler) | TWA farkı (µg/m³) | K_TWA oranı (ölçümcüler) | Ortak pencere (TR) | Ortak pencerede K oranı | En yüksek %10 kayıt hariç K oranı |
+|---|---|---|---|---|---|---|
+| 27.04 | 1,16 (B / A) | 0,6 | 1,15 (B / C) | 10:42–15:13 | 1,16 | 1,35 |
+| 28.04 | 2,20 (B / C) | 6,4 | 2,63 (B / C) | 09:31–15:03 | 4,03 | 1,30 |
+| 29.04 | 1,14 (C / A) | 1,2 | 1,22 (C / A) | 09:50–16:39 | 1,18 | 1,18 |
+| 30.04 | 1,96 (B / A) | 9,4 | 1,83 (B / A) | 10:01–12:35 | 1,32 | 1,83 |
+
+Kaynak: [S.ayni_gun_27.04 … S.ayni_gun_30.04]. Ortak pencere: aynı günün üç oturumunun zaman kesişimi.
+
+**Farkı yaratan etkenler.** Etkenler tek tek ve iki ayrıştırmayla sınanmıştır (yöntem §2.8; özet Tablo 7, Şekil 11).
+
+*Gün mü, ölçümcü mü?* Log TWA'daki değişkenliğin %79'u günden, %11'i ölçümcüden gelmektedir: mutlak maruziyeti çoğunlukla o günün
+dış ortam düzeyi belirlemiştir. Dış ortama oranda (log K_TWA) pay gün için %40, ölçümcü için %31, kalan için %29'dur; çok temiz
+27 Nisan çıkarıldığında ölçümcü payı %45'e çıkar [S.varyans_logTWA, S.varyans_logK, S.varyans_logK_27_haric]. Toplamsal modelde
+ölçümcü etkisi A için 0,83, C için 0,94, B için 1,29 kattır [S.kisi_etkisi_K_geo]. Bu paylar tekrarsız 3 × 4 düzende hesaplandığı ve \"ölçümcü\" cihaz ile kayıt yolunu da içerdiği için kesin bir kişi etkisi değil, betimsel paylar olarak okunmalıdır. Kalan payın büyüklüğü, ölçümcüler arasındaki
+farkın günden güne değiştiğini göstermektedir.
+
+*Yer: bina içi ya da dışı ve hangi bina.* Tüm kayıtlarda K, Kimya binasında 0,70, diğer binalarda 1,24, bina dışında 1,20'dir
+[S.katman_K]; Güzide Kafe poligonunda 2,16 (6 oturum, 3,6 sa), Kütüphane'de 0,70'tir [S.bina_K_Güzide_Kafe, S.bina_K_Kütüphane].
+Ölçümcü-gün düzeyinde K_TWA ile bina dışı süre payı arasındaki sıra korelasyonu zayıf (ρ = 0,28), Kimya binası dışında geçen süre
+payıyla daha belirgindir (ρ = 0,44) [S.K_dis_payi_spearman, S.K_kimya_disi_payi_spearman]; yani "bina içi mi?" sorusundan çok
+"hangi bina?" sorusu önemlidir. Kitagawa ayrıştırmasında 28 Nisan'daki B–C farkının (ΔK = 1,08) tamamı yer dağılımı bileşenindedir
+(1,18; yerdeki düzey −0,10); 30 Nisan'daki B–A farkı (0,49) yer dağılımı (0,20) ve yerdeki düzey (0,29) arasında bölünür; 29 Nisan'da
+küçük fark (0,12) tümüyle yerdeki düzeydedir, çünkü iki ölçümcü de Kimya binasındadır [S.ayni_gun_*]. C diğer binalarda hiç
+bulunmadığından 28 Nisan'daki yer bileşeni B'nin o binalardaki kendi ölçümüne dayanır; yerin kendisinin mi, o sırada yaşanan kısa
+olayların mı etkili olduğunu bu ayrıştırma tek başına ayıramaz.
+
+*Kısa tepeler.* En yüksek %10 kayıt, ölçümcü-gün başına Σc'nin %16,2–62,3'ünü oluşturur [S.tepe10_payi_aralik]. Bu kayıtlar yalnızca
+duyarlılık amacıyla hesaptan çıkarıldığında K aralığı 0,53–1,74'ten 0,49–0,95'e daralır ve hiçbir ölçümcü-gün 1'i aşmaz
+[S.K_tepeli_aralik, S.K_tepesiz_aralik]. 28 Nisan'daki B–C farkı 1,08'den 0,17'ye iner (farkın yaklaşık %84'ü), 30 Nisan'daki B–A
+farkı ise 0,49'dan 0,41'e (yaklaşık %16) [S.ayni_gun_28.04, S.ayni_gun_30.04]. Dolayısıyla 28 Nisan farkı büyük ölçüde B'nin diğer
+binalarda geçirdiği süre içindeki kısa ve yüksek olaylardan, 30 Nisan farkı ise daha sürekli bir düzey farkından kaynaklanmaktadır.
+Tepeler gerçek kısa süreli maruziyet olarak değerlendirilmiş, hiçbir hesaptan kalıcı olarak çıkarılmamıştır.
+
+*Saat dilimi ve aynı anki dış ortam düzeyi.* K, dış ortam düştükçe artmaktadır: oturum düzeyinde ρ = −0,54 [S.K_P_spearman]; çatı
+6 µg/m³'ün altındayken K, A ve C'de 1,03, B'de 1,32; 12 µg/m³ ve üstündeyken sırasıyla 0,55, 0,70 ve 0,87'dir [S.K_P_sinifi]. B ve
+C'de K akşamüstü yükselir (B: 08–11'de 0,70, 14–19'da 1,14; C: 0,61 ve 0,86), A'da değişmez (0,63–0,65) [S.K_saat_dilimi]. Bu desen,
+iç ortamın dış ortamdaki gün içi değişimi gecikmeli ve sönümlü izlemesiyle ve düşük düzeylerde sabit iç kaynaklarla ölçüm ofsetinin
+oranı büyütmesiyle uyumludur. A'nın oturumları diğerlerinden önce bittiği için (Tablo 4) A'nın düşük K'sinin bir kısmı ölçüm
+saatlerinden kaynaklanabilir. Üç oturumun ortak penceresinde 30 Nisan'daki K oranı 1,83'ten 1,32'ye iner ve sıralama değişir
+(B 0,58, A 0,60, C 0,76) [S.ayni_gun_30.04]: 30 Nisan farkının büyük kısmı, A'nın ölçümü bittikten sonraki öğleden sonra
+saatlerinden gelmektedir (Şekil 12b). 28 Nisan'da ise ortak pencerede fark büyür (4,03), çünkü B'nin kısa olayları bu pencerenin
+içindedir (Şekil 12a).
+
+*Aynı bina, aynı saatler: oda ve cihaz.* A ve C'nin yalnızca Kimya binası kayıtları iki oturumun ortak penceresinde
+karşılaştırıldığında C/A oranı 28 Nisan'da 0,70, 29 Nisan'da 1,09, 30 Nisan'da 1,45'tir (27 Nisan: 0,88) [S.kimya_A_C_ortak].
+Aynı bina ve saatlerde bile %30–45'e varan farklar vardır ve yönü günden güne değişmektedir. Her gün aynı cihazlar kullanılmış
+olsaydı sabit bir cihaz farkı her gün aynı yönde görünürdü; yönün değişmesi farkın önemli bir kısmının oda ya da mikro ortam
+(havalandırma, pencere, laboratuvar etkinliği) farkından geldiğini düşündürmektedir. Ancak hangi oturumun hangi Atmotube ile
+ölçüldüğü bilinmediğinden cihaz etkisi dışlanamaz. Dört gün birlikte ölçümcü oranları B/A 1,53, B/C 1,27, C/A 1,21'dir
+[S.olcumcu_K_oranlari]; farkın tamamının cihazdan gelmesi bu büyüklükte bir çarpan gerektirirdi. Bu, Atmotube PRO için bildirilen
+tipik cihazlar arası değişkenliğin üstündedir, fakat aynı çalışmada tek bir cihazın ortalamadan belirgin sapma gösterdiği de
+bildirildiğinden (Shittu vd., 2025) yan yana ölçüm yapılmadan karar verilemez.
+
+*Örnekleme aralığı ve çözünürlük.* Bir dakikalık 8 oturum her ikinci kayıt alınarak iki dakikaya seyreltildiğinde K_TWA en çok
+%12,9, en yüksek 15 dakikalık ortalama ise en çok %58,5 değişmiştir [S.seyreltme_K_degisim_enb, S.seyreltme_15dk_degisim_enb].
+Örnekleme aralığı ortalamayı sınırlı, kısa tepe göstergelerini güçlü biçimde etkiler; B'nin iki dakikalık aralığı onun tepe
+değerlerini diğerlerinden farklı gösterebilir. 1 µg/m³ çözünürlüğün etkisi yalnızca çok temiz günde (27 Nisan) önemlidir.
+
+*Nem.* Oturumlar boyunca çatı sensörünün nemi en çok %53, Atmotube'un nemi en çok %56'dır; %75'i aşan saha kaydı yoktur
+[S.nem_PA_enb, S.nem_atmotube_enb, S.nem_75_ustu_kayit]. Optik sensörlerde nem kaynaklı fazla okuma %75–80'in üstünde belirgin
+olduğundan (Jayaratne vd., 2018; Shittu vd., 2025) nem bu farkların açıklaması olarak görünmemektedir.
+
+**Tablo 7.** Aynı gün farkı yaratan etkenlerin özeti.
+
+| Etken | Nasıl sınandı | Bulgu | Değerlendirme |
+|---|---|---|---|
+| Gün (dış ortam düzeyi) | 3 × 4 kareler toplamı ayrıştırması | log TWA değişkenliğinin %79'u | Mutlak düzeyde baskın |
+| Yer: hangi bina, bina içi/dışı | Katman K'leri, Kitagawa | Kimya 0,70; diğer binalar 1,24; bina dışı 1,20; 28.04 farkı yer bileşeninde | B'de büyük; "hangi bina" "içi/dışı"ndan önemli |
+| Kısa tepeler | En yüksek %10 kayıt hariç K (duyarlılık) | 28.04 farkının ~%84'ü, 30.04'ün ~%16'sı | 28.04'te baskın |
+| Saat dilimi | Ortak pencere; saat dilimine göre K | 30.04 oranı 1,83 → 1,32 | 30.04'te büyük |
+| Oda / cihaz | Aynı bina ve saatte A–C | C/A 0,70–1,45, yönü değişken | Ayrılamadı (yan yana ölçüm yok) |
+| Örnekleme aralığı | 1 → 2 dk seyreltme | K ≤ %12,9; 15 dk tepe ≤ %58,5 | Ortalamada küçük, tepede büyük |
+| Çözünürlük (1 µg/m³) | c ∓ 0,5 µg/m³ | K'de ±%2,6–12,1 | Yalnızca temiz günde önemli |
+| Nem | Oturum nemi | ≤ %56; %75'i aşan kayıt yok | Belirleyici değil |
+
+![Şekil 11](sekiller/sekil11_bilesenler.png)
+
+**Şekil 11.** Farkın bileşenleri: (a) aynı günün en yüksek ve en düşük K'li iki ölçümcüsü arasındaki farkın Kitagawa ayrıştırması
+(yer dağılımı: Kimya binası, diğer binalar ve bina dışı arasında bulunma payı; yerdeki düzey: aynı tür yerde ölçülen oran);
+(b) K_TWA (dolu) ve en yüksek %10 kayıt hariç K (boş; yalnızca duyarlılık); (c) 3 ölçümcü × 4 gün düzeninde log K_TWA ve log TWA
+değişkenliğinin ölçümcü, gün ve kalan payları. Kaynak: Atmotube PRO saha ölçümleri (ham; 27–30 Nisan 2026) ve PurpleAir PA-II
+(US EPA düzeltmeli, 2 dk).
+
+![Şekil 12](sekiller/sekil12_saat_gorel.png)
+
+**Şekil 12.** Aynı gün üç ölçümcünün saat ekseninde göreli maruziyeti: 30 dakikalık dilimlerde K = kişisel / çatı (logaritmik
+eksen; en az %75'i dolu dilimler), (a) 28 Nisan, (b) 30 Nisan 2026. Konum bilgisi bilinçli olarak gösterilmemiştir (KVKK). Kaynak:
+Atmotube PRO saha ölçümleri (ham) ve PurpleAir PA-II (US EPA düzeltmeli, 2 dk); Türkiye saati.
+
+### 3.5 En kötü durum
+
+**Tablo 8.** Sabit sensörde her tam günün en yüksek kayan ortalamasının günler arası dağılımı (154 tam gün; µg/m³).
 
 | Pencere | Ortanca | %95'lik | En yüksek (bitiş zamanı) | ≥ 35,5 µg/m³ olan gün | ≥ 55,5 µg/m³ olan gün |
 |---|---|---|---|---|---|
@@ -362,16 +565,16 @@ bu, kişinin kaynaklara (sigara dumanı, araç, mutfak) daha yakın olabilmesiyl
 PurpleAir ile doğrudan karşılaştırılamaz ve kısa sürelerde belirsizlikleri büyüktür (15 dakikalık çözünürlükte referans uyumu
 R² ≈ 0,5; Shittu vd., 2025).
 
-![Şekil 10](sekiller/sekil10_en_kotu.png)
+![Şekil 13](sekiller/sekil13_en_kotu.png)
 
-**Şekil 10.** (a) Her tam günün ortalaması (gri çubuk), en yüksek 60 dakikalık kayan ortalaması (dolu mavi) ve kampüs saatlerindeki
+**Şekil 13.** (a) Her tam günün ortalaması (gri çubuk), en yüksek 60 dakikalık kayan ortalaması (dolu mavi) ve kampüs saatlerindeki
 en yüksek 60 dakikası (boş turuncu); (b) günlük en kötü pencerelerin dağılımı (nokta: ortanca; çizgi: %5–95; ×: en yüksek; zemin: HKİ
 aralıkları) ve saha oturumlarının tepeleri. Kaynak: PurpleAir PA-II, 2 dk kayıtlar, US EPA düzeltmesi ve pencereler SQL'de (Q3);
 1 Mayıs – 12 Ekim 2026, 154 tam gün; Atmotube 27–30 Nisan (ham).
 
-### 3.5 Senaryolar: kampüste geçen zaman dış ortamda geçseydi
+### 3.6 Senaryolar: kampüste geçen zaman dış ortamda geçseydi
 
-**Tablo 6.** Gerçekçi ve tamamen dış ortam senaryoları (09:00–17:00, 8 saat; R = 1).
+**Tablo 9.** Gerçekçi ve tamamen dış ortam senaryoları (09:00–17:00, 8 saat; R = 1).
 
 | Gün | Gerçekçi TWA (µg/m³) | Dış ortam TWA (µg/m³) | Dış/İç (TWA) | Gerçekçi D (µg) | Dış ortam D (µg) | Dış/İç (D) | Yürüyüş saatinin D payı |
 |---|---|---|---|---|---|---|---|
@@ -399,9 +602,9 @@ ortancası 9,0 µg/m³'tür; günlerin %84,1'inde sabah penceresi daha yüksekti
 F.aksam_ortanca, F.sabah_kotu_gun_payi, F.sabah_aksam_oran_ortanca]. Tipik düzeyde 1 saatlik tempolu yürüyüşte sabah 22,9 µg,
 akşamüstü 14,1 µg; 1 saatlik sporda 44,1 ve 27,1 µg PM₂.₅ solunmaktadır [F.yuruyus_1sa_*, F.spor_1sa_*].
 
-![Şekil 11](sekiller/sekil11_senaryo.png)
+![Şekil 14](sekiller/sekil14_senaryo.png)
 
-**Şekil 11.** (a) Zaman ağırlıklı ortalama ve (b) solunan PM₂.₅: gerçekçi (mavi) ve tamamen dış ortam (turuncu) senaryoları, en
+**Şekil 14.** (a) Zaman ağırlıklı ortalama ve (b) solunan PM₂.₅: gerçekçi (mavi) ve tamamen dış ortam (turuncu) senaryoları, en
 temiz, tipik ve en kötü günde; (c) tipik günde F ve IR varsayımlarına duyarlılık (dikey çizgi: tamamen dış ortam); (d) sabah
 (06–09) ve akşamüstü (16–19) pencere ortalamaları, her nokta bir gün. Kaynak: PurpleAir PA-II, US EPA düzeltmeli saatlik değerler;
 1 Mayıs – 12 Ekim 2026, 107 hafta içi tam gün; model `docs/maruziyet_yontemi.md`. Değerler yalnızca kampüste geçen süre içindir.
@@ -432,6 +635,19 @@ aralığının bu bina için makul olduğunu düşündürmektedir; sızma katsay
 (Chen ve Zhao, 2011; Hänninen vd., 2011). Bununla birlikte oranın mutlak düzeyi, Atmotube ile düzeltilmiş PurpleAir'in yerel olarak
 yan yana ölçülmemiş olmasına bağlı bir belirsizlik taşır. Kişisel tepeler (tek kayıtta 500 µg/m³'ü aşan değerler) çatı sensöründe
 görülmeyen, kaynağa yakınlıkla ilgili kısa süreli maruziyetlerdir; toplam solunan miktara katkıları bazı oturumlarda belirgindir.
+
+**Ölçümcüler arasındaki fark.** Aynı kampüste, aynı günlerde ölçüm yapan üç kişinin maruziyeti mutlak düzeyde büyük ölçüde günün dış
+ortam düzeyini izlemiş, dış ortama oranı ise kişiden kişiye ve günden güne değişmiştir. Bu tablo, kişisel maruziyetin yalnızca dış
+ortam düzeyiyle değil, kişinin zamanını nerede ve ne yaparak geçirdiğiyle (zaman-etkinlik) belirlendiğini gösteren çalışmalarla
+uyumludur: aynı evde yaşayan çiftler arasında bile %30'a varan maruziyet farkı bildirilmiş ve bu fark ulaşım ve etkinlik farkına
+bağlanmıştır (Dons vd., 2011); konut içi ve kişisel PM₂.₅'in önemli bir bölümünün dış ortam dışı kaynaklardan geldiği de
+bilinmektedir (Meng vd., 2005). Bu çalışmada farkı belirleyen etkenler "bina içi mi?" sorusundan çok "hangi bina, hangi saat ve
+hangi kısa olay?" sorularıdır: 28 Nisan'daki fark kısa ve yüksek olaylardan, 30 Nisan'daki fark ölçüm saatlerinden ve bina
+dışında geçen süreden gelmektedir. Aynı bina ve saatlerde iki ölçümcü arasında bile yönü değişen %30–45'lik farklar bulunması,
+düşük maliyetli sensörlerde cihazlar arası farkın ve oda düzeyindeki mikro ortam farkının birlikte rol oynayabileceğini
+göstermektedir; düşük maliyetli sensörlerin performansının cihaza ve koşullara göre değiştiği, karşılaştırmalı kullanım öncesinde
+referans ya da birbirleriyle yan yana denetlenmeleri gerektiği bilinmektedir (Morawska vd., 2018; Karagulian vd., 2019). Bu nedenle
+ölçümcüler arasındaki farklar şimdilik "kişinin davranışı" olarak değil, kişi, cihaz ve mekânın birleşik etkisi olarak okunmalıdır.
 
 **En kötü durum.** Çatı sensörünün en kötü saatleri çoğunlukla insanların kampüste bulunmadığı gece ve sabah erken saatlerindedir;
 kampüs saatlerinde günün en kötü saatinin ortancası 16,1 µg/m³'tür. Kampüse sabah erken gelenler (07:00–09:00) ise günün en kirli
@@ -467,6 +683,12 @@ epizot günlerindeki 2–3 kat yüksek değerleri göstermediğini düşündürm
 8. **Senaryo modeli:** R = 1 alınmıştır; F literatür değerleridir, iç kaynaklar ve bina farkları dahil değildir; solunum hızları
    yetişkin ortalamalarıdır. Yalnızca hafta içi günler alınmış, resmî tatiller ayrılmamıştır. Sonuçlar kampüste geçen 8 saat içindir;
    WHO 24 saatlik değeriyle karşılaştırılmamıştır.
+9. **Saha karşılaştırması (§3.4):** 12 oturumla sınırlıdır; ölçümcü, cihaz ve kayıt yolu (1 ya da 2 dk, nem alanı) ve gezilen yerler
+   birbirine bağlıdır ve ayrılamaz. Güven aralıkları yalnızca örnekleme belirsizliğidir; cihaz kalibrasyonu ve PurpleAir düzeltmesinin
+   belirsizliği dahil değildir. Solunum hızı ölçülmemiş, konuma göre varsayılmıştır (K_D). 15 m kuralı bina çevresindeki dış alanları
+   (ör. kafe önündeki oturma alanı) "bina" sayar; iç/dış ayrımı ölçülmemiştir. Kitagawa ayrıştırmasında bir ölçümcünün bulunmadığı
+   katman diğerinin değeriyle doldurulmuştur. En yüksek %10 kayıt hariç hesaplar yalnızca duyarlılıktır. Dört bahar günü kış
+   koşullarını ve başka kişileri temsil etmez.
 
 ## 6 Sonuç ve öneriler
 
@@ -484,6 +706,13 @@ gereken yerel bir kaynağı düşündürmektedir. Kampüsün geri kalanı için 
 solunan miktar 32,4 yerine 43,0 µg (1,33 kat) olurdu; 107 günde bu katlar sırasıyla 1,69–1,85 ve 1,26–1,49'dur. Ölçülen kişisel/çatı
 oranları (Kimya binasında yaklaşık 0,65, canlı kayıtlarda 0,75) bu senaryodaki iç ortam varsayımını destekler niteliktedir.
 
+**Soru 5 (saha ölçümlerinin karşılaştırması):** 4 günde 3 ölçümcü 12 oturum yapmıştır. Dış ortama göre kişisel maruziyet 12
+ölçümcü-günün 7'sinde belirgin biçimde azalmış (K_TWA 0,53–0,88), hiçbirinde belirgin biçimde artmamıştır; ölçümcüler birlikte
+A 0,63, C 0,77, B 0,97, solunan miktara göre B 1,13'tür. Aynı gün ölçüm yapanların ortalamaları 1,14–2,20 kat (0,6–9,4 µg/m³),
+dış ortama oranları 1,15–2,63 kat farklıdır. Mutlak düzeydeki farkı büyük ölçüde gün (dış ortam), oranlardaki farkı ölçümcü
+(cihaz ve gezilen yerlerle birlikte), bulunulan bina, ölçüm saati ve kısa tepeler belirlemektedir; nem ve örnekleme aralığı
+belirleyici görünmemektedir. Cihaz farkı yan yana ölçüm olmadan ayrılamaz.
+
 **Öneriler** (ölçülü; karar kullanıcınındır):
 
 1. **Kişisel:** Açık havada spor ve uzun yürüyüşlerin sabah erken saatler yerine akşamüstüne alınması önerilir; iç mekânların dış
@@ -496,6 +725,16 @@ oranları (Kimya binasında yaklaşık 0,65, canlı kayıtlarda 0,75) bu senaryo
 4. **Uygulamanın maruziyet modeli için öneriler** (uygulama değiştirilmedi): P profilinin aya göre ayrılması (Ekim profili diğer
    aylardan belirgin farklıdır); ölçülen K değerinin (Kimya binası 0,65) bina özelinde F için bir dayanak olarak belgelenmesi;
    asistanın F ve IR aralıklarına göre bir sonuç aralığı göstermesi.
+5. **Saha karşılaştırmasını güçlendirmek için gereken veri (gelecek çalışma):**
+   - *Cihaz farkı:* 5 Atmotube'un SUMER çatısında PurpleAir yanında en az 24, tercihen 48 saat yan yana ölçümü
+     (`docs/hesaplama_ve_kaynaklar.md` §5) ve 27–30 Nisan oturumlarının hangi ATP ile ölçüldüğünün kaydı; böylece ölçümcü ile cihaz
+     etkisi ayrılabilir ve K mutlak olarak yorumlanabilir.
+   - *Aynı ortamda eşli ölçüm:* iki ölçümcünün kısa süre aynı odada (cihaz farkı), sonra ayrı odalarda (oda farkı) ölçmesi.
+   - *Zaman-etkinlik kaydı:* her ölçüm dilimi için iç/dış ortam ve etkinlik (oturma, yürüme) etiketi; böylece K_D varsayım yerine
+     ölçülen etkinlikle hesaplanır ve 15 m kuralının belirsizliği kalkar.
+   - *Tek tip ayar:* tüm cihazlarda aynı örnekleme aralığı (1 dk) ve aynı dışa aktarım yolu (nem ve sıcaklık alanları dahil).
+   - *Daha çok gün ve mevsim:* her ölçümcü için en az 8–10 gün ve kış dönemi; ölçümcü × gün etkileşimini gürültüden ayırmak için.
+   - *Kaynak doğrulaması:* Güzide Kafe çevresindeki yüksek oranların (K 2,16) farklı gün ve saatlerde tekrarlı ölçümle denetlenmesi.
 
 ---
 
@@ -512,23 +751,40 @@ Doğrulama durumu: "uygulama belgesi" = künye ve değerler `docs/` belgelerinde
   — uygulama belgesi (katsayılar ikincil).
 - Chen, C., Zhao, B. (2011). Review of relationship between indoor and outdoor particles: I/O ratio, infiltration factor and
   penetration factor. *Atmospheric Environment*, 45, 275–288. https://doi.org/10.1016/j.atmosenv.2010.09.048 — uygulama belgesi.
+- Dons, E., Int Panis, L., Van Poppel, M., Theunis, J., Willems, H., Torfs, R., Wets, G. (2011). Impact of time–activity patterns on
+  personal exposure to black carbon. *Atmospheric Environment*, 45(21), 3594–3602. https://doi.org/10.1016/j.atmosenv.2011.03.064 —
+  arama özeti (16 kişi, 7 gün; aynı adreste yaşayan eşler arasında %30'a varan fark). Yazar listesi bu çalışmada tam metinden
+  doğrulanmamıştır.
 - Field, C. A., Welsh, A. H. (2007). Bootstrapping clustered data. *Journal of the Royal Statistical Society: Series B*, 69(3),
   369–390. https://doi.org/10.1111/j.1467-9868.2007.00593.x — arama özeti (küme bootstrap'ın iki model altında da tutarlı olduğu).
+- Karagulian, F., Barbiere, M., Kotsev, A., Spinelle, L., Gerboles, M., Lagler, F., Redon, N., Crunaire, S., Borowiak, A. (2019).
+  Review of the performance of low-cost sensors for air quality monitoring. *Atmosphere*, 10(9), 506.
+  https://doi.org/10.3390/atmos10090506 — arama özeti (DOAJ, JRC ve EPA HERO kayıtları).
 - Hänninen, O. ve ark. (2011). Seasonal patterns of outdoor PM infiltration into indoor environments. *Air Quality, Atmosphere &
   Health*, 4, 221–233. https://doi.org/10.1007/s11869-010-0076-5 — uygulama belgesi.
 - Jayaratne, R., Liu, X., Thai, P., Dunbabin, M., Morawska, L. (2018). The influence of humidity on the performance of a low-cost
   air particle mass sensor and the effect of atmospheric fog. *Atmospheric Measurement Techniques*, 11, 4883–4890.
   https://doi.org/10.5194/amt-11-4883-2018 — arama özeti (yaklaşık %75 nemin üstünde belirgin artış).
+- Kitagawa, E. M. (1955). Components of a difference between two rates. *Journal of the American Statistical Association*, 50(272),
+  1168–1194. JSTOR 2281213 — arama özeti (künye); DOI bu çalışmada doğrulanamadığı için verilmemiştir.
 - Klepeis, N. E. ve ark. (2001). The National Human Activity Pattern Survey (NHAPS): a resource for assessing exposure to
   environmental pollutants. *Journal of Exposure Analysis and Environmental Epidemiology*, 11(3), 231–252.
   https://doi.org/10.1038/sj.jea.7500165 — arama özeti (EPA HERO kaydı; zamanın yaklaşık %87'si kapalı binalarda).
+- Künsch, H. R. (1989). The jackknife and the bootstrap for general stationary observations. *The Annals of Statistics*, 17(3),
+  1217–1241. https://doi.org/10.1214/aos/1176347265 — arama özeti (Project Euclid kaydı; blok bootstrap).
+- Meng, Q. Y. ve ark. (2005). Influence of ambient (outdoor) sources on residential indoor and personal PM2.5 concentrations: analyses
+  of RIOPA data. *Journal of Exposure Analysis and Environmental Epidemiology*, 15(1), 17–28. https://doi.org/10.1038/sj.jea.7500378 —
+  arama özeti (212 konut; yalnızca nitel bulgu kullanılmıştır, sayısal pay özetler arasında farklı verildiği için alınmamıştır).
+- Morawska, L. ve ark. (2018). Applications of low-cost sensing technologies for air quality monitoring and exposure assessment: How
+  far have they gone? *Environment International*, 116, 286–299. https://doi.org/10.1016/j.envint.2018.04.018 — arama özeti.
 - Salamalikis, V. ve ark. (2025). Citizen-operated low-cost sensors for estimating outdoor particulate matter infiltration.
   *Air Quality, Atmosphere & Health*, 18, 2609–2624. https://doi.org/10.1007/s11869-025-01787-4 — uygulama belgesi.
 - Seinfeld, J. H., Pandis, S. N. (2016). *Atmospheric Chemistry and Physics: From Air Pollution to Climate Change* (3. baskı).
   Hoboken: Wiley. ISBN 978-1-118-94740-1 — arama özeti (künye); içerik genel ders kitabı bilgisi olarak kullanılmıştır.
 - Shittu, A. I. ve ark. (2025). Performance evaluation of Atmotube PRO sensors for air quality measurements in an urban location.
   *Atmospheric Measurement Techniques*, 18, 817–828. https://doi.org/10.5194/amt-18-817-2025 — arama özeti (8 cihaz, 14 hafta, Fidas;
-  saatlik R² > 0,7, 15 dk R² 0,48–0,53, dakikalık değişim katsayısı %28, nem > %80'de pozitif sapma). Uygulama belgesindeki eğim
+  saatlik R² > 0,7, 15 dk R² 0,48–0,53, cihazlar arası değişim katsayısı dakikalık %28, saatlik %18, günlük %15; bir cihazda ortalamadan
+  belirgin sapma; nem > %80'de pozitif sapma). Uygulama belgesindeki eğim
   (0,99) bu çalışmada doğrulanmamıştır.
 - U.S. EPA (2011). *Exposure Factors Handbook: 2011 Edition*, Bölüm 6, Tablo 6-2 (EPA/600/R-09/052F) — uygulama belgesi (3 Ekim 2026'da
   doğrulanmış).
@@ -549,9 +805,9 @@ Doğrulama durumu: "uygulama belgesi" = künye ve değerler `docs/` belgelerinde
   kaydedilir (bu klasör depoya konmaz; saha noktaları konum içerir).
 - **Ek girdiler (depoda):** `docs/veri/purpleair_229263_2dk_2026-04-27_2026-10-06.csv` (27–30 Nisan eşleştirmesi),
   `frontend_v2/data/campus.geojson`, `frontend_v2/js/app.js` (`PEOPLE`), `colorscale.js` ve `maruziyet.js` (sabitlerin denetimi).
-- **Çalıştırma:** `python3 -I -B betikler/hepsi.py <ham klasörü> <rapor klasörü>` — Şekil 1–11'i ve `sayilar.json`'u baştan üretir
-  (yaklaşık 11 sn). Tek tek: `a_envanter.py` (Şekil 1, A.* ve G.*), `b_zaman.py` (Şekil 2–5, B.*), `c_mekan.py` (Şekil 6–7, C.*),
-  `d_kisisel.py` (Şekil 8–9, D.*), `e_en_kotu.py` (Şekil 10, E.*), `f_senaryo.py` (Şekil 11, F.*). Betikler başta uygulamanın
+- **Çalıştırma:** `python3 -I -B betikler/hepsi.py <ham klasörü> <rapor klasörü>` — Şekil 1–14'ü ve `sayilar.json`'u baştan üretir
+  (yaklaşık 15 sn). Tek tek: `a_envanter.py` (Şekil 1, A.* ve G.*), `b_zaman.py` (Şekil 2–5, B.*), `c_mekan.py` (Şekil 6–7, C.*),
+  `d_kisisel.py` (Şekil 8–9, D.*), `e_en_kotu.py` (Şekil 13, E.*), `f_senaryo.py` (Şekil 14, F.*), `g_saha_kiyas.py` (Şekil 10–12, S.*; sürüm 1.2). Betikler başta uygulamanın
   düzeltme katsayılarını, HKİ eşiklerini, F/IR değerlerini ve 15 m kuralını kaynak dosyalarla karşılaştırır; fark varsa durur.
 - **Bağımsız sayı denetimi (Ajan 1, 13 Ekim 2026):** tam gün sayısı ve ortalama, günlük döngü, en kötü %5 eşiği, 8–12 Ekim epizodu, günlük en kötü 60 dakika, Kimya binası payı, tipik gün senaryosu ayrı betiklerle yeniden hesaplanmış, hepsi tutmuştur.
 - **Yapılan denetimler:** Python düzeltmesi uygulamanın `paCorrect` ve `hki` işlevleriyle (Node.js) 418 saat ve 17 sınır değerinde
@@ -559,4 +815,18 @@ Doğrulama durumu: "uygulama belgesi" = künye ve değerler `docs/` belgelerinde
   Ajan 1'in Mayıs–Eylül sayıları (148 tam gün, 12,1 µg/m³, 38 aşım günü, aylık 13,4 / 12,1 / 11,2 / 13,9 / 9,8; 06:00'da 15,8,
   18:00'de 8,9 µg/m³) aynen yeniden elde edilmiştir.
 - **KVKK:** Çıktılarda kişi adı, oturum adı ve kampüs dışı konum yoktur; haritada yalnızca en az 2 oturum ve 10 ölçüm içeren hücreler
-  çizilmiştir. Şekil 8 ve Tablo 4'te oturumlar kişi ya da ekip etiketi olmadan, yalnızca numarayla verilmiştir.
+  çizilmiştir. Şekil 8 ve Tablo 4'te oturumlar kişi ya da ekip etiketi olmadan, yalnızca numarayla verilmiştir. §3.4'te ölçümcüler
+  "Ölçümcü A/B/C" (uygulamadaki Saha ekibi A/B/C) olarak anılır; her ölçümcü-gün tek oturum olduğundan oturum numarası ile ölçümcü
+  harfi değerlerden eşlenebilir. Bu nedenle sürüm 1.2'de dakikalık konum bilgisi hiçbir şekil ve metinde verilmemiştir (Şekil 8'deki
+  bina içi/dışı gölgelendirmesi ve tek kayıtların konum notları kaldırıldı); ölçümcüler için yalnızca oturum toplamı süre payları
+  (Kimya binası, diğer binalar, bina dışı) verilmiştir.
+
+## Ek B · Sürüm notları
+
+- **1.2 (13 Ekim 2026):** §2.8 ve §3.4 (saha ölçümlerinin karşılaştırması) eklendi; yeni Tablo 5–7 ve Şekil 10–12. Eski Tablo 5–6
+  → Tablo 8–9, eski Şekil 10–11 → Şekil 13–14, eski §3.4–3.5 → §3.5–3.6. Şekil 8'den bina içi/dışı gölgelendirmesi kaldırıldı (KVKK).
+  §3.3'te "bina dışında daha çok zaman geçen oturumlar" ifadesi "Kimya binası dışında" olarak düzeltildi (Oturum 5'in süresinin
+  yalnızca %3,5'i bina dışındadır). `sayilar.json`'a 75 yeni sayı (S.*) eklendi; sürüm 1.1'deki 264 sayının hiçbiri değişmedi.
+  Yöntem kararları `karar_kaydi.md`'de.
+- **1.1 (13 Ekim 2026):** CO₂ çıkarıldı.
+
