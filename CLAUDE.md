@@ -63,7 +63,8 @@ hafıza ve çalışma klasörleri `ajanlar/<ad>/` (`HAFIZA.md`), özet `ajanlar/
   (commit/veritabanı yok). **4 · arayuz-kalitesi** (salt okur): işlev, grafikler, anlaşılırlık; ekran görüntüsüyle. **3 · son-kontrol**
   (salt okur): geri alınamazlık, tutarlılık, onay/ret, `anlatim_notu.md`. **5 · veri-analiz**: analiz ve akademik rapor (grafik, harita,
   `sayilar.json`); yalnızca `ajanlar/veri-analiz/` altına yazar.
-- Analiz akışı: 5 → 1 (kritik sayıları bağımsız yeniden hesaplar) → 3 → ana ajan yayımlar.
+- Analiz ve rapor işlerinin sahibi Ajan 5'tir (kullanıcının kararı): sorunlu alanlar, kişisel maruziyet, en kötü durum, senaryolar,
+  dönemsel raporlar; yeni veri gelince raporu o günceller. Analiz akışı: 5 → 1 (kritik sayıları bağımsız yeniden hesaplar) → 3 → ana ajan yayımlar.
 - Akış: 1 → 2 → 4 → 3 → ana ajan uygular ve sayıları 1'in beklentisiyle karşılaştırır. Veritabanına yazma, commit ve `main`
   yalnızca ana ajanda; silme gibi kararlar kullanıcıya sorulur. Salt okuyan ajanların "Hafızaya eklenecek" maddelerini ana ajan işler.
 - Küçük işte ajan açma: tek dosyalık düzeltme ya da soru için ana ajan doğrudan çalışır.

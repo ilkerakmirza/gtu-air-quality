@@ -16,6 +16,9 @@ dönüşü zor kararlar kullanıcıya sorulur.
 sonucu 1'in beklediği sayılarla karşılaştırır → kullanıcıya kısa özet. Her işte tüm ajanlar gerekmez: yalnızca kod/ekran
 değişikliğinde 2 → 4 → 3 yeterli; yalnızca veri sorusunda 1.
 
+**Analiz ve raporlama işlerinin sahibi Ajan 5'tir** (kullanıcının kararı, 13 Ekim 2026): kampüste sorunlu alanlar, kişisel maruziyet,
+en kötü durum ve senaryolar, dönemsel raporlar; yeni veri gelince raporu o günceller.
+
 **Analiz akışı:** 5 analiz eder ve her sayıyı `sayilar.json`'a yazar → 1 kritik sayıları bağımsız yeniden hesaplar → 3 KVKK, tutarlılık
 ve dil açısından onaylar → ana ajan raporu yayımlar.
 
