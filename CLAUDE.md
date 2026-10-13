@@ -18,8 +18,10 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
 ## Bekleyen işler (oturum başında kullanıcıya kısaca hatırlat, bitenleri buradan sil)
 - **Tuzla resmî ÇŞB toplayıcısı Haziran 2026'dan beri çalışmıyor** (yerel bilgisayardaki zamanlanmış görev); Tuzla saatlik
   arşivi 6 Ekim 2026'dan beri sunucuda İBB'den toplanıyor (`collector.collect_hourly`).
-- **CO₂ sensörlerinden 21 Temmuz 2026'dan beri veri yok:** Tuya IoT Platform'daki bulut geliştirme planının süresi dolmuş;
-  kullanıcı Tuya'da planı yenilemeli/uzatmalı.
+- **CO₂ şimdilik kapalı (kullanıcının kararı, 13 Ekim 2026):** ölçüm alınmıyor; uygulamada `api.js` → `CO2_AKTIF = false`
+  (panel, harita, lejant, Özet çipi, kesinti duyurusu gizli; veri silinmedi) ve rapordan çıkarıldı. Sensörler yeniden tanımlanınca
+  `CO2_AKTIF = true` yap. Not: 22 Haziran 15:01'den sonraki 2 798 kayıt donmuş değer (toplayıcı çevrimdışı cihazın son değerini
+  yeniden yazıyor, `backend/tuya_co2.py`); yeniden açmadan önce toplayıcı düzeltilmeli.
 - **Tuzla PM₂.₅ geçmişi (kampüs–bölge karşılaştırması için):** İBB açık verisi Tuzla'nın PM₂.₅ geçmişini vermiyor,
   ÇŞB sitesi yalnızca Türkiye'den erişilebiliyor. **Masaüstü oturumunda** (kullanıcının Türkiye'deki bilgisayarı) çalıştır:
   `pip install requests && python scripts/csb_gecmis.py 2026-04-01`, sonra `frontend_v2/data/tuzla_saatlik.json`'u commit'leyip

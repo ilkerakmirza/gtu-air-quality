@@ -1,8 +1,8 @@
 # GTÜ kampüsünde PM₂.₅: sorunlu zamanlar ve yerler, kişisel maruziyet ve iç/dış ortam senaryoları
 
-**Hazırlayan:** GTÜ AirLab · **Tarih:** 13 Ekim 2026 · **Sürüm:** 1.0
+**Hazırlayan:** GTÜ AirLab · **Tarih:** 13 Ekim 2026 · **Sürüm:** 1.1 (CO₂ çıkarıldı)
 **Veri dönemi:** PurpleAir 1 Mayıs – 12 Ekim 2026 (Türkiye saati; 13 Ekim 00:00'da kesildi); saha oturumları 27–30 Nisan 2026;
-Atmotube canlı kayıtları 15 Haziran – 12 Ekim 2026; iç ortam CO₂ 22 Haziran – 21 Temmuz 2026
+Atmotube canlı kayıtları 15 Haziran – 12 Ekim 2026
 **Sayıların kaydı:** her sayı `sayilar.json`'da değer, birim, hesap tarifi ve kaynak sorgusuyla yer alır (anahtarlar metinde köşeli
 parantezle verilmiştir, ör. [B.ort_mayis_eylul]). Şekiller ve sayılar `betikler/` ile yeniden üretilir (Ek A).
 
@@ -26,16 +26,14 @@ ancak çatı sensörüne oranla (K = 0,96) burada solunan havanın dış ortam d
 tipik bir hafta içi günde (5 Mayıs) 7 saat kapalı pencereli iç ortam ve 1 saat açık havada yürüme varsayımıyla zaman ağırlıklı
 ortalama 7,0 µg/m³, aynı sürenin tamamı dış ortamda geçseydi 12,3 µg/m³ olurdu (1,75 kat); solunan miktar 32,4 µg yerine 43,0 µg
 olurdu (1,33 kat). Açık havadaki tek saat, gerçekçi senaryodaki solunan miktarın %67'sini oluşturmaktadır; bu saatin sabah 06–09
-yerine akşamüstü 16–19 arasına alınması tipik günde yaklaşık %40 daha az PM₂.₅ solunması anlamına gelmektedir. **İç ortam CO₂**
-verisi 22 Haziran 15:01'den sonra donmuş değerlerden oluştuğu için (kayıtların %99,4'ü 400 ppm, sabit sıcaklık ve nemle) iç ortam
-göstergesi olarak kullanılamamıştır.
+yerine akşamüstü 16–19 arasına alınması tipik günde yaklaşık %40 daha az PM₂.₅ solunması anlamına gelmektedir.
 
 ---
 
 ## 1 Giriş
 
 GTÜ AirLab platformu kampüs hava kalitesini bir sabit sensörle (PurpleAir PA-II, SUMER çatısı), kişisel ölçerlerle (Atmotube PRO)
-ve iç ortam CO₂ sensörüyle izlemektedir. Bu rapor kullanıcının dört sorusunu yanıtlamayı amaçlar:
+izlemektedir. İç ortam CO₂ ölçümü şu an yapılmadığı için bu rapora alınmamıştır; sensörler yeniden tanımlandığında ayrıca incelenecektir. Bu rapor kullanıcının dört sorusunu yanıtlamayı amaçlar:
 
 1. Kampüste sorunlu alanlar: nerede, nasıl ve ne zaman kötü?
 2. Kişisel maruziyete göre bir sensörün gün içindeki en kötü durumdaki maruziyeti ne kadar?
@@ -59,14 +57,13 @@ değeriyle karşılaştırılmamış, Tuzla istasyonu yöntem kararlarının day
 | PurpleAir PA-II, SUMER çatısı (2 dk; US EPA düzeltmeli) | 1 Mayıs – 12 Ekim 2026 | 111.578 iki dakikalık kayıt; 3.751 geçerli saat; 165 takvim gününün 154'ü tam gün [A.pa_kayit_2dk, A.pa_saat, A.pa_tam_gun] | Ne zaman (1), en kötü durum (2), senaryolar (3) | Tek nokta ve çatı yüksekliği; 4–8 Temmuz ve 2–6 Ekim kesintileri; arşiv döneminde sıcaklık ve PM₁₀ büyük ölçüde yok |
 | Saha oturumları, Atmotube PRO (1–2 dk, GPS'li) | 27–30 Nisan 2026 | 12 oturum, 4.015 nokta, 3 ekip (her ekip 4 oturum) [A.saha_oturum, A.saha_nokta] | Nerede (1), ölçülen kişisel maruziyet (2) | Dört bahar günü; noktaların %87,8'i tek binada; cihaz kimliği ve kalibrasyonu belirsiz |
 | Atmotube canlı kayıtları (ATP-1…5) | 15 Haziran – 12 Ekim 2026 | 416 kayıt, 30 gün; PM₂.₅'li ve kampüs içi 299; PurpleAir'le eşleşen 233 [A.atp_kayit, D.atp_kampus, D.atp_esli] | Kişisel / dış ortam oranı (3) | Seyrek, telefonla eşitlenen anlık değerler; ortam (iç/dış) bilinmiyor |
-| İç ortam CO₂ (tek cihaz) | 22 Haziran – 21 Temmuz 2026 | 2.814 kayıt; yalnızca 16'sı değişken [G.co2_kayit, G.co2_degisken_kayit] | İç ortam göstergesi | 22 Haziran 15:01'den sonra donmuş değer (§3.6) |
 | Bina poligonları (`campus.geojson`) | — | 96 bina poligonu | Mekânsal eşleştirme | 20 bina adsız ya da genel adlı |
 
 ![Şekil 1](sekiller/sekil01_kapsam.png)
 
 **Şekil 1.** Veri kapsamı (27 Nisan – 12 Ekim 2026, Türkiye günü). PurpleAir satırında çubuk yüksekliği günün geçerli saat
 sayısıdır (mavi: tam gün). Saha satırı gün başına oturum sayısını, Atmotube canlı satırı gün başına kayıt sayısını (40'ta
-kesilmiş), CO₂ satırı değişen (koyu) ve tekrarlanan (taralı) kayıtları gösterir. Kaynak: Q1, Q2, Q3 (Ek A).
+kesilmiş). Kaynak: Q1, Q2, Q3 (Ek A).
 
 ### 2.2 PurpleAir verisinin işlenmesi
 
@@ -134,12 +131,6 @@ etkinlikler F = 1 ile hesaplanmıştır. Günler: 1 Mayıs – 12 Ekim arasında
 için F'nin belgedeki aralıkları (kapalı pencere 0,3–0,75; mekanik 0,25; açık pencere 0,8), bu çalışmada ölçülen K (Kimya binası
 0,65) ve IR'nin 95. yüzdelikleri (0,39 ve 2,28 m³/sa; U.S. EPA, 2011) kullanılmıştır. Açık hava saatinin etkisi için 06:00–09:00
 ve 16:00–19:00 pencere ortalamaları gün gün karşılaştırılmıştır.
-
-### 2.8 İç ortam (CO₂)
-
-Planlanan çözümleme saatlere göre dağılım ve 1000 ppm üstü süre payıydı. CO₂ bir kirletici değil havalandırma göstergesidir;
-ASHRAE standartları bir CO₂ sınırı içermez ve yaklaşık 1000–1200 ppm düzeyi esas olarak insan kaynaklı koku kabulüyle ilişkilidir
-(ASHRAE, 2022). Analizden önce kayıtların ölçüm niteliği denetlenmiş (aynı değer üçlüsünün tekrarı), sonuç §3.6'da verilmiştir.
 
 ---
 
@@ -415,21 +406,6 @@ temiz, tipik ve en kötü günde; (c) tipik günde F ve IR varsayımlarına duya
 (06–09) ve akşamüstü (16–19) pencere ortalamaları, her nokta bir gün. Kaynak: PurpleAir PA-II, US EPA düzeltmeli saatlik değerler;
 1 Mayıs – 12 Ekim 2026, 107 hafta içi tam gün; model `docs/maruziyet_yontemi.md`. Değerler yalnızca kampüste geçen süre içindir.
 
-### 3.6 İç ortam göstergesi (CO₂)
-
-İç ortam CO₂ verisi 22 Haziran 14:30 – 21 Temmuz 16:52 arasında 19 güne yayılan 2.814 kayıttan oluşmaktadır. Yalnızca ilk yarım
-saatteki 16 kayıt değişken değer taşımaktadır (450–753 ppm); 22 Haziran 15:01'den sonraki 2.798 kaydın tamamı aynı değer üçlüsünü
-(400 ppm, 27,2 °C, %49 bağıl nem) yinelemektedir ve 2.804 kayıt bir önceki kayıtla birebir aynıdır [G.co2_*]. Haftalar boyunca hiç
-değişmeyen sıcaklık ve nem gerçek bir ölçümle bağdaşmadığından bu kayıtlar, cihaz çevrimdışıyken toplayıcının bulut hizmetinin
-döndürdüğü son değeri her sorguda yeni zaman damgasıyla yazmasından kaynaklanıyor olmalıdır (`backend/tuya_co2.py` her kayda o anın
-saatini yazar; PurpleAir'deki "aynı son ölçümü yazma" denetiminin karşılığı yoktur). Bu nedenle saatlere göre CO₂ dağılımı ve
-1000 ppm üstü süre payı hesaplanamamıştır; 1000 ppm'i aşan kayıt bulunmaması (0) bir ölçüm sonucu değildir (Şekil 1).
-
-Nitel olarak: kalabalık ve az havalandırılan bir sınıfta CO₂'nin yükselmesi hava değişim hızının düşük olduğunu gösterir. Düşük
-hava değişimi dış ortam PM₂.₅'inin içeri geçişini azaltır (F küçülür), ancak tozun yeniden havalanması gibi iç kaynakların biriktiği
-durumlarda iç ortam düzeyi dış ortamı aşabilir (Chen ve Zhao, 2011). Uygulamanın modeli iç kaynakları içermediğinden, geçerli CO₂
-verisi elde edildiğinde F varsayımının hangi saatlerde iyimser kaldığı bu ilişki üzerinden tartışılabilir.
-
 ---
 
 ## 4 Tartışma
@@ -491,7 +467,6 @@ epizot günlerindeki 2–3 kat yüksek değerleri göstermediğini düşündürm
 8. **Senaryo modeli:** R = 1 alınmıştır; F literatür değerleridir, iç kaynaklar ve bina farkları dahil değildir; solunum hızları
    yetişkin ortalamalarıdır. Yalnızca hafta içi günler alınmış, resmî tatiller ayrılmamıştır. Sonuçlar kampüste geçen 8 saat içindir;
    WHO 24 saatlik değeriyle karşılaştırılmamıştır.
-9. **CO₂:** Verinin tamamına yakını donmuş değerdir; iç ortam sorusu yanıtlanamamıştır.
 
 ## 6 Sonuç ve öneriler
 
@@ -517,10 +492,8 @@ oranları (Kimya binasında yaklaşık 0,65, canlı kayıtlarda 0,75) bu senaryo
    ölçüm dilimine iç/dış ortam etiketi eklenmesi ve oturum başına hangi Atmotube cihazının kullanıldığının kaydedilmesi önerilir.
    Böylece G yerine doğrudan dış ortam sıcak noktaları (K) haritalanabilir.
 3. **Atmotube yan yana ölçümü** tamamlandığında K oranları cihaz çarpanıyla yeniden hesaplanmalıdır.
-4. **CO₂ toplayıcısı:** `backend/tuya_co2.py`'nin cihazın çevrimiçi durumunu ya da güncelleme zamanını denetlemesi ve aynı son
-   değeri yeniden yazmaması önerilir; 22 Haziran 15:01 – 21 Temmuz arasındaki kayıtların "donmuş" diye işaretlenmesi (silinmeden)
-   kullanıcı onayıyla değerlendirilebilir. Tuya planı yenilendiğinde iç ortam analizi tekrarlanabilir.
-5. **Uygulamanın maruziyet modeli için öneriler** (uygulama değiştirilmedi): P profilinin aya göre ayrılması (Ekim profili diğer
+
+4. **Uygulamanın maruziyet modeli için öneriler** (uygulama değiştirilmedi): P profilinin aya göre ayrılması (Ekim profili diğer
    aylardan belirgin farklıdır); ölçülen K değerinin (Kimya binası 0,65) bina özelinde F için bir dayanak olarak belgelenmesi;
    asistanın F ve IR aralıklarına göre bir sonuç aralığı göstermesi.
 
@@ -534,8 +507,6 @@ Doğrulama durumu: "uygulama belgesi" = künye ve değerler `docs/` belgelerinde
 
 - Afroz, R., Alonzo, J., Omar, S., Cheng, C., Schneider, S., Zhao, R. (2025). Impact of wildfire smoke PM2.5 on indoor air quality
   of public buildings on a university campus. *ACS ES&T Air*, 2, 625–636. https://doi.org/10.1021/acsestair.4c00342 — uygulama belgesi.
-- ASHRAE (2022; 2025'te güncellendi). *ASHRAE Position Document on Indoor Carbon Dioxide*. Atlanta: ASHRAE; ASHRAE Technical FAQ
-  (TC 4.3) — arama özeti (standartlarda CO₂ sınırı olmadığı; 1000–1200 ppm'in koku kabulüyle ilişkisi).
 - Barkjohn, K. K., Gantt, B., Clements, A. L. (2021). Development and application of a United States-wide correction for PM2.5 data
   collected with the PurpleAir sensor. *Atmospheric Measurement Techniques*, 14, 4617–4637. https://doi.org/10.5194/amt-14-4617-2021
   — uygulama belgesi (katsayılar ikincil).
@@ -574,7 +545,7 @@ Doğrulama durumu: "uygulama belgesi" = künye ve değerler `docs/` belgelerinde
 - **Sorgular:** `betikler/sorgular.sql` (Supabase `wgirpaysokuoygycmdst`, yalnızca SELECT): Q1 PurpleAir saatlik (sunucunun saatlik
   toplamasıyla aynı), Q2 saha noktaları (oturum adı yerine ad ön ekinin md5 özetinin 8 karakteri; betik bunu `app.js` → `PEOPLE` ile
   "Saha ekibi A/B/C"ye çevirir), Q3 günlük kayan ortalama tepeleri (düzeltme ve pencereler SQL'de), Atmotube canlı kayıtlarının
-  eş zamanlı PurpleAir değeri (koordinatsız) ve CO₂ kayıtları. Çıktılar olduğu gibi `Q1.txt`, `Q2.txt`, `Q3.txt` olarak bir klasöre
+  eş zamanlı PurpleAir değeri (koordinatsız) Çıktılar olduğu gibi `Q1.txt`, `Q2.txt`, `Q3.txt` olarak bir klasöre
   kaydedilir (bu klasör depoya konmaz; saha noktaları konum içerir).
 - **Ek girdiler (depoda):** `docs/veri/purpleair_229263_2dk_2026-04-27_2026-10-06.csv` (27–30 Nisan eşleştirmesi),
   `frontend_v2/data/campus.geojson`, `frontend_v2/js/app.js` (`PEOPLE`), `colorscale.js` ve `maruziyet.js` (sabitlerin denetimi).
@@ -582,7 +553,7 @@ Doğrulama durumu: "uygulama belgesi" = künye ve değerler `docs/` belgelerinde
   (yaklaşık 11 sn). Tek tek: `a_envanter.py` (Şekil 1, A.* ve G.*), `b_zaman.py` (Şekil 2–5, B.*), `c_mekan.py` (Şekil 6–7, C.*),
   `d_kisisel.py` (Şekil 8–9, D.*), `e_en_kotu.py` (Şekil 10, E.*), `f_senaryo.py` (Şekil 11, F.*). Betikler başta uygulamanın
   düzeltme katsayılarını, HKİ eşiklerini, F/IR değerlerini ve 15 m kuralını kaynak dosyalarla karşılaştırır; fark varsa durur.
-- **Bağımsız sayı denetimi (Ajan 1, 13 Ekim 2026):** tam gün sayısı ve ortalama, günlük döngü, en kötü %5 eşiği, 8–12 Ekim epizodu, günlük en kötü 60 dakika, Kimya binası payı, tipik gün senaryosu ve CO₂ donma bulgusu ayrı betiklerle yeniden hesaplanmış, sekizi de tutmuştur.
+- **Bağımsız sayı denetimi (Ajan 1, 13 Ekim 2026):** tam gün sayısı ve ortalama, günlük döngü, en kötü %5 eşiği, 8–12 Ekim epizodu, günlük en kötü 60 dakika, Kimya binası payı, tipik gün senaryosu ayrı betiklerle yeniden hesaplanmış, hepsi tutmuştur.
 - **Yapılan denetimler:** Python düzeltmesi uygulamanın `paCorrect` ve `hki` işlevleriyle (Node.js) 418 saat ve 17 sınır değerinde
   birebir aynıdır; SQL kayan ortalama tepeleri sensör arşivinden bağımsız hesaplamayla 152 günde en çok 0,03 µg/m³ farklıdır;
   Ajan 1'in Mayıs–Eylül sayıları (148 tam gün, 12,1 µg/m³, 38 aşım günü, aylık 13,4 / 12,1 / 11,2 / 13,9 / 9,8; 06:00'da 15,8,

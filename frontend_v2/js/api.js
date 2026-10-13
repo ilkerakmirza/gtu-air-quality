@@ -1,6 +1,10 @@
 // Backend API — Render production
 const API_BASE = "https://gtu-air-quality.onrender.com";
 
+// CO₂ (iç ortam) şimdilik kapalı (13 Ekim 2026, kullanıcının kararı): sensörler yeniden tanımlanınca true yap.
+// Kapalıyken panel, harita işaretçileri, lejant, Özet çipi ve kesinti duyurusu gösterilmez; sunucu verisi silinmez.
+const CO2_AKTIF = false;
+
 async function apiFetch(path, options = {}) {
     const res = await fetch(API_BASE + path, options);
     if (!res.ok) {
@@ -25,7 +29,7 @@ const API = {
     csbLatest:        () => apiFetch("/api/csb/latest"),
     purpleairStatus:  () => apiFetch("/api/purpleair/status"),
     atmotubeLive:     () => apiFetch("/api/atmotube/live"),
-    co2Live:          () => apiFetch("/api/co2/live"),
+    co2Live:          () => CO2_AKTIF ? apiFetch("/api/co2/live") : Promise.resolve({ data: [] }),
     atmotubeHistory:  (device, start, end) =>
         apiFetch(`/api/atmotube/history?device=${device}&start=${start}&end=${end}`),
     // Sunucu arşivi (CSV, zamanlar Türkiye saati): ör. source=ibb → Tuzla istasyonunun saatlik değerleri

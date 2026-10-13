@@ -76,7 +76,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     initPlayerUI();
     initChartDrawer();
 
-    document.getElementById("legend").innerHTML = buildLegend() + buildCO2Legend();
+    document.getElementById("legend").innerHTML = buildLegend() + (CO2_AKTIF ? buildCO2Legend() : "");
+    if (!CO2_AKTIF) {   // CO₂ kapalı: paneli ve harita seçeneğini gizle
+        document.querySelector('section.panel[data-key="co2"]')?.setAttribute("hidden", "");
+        document.getElementById("tg-co2")?.closest("label")?.setAttribute("hidden", "");
+    }
 
     // İlk yükleme: açılış ekranı en fazla 6 sn bekler. Ücretsiz sunucu uykudaysa uygulama yine açılır
     // (Özet, Tuzla verisini İBB'den doğrudan da alabilir); sunucu uyanınca veriler yüklenir ve Özet tazelenir.
@@ -95,8 +99,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     setInterval(loadAtmotubeLive, 120000);
 
     // CO₂ sensörleri (Tuya, sabit) — 2 dk'da bir yenile
-    loadCO2Live();
-    setInterval(loadCO2Live, 120000);
+    if (CO2_AKTIF) { loadCO2Live(); setInterval(loadCO2Live, 120000); }
 
     // CSB ulusal istasyon (Tuzla) — 5 dk'da bir
     loadCSB();

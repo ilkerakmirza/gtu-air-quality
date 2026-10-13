@@ -245,6 +245,7 @@ body {
 /* Stats strip */
 .stats-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .stats-strip[hidden], .st-hint[hidden] { display: none; }
+.panel[hidden], .toggle-row[hidden] { display: none !important; }
 .stat-card {
   background: rgba(255,255,255,0.035);
   border: 1px solid var(--stroke);
@@ -1671,7 +1672,7 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
         <a href="#inf-sin">Sınırlılıklar</a><a href="#inf-kay">Kaynaklar</a><a href="#inf-kvkk">Gizlilik (KVKK)</a></nav>
 
       <h4 id="inf-hak">Hakkında</h4>
-      <p><b>GTÜ AirLab</b>, Gebze Teknik Üniversitesi kampüsünde partikül madde (PM₂.₅, PM₁₀) ve iç mekân CO₂ düzeylerini
+      <p><b>GTÜ AirLab</b>, Gebze Teknik Üniversitesi kampüsünde partikül madde (PM₂.₅, PM₁₀) düzeylerini
         ölçmek, haritalamak ve yorumlamak amacıyla yürütülen araştırmanın veri platformudur. Sabit sensörler, taşınabilir
         sensörlerle yapılan saha ölçümleri ve resmî bölge istasyonu verileri tek bir arayüzde birleştirilir.</p>
       <p>Varsayılan görünüm kampüsteki herkes için sadeleştirilmiştir (Özet, Harita, Sağlık, Duyurular). Sensörlerin ham
@@ -1681,7 +1682,7 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
       <table class="info-table"><thead><tr><th>Kaynak</th><th>Tür</th><th>Ölçülen</th></tr></thead><tbody>
         <tr><td>PurpleAir PA-II</td><td>Sabit, dış ortam (SUMER çatısı) · kampüsün genel hava kalitesi</td><td>PM₂.₅ (US EPA düzeltmeli), PM₁, PM₁₀, sıcaklık, nem</td></tr>
         <tr><td>Atmotube Pro</td><td>Taşınabilir, GPS'li saha ölçümleri · bina bazlı karakterizasyon</td><td>PM₁, PM₂.₅, PM₁₀, VOC</td></tr>
-        <tr><td>CO₂ sensörleri</td><td>Sabit, iç mekân</td><td>CO₂</td></tr>
+        <tr><td>CO₂ sensörleri</td><td>Sabit, iç mekân · şimdilik kapalı; sensörler yeniden tanımlanınca eklenecek</td><td>CO₂</td></tr>
         <tr><td>Tuzla istasyonu</td><td>Resmî referans (ÇŞB / İBB), ~6,4 km</td><td>PM₂.₅, PM₁₀ (saatlik)</td></tr>
       </tbody></table>
 
@@ -1884,12 +1885,12 @@ body.research .exp-fab, body.exp-open .exp-fab { display: none; }
 <div class="legend" id="legend"></div>
 
 <script src="js/colorscale.js?v=57"></script>
-<script src="js/api.js?v=43"></script>
+<script src="js/api.js?v=44"></script>
 <script src="js/campus.js?v=57"></script>
-<script src="js/app.js?v=62"></script>
+<script src="js/app.js?v=63"></script>
 <script src="js/who.js?v=48"></script>
 <script src="js/kiyas.js?v=43"></script>
-<script src="js/ozet.js?v=56"></script>
+<script src="js/ozet.js?v=57"></script>
 <script src="js/maruziyet.js?v=5"></script>
 <script src="js/shell.js?v=52"></script>
 </body>

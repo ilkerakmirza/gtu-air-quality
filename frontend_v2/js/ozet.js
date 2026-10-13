@@ -118,7 +118,7 @@ const Ozet = (() => {
             ${chip(paFresh, "PurpleAir", pa && pa.recorded_at ? (paFresh ? "canlı" : "son veri " + ago(pa.recorded_at)) : "veri yok")}
             ${chip(tzFresh, "Tuzla istasyonu", tz && tz.recorded_at ? (tzFresh ? "güncel" : "son veri " + ago(tz.recorded_at)) : "veri yok")}
             ${chip(atpOn > 0, "Atmotube", `${atpOn}/${(now.atp || []).length} çevrimiçi`)}
-            ${chip(co2On > 0, "CO₂ (iç mekân)", (now.co2 || []).length ? `${co2On}/${now.co2.length} çevrimiçi` : "tanımlı değil")}
+            ${CO2_AKTIF ? chip(co2On > 0, "CO₂ (iç mekân)", (now.co2 || []).length ? `${co2On}/${now.co2.length} çevrimiçi` : "tanımlı değil") : ""}
         </div>
         <button type="button" class="ic-btn oz-more oz-exp" id="oz-to-exp">${ico("message-circle")} AirLab asistanı: kampüste ne kadar PM₂.₅ soludum?</button>`;
         return html;

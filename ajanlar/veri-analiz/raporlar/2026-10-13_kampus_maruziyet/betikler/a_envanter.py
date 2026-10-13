@@ -66,10 +66,9 @@ def main(ham, cikti):
     S.ekle("G.co2_1000_ustu", int((c.co2_ppm > 1000).sum()), "kayıt", "1000 ppm'i aşan kayıt (veri donmuş olduğundan yorumlanamaz)", "Q3 co2")
 
     # ── Şekil 1: kapsam zaman çizelgesi ──
-    fig, ax = plt.subplots(figsize=(7.5, 3.9))
+    fig, ax = plt.subplots(figsize=(7.5, 3.2))
     gunler = pd.date_range("2026-04-27", "2026-10-12", freq="D", tz=veri.TZ)
-    satir = {"PurpleAir\n(SUMER çatısı)": 3.0, "Saha oturumları\n(Atmotube, 12)": 2.0, "Atmotube canlı\n(ATP-1…5)": 1.0,
-             "İç ortam CO₂\n(tek cihaz)": 0.0}
+    satir = {"PurpleAir\n(SUMER çatısı)": 3.0, "Saha oturumları\n(Atmotube, 12)": 2.0, "Atmotube canlı\n(ATP-1…5)": 1.0}
     # PurpleAir: günlük geçerli saat sayısı → çubuk yüksekliği
     for k, r in g.iterrows():
         x = pd.Timestamp(k, tz=veri.TZ)
@@ -82,14 +81,8 @@ def main(ham, cikti):
     for x, n in ag.items():
         ax.bar(x + pd.Timedelta("12h"), 0.75 * min(n, 40) / 40, bottom=1.0 - 0.375, width=0.9, color=DEVICE_COLOR["atmotube"],
                alpha=0.7, lw=0)
-    cg = c.groupby([c.tl.dt.floor("D"), donuk]).size().unstack(fill_value=0)
-    for x, r in cg.iterrows():
-        if r.get(False, 0):
-            ax.bar(x + pd.Timedelta("12h"), 0.75, bottom=-0.375, width=0.9, color=MUREKKEP, lw=0)
-        if r.get(True, 0):
-            ax.bar(x + pd.Timedelta("12h"), 0.75, bottom=-0.375, width=0.9, fc="none", ec=GRI, hatch="////", lw=0.4)
     ax.set_yticks(list(satir.values()), list(satir.keys()), fontsize=8)
-    ax.set_ylim(-0.6, 3.6)
+    ax.set_ylim(0.4, 3.6)
     ax.set_xlim(gunler[0] - pd.Timedelta("1D"), gunler[-1] + pd.Timedelta("2D"))
     ax.xaxis.set_major_locator(mdates.MonthLocator(tz=veri.TZ))
     ax.xaxis.set_major_formatter(FuncFormatter(lambda x, _: veri.AY_KISA.get(mdates.num2date(x, tz=veri.TZ).month, "")))
@@ -98,11 +91,8 @@ def main(ham, cikti):
     ax.text(pd.Timestamp("2026-07-05", tz=veri.TZ), 3.45, "5–7 Tem\nkesinti", fontsize=6.8, ha="center", color=IKINCIL)
     ax.text(pd.Timestamp("2026-10-04", tz=veri.TZ), 3.45, "2–6 Eki\nkesinti", fontsize=6.8, ha="center", color=IKINCIL)
     ax.text(pd.Timestamp("2026-05-03", tz=veri.TZ), 1.9, "27–30 Nisan", fontsize=6.8, ha="left", color=IKINCIL)
-    ax.annotate("22 Haz 15:00'ten sonra donmuş\ndeğer (400 ppm, 27,2 °C, %49)", xy=(pd.Timestamp("2026-07-08", tz=veri.TZ), 0.38),
-                xytext=(pd.Timestamp("2026-08-05", tz=veri.TZ), 0.25), fontsize=7, va="center", color=MUREKKEP,
-                arrowprops=dict(arrowstyle="-", color=IKINCIL, lw=0.6))
     kaynak_notu(fig, "PurpleAir: çubuk yüksekliği = günün geçerli saat sayısı (mavi: tam gün ≥ 18 saat; gri: eksik gün). Saha: gün başına oturum (en çok 3).\n"
-                     "Atmotube canlı: gün başına kayıt (40'ta kesilmiş). CO₂: koyu = değişen değer, taralı = aynı değer üçlüsünün tekrarı.")
+                     "Atmotube canlı: gün başına kayıt (40'ta kesilmiş).")
     fig.subplots_adjust(top=0.91, bottom=0.18, left=0.19, right=0.98)
     fig.savefig(os.path.join(cikti, "sekiller", "sekil01_kapsam.png"))
     plt.close(fig)
