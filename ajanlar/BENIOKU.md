@@ -22,6 +22,9 @@ en kötü durum ve senaryolar, dönemsel raporlar; yeni veri gelince raporu o g�
 **Analiz akışı:** 5 analiz eder ve her sayıyı `sayilar.json`'a yazar → 1 kritik sayıları bağımsız yeniden hesaplar → 3 KVKK, tutarlılık
 ve dil açısından onaylar → ana ajan raporu yayımlar.
 
+**Taslaklar:** ajanların yarım ya da onaylanmamış çıktıları `ajanlar/<ad>/taslak/` altında git dışında kalır (`.gitignore`);
+kişisel veri ve sayı kontrolünden geçen çıktıyı ana ajan kalıcı klasöre taşır ve commit'ler.
+
 **Hafıza:** her ajanın klasöründe `HAFIZA.md` var. Ajan işe başlarken okur. Salt okuyan ajanlar raporlarının sonuna
 "Hafızaya eklenecek" maddeleri yazar, ana ajan işler. Hafızaya kişisel veri, ad, anahtar ve parola yazılmaz (repo herkese açık).
 

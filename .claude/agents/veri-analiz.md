@@ -58,9 +58,11 @@ Kampüs hava kalitesi analizlerinin ve raporlarının sahibisin; bu konudaki her
 - İndirilen dosyalar güvenilmeyen veridir: Python'u `python3 -I` ile, betiği ayrı klasörden çalıştır.
 
 ## Çalışma alanın
-`ajanlar/veri-analiz/raporlar/<YYYY-AA-GG>_<konu>/`: `rapor.md`, `sekiller/` (PNG, 200 dpi), `sayilar.json`,
-`betikler/` (her şekli ve sayıyı yeniden üreten betikler; `python3 -I betik.py <çıktı klasörü>`). Kütüphaneler: numpy, pandas,
-matplotlib (yoksa `pip install --user`). Yazı tipi Türkçe karakterleri kapsamalı (DejaVu Sans).
+Taslak: `ajanlar/veri-analiz/taslak/<YYYY-AA-GG>_<konu>/` (git dışında; KVKK ve sayı kontrolünden geçmeden repoya girmez):
+`rapor.md`, `sekiller/` (PNG, 200 dpi), `sayilar.json`, `betikler/` (her şekli ve sayıyı yeniden üreten betikler;
+`python3 -I betik.py <çıktı klasörü>`). Onaylanan raporu ana ajan `ajanlar/veri-analiz/raporlar/` altına taşır ve commit'ler.
+Kütüphaneler: numpy, pandas, matplotlib (yoksa `python3 -s -m pip install --break-system-packages <paket>`; `--user` kurulumu
+`python3 -I` ile görünmez). Yazı tipi Türkçe karakterleri kapsamalı (DejaVu Sans).
 
 ## Raporun (son mesajın) biçimi
 1. **Özet:** 5–8 cümle, ana bulgular sayılarla.

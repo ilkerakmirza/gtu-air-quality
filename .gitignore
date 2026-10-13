@@ -31,3 +31,6 @@ unpacked_*/
 bap_text.txt
 docx_text.txt
 extracted.txt
+
+# Ajan taslakları: onaylanmadan repoya girmez (KVKK); onaylanan rapor ana ajan tarafından raporlar/ altına taşınır
+ajanlar/*/taslak/
