@@ -38,6 +38,9 @@ Tek bir güncel sürüm olması için **tek kaynak `main` branch'idir**.
      kullanıcı kontrol etmeli (değeri isteme).
 - **Tanıtım videoları (6 Ekim 2026 deneme sürümü hazır):** `scripts/tanitim_video/` (Shorts 9:16 → Instagram/LinkedIn, uzun 16:9 → YouTube).
   Yayın sürümü PurpleAir veri göndermeye başlayınca `GERCEK=1` ile ve kalıcı adres (gtuairlab / airlab.gtu.edu.tr) karekodla yeniden kaydedilecek.
+- **airlab.gtu.edu.tr (14 Ekim 2026):** GTÜ ana sayfa editöründeki birim sayfasına yönlenir (`gtu.edu.tr/kategori/9611`); kullanıcı bunu
+  vitrin olarak kullanacak (tanıtım metni + uygulamaya "URL" hedefli kategori bağlantısı). Uygulama GitHub Pages'te kalır; adres değişirse
+  (gtuairlab'a taşıma) birim sayfasındaki bağlantıyı da güncellemesini hatırlat.
 - **Adsız 20 bina:** ekip numaralı haritadan eşleştirince `campus.geojson`'a adları işle.
 - **PurpleAir düzeltmesi, kontroller** (yöntem 12 Ekim 2026'da EPA'nın ABD geneli denklemine, cf_1 girdisiyle geçti;
   ayrıntı `docs/purpleair_epa_duzeltmesi.md` §9): (1) PurpleAir haritasında orta düzeyde bir saatin (ör. 11 Ekim 06:00, saatlik)
