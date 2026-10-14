@@ -3,11 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GTÜ AirLab</title>
-<meta http-equiv="refresh" content="0; url=frontend_v2/">
-<link rel="canonical" href="frontend_v2/">
+<title>GTÜ AirLab taşındı</title>
+<meta http-equiv="refresh" content="0; url=https://gtuairlab.github.io/frontend_v2/">
+<link rel="canonical" href="https://gtuairlab.github.io/frontend_v2/">
+<script>
+  // Uygulama gtuairlab.github.io adresine taşındı (14 Ekim 2026). Eski adresteki önbellek çalışanını kaldırıp yeni adrese geçer.
+  try { navigator.serviceWorker && navigator.serviceWorker.getRegistrations().then(function (r) { r.forEach(function (x) { x.unregister(); }); }); } catch (e) {}
+  location.replace("https://gtuairlab.github.io/frontend_v2/" + location.search + location.hash);
+</script>
 </head>
-<body>
-<p>GTÜ AirLab uygulamasına yönlendiriliyorsunuz… <a href="frontend_v2/">Açılmazsa buraya dokunun.</a></p>
+<body style="font-family:sans-serif;background:#0A101D;color:#E9EDF5;padding:2rem">
+<p>GTÜ AirLab yeni adresine taşındı: <a style="color:#7AA3F5" href="https://gtuairlab.github.io/frontend_v2/">gtuairlab.github.io</a></p>
 </body>
 </html>

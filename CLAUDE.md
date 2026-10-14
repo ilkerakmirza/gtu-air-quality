@@ -1,3 +1,9 @@
+# ⚠️ Bu repo taşındı (14 Ekim 2026)
+Proje artık **`gtuairlab/gtuairlab.github.io`** reposunda; site https://gtuairlab.github.io/frontend_v2/ . Bu eski repoda yalnızca
+yönlendirme sayfaları güncel; **burada geliştirme yapma**. Kullanıcıya yeni repoyla çalışmasını hatırlat (masaüstünde yeni klonu,
+bulutta yeni repoya bağlı ortamı kullansın). Render sunucusu yeni repoya bağlanana kadar bu repodaki `backend/` dokunulmadan kalır.
+Eski repoyu silmek kullanıcının ayrı onayına bağlı.
+
 # GTÜ AirLab (kampüs hava kalitesi) — Claude çalışma kuralları
 
 Bu proje hem Claude masaüstü uygulamasında hem de Claude Code web (bulut) oturumlarında geliştiriliyor.
